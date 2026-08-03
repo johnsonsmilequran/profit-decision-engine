@@ -93,6 +93,7 @@
 - `趣然AI商品经营利润决策助手/output/tokens.css`
 - `趣然AI商品经营利润决策助手/output/design-system-showcase.html`
 - `趣然AI商品经营利润决策助手/output/技术方案.md`
+- `趣然AI商品经营利润决策助手/output/pages/阶段1_*.md`
 - `趣然AI商品经营利润决策助手/debate-log.md`
 - `趣然AI商品经营利润决策助手/drafts/validation-report.md`
 - `趣然AI商品经营利润决策助手/drafts/stage6-consistency.md`
