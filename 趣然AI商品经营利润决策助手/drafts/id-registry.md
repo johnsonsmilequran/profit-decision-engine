@@ -1,4 +1,4 @@
-# 需求 ID 注册表 v1
+# 需求 ID 注册表 v2
 
 > 本注册表是阶段 5 三位主笔共用的唯一 ID 来源。发布后不得重排或复用。
 
@@ -10,7 +10,7 @@
 | F04 | AI 建议解释 | US-F04-01 | REQ-F04-01、REQ-F04-02、REQ-F04-03 | active / MVP |
 | F05 | 行动清单 | US-F05-01 | REQ-F05-01、REQ-F05-02、REQ-F05-03 | active / MVP |
 | F06 | 审核与执行跟踪 | US-F06-01、US-F06-02 | REQ-F06-01、REQ-F06-02、REQ-F06-03 | active / MVP |
-| F07 | 权限隔离 | US-F07-01 | REQ-F07-01、REQ-F07-02 | active / MVP |
+| F07 | 权限隔离 | US-F07-01 | REQ-F07-01、REQ-F07-02、REQ-F07-03 | active / MVP |
 | F08 | 规则与数据溯源 | US-F08-01 | REQ-F08-01、REQ-F08-02 | active / MVP |
 
 ## 验收条件 ID
@@ -36,6 +36,7 @@
 | REQ-F06-03 | AC-F06-05、AC-F06-06 |
 | REQ-F07-01 | AC-F07-01、AC-F07-02 |
 | REQ-F07-02 | AC-F07-03、AC-F07-04 |
+| REQ-F07-03 | AC-F07-05、AC-F07-06 |
 | REQ-F08-01 | AC-F08-01、AC-F08-02 |
 | REQ-F08-02 | AC-F08-03、AC-F08-04 |
 
