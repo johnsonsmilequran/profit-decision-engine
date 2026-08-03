@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="page-id" content="PAGE-F01-01">
-  <title>数据批次｜趣然 AI 商品经营与利润决策助手</title>
+  <title>数据批次列表页｜趣然 AI 商品经营与利润决策助手</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
@@ -547,16 +547,16 @@
       <nav class="flex-1 px-3 py-5">
         <p class="nav-label eyebrow mb-3 px-3">经营任务</p>
         <div class="space-y-1">
-          <a class="nav-link prototype-link" href="#" data-message="将返回运营工作台">
+          <a class="nav-link prototype-link" href="阶段1_角色工作台_运营工作台.html" data-message="将返回运营工作台">
             <i class="ph ph-squares-four text-lg" aria-hidden="true"></i><span class="nav-label">工作台</span>
           </a>
-          <a class="nav-link prototype-link" href="#" data-message="将进入当前批次行动清单">
+          <a class="nav-link prototype-link" href="阶段1_行动中心_行动清单页.html" data-message="将进入当前批次行动清单">
             <i class="ph ph-list-checks text-lg" aria-hidden="true"></i><span class="nav-label">行动中心</span><span class="nav-badge">16</span>
           </a>
           <a class="nav-link active" href="#batch-list" aria-current="page">
             <i class="ph ph-database text-lg" aria-hidden="true"></i><span class="nav-label">数据批次</span>
           </a>
-          <a class="nav-link prototype-link" href="#" data-message="将进入历史与追溯列表">
+          <a class="nav-link prototype-link" href="阶段1_历史追溯_历史与追溯列表页.html" data-message="将进入历史与追溯列表">
             <i class="ph ph-clock-counter-clockwise text-lg" aria-hidden="true"></i><span class="nav-label">历史与追溯</span>
           </a>
         </div>
@@ -578,8 +578,8 @@
       <header class="topbar flex items-center justify-between px-5 xl:px-7" aria-label="业务上下文">
         <div class="flex min-w-0 items-center gap-2">
           <span class="context-chip"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
-          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>TOY-20260803-01</span>
-          <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>数据期间 2026.07.01—07.31</span>
+          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>BATCH-20260630-01</span>
+          <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>数据期间 2026-06-01—2026-06-30</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="context-chip"><span class="status-dot" aria-hidden="true"></span>角色：运营</span>
@@ -597,7 +597,7 @@
           </div>
           <div class="flex items-center gap-2">
             <button id="refreshButton" class="btn-secondary" type="button"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>刷新列表</button>
-            <button class="btn-primary prototype-link" type="button" data-message="将进入新批次导入页"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入新批次</button>
+            <button class="btn-primary prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将进入新批次导入页"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入新批次</button>
           </div>
         </section>
 
@@ -611,15 +611,15 @@
                     <span class="badge badge-current"><i class="ph ph-push-pin" aria-hidden="true"></i>当前成功批次</span>
                     <span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span>
                   </div>
-                  <h2 id="current-heading" class="mono mt-3 text-xl font-bold">TOY-20260803-01</h2>
-                  <p class="file-name mt-1" title="玩具事业部经营数据_2026-08-03.xlsx">玩具事业部经营数据_2026-08-03.xlsx</p>
+                  <h2 id="current-heading" class="mono mt-3 text-xl font-bold">BATCH-20260630-01</h2>
+                  <p class="file-name mt-1" title="商品链接.xlsx">商品链接.xlsx</p>
                 </div>
               </div>
 
               <div class="mt-5 grid grid-cols-3 gap-4">
-                <div><div class="meta">数据期间</div><div class="numeric mt-1 font-semibold">2026.07.01—07.31</div><div class="meta mt-1">上一个完整自然月</div></div>
-                <div><div class="meta">业务截止日</div><div class="numeric mt-1 font-semibold">2026.08.02</div><div class="meta mt-1">冻结批次判断时点</div></div>
-                <div><div class="meta">规则版本</div><button class="link-button version-trigger mono mt-0.5" type="button" data-version="RULE-1.3.0">RULE-1.3.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button><div class="meta mt-0.5">历史版本不可覆盖</div></div>
+                <div><div class="meta">数据期间</div><div class="numeric mt-1 font-semibold">2026-06-01—2026-06-30</div><div class="meta mt-1">上一个完整自然月</div></div>
+                <div><div class="meta">业务截止日</div><div class="numeric mt-1 font-semibold">2026-06-30</div><div class="meta mt-1">冻结批次判断时点</div></div>
+                <div><div class="meta">规则版本</div><button class="link-button version-trigger mono mt-0.5" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button><div class="meta mt-0.5">历史版本不可覆盖</div></div>
               </div>
 
               <div class="batch-steps mt-5 flex items-center justify-between" aria-label="当前批次处理进度">
@@ -634,7 +634,7 @@
               <div>
                 <div class="flex items-center justify-between">
                   <div><div class="eyebrow">校验摘要</div><p class="meta mt-1">校验已完成，数量均为冻结结果</p></div>
-                  <span class="context-chip"><i class="ph ph-clock" aria-hidden="true"></i>08.03 09:18 完成</span>
+                  <span class="context-chip"><i class="ph ph-clock" aria-hidden="true"></i>07.06 09:18 完成</span>
                 </div>
                 <div class="mt-5 grid grid-cols-3 gap-3">
                   <div class="summary-stat"><div class="summary-number numeric" style="color: var(--success);">18</div><div class="meta mt-2">有效 SPU</div></div>
@@ -643,8 +643,8 @@
                 </div>
               </div>
               <div class="mt-5 flex items-end justify-between gap-4">
-                <div><div class="meta">创建信息</div><div class="mt-1 text-sm font-semibold">林峰 · 2026.08.03 09:05</div></div>
-                <button class="btn-secondary detail-trigger" type="button" data-batch="TOY-20260803-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+                <div><div class="meta">创建信息</div><div class="mt-1 text-sm font-semibold">林峰 · 2026.07.06 09:05</div></div>
+                <button class="btn-secondary detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260630-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
               </div>
             </div>
           </div>
@@ -700,105 +700,105 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="batch-row" data-search="toy-20260727-01 玩具事业部经营数据_2026-07-27.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260727-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-07-27.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.06.01—06.30</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.07.26</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.3.0">RULE-1.3.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">07.27 09:08</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260727-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260720-01 玩具事业部经营数据_2026-07-20.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260720-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-07-20.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.06.01—06.30</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.07.19</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">1</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.3.0">RULE-1.3.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">07.20 09:11</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260720-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260713-01 玩具事业部经营数据_2026-07-13.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260713-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-07-13.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.06.01—06.30</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.07.12</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">19</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">3</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.3.0">RULE-1.3.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">07.13 09:16</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260713-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260706-01 玩具事业部经营数据_2026-07-06.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260706-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-07-06.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.06.01—06.30</div><div class="meta mt-1">首批完整自然月</div></td>
-                  <td><div class="numeric">2026.06.30</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.2.0">RULE-1.2.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">07.06 09:12</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260706-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260629-01 玩具事业部经营数据_2026-06-29.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260629-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-06-29.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.05.01—05.31</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.06.28</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.2.0">RULE-1.2.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">06.29 09:07</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260629-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260622-01 玩具事业部经营数据_2026-06-22.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260622-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-06-22.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.05.01—05.31</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.06.21</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">19</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">1</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.2.0">RULE-1.2.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">06.22 09:14</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260622-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260615-01 玩具事业部经营数据_2026-06-15.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260615-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-06-15.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.05.01—05.31</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.06.14</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.1.0">RULE-1.1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">06.15 09:10</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260615-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260608-01 玩具事业部经营数据_2026-06-08.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260608-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-06-08.xlsx</div></td>
-                  <td><div class="numeric font-semibold">2026.05.01—05.31</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.06.07</div></td>
-                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">17</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">3</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.1.0">RULE-1.1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">06.08 09:22</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260608-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
-                </tr>
-                <tr class="batch-row" data-search="toy-20260601-01 玩具事业部经营数据_2026-06-01.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260601-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-06-01.xlsx</div></td>
+                <tr class="batch-row" data-search="batch-20260531-01 玩具事业部经营数据_2026-05-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20260531-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-05-31.xlsx</div></td>
                   <td><div class="numeric font-semibold">2026.05.01—05.31</div><div class="meta mt-1">上一个完整自然月</div></td>
                   <td><div class="numeric">2026.05.31</div></td>
                   <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
-                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.1.0">RULE-1.1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">06.01 09:06</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260601-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">05.31 09:08</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260531-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
-                <tr class="batch-row" data-search="toy-20260525-01 玩具事业部经营数据_2026-05-25.xlsx">
-                  <td><div class="mono font-semibold">TOY-20260525-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-05-25.xlsx</div></td>
+                <tr class="batch-row" data-search="batch-20260430-01 玩具事业部经营数据_2026-04-30.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20260430-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-04-30.xlsx</div></td>
                   <td><div class="numeric font-semibold">2026.04.01—04.30</div><div class="meta mt-1">上一个完整自然月</div></td>
-                  <td><div class="numeric">2026.05.24</div></td>
+                  <td><div class="numeric">2026.04.30</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">1</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">04.30 09:11</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260430-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20260331-01 玩具事业部经营数据_2026-03-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20260331-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-03-31.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2026.03.01—03.31</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2026.03.31</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">19</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">3</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">03.31 09:16</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260331-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20260228-01 玩具事业部经营数据_2026-02-28.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20260228-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-02-28.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2026.02.01—02.28</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2026.02.28</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">20</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">02.28 09:12</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260228-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20260131-01 玩具事业部经营数据_2026-01-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20260131-01</div><div class="file-name mt-1">玩具事业部经营数据_2026-01-31.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2026.01.01—01.31</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2026.01.31</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">01.31 09:07</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20260131-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20251231-01 玩具事业部经营数据_2025-12-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20251231-01</div><div class="file-name mt-1">玩具事业部经营数据_2025-12-31.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2025.12.01—12.31</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2025.12.31</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">19</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">1</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">12.31 09:14</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20251231-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20251130-01 玩具事业部经营数据_2025-11-30.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20251130-01</div><div class="file-name mt-1">玩具事业部经营数据_2025-11-30.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2025.11.01—11.30</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2025.11.30</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">11.30 09:10</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20251130-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20251031-01 玩具事业部经营数据_2025-10-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20251031-01</div><div class="file-name mt-1">玩具事业部经营数据_2025-10-31.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2025.10.01—10.31</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2025.10.31</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">17</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">3</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">10.31 09:22</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20251031-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20250930-01 玩具事业部经营数据_2025-09-30.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20250930-01</div><div class="file-name mt-1">玩具事业部经营数据_2025-09-30.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2025.09.01—09.30</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2025.09.30</div></td>
+                  <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
+                  <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">18</b> 有效</span><span class="badge badge-rejected"><b class="numeric">0</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">2</b> 降级</span></div></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">林峰</div><div class="meta numeric mt-1">09.30 09:06</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20250930-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="batch-row" data-search="batch-20250831-01 玩具事业部经营数据_2025-08-31.xlsx">
+                  <td><div class="mono font-semibold">BATCH-20250831-01</div><div class="file-name mt-1">玩具事业部经营数据_2025-08-31.xlsx</div></td>
+                  <td><div class="numeric font-semibold">2025.08.01—08.31</div><div class="meta mt-1">上一个完整自然月</div></td>
+                  <td><div class="numeric">2025.08.31</div></td>
                   <td><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已生成</span></td>
                   <td><div class="count-group"><span class="badge badge-valid"><b class="numeric">16</b> 有效</span><span class="badge badge-rejected"><b class="numeric">1</b> 拒绝</span><span class="badge badge-degraded"><b class="numeric">1</b> 降级</span></div></td>
-                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-1.0.0">RULE-1.0.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
-                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">05.25 09:17</div></td>
-                  <td><button class="link-button detail-trigger" type="button" data-batch="TOY-20260525-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="badge badge-version version-trigger mono" type="button" data-version="RULE-V1.0">RULE-V1.0<i class="ph ph-arrow-square-out" aria-hidden="true"></i></button></td>
+                  <td><div class="text-sm font-semibold">周晓</div><div class="meta numeric mt-1">08.31 09:17</div></td>
+                  <td><button class="link-button detail-trigger" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-batch="BATCH-20250831-01">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
               </tbody>
             </table>
@@ -841,6 +841,8 @@
 
     document.querySelectorAll('.prototype-link').forEach((element) => {
       element.addEventListener('click', (event) => {
+        const href = element.getAttribute('href');
+        if ((href && href.endsWith('.html')) || element.hasAttribute('onclick')) return;
         event.preventDefault();
         showToast(element.dataset.message || '将进入对应业务页面');
       });

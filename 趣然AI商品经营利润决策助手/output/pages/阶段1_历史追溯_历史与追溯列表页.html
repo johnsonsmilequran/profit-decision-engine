@@ -528,9 +528,9 @@
 
       <nav class="flex flex-col gap-2 px-3 mt-5" aria-label="主要导航">
         <div class="nav-label">经营任务</div>
-        <button class="nav-button" type="button" data-nav="工作台"><i class="ph-bold ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button>
-        <button class="nav-button" type="button" data-nav="行动中心"><i class="ph-bold ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button>
-        <button class="nav-button" type="button" data-nav="数据批次"><i class="ph-bold ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_角色工作台_运营工作台.html'" data-nav="工作台"><i class="ph-bold ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="行动中心"><i class="ph-bold ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次"><i class="ph-bold ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button>
         <button class="nav-button active" type="button" aria-current="page" data-nav="历史与追溯"><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button>
       </nav>
 
@@ -604,13 +604,13 @@
             <table aria-describedby="history-note">
               <thead><tr><th class="sticky-column" scope="col">批次与 SPU</th><th scope="col">冻结建议动作</th><th scope="col">审核与双动作状态</th><th scope="col">业务里程碑摘要</th><th scope="col">审计异常</th><th scope="col">追溯</th></tr></thead>
               <tbody id="history-list">
-                <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 515 布乐迪忙碌屋益智玩具">
+                <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="执行中" data-search="SPU 515 布乐迪忙碌屋益智玩具">
                   <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-01</div><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="record-meta"><span class="mono">SPU 515</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 07-06 09:18</div></td>
                   <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率低于清仓线</div></td>
-                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已确认禁补</span></div></td>
-                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：陈雨欣于 07-29 16:42 记录经营结果</div></td>
-                  <td class="audit-cell"><span class="badge badge-ai"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i>2 条异常</span><div class="audit-copy">AI 生成失败 1 条、并发冲突 1 条；成功事件保持不变</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260630-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待执行</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">待确认禁补</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">采购动作</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近业务事件：王敏于 07-06 10:05 整体通过建议</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">审核记录与固定规则事件完整</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260531-01" data-period="2026-05" data-action="止损 禁止补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 515 布乐迪忙碌屋益智玩具">
@@ -619,7 +619,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已确认禁补</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：陈雨欣于 06-27 14:20 记录经营结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260531-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260531-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260430-01" data-period="2026-04" data-action="加投 补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 515 布乐迪忙碌屋益智玩具">
@@ -628,7 +628,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已执行 · 已记录结果</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：刘思琪于 05-28 10:35 记录采购结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260430-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260430-01 / SPU 515"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="加投 补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 728 儿童磁力片进阶套装">
@@ -637,7 +637,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已执行 · 已记录结果</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：王嘉乐于 07-25 11:08 记录经营结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260630-01 / SPU 728"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-01 / SPU 728"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260531-01" data-period="2026-05" data-action="观察 不补货" data-review="已驳回" data-execution="已关闭" data-search="SPU 728 儿童磁力片进阶套装">
@@ -646,7 +646,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-neutral">已驳回</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已关闭</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">无采购任务</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step closed">主管驳回</span><span class="milestone-step">运营动作</span><span class="milestone-step">采购动作</span><span class="milestone-step closed">建议关闭</span></div><div class="milestone-time">最近业务事件：李明睿于 06-09 15:24 驳回建议</div></td>
                   <td class="audit-cell"><span class="badge badge-ai"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i>1 条异常</span><div class="audit-copy">存在 1 条重复请求，未改变审核结果</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260531-01 / SPU 728"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260531-01 / SPU 728"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 811 恐龙轨道车大冒险">
@@ -655,7 +655,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已确认禁补</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：刘思琪于 07-23 17:05 记录经营结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260630-01 / SPU 811"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-01 / SPU 811"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260531-01" data-period="2026-05" data-action="止损 禁止补货" data-review="已通过" data-execution="执行中" data-search="SPU 811 恐龙轨道车大冒险">
@@ -664,7 +664,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 结果未记录</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已确认禁补</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近业务事件：周倩于 06-15 10:20 确认禁补</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">历史保留当时未完成状态</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260531-01 / SPU 811"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260531-01 / SPU 811"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="止损 禁止补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 476 儿童医具角色扮演箱">
@@ -673,7 +673,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已确认禁补</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：陈雨欣于 07-21 09:46 记录经营结果</div></td>
                   <td class="audit-cell"><span class="badge badge-ai"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i>1 条异常</span><div class="audit-copy">存在 1 条越权拒绝，未影响成功事件</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260630-01 / SPU 476"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-01 / SPU 476"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260430-01" data-period="2026-04" data-action="观察 不生成" data-review="已通过" data-execution="已记录结果" data-search="SPU 632 木制厨房过家家套装">
@@ -682,7 +682,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">未生成</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：陈雨欣于 05-26 15:12 记录观察结果</div></td>
                   <td class="audit-cell"><span class="badge badge-ai"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i>1 条异常</span><div class="audit-copy">AI 内容未采用；固定规则事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260430-01 / SPU 632"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260430-01 / SPU 632"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260630-01" data-period="2026-06" data-action="加投 补货" data-review="已通过" data-execution="执行中" data-search="SPU 905 太空探索拼装积木">
@@ -691,7 +691,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 结果未记录</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已执行 · 结果未记录</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近业务事件：林晓云于 07-12 13:28 记录补货已执行</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">历史保留当时执行进度</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260630-01 / SPU 905"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-01 / SPU 905"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260531-01" data-period="2026-05" data-action="观察 不补货" data-review="已通过" data-execution="已记录结果" data-search="SPU 720 森林动物叠叠乐">
@@ -700,7 +700,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已执行 · 已记录结果</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">无采购任务</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：王嘉乐于 06-24 16:05 记录观察结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260531-01 / SPU 720"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260531-01 / SPU 720"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-batch="BATCH-20260430-01" data-period="2026-04" data-action="补货 维持" data-review="已通过" data-execution="已记录结果" data-search="SPU 845 百变齿轮工程车">
@@ -709,7 +709,7 @@
                   <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">无经营任务</span></div><div class="status-row"><span class="status-label">采购动作</span><span class="status-value">已执行 · 已记录结果</span></div></td>
                   <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step done">采购动作</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近业务事件：林晓云于 05-18 10:44 记录采购结果</div></td>
                   <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">业务主线事件完整</div></td>
-                  <td><button class="link-button" type="button" data-record="BATCH-20260430-01 / SPU 845"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260430-01 / SPU 845"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
               </tbody>
             </table>

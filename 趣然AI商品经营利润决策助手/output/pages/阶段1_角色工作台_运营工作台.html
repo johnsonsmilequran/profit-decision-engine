@@ -564,16 +564,16 @@
             <i class="ph ph-squares-four text-lg" aria-hidden="true"></i>
             <span class="nav-label">工作台</span>
           </a>
-          <a class="nav-link prototype-link" href="#tasks" data-message="将进入当前批次行动清单">
+          <a class="nav-link prototype-link" href="阶段1_行动中心_行动清单页.html" data-message="将进入当前批次行动清单">
             <i class="ph ph-list-checks text-lg" aria-hidden="true"></i>
             <span class="nav-label">行动中心</span>
             <span class="nav-badge">16</span>
           </a>
-          <a class="nav-link prototype-link" href="#batch" data-message="将进入数据批次列表">
+          <a class="nav-link prototype-link" href="阶段1_数据批次_数据批次列表页.html" data-message="将进入数据批次列表">
             <i class="ph ph-database text-lg" aria-hidden="true"></i>
             <span class="nav-label">数据批次</span>
           </a>
-          <a class="nav-link prototype-link" href="#recent" data-message="将进入历史与追溯列表">
+          <a class="nav-link prototype-link" href="阶段1_历史追溯_历史与追溯列表页.html" data-message="将进入历史与追溯列表">
             <i class="ph ph-clock-counter-clockwise text-lg" aria-hidden="true"></i>
             <span class="nav-label">历史与追溯</span>
           </a>
@@ -604,8 +604,8 @@
       <header class="topbar flex items-center justify-between px-5 xl:px-7" aria-label="业务上下文">
         <div class="flex min-w-0 items-center gap-2">
           <span class="context-chip"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
-          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>TOY-20260706-01</span>
-          <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>业务期间 2026.06.01—06.30</span>
+          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>BATCH-20260630-01</span>
+          <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>业务期间 2026-06-01—2026-06-30</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="context-chip"><span class="status-dot" aria-hidden="true"></span>角色：运营</span>
@@ -623,7 +623,7 @@
           </div>
           <div class="flex items-center gap-2">
             <button id="refreshButton" class="btn-secondary" type="button"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>刷新状态</button>
-            <button class="btn-primary prototype-link" type="button" data-message="将进入数据批次导入页"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入新批次</button>
+            <button class="btn-primary prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将进入数据批次导入页"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入新批次</button>
           </div>
         </section>
 
@@ -636,10 +636,10 @@
               </div>
               <h2 id="batch-heading" class="mt-3 text-lg font-bold">当前经营批次</h2>
               <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span class="mono text-lg font-bold">TOY-20260706-01</span>
-                <span class="meta">规则版本 <span class="mono">RULE-1.3.0</span></span>
+                <span class="mono text-lg font-bold">BATCH-20260630-01</span>
+                <span class="meta">规则版本 <span class="mono">RULE-V1.0</span></span>
               </div>
-              <p class="muted mt-2 text-sm">数据期间 2026.06.01—06.30 · 业务截止日 2026.06.30 · 工作台更新于 2026.08.04 09:35</p>
+              <p class="muted mt-2 text-sm">数据期间 2026-06-01—2026-06-30 · 业务截止日 2026-06-30 · 工作台更新于 2026.08.04 09:35</p>
             </div>
             <div class="col-span-5 flex items-center">
               <div class="grid w-full grid-cols-[auto_1fr_auto_1fr_auto_1fr_auto] items-center gap-2" aria-label="导入处理进度">
@@ -653,7 +653,7 @@
               </div>
             </div>
             <div class="col-span-2 flex items-center justify-end">
-              <button class="btn-secondary prototype-link" type="button" data-message="将打开当前批次详情">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+              <button class="btn-secondary prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将打开当前批次详情">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
             </div>
           </div>
         </section>
@@ -692,7 +692,7 @@
                 <h2 id="tasks-heading" class="section-title">优先经营待办</h2>
                 <p class="meta mt-1">沿用固定层级：清仓 → 止损 → 观察 → 加投；AI 不改变排序</p>
               </div>
-              <button class="link-button prototype-link" type="button" data-message="将打开当前批次全部 12 条经营待办">查看全部行动<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+              <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-message="将打开当前批次全部 12 条经营待办">查看全部行动<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
             </div>
             <div class="flex flex-wrap items-center justify-between gap-3 px-5 pb-4">
               <div class="flex flex-wrap gap-2" role="group" aria-label="按经营动作筛选">
@@ -722,14 +722,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="task-row" data-action="clear" data-search="spu-515 布乐迪 忙碌屋">
-                    <td><div class="product-name">布乐迪 忙碌屋</div><div class="meta mono">SPU-515</div></td>
+                  <tr class="task-row" data-action="clear" data-search="spu-515 布乐迪忙碌屋益智玩具">
+                    <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515</div></td>
                     <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
-                    <td><div class="numeric font-semibold">净销售额 13.8 万</div><div class="evidence">经营准利润率 -6.4% · 品退率 1.2%</div></td>
-                    <td><div class="font-semibold">库存 3,186 件</div><div class="evidence">可售 126 天 · 已生成禁补</div></td>
-                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
+                    <td><div class="numeric font-semibold">上月净销售额 86,240 元</div><div class="evidence">经营准利润率 -12.8% · 近 7 天品退率未校验</div></td>
+                    <td><div class="font-semibold">仓内 3,000 件 · 在途 260 件</div><div class="evidence">近 14 天销量 112 件 · 日均 8.0 件 · 可售 407.5 天 · 禁止补货</div></td>
+                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过 · 采购待确认禁补</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="布乐迪 忙碌屋">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="布乐迪忙碌屋益智玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="clear" data-search="spu-676 遥控攀爬车">
                     <td><div class="product-name">遥控攀爬车</div><div class="meta mono">SPU-676</div></td>
@@ -738,7 +738,7 @@
                     <td><div class="font-semibold">库存 824 件</div><div class="evidence">可售 95 天 · 已生成禁补</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="遥控攀爬车">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="遥控攀爬车">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="stop" data-search="spu-642 儿童电钻工具箱">
                     <td><div class="product-name">儿童电钻工具箱</div><div class="meta mono">SPU-642</div></td>
@@ -747,7 +747,7 @@
                     <td><div class="font-semibold">库存 1,104 件</div><div class="evidence">可售 71 天 · 已生成禁补</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="儿童电钻工具箱">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童电钻工具箱">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="stop" data-search="spu-734 桌面足球弹射玩具">
                     <td><div class="product-name">桌面足球弹射玩具</div><div class="meta mono">SPU-734</div></td>
@@ -756,7 +756,7 @@
                     <td><div class="font-semibold">库存 516 件</div><div class="evidence">可售 49 天 · 已生成禁补</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="桌面足球弹射玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="桌面足球弹射玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="stop" data-search="spu-560 过家家收银台">
                     <td><div class="product-name">过家家收银台</div><div class="meta mono">SPU-560</div></td>
@@ -765,7 +765,7 @@
                     <td><div class="font-semibold">库存 1,960 件</div><div class="evidence">可售 83 天 · 已生成禁补</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="过家家收银台">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="过家家收银台">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="watch" data-search="spu-903 木质医生玩具">
                     <td><div class="product-name">木质医生玩具</div><div class="meta mono">SPU-903</div></td>
@@ -774,7 +774,7 @@
                     <td><div class="font-semibold">库存 445 件</div><div class="evidence">可售 36 天 · 暂不补货</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="木质医生玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="木质医生玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="watch" data-search="spu-991 软胶恐龙套装">
                     <td><div class="product-name">软胶恐龙套装</div><div class="meta mono">SPU-991</div></td>
@@ -783,7 +783,7 @@
                     <td><div class="font-semibold">库存 392 件</div><div class="evidence">可售 41 天 · 暂不补货</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="软胶恐龙套装">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="软胶恐龙套装">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="invest" data-search="spu-728 磁力片城堡">
                     <td><div class="product-name">磁力片城堡</div><div class="meta mono">SPU-728</div></td>
@@ -792,7 +792,7 @@
                     <td><div class="font-semibold">库存 608 件</div><div class="evidence">可售 22 天 · 已生成补货</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="磁力片城堡">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="磁力片城堡">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="invest" data-search="spu-881 蒙氏忙碌板">
                     <td><div class="product-name">蒙氏忙碌板</div><div class="meta mono">SPU-881</div></td>
@@ -801,7 +801,7 @@
                     <td><div class="font-semibold">库存 344 件</div><div class="evidence">可售 24 天 · 已生成补货</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="蒙氏忙碌板">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="蒙氏忙碌板">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                   <tr class="task-row" data-action="invest" data-search="spu-845 儿童拍立得相机">
                     <td><div class="product-name">儿童拍立得相机</div><div class="meta mono">SPU-845</div></td>
@@ -810,7 +810,7 @@
                     <td><div class="font-semibold">库存 286 件</div><div class="evidence">可售 28 天 · 新品暂不补货</div></td>
                     <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
-                    <td><button class="link-button view-task" type="button" data-name="儿童拍立得相机">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童拍立得相机">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
                 </tbody>
               </table>
@@ -838,22 +838,22 @@
                 <article class="result-item">
                   <div class="flex items-start justify-between gap-3"><div><div class="font-semibold">儿童画板</div><div class="meta mono">SPU-360 · 加投</div></div><span class="badge badge-invest">已执行 6 天</span></div>
                   <p class="muted mt-2 text-sm">待补销售额、经营准利润率及推广变化结果</p>
-                  <button class="link-button view-task mt-1" type="button" data-name="儿童画板">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+                  <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童画板">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
                 </article>
                 <article class="result-item">
                   <div class="flex items-start justify-between gap-3"><div><div class="font-semibold">流体熊 DIY 套装</div><div class="meta mono">SPU-911 · 推广止损</div></div><span class="badge badge-stop">已执行 4 天</span></div>
                   <p class="muted mt-2 text-sm">待补推广费用、净销售额及利润变化结果</p>
-                  <button class="link-button view-task mt-1" type="button" data-name="流体熊 DIY 套装">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+                  <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="流体熊 DIY 套装">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
                 </article>
                 <article class="result-item">
                   <div class="flex items-start justify-between gap-3"><div><div class="font-semibold">折叠篮球架</div><div class="meta mono">SPU-408 · 清仓</div></div><span class="badge badge-clear">已执行 3 天</span></div>
                   <p class="muted mt-2 text-sm">待补清仓销量、库存余额和利润损失结果</p>
-                  <button class="link-button view-task mt-1" type="button" data-name="折叠篮球架">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+                  <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="折叠篮球架">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
                 </article>
                 <article class="result-item">
                   <div class="flex items-start justify-between gap-3"><div><div class="font-semibold">迷你厨房套装</div><div class="meta mono">SPU-822 · 观察</div></div><span class="badge badge-watch">已执行 2 天</span></div>
                   <p class="muted mt-2 text-sm">待补观察周期、内容优化动作和品退变化</p>
-                  <button class="link-button view-task mt-1" type="button" data-name="迷你厨房套装">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+                  <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="迷你厨房套装">记录经营结果<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
                 </article>
               </div>
             </section>
@@ -864,7 +864,7 @@
                   <h2 id="limits-heading" class="section-title">数据限制</h2>
                   <p class="meta mt-1">缺失不等于 0，受阻判断已明确标记</p>
                 </div>
-                <button class="link-button prototype-link" type="button" data-message="将打开批次数据限制明细">查看明细<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+                <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将打开批次数据限制明细">查看明细<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
               </div>
               <div class="mt-4">
                 <article class="limit-item flex gap-3">
@@ -890,7 +890,7 @@
               <h2 id="recent-heading" class="section-title">最近处理</h2>
               <p class="meta mt-1">本人最近完成的经营动作与结果记录，可回到原建议追溯</p>
             </div>
-            <button class="link-button prototype-link" type="button" data-message="将进入历史与追溯列表">查看历史<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+            <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-message="将进入历史与追溯列表">查看历史<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
           </div>
           <div class="mt-3 grid grid-cols-5 gap-5">
             <article class="event-item">
@@ -898,35 +898,35 @@
               <div class="mt-1 font-semibold">磁力轨道车</div>
               <div class="meta mono">SPU-701</div>
               <p class="muted mt-2 text-sm">加投：待执行 → 已执行</p>
-              <button class="link-button view-task mt-1" type="button" data-name="磁力轨道车">查看记录</button>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="磁力轨道车">查看记录</button>
             </article>
             <article class="event-item">
               <div class="meta">昨天 17:42</div>
               <div class="mt-1 font-semibold">儿童洗车轨道</div>
               <div class="meta mono">SPU-612</div>
               <p class="muted mt-2 text-sm">止损：已执行 → 已记录结果</p>
-              <button class="link-button view-task mt-1" type="button" data-name="儿童洗车轨道">查看记录</button>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童洗车轨道">查看记录</button>
             </article>
             <article class="event-item">
               <div class="meta">08.02 15:26</div>
               <div class="mt-1 font-semibold">木质拼图礼盒</div>
               <div class="meta mono">SPU-439</div>
               <p class="muted mt-2 text-sm">观察：待执行 → 已执行</p>
-              <button class="link-button view-task mt-1" type="button" data-name="木质拼图礼盒">查看记录</button>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="木质拼图礼盒">查看记录</button>
             </article>
             <article class="event-item">
               <div class="meta">08.01 11:08</div>
               <div class="mt-1 font-semibold">恐龙考古挖掘</div>
               <div class="meta mono">SPU-558</div>
               <p class="muted mt-2 text-sm">清仓：待执行 → 已执行</p>
-              <button class="link-button view-task mt-1" type="button" data-name="恐龙考古挖掘">查看记录</button>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="恐龙考古挖掘">查看记录</button>
             </article>
             <article class="event-item">
               <div class="meta">07.31 16:35</div>
               <div class="mt-1 font-semibold">儿童电子琴</div>
               <div class="meta mono">SPU-287</div>
               <p class="muted mt-2 text-sm">加投：已执行 → 已记录结果</p>
-              <button class="link-button view-task mt-1" type="button" data-name="儿童电子琴">查看记录</button>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童电子琴">查看记录</button>
             </article>
           </div>
         </section>
@@ -985,6 +985,8 @@
 
     document.querySelectorAll('.prototype-link').forEach((element) => {
       element.addEventListener('click', (event) => {
+        const href = element.getAttribute('href');
+        if ((href && href.endsWith('.html')) || element.hasAttribute('onclick')) return;
         event.preventDefault();
         showToast(element.dataset.message || '将进入对应业务页面');
       });

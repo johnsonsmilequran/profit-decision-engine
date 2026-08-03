@@ -615,7 +615,7 @@
 
       <nav class="flex flex-col gap-2 px-3 mt-5" aria-label="主要导航">
         <div class="nav-label">经营任务</div>
-        <button class="nav-button" type="button" data-nav="工作台">
+        <button class="nav-button" type="button" onclick="location.href='阶段1_角色工作台_运营工作台.html'" data-nav="工作台">
           <i class="ph-bold ph-squares-four" aria-hidden="true"></i>
           <span class="nav-text">工作台</span>
         </button>
@@ -624,11 +624,11 @@
           <span class="nav-text">行动中心</span>
           <span class="nav-count">10</span>
         </button>
-        <button class="nav-button" type="button" data-nav="数据批次">
+        <button class="nav-button" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次">
           <i class="ph-bold ph-stack" aria-hidden="true"></i>
           <span class="nav-text">数据批次</span>
         </button>
-        <button class="nav-button" type="button" data-nav="历史与追溯">
+        <button class="nav-button" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-nav="历史与追溯">
           <i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i>
           <span class="nav-text">历史与追溯</span>
         </button>
@@ -840,7 +840,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 待确认</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>近 7 天品退率未校验，不影响利润清仓结论</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="owner-time">更新于<br><span class="mono">08-03 09:26</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 515"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 515"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="清仓 禁止补货" data-store="趣然拼多多旗舰店" data-owner="刘思琪" data-review="已通过" data-execution="待执行" data-search="SPU 811 恐龙轨道车大冒险">
@@ -849,7 +849,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 待确认</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>关键判断字段完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">刘思琪</div><div class="owner-time">更新于<br><span class="mono">08-03 09:24</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 811"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 811"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="processing" data-action="清仓 禁止补货" data-store="布乐迪京东自营店" data-owner="王嘉乐" data-review="已通过" data-execution="待记录结果" data-search="SPU 389 小熊音乐安抚玩偶" hidden>
@@ -858,7 +858,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">运营 · 已执行，待记录结果</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 已确认禁补</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-failed">生成失败</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>固定规则与动作仍可正常使用</span></div></td>
                   <td class="owner-cell"><div class="owner-name">王嘉乐</div><div class="owner-time">更新于<br><span class="mono">08-02 17:30</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 389"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 389"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="completed" data-action="清仓 禁止补货" data-store="趣然抖音旗舰店" data-owner="陈雨欣" data-review="已驳回" data-execution="已记录结果" data-search="SPU 418 双面画板学习桌" hidden>
@@ -867,7 +867,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">运营 · 已关闭</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 已关闭</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-neutral">已驳回</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>建议按审核结论关闭</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="owner-time">完成于<br><span class="mono">08-02 14:18</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 418"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 418"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="止损 禁止补货" data-store="布乐迪京东自营店" data-owner="陈雨欣" data-review="已通过" data-execution="待执行" data-search="SPU 476 儿童医具角色扮演箱">
@@ -876,7 +876,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-stop">止损</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 待确认</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>关键判断字段完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="owner-time">更新于<br><span class="mono">08-03 09:18</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 476"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 476"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="止损 禁止补货" data-store="趣然抖音旗舰店" data-owner="刘思琪" data-review="已通过" data-execution="待执行" data-search="SPU 563 早教认知忙碌板">
@@ -885,7 +885,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-stop">止损</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">采购计划 · 待确认</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">生成中</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>在途库存未提供；不影响禁补结论</span></div></td>
                   <td class="owner-cell"><div class="owner-name">刘思琪</div><div class="owner-time">更新于<br><span class="mono">08-03 09:15</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 563"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 563"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="观察 不补货" data-store="趣然天猫旗舰店" data-owner="王嘉乐" data-review="已通过" data-execution="待执行" data-search="SPU 720 森林动物叠叠乐">
@@ -894,7 +894,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-watch">观察</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-neutral">不补货</span><div class="track-owner">可售 45.2 天</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>关键判断字段完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">王嘉乐</div><div class="owner-time">更新于<br><span class="mono">08-03 09:12</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 720"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 720"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="观察 不生成" data-store="布乐迪京东自营店" data-owner="陈雨欣" data-review="已通过" data-execution="待执行" data-search="SPU 632 木制厨房过家家套装">
@@ -903,7 +903,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-watch">观察</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-neutral">不生成</span><div class="track-owner">缺少近期销量</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-failed">内容未采用</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>近 14 天销量未提供，无法计算可售天数</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="owner-time">更新于<br><span class="mono">08-03 09:09</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 632"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 632"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="completed" data-action="观察 不补货" data-store="趣然拼多多旗舰店" data-owner="刘思琪" data-review="已通过" data-execution="已记录结果" data-search="SPU 584 工程车收纳停车场" hidden>
@@ -912,7 +912,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-watch">观察</span><div class="track-owner">运营 · 已记录结果</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-neutral">不补货</span><div class="track-owner">可售 38.6 天</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>结果记录完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">刘思琪</div><div class="owner-time">完成于<br><span class="mono">08-01 17:08</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 584"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 584"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="加投 补货" data-store="趣然抖音旗舰店" data-owner="刘思琪" data-review="已通过" data-execution="待执行" data-search="SPU 728 儿童磁力片进阶套装">
@@ -921,7 +921,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-invest">加投</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-replenish">补货</span><div class="track-owner">采购计划 · 待执行</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>关键判断字段完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">刘思琪</div><div class="owner-time">更新于<br><span class="mono">08-03 09:06</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 728"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 728"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="加投 补货" data-store="趣然天猫旗舰店" data-owner="王嘉乐" data-review="已通过" data-execution="待执行" data-search="SPU 905 太空探索拼装积木">
@@ -930,7 +930,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-invest">加投</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-replenish">补货</span><div class="track-owner">采购计划 · 待执行</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">生成中</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>固定规则已就绪，可先处理动作</span></div></td>
                   <td class="owner-cell"><div class="owner-name">王嘉乐</div><div class="owner-time">更新于<br><span class="mono">08-03 09:03</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 905"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 905"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="加投 不补货" data-store="趣然天猫旗舰店" data-owner="陈雨欣" data-review="已通过" data-execution="待执行" data-search="SPU 691 城市交通拼图礼盒">
@@ -939,7 +939,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-invest">加投</span><div class="track-owner">运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-neutral">不补货</span><div class="track-owner">库存充足</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>关键判断字段完整</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="owner-time">更新于<br><span class="mono">08-03 08:58</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 691"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 691"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="processing" data-action="加投 补货" data-store="布乐迪京东自营店" data-owner="王嘉乐" data-review="已通过" data-execution="待记录结果" data-search="SPU 937 海洋生物百科投影仪" hidden>
@@ -948,7 +948,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-invest">加投</span><div class="track-owner">运营 · 已执行，待记录结果</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-replenish">补货</span><div class="track-owner">采购计划 · 已执行</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>等待经营结果记录</span></div></td>
                   <td class="owner-cell"><div class="owner-name">王嘉乐</div><div class="owner-time">更新于<br><span class="mono">08-02 11:35</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 937"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 937"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="补货 维持" data-store="趣然拼多多旗舰店" data-owner="刘思琪" data-review="已通过" data-execution="待执行" data-search="SPU 845 百变齿轮工程车">
@@ -957,7 +957,7 @@
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-neutral">维持</span><div class="track-owner">无经营执行任务</div></div></div><div class="track"><span class="track-label">库存动作</span><div><span class="badge badge-replenish">补货</span><div class="track-owner">采购计划 · 待执行</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation clear"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span>仅采购动作待处理</span></div></td>
                   <td class="owner-cell"><div class="owner-name">刘思琪</div><div class="owner-time">更新于<br><span class="mono">08-03 08:52</span></div></td>
-                  <td><button class="link-button" type="button" data-spu="SPU 845"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 845"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
               </tbody>
             </table>

@@ -874,9 +874,9 @@
         <p class="nav-label">任务导航</p>
         <ul class="nav-list">
           <li><button class="nav-item" type="button" aria-current="page" data-nav="工作台"><i class="ph ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button></li>
-          <li><button class="nav-item" type="button" data-nav="行动中心"><i class="ph ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button></li>
-          <li><button class="nav-item" type="button" data-nav="数据批次"><i class="ph ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button></li>
-          <li><button class="nav-item" type="button" data-nav="历史与追溯"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="行动中心"><i class="ph ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次"><i class="ph ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-nav="历史与追溯"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button></li>
         </ul>
       </nav>
 
@@ -899,7 +899,7 @@
         </div>
         <div class="context-item">
           <span>当前成功批次</span>
-          <strong class="mono">BATCH-2026-W31</strong>
+          <strong class="mono">BATCH-20260630-01</strong>
         </div>
         <div class="context-item">
           <span>当前角色</span>
@@ -932,13 +932,13 @@
             <span class="batch-icon" aria-hidden="true"><i class="ph ph-seal-check"></i></span>
             <div>
               <span id="batch-context-title">当前审核批次</span>
-              <strong class="mono">BATCH-2026-W31 · 已生成行动清单</strong>
+              <strong class="mono">BATCH-20260630-01 · 已生成行动清单</strong>
             </div>
           </div>
           <div class="batch-meta"><span>事业部</span><strong>玩具事业部</strong></div>
           <div class="batch-meta"><span>业务期间</span><strong class="mono">2026-06-01 — 06-30</strong></div>
-          <div class="batch-meta"><span>业务截止日</span><strong class="mono">2026-08-03</strong></div>
-          <div class="batch-meta"><span>规则版本</span><strong class="mono">RULE-V1.3</strong></div>
+          <div class="batch-meta"><span>业务截止日</span><strong class="mono">2026-06-30</strong></div>
+          <div class="batch-meta"><span>规则版本</span><strong class="mono">RULE-V1.0</strong></div>
         </section>
 
         <section class="summary-grid" aria-label="审核待办摘要">
@@ -962,7 +962,7 @@
         <section class="section" aria-labelledby="risk-title">
           <div class="section-heading">
             <div class="section-title-wrap"><h2 id="risk-title">动作风险分布</h2><p>按唯一经营主动作统计，共 12 条待审核</p></div>
-            <button class="link-button" type="button" data-nav="查看全部待审核"><span>查看全部待审核</span><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+            <button class="link-button" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="查看全部待审核"><span>查看全部待审核</span><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
           </div>
           <div class="risk-grid">
             <button class="risk-card risk-clear" type="button" aria-pressed="false" data-risk="清仓">
@@ -1004,40 +1004,40 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="spu-cell"><strong>布乐迪忙碌屋</strong><span>SPU-515</span></td><td>布乐迪旗舰店</td><td>周妍</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 16.28 万元，经营准利润率 -4.8%，命中清仓优先级</td><td class="mono dim">08-04 09:18</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="布乐迪忙碌屋"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>益智轨道拼装套装</strong><span>SPU-967</span></td><td>趣然玩具馆</td><td>高沐</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">非新品，上月净销售额 1.92 万元，低于 2 万元淘汰边界</td><td class="mono dim">08-04 09:18</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="益智轨道拼装套装"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>木制磁力轨道积木</strong><span>SPU-602</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">非新品，上月净销售额 1.87 万元，低于 2 万元淘汰边界</td><td class="mono dim">08-04 09:18</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="木制磁力轨道积木"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>木制磁力轨道积木</strong><span>SPU-602</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">非新品，上月净销售额 1.87 万元，低于 2 万元淘汰边界</td><td class="mono dim">08-04 09:18</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="木制磁力轨道积木"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>儿童过家家厨房套装</strong><span>SPU-728</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 11.46 万元，经营准利润率 -2.3%，清仓覆盖止损</td><td class="mono dim">08-04 09:19</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="儿童过家家厨房套装"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>儿童过家家厨房套装</strong><span>SPU-728</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-clear"><i class="ph ph-trash"></i>清仓</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 11.46 万元，经营准利润率 -2.3%，清仓覆盖止损</td><td class="mono dim">08-04 09:19</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="儿童过家家厨房套装"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>磁力片百变工程车</strong><span>SPU-821</span></td><td>趣然玩具馆</td><td>高沐</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 12.83 万元，经营准利润率 3.6%，低于大爆款止损线</td><td class="mono dim">08-04 09:19</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="磁力片百变工程车"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>磁力片百变工程车</strong><span>SPU-821</span></td><td>趣然玩具馆</td><td>高沐</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 12.83 万元，经营准利润率 3.6%，低于大爆款止损线</td><td class="mono dim">08-04 09:19</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="磁力片百变工程车"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>小小医生手提箱</strong><span>SPU-408</span></td><td>布乐迪旗舰店</td><td>周妍</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 6.84 万元，经营准利润率 8.4%，低于小爆款止损线</td><td class="mono dim">08-04 09:20</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="小小医生手提箱"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>小小医生手提箱</strong><span>SPU-408</span></td><td>布乐迪旗舰店</td><td>周妍</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 6.84 万元，经营准利润率 8.4%，低于小爆款止损线</td><td class="mono dim">08-04 09:20</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="小小医生手提箱"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>恐龙挖掘化石盲盒</strong><span>SPU-635</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 2.76 万元，经营准利润率 7.9%，低于小爆款止损线</td><td class="mono dim">08-04 09:20</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="恐龙挖掘化石盲盒"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>恐龙挖掘化石盲盒</strong><span>SPU-635</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 2.76 万元，经营准利润率 7.9%，低于小爆款止损线</td><td class="mono dim">08-04 09:20</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="恐龙挖掘化石盲盒"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>木制敲琴绕珠</strong><span>SPU-276</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 11.42 万元，经营准利润率 4.6%，低于大爆款止损线</td><td class="mono dim">08-04 09:21</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="木制敲琴绕珠"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>木制敲琴绕珠</strong><span>SPU-276</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-stop"><i class="ph ph-hand-palm"></i>止损</span></td><td><span class="badge badge-ban"><i class="ph ph-prohibit"></i>禁止补货</span></td><td class="evidence">上月净销售额 11.42 万元，经营准利润率 4.6%，低于大爆款止损线</td><td class="mono dim">08-04 09:21</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="木制敲琴绕珠"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>安静书交通认知版</strong><span>SPU-919</span></td><td>布乐迪旗舰店</td><td>高沐</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-package"></i>补货</span></td><td class="evidence">近 7 天品退率 2.3%，高于 1.5%；库存可售 22 天，触发补货</td><td class="mono dim">08-04 09:21</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="安静书交通认知版"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>安静书交通认知版</strong><span>SPU-919</span></td><td>布乐迪旗舰店</td><td>高沐</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-package"></i>补货</span></td><td class="evidence">近 7 天品退率 2.3%，高于 1.5%；库存可售 22 天，触发补货</td><td class="mono dim">08-04 09:21</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="安静书交通认知版"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>儿童工具箱组合</strong><span>SPU-731</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-minus-circle"></i>不补货</span></td><td class="evidence">近 7 天品退率 1.9%，高于 1.5%；库存可售 47 天</td><td class="mono dim">08-04 09:22</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="儿童工具箱组合"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>儿童工具箱组合</strong><span>SPU-731</span></td><td>好奇星球店</td><td>谢雨</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-minus-circle"></i>不补货</span></td><td class="evidence">近 7 天品退率 1.9%，高于 1.5%；库存可售 47 天</td><td class="mono dim">08-04 09:22</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="儿童工具箱组合"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                   <tr>
-                    <td class="spu-cell"><strong>轨道滚球积木套装</strong><span>SPU-566</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-minus-circle"></i>不补货</span></td><td class="evidence">近 7 天品退率 1.8%，高于 1.5%；库存可售 53 天</td><td class="mono dim">08-04 09:22</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" data-review="轨道滚球积木套装"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
+                    <td class="spu-cell"><strong>轨道滚球积木套装</strong><span>SPU-566</span></td><td>趣然玩具馆</td><td>陈诺</td><td><span class="badge badge-watch"><i class="ph ph-eye"></i>观察</span></td><td><span class="badge badge-stock"><i class="ph ph-minus-circle"></i>不补货</span></td><td class="evidence">近 7 天品退率 1.8%，高于 1.5%；库存可售 53 天</td><td class="mono dim">08-04 09:22</td><td><span class="badge badge-pending">待审核</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="轨道滚球积木套装"><span>查看并审核</span><i class="ph ph-arrow-right"></i></button></td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div class="table-footer">
-              <span>显示 1–10 条，共 12 条 · 当前批次 <span class="mono">BATCH-2026-W31</span></span>
+              <span>显示 1–10 条，共 12 条 · 当前批次 <span class="mono">BATCH-20260630-01</span></span>
               <div class="pager" aria-label="待审核建议分页">
                 <button class="pager-button" type="button" aria-label="上一页" disabled><i class="ph ph-caret-left"></i></button>
                 <span>第 1 / 2 页</span>
@@ -1049,13 +1049,13 @@
 
         <section class="lower-grid" aria-label="审核追踪与提醒">
           <article class="panel-card">
-            <div class="panel-head"><div><h2>最近审核</h2><span>本批次最近完成的建议级审核</span></div><button class="text-action" type="button" data-nav="历史与追溯">查看历史与追溯</button></div>
+            <div class="panel-head"><div><h2>最近审核</h2><span>本批次最近完成的建议级审核</span></div><button class="text-action" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-nav="历史与追溯">查看历史与追溯</button></div>
             <ul class="review-list">
-              <li class="review-item"><div><strong>绘画投影桌</strong><small class="mono">SPU-884</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 10:16</small></div><span class="review-note">规则证据完整，同意同时激活经营与库存动作</span><button class="row-link" type="button" aria-label="查看绘画投影桌审核详情" data-review="绘画投影桌"><i class="ph ph-arrow-up-right"></i></button></li>
-              <li class="review-item"><div><strong>迷你超市收银台</strong><small class="mono">SPU-703</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 10:02</small></div><span class="review-note">加投与补货条件均满足，进入双轨执行</span><button class="row-link" type="button" aria-label="查看迷你超市收银台审核详情" data-review="迷你超市收银台"><i class="ph ph-arrow-up-right"></i></button></li>
-              <li class="review-item"><div><strong>双语认知卡片机</strong><small class="mono">SPU-312</small></div><span class="result-rejected">已驳回</span><div><strong>林峰</strong><small class="mono">08-04 09:54</small></div><span class="review-note">品退统计尚未完成核验，需补齐后再判断</span><button class="row-link" type="button" aria-label="查看双语认知卡片机审核详情" data-review="双语认知卡片机"><i class="ph ph-arrow-up-right"></i></button></li>
-              <li class="review-item"><div><strong>木制拼图农场</strong><small class="mono">SPU-650</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 09:41</small></div><span class="review-note">止损与禁补联动明确，同意进入执行</span><button class="row-link" type="button" aria-label="查看木制拼图农场审核详情" data-review="木制拼图农场"><i class="ph ph-arrow-up-right"></i></button></li>
-              <li class="review-item"><div><strong>婴儿触感布书</strong><small class="mono">SPU-205</small></div><span class="result-rejected">已驳回</span><div><strong>林峰</strong><small class="mono">08-04 09:28</small></div><span class="review-note">上架日期缺少可信来源，无法确认新品阶段</span><button class="row-link" type="button" aria-label="查看婴儿触感布书审核详情" data-review="婴儿触感布书"><i class="ph ph-arrow-up-right"></i></button></li>
+              <li class="review-item"><div><strong>绘画投影桌</strong><small class="mono">SPU-884</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 10:16</small></div><span class="review-note">规则证据完整，同意同时激活经营与库存动作</span><button class="row-link" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" aria-label="查看绘画投影桌审核详情" data-review="绘画投影桌"><i class="ph ph-arrow-up-right"></i></button></li>
+              <li class="review-item"><div><strong>迷你超市收银台</strong><small class="mono">SPU-703</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 10:02</small></div><span class="review-note">加投与补货条件均满足，进入双轨执行</span><button class="row-link" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" aria-label="查看迷你超市收银台审核详情" data-review="迷你超市收银台"><i class="ph ph-arrow-up-right"></i></button></li>
+              <li class="review-item"><div><strong>双语认知卡片机</strong><small class="mono">SPU-312</small></div><span class="result-rejected">已驳回</span><div><strong>林峰</strong><small class="mono">08-04 09:54</small></div><span class="review-note">品退统计尚未完成核验，需补齐后再判断</span><button class="row-link" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" aria-label="查看双语认知卡片机审核详情" data-review="双语认知卡片机"><i class="ph ph-arrow-up-right"></i></button></li>
+              <li class="review-item"><div><strong>木制拼图农场</strong><small class="mono">SPU-650</small></div><span class="result-approved">已通过</span><div><strong>林峰</strong><small class="mono">08-04 09:41</small></div><span class="review-note">止损与禁补联动明确，同意进入执行</span><button class="row-link" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" aria-label="查看木制拼图农场审核详情" data-review="木制拼图农场"><i class="ph ph-arrow-up-right"></i></button></li>
+              <li class="review-item"><div><strong>婴儿触感布书</strong><small class="mono">SPU-205</small></div><span class="result-rejected">已驳回</span><div><strong>林峰</strong><small class="mono">08-04 09:28</small></div><span class="review-note">上架日期缺少可信来源，无法确认新品阶段</span><button class="row-link" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" aria-label="查看婴儿触感布书审核详情" data-review="婴儿触感布书"><i class="ph ph-arrow-up-right"></i></button></li>
             </ul>
           </article>
 
@@ -1065,11 +1065,11 @@
               <ul class="alert-list">
                 <li class="alert-item">
                   <span class="alert-icon"><i class="ph ph-spinner-gap" aria-hidden="true"></i></span>
-                  <div><strong>新批次规则处理中</strong><p><span class="mono">BATCH-2026-W32</span> 已完成校验，正在生成规则结论；当前工作台仍展示上一成功批次。</p><div class="alert-meta"><span class="mono">10:24</span><button class="text-action" type="button" data-nav="数据批次">查看批次状态</button></div></div>
+                  <div><strong>新批次规则处理中</strong><p><span class="mono">BATCH-20260707-01</span> 已完成校验，正在生成规则结论；当前工作台仍展示上一成功批次。</p><div class="alert-meta"><span class="mono">10:24</span><button class="text-action" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次">查看批次状态</button></div></div>
                 </li>
                 <li class="alert-item conflict">
                   <span class="alert-icon"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i></span>
-                  <div><strong>1 条建议状态已变化</strong><p>“木制拼图农场”已由林峰于 09:41 通过，旧页面中的审核入口已失效。</p><div class="alert-meta"><span>已同步最新状态</span><button class="text-action" type="button" data-review="木制拼图农场">查看详情</button></div></div>
+                  <div><strong>1 条建议状态已变化</strong><p>“木制拼图农场”已由林峰于 09:41 通过，旧页面中的审核入口已失效。</p><div class="alert-meta"><span>已同步最新状态</span><button class="text-action" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-review="木制拼图农场">查看详情</button></div></div>
                 </li>
               </ul>
             </article>
@@ -1077,9 +1077,9 @@
             <article class="panel-card">
               <div class="panel-head"><div><h2>任务去向</h2><span>按审核任务进入完整页面</span></div></div>
               <div class="destination-list">
-                <button class="destination" type="button" data-nav="行动中心"><span class="destination-copy"><i class="ph ph-list-checks"></i><span><strong>行动中心</strong><span>查看当前批次全部建议与条件筛选</span></span></span><i class="ph ph-caret-right"></i></button>
-                <button class="destination" type="button" data-nav="数据批次"><span class="destination-copy"><i class="ph ph-stack"></i><span><strong>数据批次</strong><span>核对批次处理状态与数据上下文</span></span></span><i class="ph ph-caret-right"></i></button>
-                <button class="destination" type="button" data-nav="历史与追溯"><span class="destination-copy"><i class="ph ph-clock-counter-clockwise"></i><span><strong>历史与追溯</strong><span>复核其他批次的建议与审核记录</span></span></span><i class="ph ph-caret-right"></i></button>
+                <button class="destination" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="行动中心"><span class="destination-copy"><i class="ph ph-list-checks"></i><span><strong>行动中心</strong><span>查看当前批次全部建议与条件筛选</span></span></span><i class="ph ph-caret-right"></i></button>
+                <button class="destination" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次"><span class="destination-copy"><i class="ph ph-stack"></i><span><strong>数据批次</strong><span>核对批次处理状态与数据上下文</span></span></span><i class="ph ph-caret-right"></i></button>
+                <button class="destination" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-nav="历史与追溯"><span class="destination-copy"><i class="ph ph-clock-counter-clockwise"></i><span><strong>历史与追溯</strong><span>复核其他批次的建议与审核记录</span></span></span><i class="ph ph-caret-right"></i></button>
               </div>
             </article>
           </div>

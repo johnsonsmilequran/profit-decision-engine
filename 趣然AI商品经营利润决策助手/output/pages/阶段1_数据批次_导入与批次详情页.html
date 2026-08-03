@@ -759,10 +759,10 @@
       <nav class="nav-section" aria-label="任务导航">
         <p class="nav-label">任务导航</p>
         <ul class="nav-list">
-          <li><button class="nav-item" type="button" data-nav="工作台"><i class="ph ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button></li>
-          <li><button class="nav-item" type="button" data-nav="行动中心"><i class="ph ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_角色工作台_运营工作台.html'" data-nav="工作台"><i class="ph ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="行动中心"><i class="ph ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button></li>
           <li><button class="nav-item" type="button" aria-current="page" data-nav="数据批次"><i class="ph ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button></li>
-          <li><button class="nav-item" type="button" data-nav="历史与追溯"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button></li>
+          <li><button class="nav-item" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-nav="历史与追溯"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button></li>
         </ul>
       </nav>
       <div class="sidebar-foot"><div class="role-card"><span class="avatar" aria-hidden="true">陈</span><div class="role-copy"><strong>陈诺</strong><span>运营</span></div></div></div>
@@ -772,7 +772,7 @@
       <div class="breadcrumbs"><span>数据批次</span><i class="ph ph-caret-right" aria-hidden="true"></i><strong>批次详情</strong></div>
       <div class="top-context">
         <span class="context-chip"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
-        <span class="context-chip"><i class="ph ph-stack" aria-hidden="true"></i><strong class="mono">BATCH-2026-W31</strong></span>
+        <span class="context-chip"><i class="ph ph-stack" aria-hidden="true"></i><strong class="mono">BATCH-20260630-01</strong></span>
         <div class="user-chip"><span class="avatar" aria-hidden="true">陈</span><div><strong>陈诺</strong><span>运营</span></div></div>
       </div>
     </header>
@@ -782,7 +782,7 @@
         <div class="page-heading">
           <div><p class="eyebrow">Batch Detail</p><h1>导入与批次详情</h1><p>核对导入声明、校验结果与冻结指标，并进入该批次唯一行动清单。</p></div>
           <div class="heading-actions">
-            <button class="btn-secondary" type="button" data-nav="数据批次列表"><i class="ph ph-arrow-left" aria-hidden="true"></i><span>返回批次列表</span></button>
+            <button class="btn-secondary" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次列表"><i class="ph ph-arrow-left" aria-hidden="true"></i><span>返回批次列表</span></button>
             <button class="btn-secondary" type="button" data-nav="新建导入"><i class="ph ph-upload-simple" aria-hidden="true"></i><span>新建导入</span></button>
           </div>
         </div>
@@ -790,22 +790,22 @@
         <section class="batch-hero" aria-labelledby="batch-title">
           <div class="hero-main">
             <div class="hero-top">
-              <div class="hero-id"><span class="hero-icon" aria-hidden="true"><i class="ph ph-seal-check"></i></span><div><span>不可变批次</span><strong id="batch-title" class="mono">BATCH-2026-W31</strong></div></div>
+              <div class="hero-id"><span class="hero-icon" aria-hidden="true"><i class="ph ph-seal-check"></i></span><div><span>不可变批次</span><strong id="batch-title" class="mono">BATCH-20260630-01</strong></div></div>
               <span class="status-badge status-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>行动清单已就绪</span>
             </div>
             <p class="hero-copy">该批次已完成文件接收、字段校验、指标冻结和固定规则处理。后续建议始终引用本批次快照，新文件与新批次不会覆盖这里的经营事实。</p>
             <div class="hero-meta">
               <div class="meta-item"><span>提交人</span><strong>陈诺 · 运营</strong></div>
-              <div class="meta-item"><span>提交时间</span><strong class="mono">2026-08-03 09:06</strong></div>
-              <div class="meta-item"><span>规则版本</span><strong class="mono">RULE-V1.3</strong></div>
-              <div class="meta-item"><span>清单生成时间</span><strong class="mono">2026-08-03 09:18</strong></div>
+              <div class="meta-item"><span>提交时间</span><strong class="mono">2026-06-30 09:06</strong></div>
+              <div class="meta-item"><span>规则版本</span><strong class="mono">RULE-V1.0</strong></div>
+              <div class="meta-item"><span>清单生成时间</span><strong class="mono">2026-06-30 09:18</strong></div>
             </div>
           </div>
           <aside class="hero-side">
             <p class="hero-side-label">NEXT ACTION</p>
             <h2>固定规则已完成</h2>
             <p>共形成 15 条 SPU 冻结快照，其中 4 条存在字段级降级；可判定事实均已进入唯一行动清单。</p>
-            <button class="btn-primary" type="button" data-nav="当前批次行动清单"><span>进入行动清单</span><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-primary" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="当前批次行动清单"><span>进入行动清单</span><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
           </aside>
         </section>
 
@@ -814,7 +814,7 @@
           <div class="import-card">
             <div class="field-readonly"><label>事业部</label><div class="field-value"><i class="ph ph-buildings" aria-hidden="true"></i><span>玩具事业部</span></div><p class="field-help">V0 试点经营范围</p></div>
             <div class="field-readonly"><label>完整自然月</label><div class="field-value mono"><i class="ph ph-calendar-blank" aria-hidden="true"></i><span>2026-06-01 — 2026-06-30</span></div><p class="field-help">上一个完整自然月，不按“上一周”解释</p></div>
-            <div class="field-readonly"><label>业务截止日</label><div class="field-value mono"><i class="ph ph-flag" aria-hidden="true"></i><span>2026-08-03</span></div><p class="field-help">用于新品年龄和滚动周期解释</p></div>
+            <div class="field-readonly"><label>业务截止日</label><div class="field-value mono"><i class="ph ph-flag" aria-hidden="true"></i><span>2026-06-30</span></div><p class="field-help">用于新品年龄和滚动周期解释</p></div>
             <div class="field-readonly"><label>XLSX 源文件</label><div class="field-value"><i class="ph ph-file-xls" aria-hidden="true"></i><span>商品链接.xlsx · 184 KB</span></div><p class="field-help">数据支持部门提供，文件身份已固化</p></div>
           </div>
         </section>
@@ -882,7 +882,7 @@
           <div class="section-heading"><div><h2 id="metric-title">SPU 冻结指标</h2><p>每行均绑定当前批次、实际期间、统计周期与质量状态。</p></div><span class="status-badge"><i class="ph ph-snowflake" aria-hidden="true"></i>15 条快照已冻结</span></div>
           <div class="metric-card">
             <div class="card-toolbar">
-              <div class="metric-toolbar-copy"><span>当前批次</span><strong class="mono">BATCH-2026-W31 · 规则 RULE-V1.3</strong></div>
+              <div class="metric-toolbar-copy"><span>当前批次</span><strong class="mono">BATCH-20260630-01 · 规则 RULE-V1.0</strong></div>
               <div class="toolbar-filters"><select class="select-field" aria-label="数据质量筛选"><option>全部数据质量</option><option>有效</option><option>字段级降级</option><option>待补数</option></select></div>
             </div>
             <div class="table-note"><i class="ph ph-info" aria-hidden="true"></i><span>经营准利润率采用源表值，不按旧公式重算。库存可售天数＝（仓内库存＋在途库存）÷最近 14 天平均日销量。</span></div>
@@ -890,7 +890,7 @@
               <table class="metric-table">
                 <thead><tr><th>SPU / 商品</th><th>店铺 / 责任运营</th><th>上架日期 / 类型</th><th>上月净销售额</th><th>经营准利润率</th><th>近 7 天品退率</th><th>库存可售天数</th><th>数据质量</th><th>证据</th></tr></thead>
                 <tbody>
-                  <tr><td class="spu-cell"><strong>布乐迪忙碌屋</strong><span>SPU-515</span></td><td>布乐迪旗舰店<br><span class="dim">周妍</span></td><td><span class="mono">2025-11-18</span><br><span class="dim">大爆款</span></td><td class="metric-number">¥162,800</td><td class="metric-number">-4.8%</td><td class="metric-number">1.2%</td><td class="metric-number">83 天</td><td><span class="quality-badge quality-good">有效</span></td><td><button class="evidence-button" type="button" data-evidence="SPU-515" data-name="布乐迪忙碌屋" data-row="商品明细!2" data-sales="¥162,800" data-profit="-4.8%" data-return="12 / 1,004 = 1.2%" data-inventory="仓内 2,620 + 在途 380；14 日均销 36.1" data-quality="全部关键字段有效"><i class="ph ph-magnifying-glass"></i>查看证据</button></td></tr>
+                  <tr><td class="spu-cell"><strong>布乐迪忙碌屋益智玩具</strong><span>SPU 515</span></td><td>趣然天猫旗舰店 · 天猫<br><span class="dim">陈雨欣</span></td><td><span class="mono">2025-11-18</span><br><span class="dim">小爆款 · 清仓 / 禁止补货</span></td><td class="metric-number">¥86,240</td><td class="metric-number">-12.8%</td><td class="missing">未校验</td><td class="metric-number">407.5 天</td><td><span class="quality-badge quality-warn">品退未校验</span></td><td><button class="evidence-button" type="button" data-evidence="SPU 515" data-name="布乐迪忙碌屋益智玩具" data-row="商品明细!2" data-sales="¥86,240" data-profit="-12.8%" data-return="未校验（近 7 天品退率不可采用）" data-inventory="仓内 3,000 + 在途 260；近 14 天销量 112，日均 8.0，可售 407.5 天" data-quality="近 7 天品退率未校验；固定规则结论：清仓、禁止补货"><i class="ph ph-magnifying-glass"></i>查看证据</button></td></tr>
                   <tr><td class="spu-cell"><strong>磁力片百变工程车</strong><span>SPU-821</span></td><td>趣然玩具馆<br><span class="dim">高沐</span></td><td><span class="mono">2025-09-08</span><br><span class="dim">大爆款</span></td><td class="metric-number">¥128,300</td><td class="metric-number">3.6%</td><td class="metric-number">1.1%</td><td class="metric-number">46 天</td><td><span class="quality-badge quality-good">有效</span></td><td><button class="evidence-button" type="button" data-evidence="SPU-821" data-name="磁力片百变工程车" data-row="商品明细!3" data-sales="¥128,300" data-profit="3.6%" data-return="8 / 724 = 1.1%" data-inventory="仓内 1,430 + 在途 220；14 日均销 35.9" data-quality="全部关键字段有效"><i class="ph ph-magnifying-glass"></i>查看证据</button></td></tr>
                   <tr><td class="spu-cell"><strong>木制敲琴绕珠</strong><span>SPU-276</span></td><td>趣然玩具馆<br><span class="dim">陈诺</span></td><td><span class="mono">2025-08-21</span><br><span class="dim">大爆款</span></td><td class="metric-number">¥114,200</td><td class="metric-number">4.6%</td><td class="metric-number">1.3%</td><td class="metric-number">68 天</td><td><span class="quality-badge quality-good">有效</span></td><td><button class="evidence-button" type="button" data-evidence="SPU-276" data-name="木制敲琴绕珠" data-row="商品明细!4" data-sales="¥114,200" data-profit="4.6%" data-return="9 / 692 = 1.3%" data-inventory="仓内 1,920 + 在途 140；14 日均销 30.3" data-quality="全部关键字段有效"><i class="ph ph-magnifying-glass"></i>查看证据</button></td></tr>
                   <tr><td class="spu-cell"><strong>儿童过家家厨房套装</strong><span>SPU-728</span></td><td>好奇星球店<br><span class="dim">谢雨</span></td><td><span class="mono">2025-10-06</span><br><span class="dim">大爆款</span></td><td class="metric-number">¥114,600</td><td class="metric-number">-2.3%</td><td class="metric-number">1.7%</td><td class="metric-number">72 天</td><td><span class="quality-badge quality-good">有效</span></td><td><button class="evidence-button" type="button" data-evidence="SPU-728" data-name="儿童过家家厨房套装" data-row="商品明细!5" data-sales="¥114,600" data-profit="-2.3%" data-return="14 / 824 = 1.7%" data-inventory="仓内 1,782 + 在途 260；14 日均销 28.4" data-quality="全部关键字段有效"><i class="ph ph-magnifying-glass"></i>查看证据</button></td></tr>
@@ -908,7 +908,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="metric-footer"><span>共 15 条必要身份有效 SPU · 销售与利润期间：<span class="mono">2026-06-01 — 2026-06-30</span></span><span>快照生成：<span class="mono">2026-08-03 09:12</span></span></div>
+            <div class="metric-footer"><span>共 15 条必要身份有效 SPU · 销售与利润期间：<span class="mono">2026-06-01 — 2026-06-30</span></span><span>快照生成：<span class="mono">2026-06-30 09:12</span></span></div>
           </div>
         </section>
       </div>
@@ -916,15 +916,15 @@
 
     <div id="drawerBackdrop" class="drawer-backdrop" aria-hidden="true"></div>
     <aside id="evidenceDrawer" class="evidence-drawer" aria-hidden="true" aria-labelledby="drawerTitle">
-      <div class="drawer-head"><div><span id="drawerSpu">SPU-515 · 商品明细!2</span><h2 id="drawerTitle">布乐迪忙碌屋 · 指标证据</h2></div><button id="closeDrawer" class="icon-button" type="button" aria-label="关闭指标证据"><i class="ph ph-x"></i></button></div>
+      <div class="drawer-head"><div><span id="drawerSpu">SPU 515 · 商品明细!2</span><h2 id="drawerTitle">布乐迪忙碌屋益智玩具 · 指标证据</h2></div><button id="closeDrawer" class="icon-button" type="button" aria-label="关闭指标证据"><i class="ph ph-x"></i></button></div>
       <div class="drawer-body">
-        <div class="evidence-context"><strong>冻结上下文</strong><p><span class="mono">BATCH-2026-W31</span> · 业务期间 2026-06-01 至 2026-06-30 · 截止日 2026-08-03 · <span class="mono">RULE-V1.3</span></p></div>
+        <div class="evidence-context"><strong>冻结上下文</strong><p><span class="mono">BATCH-20260630-01</span> · 业务期间 2026-06-01 至 2026-06-30 · 截止日 2026-06-30 · <span class="mono">RULE-V1.0</span></p></div>
         <div class="evidence-list">
-          <article class="evidence-item"><header><h3>上一个完整自然月净销售额</h3><span class="quality-badge quality-good">已采用</span></header><dl><dt>原始值</dt><dd id="drawerSalesRaw" class="mono">¥162,800</dd><dt>采用值</dt><dd id="drawerSalesUsed" class="mono">¥162,800</dd><dt>统计期间</dt><dd class="mono">2026-06-01 — 2026-06-30</dd><dt>口径</dt><dd>扣除退款后的净销售额</dd></dl></article>
-          <article class="evidence-item"><header><h3>经营准利润率</h3><span class="quality-badge quality-good">源表值</span></header><dl><dt>原始值</dt><dd id="drawerProfitRaw" class="mono">-4.8%</dd><dt>采用值</dt><dd id="drawerProfitUsed" class="mono">-4.8%</dd><dt>口径</dt><dd>直接采用源表“经营准利润率”</dd><dt>重算说明</dt><dd>不按旧利润公式重算</dd></dl></article>
-          <article class="evidence-item"><header><h3>最近 7 天品退率</h3><span class="quality-badge quality-good">周期已验证</span></header><dl><dt>计算输入</dt><dd id="drawerReturn" class="mono">12 / 1,004 = 1.2%</dd><dt>统计期间</dt><dd class="mono">2026-07-28 — 2026-08-03</dd><dt>公式</dt><dd>品退件数 ÷ 已销售件数</dd></dl></article>
-          <article class="evidence-item"><header><h3>库存可售天数</h3><span class="quality-badge quality-good">可计算</span></header><dl><dt>公式输入</dt><dd id="drawerInventory">仓内 2,620 + 在途 380；14 日均销 36.1</dd><dt>统计窗口</dt><dd class="mono">2026-07-21 — 2026-08-03</dd><dt>公式</dt><dd>（仓内库存＋在途库存）÷最近 14 天平均日销量</dd></dl></article>
-          <article class="evidence-item"><header><h3>数据质量与降级影响</h3><span id="drawerQualityBadge" class="quality-badge quality-good">有效</span></header><dl><dt>当前状态</dt><dd id="drawerQuality">全部关键字段有效</dd><dt>证据位置</dt><dd id="drawerSource" class="mono">商品明细!2</dd><dt>冻结时间</dt><dd class="mono">2026-08-03 09:12</dd></dl></article>
+          <article class="evidence-item"><header><h3>上一个完整自然月净销售额</h3><span class="quality-badge quality-good">已采用</span></header><dl><dt>原始值</dt><dd id="drawerSalesRaw" class="mono">¥86,240</dd><dt>采用值</dt><dd id="drawerSalesUsed" class="mono">¥86,240</dd><dt>统计期间</dt><dd class="mono">2026-06-01 — 2026-06-30</dd><dt>口径</dt><dd>扣除退款后的净销售额</dd></dl></article>
+          <article class="evidence-item"><header><h3>经营准利润率</h3><span class="quality-badge quality-good">源表值</span></header><dl><dt>原始值</dt><dd id="drawerProfitRaw" class="mono">-12.8%</dd><dt>采用值</dt><dd id="drawerProfitUsed" class="mono">-12.8%</dd><dt>口径</dt><dd>直接采用源表“经营准利润率”</dd><dt>重算说明</dt><dd>不按旧利润公式重算</dd></dl></article>
+          <article class="evidence-item"><header><h3>最近 7 天品退率</h3><span class="quality-badge quality-warn">未校验</span></header><dl><dt>计算输入</dt><dd id="drawerReturn" class="mono">未校验（近 7 天品退率不可采用）</dd><dt>统计期间</dt><dd class="mono">未校验</dd><dt>公式</dt><dd>品退件数 ÷ 已销售件数</dd></dl></article>
+          <article class="evidence-item"><header><h3>库存可售天数</h3><span class="quality-badge quality-good">可计算</span></header><dl><dt>公式输入</dt><dd id="drawerInventory">仓内 3,000 + 在途 260；近 14 天销量 112，日均 8.0，可售 407.5 天</dd><dt>统计窗口</dt><dd class="mono">2026-06-17 — 2026-06-30</dd><dt>公式</dt><dd>（仓内库存＋在途库存）÷最近 14 天平均日销量</dd></dl></article>
+          <article class="evidence-item"><header><h3>数据质量与降级影响</h3><span id="drawerQualityBadge" class="quality-badge quality-warn">字段级降级</span></header><dl><dt>当前状态</dt><dd id="drawerQuality">近 7 天品退率未校验；固定规则结论：清仓、禁止补货</dd><dt>证据位置</dt><dd id="drawerSource" class="mono">商品明细!2</dd><dt>冻结时间</dt><dd class="mono">2026-06-30 09:12</dd></dl></article>
         </div>
       </div>
       <div class="drawer-foot"><button id="drawerDone" class="btn-secondary" type="button">完成查看</button></div>
@@ -990,7 +990,7 @@
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeDrawer(); });
 
     document.querySelectorAll('[data-nav]').forEach((button) => {
-      button.addEventListener('click', () => showToast(`正在打开${button.dataset.nav}`, '将保留当前批次 BATCH-2026-W31 的上下文。'));
+      button.addEventListener('click', () => showToast(`正在打开${button.dataset.nav}`, '将保留当前批次 BATCH-20260630-01 的上下文。'));
     });
 
     document.querySelectorAll('[data-issue]').forEach((button) => {

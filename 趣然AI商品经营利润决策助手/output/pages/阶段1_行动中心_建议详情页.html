@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="page-id" content="PAGE-F06-03">
-  <title>建议详情｜趣然 AI 商品经营与利润决策助手</title>
+  <title>建议详情页｜趣然 AI 商品经营与利润决策助手</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
@@ -647,10 +647,10 @@
       <nav class="flex-1 px-3 py-5">
         <p class="nav-label eyebrow mb-3 px-3">审核任务</p>
         <div class="space-y-1">
-          <a class="nav-link prototype-link" href="#" data-message="将返回主管工作台"><i class="ph ph-squares-four text-lg" aria-hidden="true"></i><span class="nav-label">工作台</span></a>
+          <a class="nav-link prototype-link" href="阶段1_角色工作台_主管工作台.html" data-message="将返回主管工作台"><i class="ph ph-squares-four text-lg" aria-hidden="true"></i><span class="nav-label">工作台</span></a>
           <a class="nav-link active" href="#detail" aria-current="page"><i class="ph ph-list-checks text-lg" aria-hidden="true"></i><span class="nav-label">行动中心</span><span class="nav-badge">8</span></a>
-          <a class="nav-link prototype-link" href="#" data-message="将进入数据批次列表"><i class="ph ph-database text-lg" aria-hidden="true"></i><span class="nav-label">数据批次</span></a>
-          <a class="nav-link prototype-link" href="#" data-message="将进入历史与追溯列表"><i class="ph ph-clock-counter-clockwise text-lg" aria-hidden="true"></i><span class="nav-label">历史与追溯</span></a>
+          <a class="nav-link prototype-link" href="阶段1_数据批次_数据批次列表页.html" data-message="将进入数据批次列表"><i class="ph ph-database text-lg" aria-hidden="true"></i><span class="nav-label">数据批次</span></a>
+          <a class="nav-link prototype-link" href="阶段1_历史追溯_历史与追溯列表页.html" data-message="将进入历史与追溯列表"><i class="ph ph-clock-counter-clockwise text-lg" aria-hidden="true"></i><span class="nav-label">历史与追溯</span></a>
         </div>
       </nav>
       <div class="border-t p-3" style="border-color: var(--border-soft);">
@@ -666,7 +666,7 @@
       <header class="topbar flex items-center justify-between px-5 xl:px-7" aria-label="业务上下文">
         <div class="flex min-w-0 items-center gap-2">
           <span class="context-chip"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
-          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>TOY-20260706-01</span>
+          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>BATCH-20260630-01</span>
           <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>业务期间 2026.06.01—06.30</span>
         </div>
         <div class="flex items-center gap-2">
@@ -679,7 +679,7 @@
       <main id="detail" class="page-shell">
         <section class="page-enter flex items-center justify-between gap-4" aria-label="建议导航">
           <div class="flex items-center gap-2">
-            <button class="btn-secondary prototype-link" type="button" data-message="将返回待审核列表第 2 页"><i class="ph ph-arrow-left" aria-hidden="true"></i>返回待审核列表</button>
+            <button class="btn-secondary prototype-link" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-message="将返回待审核列表第 2 页"><i class="ph ph-arrow-left" aria-hidden="true"></i>返回待审核列表</button>
             <span class="context-chip">风险分组：清仓</span>
             <span class="context-chip mono">第 3 / 8 条</span>
           </div>
@@ -695,23 +695,23 @@
               <div class="flex items-start gap-4">
                 <div class="product-mark"><i class="ph ph-cube text-xl" aria-hidden="true"></i></div>
                 <div>
-                  <div class="flex flex-wrap items-center gap-2"><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>经营动作：清仓</span><span class="badge badge-pending"><i class="ph ph-hourglass-medium" aria-hidden="true"></i>待主管审核</span></div>
-                  <h1 id="product-heading" class="page-title mt-3">布乐迪 · 忙碌屋</h1>
-                  <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"><span class="mono font-semibold">SPU-515</span><span class="muted text-sm">商品链接粒度</span><span class="muted text-sm">建议 <span class="mono">DEC-20260706-515</span></span></div>
+                  <div class="flex flex-wrap items-center gap-2"><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>经营动作：清仓</span><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>主管已通过</span></div>
+                  <h1 id="product-heading" class="page-title mt-3">布乐迪忙碌屋益智玩具</h1>
+                  <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"><span class="mono font-semibold">SPU-515</span><span class="muted text-sm">商品链接粒度</span><span class="muted text-sm">建议 <span class="mono">DEC-20260630-515</span></span></div>
                 </div>
               </div>
               <div class="text-right">
                 <div class="meta">规则版本</div>
-                <div class="mono mt-1 font-bold">RULE-1.2.0</div>
+                <div class="mono mt-1 font-bold">RULE-V1.0</div>
                 <div class="meta mt-1">生成于 2026.07.06 09:18</div>
               </div>
             </div>
 
             <div class="mt-5 grid grid-cols-5 status-grid">
-              <div class="status-cell pr-4"><div class="meta">建议审核</div><div class="mt-2"><span id="heroReviewStatus" class="badge badge-pending">待审核</span></div></div>
-              <div class="status-cell px-4"><div class="meta">经营动作轨</div><div class="mt-2"><span id="heroBusinessStatus" class="badge badge-muted">待审核激活</span></div></div>
-              <div class="status-cell px-4"><div class="meta">库存动作轨</div><div class="mt-2"><span id="heroInventoryStatus" class="badge badge-muted">待审核激活</span></div></div>
-              <div class="status-cell px-4"><div class="meta">总览状态</div><div class="mt-2"><span id="heroOverallStatus" class="badge badge-pending">待审核</span></div></div>
+              <div class="status-cell pr-4"><div class="meta">建议审核</div><div class="mt-2"><span id="heroReviewStatus" class="badge badge-ready">已通过</span></div></div>
+              <div class="status-cell px-4"><div class="meta">经营动作轨</div><div class="mt-2"><span id="heroBusinessStatus" class="badge badge-muted">待执行</span></div></div>
+              <div class="status-cell px-4"><div class="meta">库存动作轨</div><div class="mt-2"><span id="heroInventoryStatus" class="badge badge-muted">待确认禁补</span></div></div>
+              <div class="status-cell px-4"><div class="meta">总览状态</div><div class="mt-2"><span id="heroOverallStatus" class="badge badge-pending">双轨待处理</span></div></div>
               <div class="status-cell pl-4"><div class="meta">AI 辅助解释</div><div class="mt-2"><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></div></div>
             </div>
           </div>
@@ -725,19 +725,19 @@
                 <article class="four-card">
                   <div class="flex items-center justify-between"><div class="four-index">01</div><i class="ph ph-crosshair text-lg muted" aria-hidden="true"></i></div>
                   <h3 class="mt-4 font-bold">具体对象</h3>
-                  <p class="muted mt-2 text-sm">玩具事业部 SPU-515“布乐迪忙碌屋”，本建议只针对商品链接整体经营，不下钻 SKU。</p>
-                  <div class="meta mono mt-3">批次 TOY-20260706-01</div>
+                  <p class="muted mt-2 text-sm">玩具事业部 SPU-515“布乐迪忙碌屋益智玩具”，本建议只针对商品链接整体经营，不下钻 SKU。</p>
+                  <div class="meta mono mt-3">批次 BATCH-20260630-01</div>
                 </article>
                 <article class="four-card">
                   <div class="flex items-center justify-between"><div class="four-index">02</div><i class="ph ph-warning-circle text-lg" style="color: var(--danger);" aria-hidden="true"></i></div>
                   <h3 class="mt-4 font-bold">发现问题</h3>
-                  <p class="muted mt-2 text-sm">经营准利润率已为负，推广继续消耗利润；同时库存约 3,400 件，按近期销量可售约 126 天。</p>
+                  <p class="muted mt-2 text-sm">经营准利润率 -12.8%，低于小爆款清仓线；同时库存 3,260 件，按近期销量可售 407.5 天。</p>
                   <div class="mt-3"><span class="badge badge-clear">利润与库存双重风险</span></div>
                 </article>
                 <article class="four-card">
                   <div class="flex items-center justify-between"><div class="four-index">03</div><i class="ph ph-scales text-lg muted" aria-hidden="true"></i></div>
                   <h3 class="mt-4 font-bold">关键依据</h3>
-                  <p class="muted mt-2 text-sm">上月净销售额 13.8 万元，归类大爆款；经营准利润率 -6.4%＜0%，直接命中清仓。</p>
+                  <p class="muted mt-2 text-sm">上月净销售额 86,240 元，归类小爆款；经营准利润率 -12.8%＜5%，直接命中清仓。</p>
                   <div class="meta mt-3">利润期间 06.01—06.30 · 品退近 7 天</div>
                 </article>
                 <article class="four-card action-card">
@@ -751,10 +751,10 @@
 
             <section class="surface overflow-hidden" aria-labelledby="evidence-heading">
               <div class="p-5">
-                <div class="flex items-end justify-between"><div><div class="eyebrow">RULE EVIDENCE</div><h2 id="evidence-heading" class="section-title mt-1">实际值 → 阈值 → 优先级 → 最终动作</h2></div><span class="badge badge-muted mono">RULE-1.2.0</span></div>
+                <div class="flex items-end justify-between"><div><div class="eyebrow">RULE EVIDENCE</div><h2 id="evidence-heading" class="section-title mt-1">实际值 → 阈值 → 优先级 → 最终动作</h2></div><span class="badge badge-muted mono">RULE-V1.0</span></div>
                 <div class="mt-4 grid grid-cols-4 gap-5">
-                  <article class="chain-step"><div class="chain-number">1</div><div class="meta mt-3">实际值</div><div class="mt-2 text-lg font-bold numeric">-6.4%</div><p class="muted mt-2 text-sm">表内经营准利润率，冻结于 2026 年 6 月完整自然月。</p></article>
-                  <article class="chain-step"><div class="chain-number">2</div><div class="meta mt-3">命中阈值</div><div class="mt-2 text-lg font-bold"><span class="numeric">-6.4%</span> ＜ <span class="numeric">0%</span></div><p class="muted mt-2 text-sm">大爆款利润率低于 0%，命中清仓；同时也命中低于 5% 的止损。</p></article>
+                  <article class="chain-step"><div class="chain-number">1</div><div class="meta mt-3">实际值</div><div class="mt-2 text-lg font-bold numeric">-12.8%</div><p class="muted mt-2 text-sm">表内经营准利润率，冻结于 2026 年 6 月完整自然月。</p></article>
+                  <article class="chain-step"><div class="chain-number">2</div><div class="meta mt-3">命中阈值</div><div class="mt-2 text-lg font-bold"><span class="numeric">-12.8%</span> ＜ <span class="numeric">5%</span></div><p class="muted mt-2 text-sm">小爆款利润率低于 5%，命中清仓；同时也命中低于 10% 的止损。</p></article>
                   <article class="chain-step"><div class="chain-number">3</div><div class="meta mt-3">优先级裁决</div><div class="mt-2 text-lg font-bold">清仓 ＞ 止损</div><p class="muted mt-2 text-sm">保留止损命中事实，但由更高优先级的清仓覆盖，不生成第二个经营主动作。</p></article>
                   <article class="chain-step"><div class="chain-number">4</div><div class="meta mt-3">最终动作</div><div class="mt-2 flex flex-wrap gap-2"><span class="badge badge-clear">清仓</span><span class="badge badge-stop">禁止补货</span></div><p class="muted mt-2 text-sm">清仓与禁补按同一规则版本原子生成，防止运营收缩后采购继续补货。</p></article>
                 </div>
@@ -763,11 +763,11 @@
                 <table class="rule-table">
                   <thead><tr><th>规则判断</th><th>冻结实际值</th><th>阈值与比较</th><th>判断结果</th><th>优先级处理</th></tr></thead>
                   <tbody>
-                    <tr><td><strong>商品分类</strong><div class="meta">上一个完整自然月销售额</div></td><td class="numeric">13.8 万元</td><td class="numeric">＞ 10 万元</td><td><span class="badge badge-ready">大爆款</span></td><td>进入大爆款规则组</td></tr>
-                    <tr class="rule-hit"><td><strong>利润清仓</strong><div class="meta">经营准利润率</div></td><td class="numeric">-6.4%</td><td class="numeric">＜ 0%</td><td><span class="badge badge-clear">命中清仓</span></td><td><strong>最高优先级胜出</strong></td></tr>
-                    <tr><td><strong>推广止损</strong><div class="meta">经营准利润率</div></td><td class="numeric">-6.4%</td><td class="numeric">＜ 5%</td><td><span class="badge badge-stop">命中止损</span></td><td><span class="badge badge-muted">被清仓覆盖</span></td></tr>
-                    <tr><td><strong>售后观察</strong><div class="meta">最近 7 天品退率</div></td><td class="numeric">1.2%</td><td class="numeric">＞ 1.5%</td><td><span class="badge badge-muted">未命中</span></td><td>不参与主动作</td></tr>
-                    <tr><td><strong>库存补货</strong><div class="meta">库存可售天数</div></td><td class="numeric">125.9 天</td><td class="numeric">＜ 30 天</td><td><span class="badge badge-muted">未命中</span></td><td>清仓联动禁补优先</td></tr>
+                    <tr><td><strong>商品分类</strong><div class="meta">上一个完整自然月销售额</div></td><td class="numeric">86,240 元</td><td class="numeric">＞ 2 万元且＜ 10 万元</td><td><span class="badge badge-ready">小爆款</span></td><td>进入小爆款规则组</td></tr>
+                    <tr class="rule-hit"><td><strong>利润清仓</strong><div class="meta">经营准利润率</div></td><td class="numeric">-12.8%</td><td class="numeric">＜ 5%</td><td><span class="badge badge-clear">命中清仓</span></td><td><strong>最高优先级胜出</strong></td></tr>
+                    <tr><td><strong>推广止损</strong><div class="meta">经营准利润率</div></td><td class="numeric">-12.8%</td><td class="numeric">＜ 10%</td><td><span class="badge badge-stop">命中止损</span></td><td><span class="badge badge-muted">被清仓覆盖</span></td></tr>
+                    <tr><td><strong>售后观察</strong><div class="meta">最近 7 天品退率</div></td><td>未校验</td><td class="numeric">＞ 1.5%</td><td><span class="badge badge-muted">数据限制</span></td><td>不补 0，不影响利润清仓</td></tr>
+                    <tr><td><strong>库存补货</strong><div class="meta">库存可售天数</div></td><td class="numeric">407.5 天</td><td class="numeric">＜ 30 天</td><td><span class="badge badge-muted">未命中</span></td><td>清仓联动禁补优先</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -776,13 +776,13 @@
             <section aria-labelledby="metrics-heading">
               <div class="mb-3 flex items-end justify-between"><div><div class="eyebrow">FROZEN METRICS</div><h2 id="metrics-heading" class="section-title mt-1">冻结经营指标</h2></div><span class="meta">源值与采用值一致 · 数据质量已校验</span></div>
               <div class="grid grid-cols-4 gap-3">
-                <article class="metric-tile"><div class="meta">上月净销售额</div><div class="metric-value numeric">¥138,240</div><div class="meta mt-3">06.01—06.30 · 已扣退款</div></article>
-                <article class="metric-tile"><div class="meta">经营准利润率</div><div class="metric-value numeric" style="color: var(--danger);">-6.4%</div><div class="meta mt-3">采用表内原值 · 不在本页重算</div></article>
-                <article class="metric-tile"><div class="meta">近 7 天品退率</div><div class="metric-value numeric">1.2%</div><div class="meta mt-3">9 件 ÷ 742 件 · 已校验</div></article>
-                <article class="metric-tile"><div class="meta">库存可售天数</div><div class="metric-value numeric">125.9 天</div><div class="meta mt-3">库存含在途 · 近 14 天口径</div></article>
-                <article class="metric-tile"><div class="meta">仓内库存</div><div class="metric-value numeric">3,186 件</div><div class="meta mt-3">截止 2026.06.30</div></article>
-                <article class="metric-tile"><div class="meta">在途库存</div><div class="metric-value numeric">214 件</div><div class="meta mt-3">合计库存 3,400 件</div></article>
-                <article class="metric-tile"><div class="meta">近 14 天销量</div><div class="metric-value numeric">378 件</div><div class="meta mt-3">06.17—06.30 · 日均 27 件</div></article>
+                <article class="metric-tile"><div class="meta">上月净销售额</div><div class="metric-value numeric">¥86,240</div><div class="meta mt-3">06.01—06.30 · 已扣退款</div></article>
+                <article class="metric-tile"><div class="meta">经营准利润率</div><div class="metric-value numeric" style="color: var(--danger);">-12.8%</div><div class="meta mt-3">采用表内原值 · 不在本页重算</div></article>
+                <article class="metric-tile"><div class="meta">近 7 天品退率</div><div class="metric-value">未校验</div><div class="meta mt-3">数据不足 · 不补 0</div></article>
+                <article class="metric-tile"><div class="meta">库存可售天数</div><div class="metric-value numeric">407.5 天</div><div class="meta mt-3">库存含在途 · 近 14 天口径</div></article>
+                <article class="metric-tile"><div class="meta">仓内库存</div><div class="metric-value numeric">3,000 件</div><div class="meta mt-3">截止 2026.06.30</div></article>
+                <article class="metric-tile"><div class="meta">在途库存</div><div class="metric-value numeric">260 件</div><div class="meta mt-3">合计库存 3,260 件</div></article>
+                <article class="metric-tile"><div class="meta">近 14 天销量</div><div class="metric-value numeric">112 件</div><div class="meta mt-3">06.17—06.30 · 日均 8.0 件</div></article>
                 <article class="metric-tile"><div class="meta">上架判断</div><div class="metric-value">非新品</div><div class="meta mt-3">上架 2025.09.18 · 已满 2 个月</div></article>
               </div>
             </section>
@@ -791,19 +791,19 @@
               <div class="mb-3 flex items-end justify-between"><div><div class="eyebrow">DUAL-TRACK DECISION SPINE</div><h2 id="tracks-heading" class="section-title mt-1">经营与库存双轨</h2></div><span class="meta">同一建议 · 整体审核 · 分角色执行</span></div>
               <div class="decision-spine">
                 <article class="track-card business">
-                  <div class="flex items-center justify-between"><div class="eyebrow">经营动作轨</div><span id="businessTrackStatus" class="badge badge-muted">待审核激活</span></div>
+                  <div class="flex items-center justify-between"><div class="eyebrow">经营动作轨</div><span id="businessTrackStatus" class="badge badge-muted">待执行</span></div>
                   <div class="mt-4 flex items-center gap-3"><div class="product-mark"><i class="ph ph-trash" aria-hidden="true"></i></div><div><div class="meta">唯一经营主动作</div><div class="text-xl font-bold" style="color: var(--action-clear);">清仓</div></div></div>
                   <p class="muted mt-4 text-sm">停止扩大亏损，对 SPU 整体制定清仓节奏。页面仅记录业务动作，不能自动写入推广系统。</p>
                   <div class="mt-4 grid grid-cols-2 gap-3"><div><div class="meta">责任角色</div><div class="mt-1 font-semibold">运营</div></div><div><div class="meta">动作版本</div><div class="mono mt-1 font-semibold">ACT-B-01</div></div></div>
                   <div class="mt-4"><span class="badge badge-clear"><i class="ph ph-link" aria-hidden="true"></i>与禁补原子联动</span></div>
                 </article>
                 <div class="spine-column" aria-label="双轨共享证据节点">
-                  <div class="spine-node">利润<br>-6.4%</div>
+                  <div class="spine-node">利润<br>-12.8%</div>
                   <div class="spine-node">优先级<br>清仓</div>
-                  <div class="spine-node">规则<br>1.2.0</div>
+                  <div class="spine-node">规则<br>V1.0</div>
                 </div>
                 <article class="track-card inventory">
-                  <div class="flex items-center justify-between"><div class="eyebrow">库存动作轨</div><span id="inventoryTrackStatus" class="badge badge-muted">待审核激活</span></div>
+                  <div class="flex items-center justify-between"><div class="eyebrow">库存动作轨</div><span id="inventoryTrackStatus" class="badge badge-muted">待确认禁补</span></div>
                   <div class="mt-4 flex items-center gap-3"><div class="product-mark" style="color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish);"><i class="ph ph-package" aria-hidden="true"></i></div><div><div class="meta">库存联动动作</div><div class="text-xl font-bold" style="color: var(--action-stop);">禁止补货</div></div></div>
                   <p class="muted mt-4 text-sm">清仓命中后同步禁止继续补货，避免运营减少投入后采购仍按旧销量扩大库存。</p>
                   <div class="mt-4 grid grid-cols-2 gap-3"><div><div class="meta">责任角色</div><div class="mt-1 font-semibold">采购计划</div></div><div><div class="meta">动作版本</div><div class="mono mt-1 font-semibold">ACT-I-01</div></div></div>
@@ -819,8 +819,8 @@
               </button>
               <div id="aiPanel" class="accordion-panel ai-copy" hidden>
                 <div class="rounded-md p-4" style="background: var(--ai-soft); border: 1px solid var(--border-soft);">
-                  <p>忙碌屋在 2026 年 6 月仍取得 13.8 万元净销售额，因此按固定规则归入“大爆款”。但经营准利润率为 -6.4%，说明现有销量并未转化为正向利润；继续以原推广强度追求销售规模，会进一步放大利润损失。</p>
-                  <p>该 SPU 同时持有仓内 3,186 件和在途 214 件库存，合计约 3,400 件。按最近 14 天平均日销量 27 件计算，可售约 126 天。库存可售天数并未触发补货阈值，且清仓动作会强制联动禁止补货，因此采购侧应停止沿用此前销量节奏继续下单。</p>
+                  <p>忙碌屋在 2026 年 6 月仍取得 86,240 元净销售额，因此按固定规则归入“小爆款”。但经营准利润率为 -12.8%，说明现有销量并未转化为正向利润；继续以原推广强度追求销售规模，会进一步放大利润损失。</p>
+                  <p>该 SPU 同时持有仓内 3,000 件和在途 260 件库存，合计约 3,260 件。按最近 14 天平均日销量 8.0 件计算，可售约 407.5 天。库存可售天数并未触发补货阈值，且清仓动作会强制联动禁止补货，因此采购侧应停止沿用此前销量节奏继续下单。</p>
                   <p>该 SPU 既往曾在亏损推广约 2 个月后才被发现，运营收缩推广时又未同步采购计划，最终约滞销 3,000 件、占用库存金额 10 万元并产生约 6 万元利润损失。建议主管整体通过“清仓 + 禁止补货”组合：运营制定 SPU 级清仓节奏，采购计划同步停止新增补货，后续由运营记录销售、利润与库存变化，验证损失是否开始收敛。</p>
                 </div>
                 <div class="mt-3 flex items-center justify-between"><span class="meta">生成时间 2026.07.06 09:19 · 解释版本 AI-EXPLAIN-01</span><button class="link-button" id="regenerateButton" type="button"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>使用冻结数据重新生成</button></div>
@@ -831,27 +831,41 @@
               <div class="flex items-end justify-between"><div><div class="eyebrow">BUSINESS TIMELINE</div><h2 id="timeline-heading" class="section-title mt-1">业务时间线</h2></div><span class="meta">仅呈现已发生的业务事实与当前里程碑</span></div>
               <div class="timeline mt-5">
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">批次数据与经营指标已冻结</div><p class="muted mt-1 text-sm">锁定业务期间、截止日、SPU 身份及销售、利润、品退、库存口径。</p></div><time class="meta mono">07.06 09:16</time></div></article>
-                <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">固定规则生成双轨建议</div><p class="muted mt-1 text-sm">清仓作为唯一经营主动作，并同步生成禁止补货；规则版本 RULE-1.2.0。</p></div><time class="meta mono">07.06 09:18</time></div></article>
-                <article class="timeline-item"><div class="timeline-node current"><i class="ph ph-hourglass-medium text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">等待运营主管整体审核</div><p class="muted mt-1 text-sm">通过或驳回将一次作用于现有经营动作和库存动作。</p></div><span class="badge badge-pending">当前</span></div></article>
-                <article class="timeline-item"><div class="timeline-node future"><i class="ph ph-circle text-sm" aria-hidden="true"></i></div><div class="font-semibold muted">运营执行与采购计划处理</div><p class="meta mt-1">审核通过后由两类责任角色分别推进。</p></article>
+                <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">固定规则生成双轨建议</div><p class="muted mt-1 text-sm">清仓作为唯一经营主动作，并同步生成禁止补货；规则版本 RULE-V1.0。</p></div><time class="meta mono">07.06 09:18</time></div></article>
+                <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">运营主管已整体通过</div><p class="muted mt-1 text-sm">一次审核同时激活经营动作和库存动作，审核记录不可覆盖。</p></div><time class="meta mono">07.06 10:05</time></div></article>
+                <article class="timeline-item"><div class="timeline-node current"><i class="ph ph-hourglass-medium text-sm" aria-hidden="true"></i></div><div class="font-semibold">运营执行与采购计划处理</div><p class="meta mt-1">经营动作待执行，采购计划待确认禁止补货。</p></article>
                 <article class="timeline-item"><div class="timeline-node future"><i class="ph ph-circle text-sm" aria-hidden="true"></i></div><div class="font-semibold muted">经营结果记录</div><p class="meta mt-1">运营在执行后补录销售、利润与库存变化。</p></article>
               </div>
             </section>
+
+            <details class="surface p-5" aria-labelledby="audit-heading">
+              <summary id="audit-heading" class="flex cursor-pointer items-center justify-between gap-4 font-semibold"><span>审计详情（3）</span><span class="meta">展开查看不可变事件</span></summary>
+              <div class="mt-4 overflow-x-auto">
+                <table class="rule-table">
+                  <thead><tr><th>事件</th><th>前后状态</th><th>操作者</th><th>时间</th><th>备注</th></tr></thead>
+                  <tbody>
+                    <tr><td>规则结论固化</td><td>无 → 清仓 / 禁止补货</td><td>系统规则 RULE-V1.0</td><td class="mono">07.06 09:18</td><td>同一事务原子生成双动作</td></tr>
+                    <tr><td>主管整体审核</td><td>待审核 → 已通过</td><td>王敏 · 运营主管</td><td class="mono">07.06 10:05</td><td>运营制定清仓节奏，采购停止新增补货</td></tr>
+                    <tr><td>AI 解释采用</td><td>生成中 → 已采用</td><td>系统 AI 适配器</td><td class="mono">07.06 10:06</td><td>只解释冻结数据，未改变规则动作</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
           </div>
 
           <aside class="review-column col-span-4" aria-labelledby="review-heading">
             <section class="review-panel">
               <div class="review-head">
-                <div class="flex items-center justify-between"><div><div class="eyebrow">SUPERVISOR REVIEW</div><h2 id="review-heading" class="section-title mt-1">主管整体审核</h2></div><span class="badge badge-pending">待审核</span></div>
-                <p class="muted mt-3 text-sm">本次审核针对整条建议，不能分别通过经营轨和库存轨。</p>
+                <div class="flex items-center justify-between"><div><div class="eyebrow">SUPERVISOR REVIEW</div><h2 id="review-heading" class="section-title mt-1">主管审核记录</h2></div><span class="badge badge-ready">已通过</span></div>
+                <p class="muted mt-3 text-sm">审核已针对整条建议生效，经营轨和库存轨同时激活且不可分别改写。</p>
               </div>
               <div class="p-5">
                 <div class="rounded-md p-4" style="background: var(--warn-soft); border: 1px solid var(--warn);">
-                  <div class="flex items-start gap-3"><i class="ph ph-warning-circle text-lg" style="color: var(--warn);" aria-hidden="true"></i><div><strong>一次审核，同时作用于两条动作</strong><p class="muted mt-1 text-sm">通过后“清仓”和“禁止补货”同时进入待执行；驳回后两轨同时关闭，原证据仍保留。</p></div></div>
+                  <div class="flex items-start gap-3"><i class="ph ph-check-circle text-lg" style="color: var(--success);" aria-hidden="true"></i><div><strong>整体通过已同时激活两条动作</strong><p class="muted mt-1 text-sm">“清仓”进入运营待执行，“禁止补货”进入采购待确认；原证据和审核版本已锁定。</p></div></div>
                 </div>
 
                 <div class="mt-4">
-                  <div class="review-fact flex items-center justify-between"><span class="meta">审核对象</span><span class="font-semibold">SPU-515 忙碌屋</span></div>
+                  <div class="review-fact flex items-center justify-between"><span class="meta">审核对象</span><span class="font-semibold">SPU-515 布乐迪忙碌屋益智玩具</span></div>
                   <div class="review-fact flex items-center justify-between"><span class="meta">经营动作</span><span class="badge badge-clear">清仓</span></div>
                   <div class="review-fact flex items-center justify-between"><span class="meta">库存动作</span><span class="badge badge-stop">禁止补货</span></div>
                   <div class="review-fact flex items-center justify-between"><span class="meta">审核版本</span><span class="mono font-semibold">REV-01</span></div>
@@ -860,17 +874,17 @@
                 <fieldset class="mt-5">
                   <legend class="font-semibold">审核结论 <span style="color: var(--danger);">*</span></legend>
                   <div class="mt-3 grid grid-cols-2 gap-3">
-                    <label class="choice-card selected" data-choice="approve"><input type="radio" name="review" value="approve" checked><span><strong>整体通过</strong><span class="meta mt-1 block">同时激活两轨动作</span></span></label>
-                    <label class="choice-card reject" data-choice="reject"><input type="radio" name="review" value="reject"><span><strong>整体驳回</strong><span class="meta mt-1 block">同时关闭两轨动作</span></span></label>
+                    <label class="choice-card selected" data-choice="approve"><input type="radio" name="review" value="approve" checked disabled><span><strong>整体通过</strong><span class="meta mt-1 block">已同时激活两轨动作</span></span></label>
+                    <label class="choice-card reject" data-choice="reject"><input type="radio" name="review" value="reject" disabled><span><strong>整体驳回</strong><span class="meta mt-1 block">当前记录不可改写</span></span></label>
                   </div>
                 </fieldset>
 
                 <label class="mt-5 block" for="reviewNote"><span class="font-semibold">审核备注</span><span id="noteHint" class="meta ml-2">通过时选填</span></label>
-                <textarea id="reviewNote" class="review-note mt-2" placeholder="可补充清仓节奏、跨部门协同要求或复核说明">通过后由运营在 2 个工作日内形成清仓节奏，采购计划同步停止新增补货，并在执行后回填库存变化。</textarea>
+                <textarea id="reviewNote" class="review-note mt-2" disabled>通过后由运营在 2 个工作日内形成清仓节奏，采购计划同步停止新增补货，并在执行后回填库存变化。</textarea>
                 <p id="validationMessage" class="meta mt-2">备注不能用于修改固定规则动作。</p>
 
-                <button id="submitReview" class="btn-primary mt-5 w-full" type="button"><i class="ph ph-check-circle" aria-hidden="true"></i>提交整体通过</button>
-                <p class="meta mt-3 text-center">提交前将再次确认对象、双轨动作与审核结论</p>
+                <button id="submitReview" class="btn-primary mt-5 w-full" type="button" disabled><i class="ph ph-lock-key" aria-hidden="true"></i>审核结果已锁定</button>
+                <p class="meta mt-3 text-center">审核人：王敏 · 2026.07.06 10:05 · 版本 REV-01</p>
               </div>
             </section>
           </aside>
@@ -888,7 +902,7 @@
     <div class="modal-card">
       <div class="flex items-start gap-4">
         <div class="product-mark"><i class="ph ph-gavel text-xl" aria-hidden="true"></i></div>
-        <div><div class="eyebrow">FINAL CONFIRMATION</div><h2 id="confirmTitle" class="section-title mt-1">确认整体通过这条建议？</h2><p class="muted mt-2">SPU-515“布乐迪忙碌屋”的经营动作“清仓”和库存动作“禁止补货”将同时进入待执行。</p></div>
+        <div><div class="eyebrow">FINAL CONFIRMATION</div><h2 id="confirmTitle" class="section-title mt-1">确认整体通过这条建议？</h2><p class="muted mt-2">SPU-515“布乐迪忙碌屋益智玩具”的经营动作“清仓”和库存动作“禁止补货”将同时进入待执行。</p></div>
       </div>
       <div class="mt-5 rounded-md p-4" style="background: var(--bg); border: 1px solid var(--border-soft);">
         <div class="flex items-center justify-between"><span class="meta">审核结论</span><strong id="modalDecision">整体通过</strong></div>
@@ -919,6 +933,8 @@
 
     document.querySelectorAll('.prototype-link').forEach((element) => {
       element.addEventListener('click', (event) => {
+        const href = element.getAttribute('href');
+        if ((href && href.endsWith('.html')) || element.hasAttribute('onclick')) return;
         event.preventDefault();
         showToast('已保留列表上下文', element.dataset.message || '将进入对应业务页面');
       });
