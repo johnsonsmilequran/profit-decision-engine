@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-03T11:06:24Z",
+  "last_updated_at_utc": "2026-08-03T15:42:54Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -19,8 +19,8 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 1,
-  "source_ids_changed": [],
+  "contract_revision": 3,
+  "source_ids_changed": ["REQ-F07-03"],
   "current_stage": "6.3",
   "current_substep": "stage6-regenerated-from-stage5-and-verified",
   "completed_stages": ["0", "1", "5", "6"],
@@ -132,6 +132,12 @@
       "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；观察归运营负责并以记录观察或有证据的优化结果闭环",
       "stage": "5",
       "rationale": "既避免止损/清仓与禁补被拆散，也允许运营和采购计划分别执行并保留独立状态"
+    },
+    {
+      "id": "D-18",
+      "decision": "使用钉钉统一身份认证；三类业务角色变更由事业部负责人审批，运维/系统管理员按审批结果配置",
+      "stage": "5",
+      "rationale": "统一身份可追溯到个人，并将业务授权与技术配置分离，避免共享账号或技术管理员自行扩大经营数据权限"
     }
   ],
   "category": "saas",
