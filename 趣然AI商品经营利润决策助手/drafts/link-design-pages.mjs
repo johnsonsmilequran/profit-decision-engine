@@ -38,7 +38,7 @@ const common = {
   '返回工作台': 'PAGE-F00-01',
 };
 
-const wiring = `\n<script data-page-wiring>\n(() => {\n  const routes = ${JSON.stringify(routes)};\n  const labels = ${JSON.stringify(common)};\n  const candidates = document.querySelectorAll('a[href="#"], button[data-target-page]');\n  for (const el of candidates) {\n    const text = el.textContent.replace(/\\s+/g, ' ').trim();\n    const key = Object.keys(labels).find((label) => text === label || text.includes(label));\n    const pageId = el.dataset.targetPage || (key && labels[key]);\n    if (!pageId || !routes[pageId]) continue;\n    if (el.tagName === 'A') el.href = routes[pageId];\n    else el.addEventListener('click', () => { location.href = routes[pageId]; });\n  }\n})();\n</script>\n`;
+const wiring = `\n<script data-page-wiring>\n(() => {\n  const routes = ${JSON.stringify(routes)};\n  const labels = ${JSON.stringify(common)};\n  const candidates = document.querySelectorAll('a[href="#"], button');\n  for (const el of candidates) {\n    const text = el.textContent.replace(/\\s+/g, ' ').trim();\n    const key = Object.keys(labels).find((label) => text === label || text.includes(label));\n    const pageId = el.dataset.targetPage || (key && labels[key]);\n    if (!pageId || !routes[pageId]) continue;\n    if (el.tagName === 'A') el.href = routes[pageId];\n    else el.addEventListener('click', () => { location.href = routes[pageId]; });\n  }\n})();\n</script>\n`;
 
 for (const name of files) {
   const target = path.join(pagesDir, name);

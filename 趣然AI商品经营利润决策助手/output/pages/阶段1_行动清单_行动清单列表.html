@@ -147,11 +147,12 @@
   </div>
 </div><script>const d=[['515','布乐迪 忙碌屋玩具','经营亏损','利润率 -18.6%','清仓','禁止补货','待审核','品退未校验'],['2086','多功能磁力积木桌','低利润风险','利润率 2.4%','止损','禁止补货','待审核','AI 已生成'],['7312','儿童过家家厨房','品退偏高','品退率 2.1%','观察','不生成','已通过','库存不足'],['4268','彩虹轨道滚球积木','增长机会','利润率 18.2%','加投','补货','执行中','AI 已生成'],['9031','儿童帐篷阅读角','淘汰商品','销售额 ¥12,680','清仓','禁止补货','待审核','AI 生成中'],['1160','木制拼图礼盒','低利润风险','利润率 7.1%','止损','禁止补货','已通过','AI 已生成'],['5572','声光音乐健身架','品退偏高','品退率 1.9%','观察','不补货','待执行','AI 已生成'],['7725','儿童沙滩工具车','新品增长','利润率 -8.0%','加投','不生成','已执行','库存不足'],['3841','恐龙考古挖掘盒','淘汰商品','销售额 ¥18,940','清仓','禁止补货','执行中','AI 失败'],['6650','磁性换装贴纸书','增长机会','利润率 16.8%','加投','补货','待执行','AI 已生成']];document.querySelector('#list').innerHTML=d.map(r=>`<tr class="data-row"><td class="p-3"><b>${r[1]}</b><p class="text-xs text-[var(--muted)] mono mt-1">SPU-${r[0]} · ${r[2]}</p></td><td class="p-3 mono">${r[3]}</td><td class="p-3"><span class="badge ${['清仓','止损'].includes(r[4])?'danger':r[4]=='观察'?'warn':'accent'}">${r[4]}</span></td><td class="p-3"><span class="badge ${r[5]=='补货'?'success':r[5]=='禁止补货'?'warn':''}">${r[5]}</span></td><td class="p-3">${r[6]}</td><td class="p-3 text-[var(--muted)]">${r[7]}</td><td class="p-3"><button class="text-[var(--accent)] font-semibold">详情 <i class="ph ph-arrow-right"></i></button></td></tr>`).join('')</script>
 
+
 <script data-page-wiring>
 (() => {
   const routes = {"PAGE-F08-01":"阶段1_历史追溯_历史追溯索引.html","PAGE-F06-01":"阶段1_审核执行_建议审核表单.html","PAGE-F06-02":"阶段1_审核执行_经营动作执行表单.html","PAGE-F06-04":"阶段1_审核执行_经营结果记录表单.html","PAGE-F06-03":"阶段1_审核执行_采购动作执行表单.html","PAGE-F00-01":"阶段1_工作台_角色待办工作台.html","PAGE-F01-01":"阶段1_数据批次_批次列表.html","PAGE-F01-03":"阶段1_数据批次_批次详情与校验结果.html","PAGE-F01-02":"阶段1_数据批次_新建数据导入.html","PAGE-F05-02":"阶段1_行动清单_建议详情.html","PAGE-F05-01":"阶段1_行动清单_行动清单列表.html","PAGE-F07-02":"阶段1_身份权限_权限不足.html","PAGE-F07-01":"阶段1_身份权限_钉钉认证门禁.html"};
   const labels = {"工作台":"PAGE-F00-01","数据批次":"PAGE-F01-01","批次管理":"PAGE-F01-01","行动清单":"PAGE-F05-01","历史追溯":"PAGE-F08-01","新建导入":"PAGE-F01-02","导入数据":"PAGE-F01-02","查看批次":"PAGE-F01-03","批次详情":"PAGE-F01-03","查看清单":"PAGE-F05-01","查看详情":"PAGE-F05-02","建议详情":"PAGE-F05-02","审核建议":"PAGE-F06-01","去审核":"PAGE-F06-01","执行经营动作":"PAGE-F06-02","确认经营动作":"PAGE-F06-02","执行采购动作":"PAGE-F06-03","确认采购动作":"PAGE-F06-03","记录经营结果":"PAGE-F06-04","返回建议详情":"PAGE-F05-02","返回工作台":"PAGE-F00-01"};
-  const candidates = document.querySelectorAll('a[href="#"], button[data-target-page]');
+  const candidates = document.querySelectorAll('a[href="#"], button');
   for (const el of candidates) {
     const text = el.textContent.replace(/\s+/g, ' ').trim();
     const key = Object.keys(labels).find((label) => text === label || text.includes(label));
