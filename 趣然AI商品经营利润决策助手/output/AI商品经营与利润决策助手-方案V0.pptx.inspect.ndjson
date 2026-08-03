@@ -1,0 +1,149 @@
+{"kind":"deck","id":"pr/lggqc7","name":"Deck"}
+{"kind":"layout","layoutId":"f102fa80-c69e-474d-932e-e0ceec26aeb0","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"4f35cd5e-0ccb-42d0-b5b1-96033c4c586a","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/p19xfq","slide":1,"title":"AI 商品经营","textShapes":3}
+{"kind":"textbox","id":"sh/7618fm5c","slide":1,"name":"Title-3-1","text":"AI 商品经营\n与利润决策助手","textPreview":"AI 商品经营 | 与利润决策助手","textChars":15,"textLines":2,"bbox":[41.33,182.55,992,261.57]}
+{"kind":"textbox","id":"sh/87a9ormx","slide":1,"name":"Subtitle-4-2","text":"用一张行动清单，统一利润、推广与补货决策\n10—20 个真实 SPU｜每周生成｜轻闭环","textPreview":"用一张行动清单，统一利润、推广与补货决策 | 10—20 个真实 SPU｜每周生成｜轻闭环","textChars":43,"textLines":2,"bbox":[41.33,497.87,598.67,113.41]}
+{"kind":"textbox","id":"sh/tsjqhwni","slide":1,"name":"Subtitle-4-3","text":"趣然电商 · 玩具事业部 · V0","textPreview":"趣然电商 · 玩具事业部 · V0","textChars":17,"textLines":1,"bbox":[41.33,41.18,598.67,68.15]}
+{"kind":"shape","id":"sh/utsrq143","slide":1,"name":"accent-1","bbox":[41.33,18,180,7]}
+{"kind":"notes","id":"nt/p19xfq","slide":1,"text":""}
+{"kind":"slide","id":"sl/zihgaw","slide":2,"title":"02","textShapes":9}
+{"kind":"shape","id":"sh/mdg3qdsj","slide":2,"name":"Rounded-Rectangle-5-1","bbox":[41.33,317.33,374.67,312]}
+{"kind":"shape","id":"sh/90rml8bu","slide":2,"name":"Rounded-Rectangle-6-2","bbox":[452.67,317.33,374.67,312]}
+{"kind":"shape","id":"sh/8fylsna9","slide":2,"name":"Rounded-Rectangle-7-3","bbox":[864.28,317.33,374.67,312]}
+{"kind":"textbox","id":"sh/zap4fyts","slide":2,"name":"Slide-Number-Placeholder-1-4","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/y9g3mtc7","slide":2,"name":"Title-2-5","text":"一张清单，统一利润、推广与补货动作","textPreview":"一张清单，统一利润、推广与补货动作","textChars":17,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"textbox","id":"sh/lc7mh8by","slide":2,"name":"Content-Placeholder-9-6","text":"统一利润标准\n分类、阈值与优先级固定","textPreview":"统一利润标准 | 分类、阈值与优先级固定","textChars":18,"textLines":2,"bbox":[73.74,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/kbylo3ud","slide":2,"name":"Content-Placeholder-10-7","text":"保留全程追溯\n批次到结果均留痕","textPreview":"保留全程追溯 | 批次到结果均留痕","textChars":15,"textLines":2,"bbox":[896.78,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/b654bytw","slide":2,"name":"Content-Placeholder-11-8","text":"阻断继续补货\n止损/清仓同步禁补","textPreview":"阻断继续补货 | 止损/清仓同步禁补","textChars":16,"textLines":2,"bbox":[485.17,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/a5w3itcb","slide":2,"name":"Content-Placeholder-9-9","text":"统一","textPreview":"统一","textChars":2,"textLines":1,"bbox":[73.74,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/ojel8r25","slide":2,"name":"Content-Placeholder-9-10","text":"阻断","textPreview":"阻断","textChars":2,"textLines":1,"bbox":[484.3,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/p4n2hcjq","slide":2,"name":"Content-Placeholder-9-11","text":"追溯","textPreview":"追溯","textChars":2,"textLines":1,"bbox":[898.94,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/2hc36hkz","slide":2,"name":"Content-Placeholder-15-12","text":"固定规则生成主动作，AI 解释和排序，人工审核后执行。\n","textPreview":"固定规则生成主动作，AI 解释和排序，人工审核后执行。 |","textChars":28,"textLines":2,"bbox":[41.33,119.51,1197.33,167.92]}
+{"kind":"shape","id":"sh/nilkfm1k","slide":2,"name":"accent-2","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/zihgaw","slide":2,"text":""}
+{"kind":"slide","id":"sl/jt374o","slide":3,"title":"03","textShapes":7}
+{"kind":"textbox","id":"sh/lcfyhorq","slide":3,"name":"Google-Shape-532-p58-2","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/yp4fm98f","slide":3,"name":"Google-Shape-533-p58-3","text":"515 案例：止损晚了约 2 个月，补货却没有停","textPreview":"515 案例：止损晚了约 2 个月，补货却没有停","textChars":24,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"shape","id":"sh/zqdgfe9k","slide":3,"name":"Rounded-Rectangle-6-4","bbox":[657.68,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/cnmxkja9","slide":3,"name":"Content-Placeholder-10-5","text":"02 月报后发现\n约 2 个月后看到亏损","textPreview":"02 月报后发现 | 约 2 个月后看到亏损","textChars":20,"textLines":2,"bbox":[688.89,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/dovydoru","slide":3,"name":"Rounded-Rectangle-8-6","bbox":[42.94,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/ql4fi9s3","slide":3,"name":"Content-Placeholder-10-7","text":"01 亏损推广\n忙碌屋前期亏损推广","textPreview":"01 亏损推广 | 忙碌屋前期亏损推广","textChars":17,"textLines":2,"bbox":[74.15,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/bmdgbe9o","slide":3,"name":"Rounded-Rectangle-1-8","bbox":[657.68,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/oj2xgzax","slide":3,"name":"Content-Placeholder-10-9","text":"04 采购仍补货\n继续按旧销量补货","textPreview":"04 采购仍补货 | 继续按旧销量补货","textChars":17,"textLines":2,"bbox":[688.89,489.77,523.56,110.07]}
+{"kind":"shape","id":"sh/pkby94ri","slide":3,"name":"Rounded-Rectangle-3-10","bbox":[42.94,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/1sb2pkzu","slide":3,"name":"Content-Placeholder-10-11","text":"03 运营止损\n减少推广但未同步采购","textPreview":"03 运营止损 | 减少推广但未同步采购","textChars":18,"textLines":2,"bbox":[74.15,489.77,523.56,110.07]}
+{"kind":"textbox","id":"sh/0r21wfy9","slide":3,"name":"Content-Placeholder-15-12","text":"损失来自发现滞后和跨部门动作断裂，不只是一个利润指标没被看到。\n","textPreview":"损失来自发现滞后和跨部门动作断裂，不只是一个利润指标没被看到。 |","textChars":32,"textLines":2,"bbox":[42.09,111.02,1197.33,106.27]}
+{"kind":"shape","id":"sh/fqtknuho","slide":3,"name":"accent-3","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/jt374o","slide":3,"text":""}
+{"kind":"slide","id":"sl/4r98m8","slide":4,"title":"04","textShapes":9}
+{"kind":"shape","id":"sh/ormtofuh","slide":4,"name":"Rounded-Rectangle-5-1","bbox":[41.33,317.33,374.67,312]}
+{"kind":"shape","id":"sh/3qdcfadw","slide":4,"name":"Rounded-Rectangle-6-2","bbox":[452.67,317.33,374.67,312]}
+{"kind":"shape","id":"sh/2p4bm5cb","slide":4,"name":"Rounded-Rectangle-7-3","bbox":[864.28,317.33,374.67,312]}
+{"kind":"textbox","id":"sh/dgfulkby","slide":4,"name":"Slide-Number-Placeholder-1-4","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/cf6dsfud","slide":4,"name":"Title-2-5","text":"一次决策断点，已造成真实经营损失","textPreview":"一次决策断点，已造成真实经营损失","textChars":16,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"textbox","id":"sh/bedcjats","slide":4,"name":"Content-Placeholder-9-6","text":"件滞销\n库存动作未同步","textPreview":"件滞销 | 库存动作未同步","textChars":11,"textLines":2,"bbox":[73.74,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/qd4vqpc7","slide":4,"name":"Content-Placeholder-10-7","text":"元利润损失\n发现延迟约 2 个月","textPreview":"元利润损失 | 发现延迟约 2 个月","textChars":16,"textLines":2,"bbox":[896.78,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/tkbu90vu","slide":4,"name":"Content-Placeholder-11-8","text":"元库存占用\n资金被持续占用","textPreview":"元库存占用 | 资金被持续占用","textChars":13,"textLines":2,"bbox":[485.17,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/sj2tgvu9","slide":4,"name":"Content-Placeholder-9-9","text":"≈3,000","textPreview":"≈3,000","textChars":6,"textLines":1,"bbox":[73.74,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/il8z2tgz","slide":4,"name":"Content-Placeholder-9-10","text":"≈10万","textPreview":"≈10万","textChars":4,"textLines":1,"bbox":[484.3,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/jmhgbyhk","slide":4,"name":"Content-Placeholder-9-11","text":"≈6万","textPreview":"≈6万","textChars":3,"textLines":1,"bbox":[898.94,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/knah43y5","slide":4,"name":"Content-Placeholder-15-12","text":"价值先用已发生、可核验的事实表达，不推演未确认的年度收益。\n","textPreview":"价值先用已发生、可核验的事实表达，不推演未确认的年度收益。 |","textChars":30,"textLines":2,"bbox":[41.33,119.51,1197.33,167.92]}
+{"kind":"shape","id":"sh/5ojyd8fq","slide":4,"name":"accent-4","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/4r98m8","slide":4,"text":""}
+{"kind":"slide","id":"sl/00i4rf","slide":5,"title":"05","textShapes":7}
+{"kind":"textbox","id":"sh/pofa9oj6","slide":5,"name":"Google-Shape-532-p58-2","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/2lore90v","slide":5,"name":"Google-Shape-533-p58-3","text":"固定规则先判动作，AI 只解释和排序","textPreview":"固定规则先判动作，AI 只解释和排序","textChars":18,"textLines":1,"bbox":[41.33,36.17,1197.33,67.64]}
+{"kind":"shape","id":"sh/nmxs7e1g","slide":5,"name":"Rounded-Rectangle-1-4","bbox":[41.68,350.56,580.99,138.67]}
+{"kind":"textbox","id":"sh/0jm9cjip","slide":5,"name":"Content-Placeholder-10-5","text":"固定规则决定","textPreview":"固定规则决定","textChars":6,"textLines":1,"bbox":[72.89,376.69,523.56,92.16]}
+{"kind":"textbox","id":"sh/1kfa54ja","slide":5,"name":"Content-Placeholder-15-6","text":"商品类型｜利润与品退阈值\n主动作优先级｜补货冲突\n清仓 > 止损 > 观察 > 加投 > 维持","textPreview":"商品类型｜利润与品退阈值 | 主动作优先级｜补货冲突 | 清仓 > 止损 > 观察 > 加投 > 维持","textChars":47,"textLines":3,"bbox":[72.89,506.94,549.78,102.67]}
+{"kind":"shape","id":"sh/eh4ra90j","slide":5,"name":"Rounded-Rectangle-7-7","bbox":[657.3,350.56,580.99,138.67]}
+{"kind":"textbox","id":"sh/fid83e14","slide":5,"name":"Content-Placeholder-10-8","text":"AI 负责解释","textPreview":"AI 负责解释","textChars":7,"textLines":1,"bbox":[688.51,376.69,523.56,92.16]}
+{"kind":"textbox","id":"sh/kfq9o3it","slide":5,"name":"Content-Placeholder-15-9","text":"说明问题｜提取关键依据\n解释排序｜给出优化提示\n不得改规则｜不得猜数据","textPreview":"说明问题｜提取关键依据 | 解释排序｜给出优化提示 | 不得改规则｜不得猜数据","textChars":35,"textLines":3,"bbox":[688.51,506.94,549.78,102.67]}
+{"kind":"textbox","id":"sh/lgzah8je","slide":5,"name":"Content-Placeholder-15-10","text":"确定性经营结论与生成式表达分开，避免模型漂移改变业务规则。\n\n","textPreview":"确定性经营结论与生成式表达分开，避免模型漂移改变业务规则。 |  |","textChars":31,"textLines":3,"bbox":[42.09,121.52,1197.33,171.05]}
+{"kind":"shape","id":"sh/lgny5sru","slide":5,"name":"accent-5","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/00i4rf","slide":5,"text":""}
+{"kind":"slide","id":"sl/25enxd","slide":6,"title":"06","textShapes":7}
+{"kind":"textbox","id":"sh/gzu543ax","slide":6,"name":"Google-Shape-532-p58-2","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/fel4vi9c","slide":6,"name":"Google-Shape-533-p58-3","text":"四段轻闭环，让止损同步到采购","textPreview":"四段轻闭环，让止损同步到采购","textChars":14,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"shape","id":"sh/edcn2dsr","slide":6,"name":"Rounded-Rectangle-6-4","bbox":[657.68,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/tc3mt8r6","slide":6,"name":"Content-Placeholder-10-5","text":"02 规则与解释\n固定规则判动作，AI 生成说明","textPreview":"02 规则与解释 | 固定规则判动作，AI 生成说明","textChars":24,"textLines":2,"bbox":[688.89,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/sbu503a1","slide":6,"name":"Rounded-Rectangle-8-6","bbox":[42.94,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/ral4ry9g","slide":6,"name":"Content-Placeholder-10-7","text":"01 导入与校验\n每周一导入 SPU 经营表","textPreview":"01 导入与校验 | 每周一导入 SPU 经营表","textChars":22,"textLines":2,"bbox":[74.15,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/69snytsv","slide":6,"name":"Rounded-Rectangle-1-8","bbox":[657.68,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/58jmpora","slide":6,"name":"Content-Placeholder-10-9","text":"04 执行与结果\n运营/采购更新状态和结果","textPreview":"04 执行与结果 | 运营/采购更新状态和结果","textChars":21,"textLines":2,"bbox":[688.89,489.77,523.56,110.07]}
+{"kind":"shape","id":"sh/47a5wjap","slide":6,"name":"Rounded-Rectangle-3-10","bbox":[42.94,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/qpwzmloj","slide":6,"name":"Content-Placeholder-10-11","text":"03 审核与分派\n运营主管审核并分配角色","textPreview":"03 审核与分派 | 运营主管审核并分配角色","textChars":20,"textLines":2,"bbox":[74.15,489.77,523.56,110.07]}
+{"kind":"textbox","id":"sh/bq5gvq54","slide":6,"name":"Content-Placeholder-15-12","text":"同一条建议从生成到结果均留状态；止损或清仓同步输出“禁止补货”。\n","textPreview":"同一条建议从生成到结果均留状态；止损或清仓同步输出“禁止补货”。 |","textChars":33,"textLines":2,"bbox":[42.09,111.02,1197.33,106.27]}
+{"kind":"shape","id":"sh/cbehov6p","slide":6,"name":"accent-6","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/25enxd","slide":6,"text":""}
+{"kind":"slide","id":"sl/ovgy9w","slide":7,"title":"07","textShapes":7}
+{"kind":"textbox","id":"sh/5cn2dwbm","slide":7,"name":"Google-Shape-532-p58-2","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/i9cj21cv","slide":7,"name":"Google-Shape-533-p58-3","text":"每条建议都要写清对象、问题、依据和动作","textPreview":"每条建议都要写清对象、问题、依据和动作","textChars":19,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"shape","id":"sh/jalkb6dg","slide":7,"name":"Rounded-Rectangle-6-4","bbox":[657.68,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/sfe18bux","slide":7,"name":"Content-Placeholder-10-5","text":"02 发现的问题\n明确需要处理的经营异常","textPreview":"02 发现的问题 | 明确需要处理的经营异常","textChars":20,"textLines":2,"bbox":[688.89,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/t0n2hgbi","slide":7,"name":"Rounded-Rectangle-8-6","bbox":[42.94,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/6dwj61c7","slide":7,"name":"Content-Placeholder-10-7","text":"01 具体对象\nSPU ID、名称、店铺、责任运营","textPreview":"01 具体对象 | SPU ID、名称、店铺、责任运营","textChars":25,"textLines":2,"bbox":[74.15,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/7e5kf6tc","slide":7,"name":"Rounded-Rectangle-1-8","bbox":[657.68,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/8ja1w7ut","slide":7,"name":"Content-Placeholder-10-9","text":"04 推荐动作\n对应角色可以直接执行","textPreview":"04 推荐动作 | 对应角色可以直接执行","textChars":18,"textLines":2,"bbox":[688.89,489.77,523.56,110.07]}
+{"kind":"shape","id":"sh/943i5cve","slide":7,"name":"Rounded-Rectangle-3-10","bbox":[42.94,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/p4je9sfa","slide":7,"name":"Content-Placeholder-10-11","text":"03 关键依据\n周期、关键值、阈值、对比关系","textPreview":"03 关键依据 | 周期、关键值、阈值、对比关系","textChars":22,"textLines":2,"bbox":[74.15,489.77,523.56,110.07]}
+{"kind":"textbox","id":"sh/o3axgnyp","slide":7,"name":"Content-Placeholder-15-12","text":"建议必须可审核、可执行、可追溯，而不是只显示一个“风险”标签。\n","textPreview":"建议必须可审核、可执行、可追溯，而不是只显示一个“风险”标签。 |","textChars":32,"textLines":2,"bbox":[42.09,111.02,1197.33,106.27]}
+{"kind":"shape","id":"sh/321w7ixk","slide":7,"name":"accent-7","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/ovgy9w","slide":7,"text":""}
+{"kind":"slide","id":"sl/md4fzr","slide":8,"title":"08","textShapes":7}
+{"kind":"textbox","id":"sh/zqlcbm1g","slide":8,"name":"Google-Shape-532-p58-2","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/0rud4ri1","slide":8,"name":"Google-Shape-533-p58-3","text":"SPU 是唯一决策粒度；数据不足就降级，不猜测","textPreview":"SPU 是唯一决策粒度；数据不足就降级，不猜测","textChars":23,"textLines":1,"bbox":[41.33,36.17,1197.33,67.64]}
+{"kind":"shape","id":"sh/1s3udwj6","slide":8,"name":"Rounded-Rectangle-1-4","bbox":[41.68,350.56,580.99,138.67]}
+{"kind":"textbox","id":"sh/qlsbyx0j","slide":8,"name":"Content-Placeholder-10-5","text":"首版读取数据","textPreview":"首版读取数据","textChars":6,"textLines":1,"bbox":[72.89,376.69,523.56,92.16]}
+{"kind":"textbox","id":"sh/rm1c7214","slide":8,"name":"Content-Placeholder-15-6","text":"SPU 身份与上架日期\n净销售额｜经营准利润率｜推广\n品退｜条件库存｜近 14 天销量","textPreview":"SPU 身份与上架日期 | 净销售额｜经营准利润率｜推广 | 品退｜条件库存｜近 14 天销量","textChars":43,"textLines":3,"bbox":[72.89,506.94,549.78,102.67]}
+{"kind":"shape","id":"sh/cnat07ip","slide":8,"name":"Rounded-Rectangle-7-7","bbox":[657.3,350.56,580.99,138.67]}
+{"kind":"textbox","id":"sh/doju9cja","slide":8,"name":"Content-Placeholder-10-8","text":"安全降级","textPreview":"安全降级","textChars":4,"textLines":1,"bbox":[688.51,376.69,523.56,92.16]}
+{"kind":"textbox","id":"sh/ahwva103","slide":8,"name":"Content-Placeholder-15-9","text":"日期错误：不分类\n库存缺失：不生成补货\n品退未核验：不单独触发","textPreview":"日期错误：不分类 | 库存缺失：不生成补货 | 品退未核验：不单独触发","textChars":31,"textLines":3,"bbox":[688.51,506.94,549.78,102.67]}
+{"kind":"textbox","id":"sh/bi5cj61o","slide":8,"name":"Content-Placeholder-15-10","text":"数据边界决定建议边界：缺关键字段时宁可不生成，也不让 AI 补齐事实。\n\n","textPreview":"数据边界决定建议边界：缺关键字段时宁可不生成，也不让 AI 补齐事实。 |  |","textChars":37,"textLines":3,"bbox":[42.09,121.52,1197.33,171.05]}
+{"kind":"shape","id":"sh/f6p4jmx4","slide":8,"name":"accent-8","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/md4fzr","slide":8,"text":""}
+{"kind":"slide","id":"sl/hwjit1","slide":9,"title":"09","textShapes":9}
+{"kind":"shape","id":"sh/3ehw3ex8","slide":9,"name":"Rounded-Rectangle-5-1","bbox":[41.33,317.33,374.67,312]}
+{"kind":"shape","id":"sh/4fqxcjet","slide":9,"name":"Rounded-Rectangle-6-2","bbox":[452.67,317.33,374.67,312]}
+{"kind":"shape","id":"sh/5gje5ofe","slide":9,"name":"Rounded-Rectangle-7-3","bbox":[864.28,317.33,374.67,312]}
+{"kind":"textbox","id":"sh/up8v69wr","slide":9,"name":"Slide-Number-Placeholder-1-4","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/vqhwzuxw","slide":9,"name":"Title-2-5","text":"权限、追溯与 LiteLLM 边界保证可控","textPreview":"权限、追溯与 LiteLLM 边界保证可控","textChars":21,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"textbox","id":"sh/gbqd8zeh","slide":9,"name":"Content-Placeholder-9-6","text":"角色最小可见\n采购只看必要依据","textPreview":"角色最小可见 | 采购只看必要依据","textChars":15,"textLines":2,"bbox":[73.74,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/hcze14f2","slide":9,"name":"Content-Placeholder-10-7","text":"系统级模型配置\n普通用户不可见密钥","textPreview":"系统级模型配置 | 普通用户不可见密钥","textChars":17,"textLines":2,"bbox":[896.78,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/6lov2pwf","slide":9,"name":"Content-Placeholder-11-8","text":"规则与数据留痕\n批次、期间、关键值","textPreview":"规则与数据留痕 | 批次、期间、关键值","textChars":17,"textLines":2,"bbox":[485.17,514.5,309.67,86]}
+{"kind":"textbox","id":"sh/7mxwvux0","slide":9,"name":"Content-Placeholder-9-9","text":"权限","textPreview":"权限","textChars":2,"textLines":1,"bbox":[73.74,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/ju58rihw","slide":9,"name":"Content-Placeholder-9-10","text":"追溯","textPreview":"追溯","textChars":2,"textLines":1,"bbox":[484.3,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/y9cryd0b","slide":9,"name":"Content-Placeholder-9-11","text":"运维","textPreview":"运维","textChars":2,"textLines":1,"bbox":[898.94,360,308.67,142.71]}
+{"kind":"textbox","id":"sh/lwnqtsz2","slide":9,"name":"Content-Placeholder-15-12","text":"数据可见范围、规则证据和模型接入边界同时固定。\n","textPreview":"数据可见范围、规则证据和模型接入边界同时固定。 |","textChars":24,"textLines":2,"bbox":[41.33,119.51,1197.33,167.92]}
+{"kind":"shape","id":"sh/kve90nih","slide":9,"name":"accent-9","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/hwjit1","slide":9,"text":""}
+{"kind":"slide","id":"sl/j5n8hu","slide":10,"title":"10","textShapes":8}
+{"kind":"textbox","id":"sh/25cjqh4r","slide":10,"name":"Slide-Number-Placeholder-3-2","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/p8321wn2","slide":10,"name":"Title-10-3","text":"先跑通 10—20 个真实 SPU，再补数据扩能力","textPreview":"先跑通 10—20 个真实 SPU，再补数据扩能力","textChars":25,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"shape","id":"sh/47ulsrmh","slide":10,"name":"Google-Shape-2259-p159-4","bbox":[35.46,354.2,1285.61,0.03]}
+{"kind":"shape","id":"sh/rulk3m58","slide":10,"name":"Google-Shape-2260-p159-5","bbox":[35.46,348.58,11.24,11.24]}
+{"kind":"shape","id":"sh/qtc3uh4n","slide":10,"name":"Google-Shape-2261-p159-6","bbox":[446.38,348.58,11.24,11.24]}
+{"kind":"shape","id":"sh/dw325wne","slide":10,"name":"Google-Shape-2262-p159-7","bbox":[858.38,348.58,11.24,11.24]}
+{"kind":"textbox","id":"sh/cvulwrmt","slide":10,"name":"Content-Placeholder-15-8","text":"NOW","textPreview":"NOW","textChars":3,"textLines":1,"bbox":[41.33,298.51,169.33,27.55]}
+{"kind":"textbox","id":"sh/zy5k7654","slide":10,"name":"Content-Placeholder-15-9","text":"NEXT","textPreview":"NEXT","textChars":4,"textLines":1,"bbox":[450.83,298.51,169.33,27.55]}
+{"kind":"textbox","id":"sh/exw3y14z","slide":10,"name":"Content-Placeholder-15-10","text":"LATER","textPreview":"LATER","textChars":5,"textLines":1,"bbox":[863.33,298.51,169.33,27.55]}
+{"kind":"textbox","id":"sh/8rqhw7ap","slide":10,"name":"Text-Placeholder-16-11","text":"补齐关键数据\n仓内/在途｜近 14 天销量\n可信近 7 天品退","textPreview":"补齐关键数据 | 仓内/在途｜近 14 天销量 | 可信近 7 天品退","textChars":31,"textLines":3,"bbox":[453.24,401.33,331.35,166.54]}
+{"kind":"textbox","id":"sh/tszypcba","slide":10,"name":"Text-Placeholder-16-12","text":"V0 试点\n周导入｜固定规则\n行动清单｜轻闭环","textPreview":"V0 试点 | 周导入｜固定规则 | 行动清单｜轻闭环","textChars":23,"textLines":3,"bbox":[41.98,401.33,331.35,166.54]}
+{"kind":"textbox","id":"sh/6p8fuxsj","slide":10,"name":"Text-Placeholder-16-13","text":"候选扩展\n评价/退款原因｜广告明细\n系统写回｜SKU","textPreview":"候选扩展 | 评价/退款原因｜广告明细 | 系统写回｜SKU","textChars":26,"textLines":3,"bbox":[858.57,401.33,331.35,166.54]}
+{"kind":"shape","id":"sh/7qhgn2t4","slide":10,"name":"accent-10","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/j5n8hu","slide":10,"text":""}
+{"kind":"slide","id":"sl/pg6bwv","slide":11,"title":"11","textShapes":7}
+{"kind":"textbox","id":"sh/u5wbuxkb","slide":11,"name":"Google-Shape-532-p58-2","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1184.18,659.24,54.48,25.33]}
+{"kind":"textbox","id":"sh/h8nu5c32","slide":11,"name":"Google-Shape-533-p58-3","text":"第一版完成标准：发现至少 3 个真实问题，并且建议可执行","textPreview":"第一版完成标准：发现至少 3 个真实问题，并且建议可执行","textChars":28,"textLines":1,"bbox":[41.33,36.12,1197.33,109.97]}
+{"kind":"shape","id":"sh/g7etw72h","slide":11,"name":"Rounded-Rectangle-6-4","bbox":[657.68,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/7ilcz2lk","slide":11,"name":"Content-Placeholder-10-5","text":"02 真实发现\n至少 3 个数据触发的经营问题","textPreview":"02 真实发现 | 至少 3 个数据触发的经营问题","textChars":23,"textLines":2,"bbox":[688.89,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/6hcbqxkf","slide":11,"name":"Rounded-Rectangle-8-6","bbox":[42.94,248.8,580.99,172]}
+{"kind":"textbox","id":"sh/tknu1s3q","slide":11,"name":"Content-Placeholder-10-7","text":"01 真实范围\n玩具事业部 10—20 个真实 SPU","textPreview":"01 真实范围 | 玩具事业部 10—20 个真实 SPU","textChars":27,"textLines":2,"bbox":[74.15,279.77,523.56,110.07]}
+{"kind":"shape","id":"sh/8jets725","slide":11,"name":"Rounded-Rectangle-1-8","bbox":[657.68,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/jelcvilo","slide":11,"name":"Content-Placeholder-10-9","text":"04 轻闭环走通\n审核、执行、结果和备注可记录","textPreview":"04 轻闭环走通 | 审核、执行、结果和备注可记录","textChars":23,"textLines":2,"bbox":[688.89,489.77,523.56,110.07]}
+{"kind":"shape","id":"sh/ydcbmdk3","slide":11,"name":"Rounded-Rectangle-3-10","bbox":[42.94,458.8,580.99,172]}
+{"kind":"textbox","id":"sh/kzypwjmd","slide":11,"name":"Content-Placeholder-10-11","text":"03 可执行建议\n四要素完整，固定规则可追溯","textPreview":"03 可执行建议 | 四要素完整，固定规则可追溯","textChars":22,"textLines":2,"bbox":[74.15,489.77,523.56,110.07]}
+{"kind":"textbox","id":"sh/507q54ny","slide":11,"name":"Content-Placeholder-15-12","text":"V0 以真实业务评审通过为准，不以页面数量或模型文案数量为准。\n","textPreview":"V0 以真实业务评审通过为准，不以页面数量或模型文案数量为准。 |","textChars":32,"textLines":2,"bbox":[42.09,111.02,1197.33,106.27]}
+{"kind":"shape","id":"sh/ixw7u947","slide":11,"name":"accent-11","bbox":[41.33,18,92,7]}
+{"kind":"notes","id":"nt/pg6bwv","slide":11,"text":""}

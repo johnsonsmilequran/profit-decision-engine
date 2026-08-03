@@ -1,0 +1,276 @@
+{"kind":"deck","id":"pr/oc9s5u","name":"Deck"}
+{"kind":"layout","layoutId":"53263b66-aac0-4d83-b9d1-5e221d351d03","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"7e61414c-be45-43c5-ac16-b8c50f452f6b","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/q3r1i6","slide":1,"title":"趣然电商 · 玩具事业部 · V0 MVP","textShapes":14}
+{"kind":"textbox","id":"sh/obal8r6l","slide":1,"text":"趣然电商 · 玩具事业部 · V0 MVP","textPreview":"趣然电商 · 玩具事业部 · V0 MVP","textChars":21,"textLines":1,"bbox":[52,46,620,26]}
+{"kind":"textbox","id":"sh/na1kfmpg","slide":1,"text":"AI 商品经营\n与利润决策助手","textPreview":"AI 商品经营 | 与利润决策助手","textChars":15,"textLines":2,"bbox":[52,154,690,190]}
+{"kind":"textbox","id":"sh/298361ov","slide":1,"text":"用固定规则统一利润、推广与补货决策","textPreview":"用固定规则统一利润、推广与补货决策","textChars":17,"textLines":1,"bbox":[52,368,650,46]}
+{"kind":"shape","id":"sh/xgj2lg7i","slide":1,"bbox":[52,448,488,54]}
+{"kind":"textbox","id":"sh/cfalcb6x","slide":1,"text":"10—20 个真实 SPU｜每周生成｜轻闭环","textPreview":"10—20 个真实 SPU｜每周生成｜轻闭环","textChars":22,"textLines":1,"bbox":[72,461,450,30]}
+{"kind":"shape","id":"sh/be1kj6pc","slide":1,"bbox":[790,160,180,142]}
+{"kind":"textbox","id":"sh/ads3a1or","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[810,178,60,22]}
+{"kind":"textbox","id":"sh/l43mpg7e","slide":1,"text":"导入","textPreview":"导入","textChars":2,"textLines":1,"bbox":[810,229,140,38]}
+{"kind":"shape","id":"sh/k3ulgb6t","slide":1,"bbox":[1004,160,180,142]}
+{"kind":"textbox","id":"sh/ydc7a5cj","slide":1,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1024,178,60,22]}
+{"kind":"textbox","id":"sh/zelojad4","slide":1,"text":"规则","textPreview":"规则","textChars":2,"textLines":1,"bbox":[1024,229,140,38]}
+{"kind":"shape","id":"sh/kfupcfup","slide":1,"bbox":[790,338,180,142]}
+{"kind":"textbox","id":"sh/lg36lkvu","slide":1,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[810,356,60,22]}
+{"kind":"textbox","id":"sh/mhw7epcf","slide":1,"text":"审核","textPreview":"审核","textChars":2,"textLines":1,"bbox":[810,407,140,38]}
+{"kind":"shape","id":"sh/7i5onud0","slide":1,"bbox":[1004,338,180,142]}
+{"kind":"textbox","id":"sh/8jepgzul","slide":1,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1024,356,60,22]}
+{"kind":"textbox","id":"sh/94n6p4b6","slide":1,"text":"执行","textPreview":"执行","textChars":2,"textLines":1,"bbox":[1024,407,140,38]}
+{"kind":"textbox","id":"sh/2lsn2lcb","slide":1,"text":"不是经营看板，而是把规则结论送进审核、执行与结果记录。","textPreview":"不是经营看板，而是把规则结论送进审核、执行与结果记录。","textChars":27,"textLines":1,"bbox":[790,532,400,58]}
+{"kind":"textbox","id":"sh/nm1obqdw","slide":1,"text":"阶段 6 正式版 · 2026","textPreview":"阶段 6 正式版 · 2026","textChars":15,"textLines":1,"bbox":[52,675,260,20]}
+{"kind":"notes","id":"nt/q3r1i6","slide":1,"text":"开场先强调：首版是决策轻闭环，不是只读看板。范围只到 SPU。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md"}
+{"kind":"slide","id":"sl/5y6u7k","slide":2,"title":"执行摘要","textShapes":16}
+{"kind":"textbox","id":"sh/p8rm5kv6","slide":2,"text":"执行摘要","textPreview":"执行摘要","textChars":4,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/2l0na5cf","slide":2,"text":"每周形成一次新判断，一周内持续推进动作","textPreview":"每周形成一次新判断，一周内持续推进动作","textChars":19,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/nm943ad0","slide":2,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/cbi5gfux","slide":2,"text":"02 / 11","textPreview":"02 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/xcrm9kv2","slide":2,"bbox":[42,180,372,300]}
+{"kind":"shape","id":"sh/a90ne5cr","slide":2,"bbox":[42,180,372,8]}
+{"kind":"textbox","id":"sh/ba947adc","slide":2,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[64,206,62,26]}
+{"kind":"textbox","id":"sh/sfyl4vud","slide":2,"text":"统一利润标准","textPreview":"统一利润标准","textChars":6,"textLines":1,"bbox":[64,242,328,54]}
+{"kind":"textbox","id":"sh/dg7mx0vy","slide":2,"text":"同一批数据、同一规则版本得到相同的商品分类、主动作与补货结论。","textPreview":"同一批数据、同一规则版本得到相同的商品分类、主动作与补货结论。","textChars":31,"textLines":1,"bbox":[64,304,328,156]}
+{"kind":"shape","id":"sh/lkf6983u","slide":2,"bbox":[454,180,372,300]}
+{"kind":"shape","id":"sh/0j650329","slide":2,"bbox":[454,180,372,8]}
+{"kind":"textbox","id":"sh/zix47ylo","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[476,206,62,26]}
+{"kind":"textbox","id":"sh/yhonytk3","slide":2,"text":"阻断动作冲突","textPreview":"阻断动作冲突","textChars":6,"textLines":1,"bbox":[476,242,328,54]}
+{"kind":"textbox","id":"sh/9oz6d8jq","slide":2,"text":"止损或清仓与“禁止补货”同时生成，避免运营减投后采购继续补货。","textPreview":"止损或清仓与“禁止补货”同时生成，避免运营减投后采购继续补货。","textChars":31,"textLines":1,"bbox":[476,304,328,156]}
+{"kind":"shape","id":"sh/8nq5432l","slide":2,"bbox":[866,180,372,300]}
+{"kind":"shape","id":"sh/nmhoby10","slide":2,"bbox":[866,180,372,8]}
+{"kind":"textbox","id":"sh/mlon2tkf","slide":2,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[888,206,62,26]}
+{"kind":"textbox","id":"sh/xcz6hsj2","slide":2,"text":"全程可追溯","textPreview":"全程可追溯","textChars":5,"textLines":1,"bbox":[888,242,328,54]}
+{"kind":"textbox","id":"sh/wrq58n2h","slide":2,"text":"保留批次、业务截止日、规则版本、原始关键值与审核执行历史。","textPreview":"保留批次、业务截止日、规则版本、原始关键值与审核执行历史。","textChars":29,"textLines":1,"bbox":[888,304,328,156]}
+{"kind":"shape","id":"sh/gvypkrat","slide":2,"bbox":[42,516,1196,116]}
+{"kind":"textbox","id":"sh/hw7qdwre","slide":2,"text":"周一","textPreview":"周一","textChars":2,"textLines":1,"bbox":[72,542,90,26]}
+{"kind":"textbox","id":"sh/utg7ihsn","slide":2,"text":"导入新经营表 → 固定规则生成新清单","textPreview":"导入新经营表 → 固定规则生成新清单","textChars":18,"textLines":1,"bbox":[162,538,470,38]}
+{"kind":"textbox","id":"sh/vup8bm98","slide":2,"text":"周内","textPreview":"周内","textChars":2,"textLines":1,"bbox":[702,542,90,26]}
+{"kind":"textbox","id":"sh/4jipobap","slide":2,"text":"只更新审核、执行和结果状态","textPreview":"只更新审核、执行和结果状态","textChars":13,"textLines":1,"bbox":[792,538,400,38]}
+{"kind":"notes","id":"nt/5y6u7k","slide":2,"text":"讲清楚数据刷新与状态刷新是两件事：一周只生成一次新判断。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/urf4tr","slide":3,"title":"核心痛点场景","textShapes":26}
+{"kind":"textbox","id":"sh/3mx4rm1g","slide":3,"text":"核心痛点场景","textPreview":"核心痛点场景","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/4n65kri1","slide":3,"text":"515 案例：两次断点叠加成真实损失","textPreview":"515 案例：两次断点叠加成真实损失","textChars":18,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/pofmtwjm","slide":3,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/uh4neh0z","slide":3,"text":"03 / 11","textPreview":"03 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/vid4nm14","slide":3,"bbox":[42,200,260,220]}
+{"kind":"shape","id":"sh/gjm5g7ip","slide":3,"bbox":[62,220,42,42]}
+{"kind":"textbox","id":"sh/hkvmpcja","slide":3,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[62,221,42,40]}
+{"kind":"textbox","id":"sh/6tk3axkn","slide":3,"text":"亏损推广","textPreview":"亏损推广","textChars":4,"textLines":1,"bbox":[62,288,220,40]}
+{"kind":"textbox","id":"sh/7ed4j218","slide":3,"text":"前期持续以亏损方式推广","textPreview":"前期持续以亏损方式推广","textChars":11,"textLines":1,"bbox":[62,340,220,56]}
+{"kind":"textbox","id":"sh/3e5ovuho","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[308,281,32,34]}
+{"kind":"shape","id":"sh/2dw72p03","slide":3,"bbox":[341,200,260,220]}
+{"kind":"shape","id":"sh/pgn6x4zu","slide":3,"bbox":[361,220,42,42]}
+{"kind":"textbox","id":"sh/4fep4zi9","slide":3,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[361,221,42,40]}
+{"kind":"textbox","id":"sh/ripozuhk","slide":3,"text":"发现滞后","textPreview":"发现滞后","textChars":4,"textLines":1,"bbox":[361,288,220,40]}
+{"kind":"textbox","id":"sh/qhg76pgf","slide":3,"text":"月度利润报表后才发现","textPreview":"月度利润报表后才发现","textChars":10,"textLines":1,"bbox":[361,340,220,56]}
+{"kind":"textbox","id":"sh/dk7614zq","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[607,281,32,34]}
+{"kind":"shape","id":"sh/cjyp8zy5","slide":3,"bbox":[640,200,260,220]}
+{"kind":"shape","id":"sh/7mlonahg","slide":3,"bbox":[660,220,42,42]}
+{"kind":"textbox","id":"sh/6lcnu50v","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[660,221,42,40]}
+{"kind":"textbox","id":"sh/atkjix4v","slide":3,"text":"运营减投","textPreview":"运营减投","textChars":4,"textLines":1,"bbox":[660,288,220,40]}
+{"kind":"textbox","id":"sh/ved0r25g","slide":3,"text":"减少推广但未同步采购","textPreview":"减少推广但未同步采购","textChars":10,"textLines":1,"bbox":[660,340,220,56]}
+{"kind":"textbox","id":"sh/wfm1k7m1","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[906,281,32,34]}
+{"kind":"shape","id":"sh/xgvitcn6","slide":3,"bbox":[939,200,260,220]}
+{"kind":"shape","id":"sh/mpkzexoj","slide":3,"bbox":[959,220,42,42]}
+{"kind":"textbox","id":"sh/nqt0n254","slide":3,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[959,221,42,40]}
+{"kind":"textbox","id":"sh/8r21g76p","slide":3,"text":"采购续补","textPreview":"采购续补","textChars":4,"textLines":1,"bbox":[959,288,220,40]}
+{"kind":"textbox","id":"sh/9sbipcna","slide":3,"text":"仍按旧销量继续补货","textPreview":"仍按旧销量继续补货","textChars":9,"textLines":1,"bbox":[959,340,220,56]}
+{"kind":"shape","id":"sh/yl0zadon","slide":3,"bbox":[42,456,1196,150]}
+{"kind":"textbox","id":"sh/zmt0ji58","slide":3,"text":"约 2 个月","textPreview":"约 2 个月","textChars":6,"textLines":1,"bbox":[70,486,250,42]}
+{"kind":"textbox","id":"sh/1gzmpg7q","slide":3,"text":"发现延迟","textPreview":"发现延迟","textChars":4,"textLines":1,"bbox":[70,540,250,26]}
+{"kind":"textbox","id":"sh/gfqlgv65","slide":3,"text":"约 3000 件","textPreview":"约 3000 件","textChars":8,"textLines":1,"bbox":[361,486,250,42]}
+{"kind":"textbox","id":"sh/feh4nqpk","slide":3,"text":"滞销","textPreview":"滞销","textChars":2,"textLines":1,"bbox":[361,540,250,26]}
+{"kind":"textbox","id":"sh/ed83eloz","slide":3,"text":"约 10 万元","textPreview":"约 10 万元","textChars":7,"textLines":1,"bbox":[652,486,250,42]}
+{"kind":"textbox","id":"sh/tcf2lg7e","slide":3,"text":"库存占用","textPreview":"库存占用","textChars":4,"textLines":1,"bbox":[652,540,250,26]}
+{"kind":"textbox","id":"sh/sb6lcb69","slide":3,"text":"约 6 万元","textPreview":"约 6 万元","textChars":6,"textLines":1,"bbox":[943,486,250,42]}
+{"kind":"textbox","id":"sh/raxkj6po","slide":3,"text":"利润损失","textPreview":"利润损失","textChars":4,"textLines":1,"bbox":[943,540,250,26]}
+{"kind":"notes","id":"nt/urf4tr","slide":3,"text":"强调损失来自“发现滞后 + 跨部门动作断裂”，不是单个指标没展示。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md"}
+{"kind":"slide","id":"sl/kf4q4i","slide":4,"title":"价值证据","textShapes":11}
+{"kind":"textbox","id":"sh/1cz258n2","slide":4,"text":"价值证据","textPreview":"价值证据","textChars":4,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/epojatob","slide":4,"text":"价值先用真实案例验证，不外推公司级 ROI","textPreview":"价值先用真实案例验证，不外推公司级 ROI","textChars":21,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/fqh03y5w","slide":4,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/ofq1g36d","slide":4,"text":"04 / 11","textPreview":"04 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"textbox","id":"sh/pgz298ny","slide":4,"text":"阶段 2 的价值论证未执行；首版只使用已确认的 515 量化事实。","textPreview":"阶段 2 的价值论证未执行；首版只使用已确认的 515 量化事实。","textChars":33,"textLines":1,"bbox":[42,165,1180,44]}
+{"kind":"shape","id":"sh/2d8jedo7","slide":4,"bbox":[42,246,372,270]}
+{"kind":"textbox","id":"sh/3ehk7y5s","slide":4,"text":"≈ 3000","textPreview":"≈ 3000","textChars":6,"textLines":1,"bbox":[70,302,316,70]}
+{"kind":"textbox","id":"sh/cja1kn6p","slide":4,"text":"件滞销","textPreview":"件滞销","textChars":3,"textLines":1,"bbox":[70,395,316,42]}
+{"kind":"shape","id":"sh/dkj2dsna","slide":4,"bbox":[70,458,92,6]}
+{"kind":"shape","id":"sh/5k7yp0zu","slide":4,"bbox":[454,246,372,270]}
+{"kind":"textbox","id":"sh/4jyxgvi9","slide":4,"text":"≈ 10 万","textPreview":"≈ 10 万","textChars":6,"textLines":1,"bbox":[482,302,316,70]}
+{"kind":"textbox","id":"sh/3ipgnqho","slide":4,"text":"元库存占用","textPreview":"元库存占用","textChars":5,"textLines":1,"bbox":[482,395,316,42]}
+{"kind":"shape","id":"sh/ihwful0j","slide":4,"bbox":[482,458,92,6]}
+{"kind":"shape","id":"sh/do7ytkz6","slide":4,"bbox":[866,246,372,270]}
+{"kind":"textbox","id":"sh/snyhkfil","slide":4,"text":"≈ 6 万","textPreview":"≈ 6 万","textChars":5,"textLines":1,"bbox":[894,302,316,70]}
+{"kind":"textbox","id":"sh/rmpgrah0","slide":4,"text":"元利润损失","textPreview":"元利润损失","textChars":5,"textLines":1,"bbox":[894,395,316,42]}
+{"kind":"shape","id":"sh/qlgfi50f","slide":4,"bbox":[894,458,92,6]}
+{"kind":"shape","id":"sh/tsnyhgzm","slide":4,"bbox":[42,552,1196,76]}
+{"kind":"textbox","id":"sh/8rexobi1","slide":4,"text":"边界：这些数字证明决策断点会造成真实损失，但不能直接外推为全公司年度收益。","textPreview":"边界：这些数字证明决策断点会造成真实损失，但不能直接外推为全公司年度收益。","textChars":37,"textLines":1,"bbox":[66,572,1148,40]}
+{"kind":"notes","id":"nt/kf4q4i","slide":4,"text":"主动说明价值边界，避免把单个案例包装成公司级投资回报。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md"}
+{"kind":"slide","id":"sl/riq09e","slide":5,"title":"产品设计 1","textShapes":9}
+{"kind":"textbox","id":"sh/cre1oz6l","slide":5,"text":"产品设计 1","textPreview":"产品设计 1","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/bqlkvu50","slide":5,"text":"固定规则负责判定，AI 负责表达","textPreview":"固定规则负责判定，AI 负责表达","textChars":16,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/apcjm9of","slide":5,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/lgn21on2","slide":5,"text":"05 / 11","textPreview":"05 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/kfe1sj6h","slide":5,"bbox":[42,190,520,380]}
+{"kind":"shape","id":"sh/ze5kze5c","slide":5,"bbox":[718,190,520,380]}
+{"kind":"textbox","id":"sh/ytwjq9or","slide":5,"text":"固定规则｜最终判定权","textPreview":"固定规则｜最终判定权","textChars":10,"textLines":1,"bbox":[70,220,450,42]}
+{"kind":"textbox","id":"sh/1k3ipkny","slide":5,"text":"• 商品分类\n• 利润与品退阈值\n• 主动作优先级\n• 补货冲突处理","textPreview":"• 商品分类 | • 利润与品退阈值 | • 主动作优先级 | • 补货冲突处理","textChars":34,"textLines":4,"bbox":[70,290,420,210]}
+{"kind":"textbox","id":"sh/0ja1gf6d","slide":5,"text":"AI｜解释与排序","textPreview":"AI｜解释与排序","textChars":8,"textLines":1,"bbox":[746,220,450,42]}
+{"kind":"textbox","id":"sh/mtw3i9wr","slide":5,"text":"• 组织对象、问题、依据和动作\n• 同层建议排序\n• 非覆盖式优化提示\n• 失败时使用结构化兜底","textPreview":"• 组织对象、问题、依据和动作 | • 同层建议排序 | • 非覆盖式优化提示 | • 失败时使用结构化兜底","textChars":48,"textLines":4,"bbox":[746,290,430,210]}
+{"kind":"shape","id":"sh/ne5kbedc","slide":5,"bbox":[590,248,100,250]}
+{"kind":"textbox","id":"sh/8felkjex","slide":5,"text":"不可\n越界","textPreview":"不可 | 越界","textChars":5,"textLines":2,"bbox":[608,324,64,92]}
+{"kind":"shape","id":"sh/9gn2dovi","slide":5,"bbox":[42,594,1196,44]}
+{"kind":"textbox","id":"sh/ahg3mtw3","slide":5,"text":"动作优先级：清仓 > 止损 > 观察 > 加投 > 维持","textPreview":"动作优先级：清仓 > 止损 > 观察 > 加投 > 维持","textChars":28,"textLines":1,"bbox":[64,604,1152,28]}
+{"kind":"notes","id":"nt/riq09e","slide":5,"text":"这是产品可信度的核心：AI 不参与阈值和主动作裁决。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/kt8059","slide":6,"title":"产品设计 2","textShapes":23}
+{"kind":"textbox","id":"sh/pw7ypobm","slide":6,"text":"产品设计 2","textPreview":"产品设计 2","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/2twfe9cv","slide":6,"text":"整条建议审核，经营与库存动作分开执行","textPreview":"整条建议审核，经营与库存动作分开执行","textChars":18,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/nu5wnetg","slide":6,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/czyxkjud","slide":6,"text":"06 / 11","textPreview":"06 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/xk7ytobi","slide":6,"bbox":[42,180,210,108]}
+{"kind":"textbox","id":"sh/axgfitc7","slide":6,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[60,195,32,24]}
+{"kind":"textbox","id":"sh/bypgrets","slide":6,"text":"导入校验","textPreview":"导入校验","textChars":4,"textLines":1,"bbox":[60,230,174,34]}
+{"kind":"textbox","id":"sh/knyxo3u9","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[253,217,28,34]}
+{"kind":"shape","id":"sh/loryx8bu","slide":6,"bbox":[281,180,210,108]}
+{"kind":"textbox","id":"sh/xcba1gvy","slide":6,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[299,195,32,24]}
+{"kind":"textbox","id":"sh/cr29sbed","slide":6,"text":"规则 + 解释","textPreview":"规则 + 解释","textChars":7,"textLines":1,"bbox":[299,230,174,34]}
+{"kind":"textbox","id":"sh/bqtsz6d8","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[492,217,28,34]}
+{"kind":"shape","id":"sh/ap0rqlwn","slide":6,"bbox":[520,180,210,108]}
+{"kind":"textbox","id":"sh/lgba50va","slide":6,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[538,195,32,24]}
+{"kind":"textbox","id":"sh/kf29wvep","slide":6,"text":"整体审核","textPreview":"整体审核","textChars":4,"textLines":1,"bbox":[538,230,174,34]}
+{"kind":"textbox","id":"sh/zets3qd4","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[731,217,28,34]}
+{"kind":"shape","id":"sh/ydkrulwj","slide":6,"bbox":[759,180,210,108]}
+{"kind":"textbox","id":"sh/1krqtwvq","slide":6,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[777,195,32,24]}
+{"kind":"textbox","id":"sh/0ji9krel","slide":6,"text":"分派执行","textPreview":"分派执行","textChars":4,"textLines":1,"bbox":[777,230,174,34]}
+{"kind":"textbox","id":"sh/s3m90bm1","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[970,217,28,34]}
+{"kind":"shape","id":"sh/t4va9w3m","slide":6,"bbox":[998,180,210,108]}
+{"kind":"textbox","id":"sh/61kry14b","slide":6,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1016,195,32,24]}
+{"kind":"textbox","id":"sh/r2ts76lw","slide":6,"text":"结果回填","textPreview":"结果回填","textChars":4,"textLines":1,"bbox":[1016,230,174,34]}
+{"kind":"textbox","id":"sh/g7m94bmd","slide":6,"text":"审核通过后","textPreview":"审核通过后","textChars":5,"textLines":1,"bbox":[42,330,190,28]}
+{"kind":"shape","id":"sh/1svadg3y","slide":6,"bbox":[42,372,1196,82]}
+{"kind":"textbox","id":"sh/e54r2147","slide":6,"text":"运营泳道","textPreview":"运营泳道","textChars":4,"textLines":1,"bbox":[66,394,160,28]}
+{"kind":"textbox","id":"sh/f6dsb6ls","slide":6,"text":"加投 / 观察 / SPU 推广止损 / 清仓 → 记录经营结果","textPreview":"加投 / 观察 / SPU 推广止损 / 清仓 → 记录经营结果","textChars":32,"textLines":1,"bbox":[250,394,930,34]}
+{"kind":"shape","id":"sh/ov698vm9","slide":6,"bbox":[42,472,1196,82]}
+{"kind":"textbox","id":"sh/pwfahg3u","slide":6,"text":"采购计划泳道","textPreview":"采购计划泳道","textChars":6,"textLines":1,"bbox":[66,494,160,28]}
+{"kind":"textbox","id":"sh/zqhc7u5w","slide":6,"text":"补货 / 禁止补货 → 记录采购执行结果","textPreview":"补货 / 禁止补货 → 记录采购执行结果","textChars":20,"textLines":1,"bbox":[250,494,930,34]}
+{"kind":"shape","id":"sh/yp8vepor","slide":6,"bbox":[42,582,1196,54]}
+{"kind":"textbox","id":"sh/lszu9kn2","slide":6,"text":"止损或清仓与“禁止补货”原子生成，主管不能拆开审核。","textPreview":"止损或清仓与“禁止补货”原子生成，主管不能拆开审核。","textChars":26,"textLines":1,"bbox":[64,596,1152,30]}
+{"kind":"notes","id":"nt/kt8059","slide":6,"text":"阶段五定型点：建议整体审核，动作分开执行；状态也必须分层。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/s3qkdd","slide":7,"title":"产品设计 3","textShapes":16}
+{"kind":"textbox","id":"sh/oral8vm9","slide":7,"text":"产品设计 3","textPreview":"产品设计 3","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/nq1kzqlo","slide":7,"text":"每条建议都必须能直接审核和执行","textPreview":"每条建议都必须能直接审核和执行","textChars":15,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/2ps36l4j","slide":7,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/1oj2xg3y","slide":7,"text":"07 / 11","textPreview":"07 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/0nql4bmd","slide":7,"bbox":[42,180,588,164]}
+{"kind":"shape","id":"sh/fmhkv6ls","slide":7,"bbox":[42,180,588,8]}
+{"kind":"textbox","id":"sh/el832147","slide":7,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[64,206,62,26]}
+{"kind":"textbox","id":"sh/d0z2tg3m","slide":7,"text":"具体对象","textPreview":"具体对象","textChars":4,"textLines":1,"bbox":[64,242,544,54]}
+{"kind":"textbox","id":"sh/szql0bm1","slide":7,"text":"SPU ID、链接名称、店铺、平台、责任运营","textPreview":"SPU ID、链接名称、店铺、平台、责任运营","textChars":22,"textLines":1,"bbox":[64,304,544,20]}
+{"kind":"shape","id":"sh/6dsvexkn","slide":7,"bbox":[650,180,588,164]}
+{"kind":"shape","id":"sh/re1wn218","slide":7,"bbox":[650,180,588,8]}
+{"kind":"textbox","id":"sh/sfaxg72t","slide":7,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[672,206,62,26]}
+{"kind":"textbox","id":"sh/tgjepcje","slide":7,"text":"发现问题","textPreview":"发现问题","textChars":4,"textLines":1,"bbox":[672,242,544,54]}
+{"kind":"textbox","id":"sh/i98vaxkb","slide":7,"text":"利润、销售、品退或库存触发了什么风险","textPreview":"利润、销售、品退或库存触发了什么风险","textChars":18,"textLines":1,"bbox":[672,304,544,20]}
+{"kind":"shape","id":"sh/jahwji1w","slide":7,"bbox":[42,370,588,164]}
+{"kind":"shape","id":"sh/4badcn2h","slide":7,"bbox":[42,370,588,8]}
+{"kind":"textbox","id":"sh/5cjelsj2","slide":7,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[64,396,62,26]}
+{"kind":"textbox","id":"sh/ul8v6dkf","slide":7,"text":"关键依据","textPreview":"关键依据","textChars":4,"textLines":1,"bbox":[64,432,544,54]}
+{"kind":"textbox","id":"sh/vmhwfi10","slide":7,"text":"原始关键值、统计期间、规则版本与阈值","textPreview":"原始关键值、统计期间、规则版本与阈值","textChars":18,"textLines":1,"bbox":[64,494,544,20]}
+{"kind":"shape","id":"sh/zqds7ehs","slide":7,"bbox":[650,370,588,164]}
+{"kind":"shape","id":"sh/yp4be907","slide":7,"bbox":[650,370,588,8]}
+{"kind":"textbox","id":"sh/lsfu9ozy","slide":7,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[672,396,62,26]}
+{"kind":"textbox","id":"sh/kr6tgjid","slide":7,"text":"推荐动作","textPreview":"推荐动作","textChars":4,"textLines":1,"bbox":[672,432,544,54]}
+{"kind":"textbox","id":"sh/7uxcbyho","slide":7,"text":"唯一主动作 + 补货/禁补结论 + 责任人","textPreview":"唯一主动作 + 补货/禁补结论 + 责任人","textChars":21,"textLines":1,"bbox":[672,494,544,20]}
+{"kind":"shape","id":"sh/mtobit03","slide":7,"bbox":[42,580,1196,58]}
+{"kind":"textbox","id":"sh/9gfudozu","slide":7,"text":"示例：SPU 515｜利润率触发止损线｜展示原始值与规则版本｜停止整体推广并禁止补货","textPreview":"示例：SPU 515｜利润率触发止损线｜展示原始值与规则版本｜停止整体推广并禁止补货","textChars":42,"textLines":1,"bbox":[64,595,1152,32]}
+{"kind":"notes","id":"nt/s3qkdd","slide":7,"text":"建议不是风险标签；四要素缺一就无法审核或执行。示例只表达结构，不补造 515 的具体利润率。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/qid684","slide":8,"title":"技术方案 1","textShapes":13}
+{"kind":"textbox","id":"sh/elwzq5wj","slide":8,"text":"技术方案 1","textPreview":"技术方案 1","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/1o7y10fa","slide":8,"text":"SPU 是唯一决策粒度；缺什么就降级什么","textPreview":"SPU 是唯一决策粒度；缺什么就降级什么","textChars":20,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/0nyhsvep","slide":8,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/ri5gvqx8","slide":8,"text":"08 / 11","textPreview":"08 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/qxwzmlwn","slide":8,"bbox":[42,184,372,382]}
+{"kind":"shape","id":"sh/dknyx0fe","slide":8,"bbox":[42,184,372,8]}
+{"kind":"textbox","id":"sh/sjehovet","slide":8,"text":"INPUT","textPreview":"INPUT","textChars":5,"textLines":1,"bbox":[64,210,62,26]}
+{"kind":"textbox","id":"sh/be907adc","slide":8,"text":"业务事实输入","textPreview":"业务事实输入","textChars":6,"textLines":1,"bbox":[64,246,328,54]}
+{"kind":"textbox","id":"sh/atgzypwr","slide":8,"text":"SPU 身份\n上一个完整自然月净销售额\n表内经营准利润率\n最近 7 天品退\n条件库存与最近 14 天销量","textPreview":"SPU 身份 | 上一个完整自然月净销售额 | 表内经营准利润率 | 最近 7 天品退 | 条件库存与最近 14 天销量","textChars":52,"textLines":5,"bbox":[64,308,328,238]}
+{"kind":"shape","id":"sh/kzq1cfmh","slide":8,"bbox":[454,184,372,382]}
+{"kind":"shape","id":"sh/l0zi5k32","slide":8,"bbox":[454,184,372,8]}
+{"kind":"textbox","id":"sh/yx8ja54b","slide":8,"text":"RULE","textPreview":"RULE","textChars":4,"textLines":1,"bbox":[476,210,62,26]}
+{"kind":"textbox","id":"sh/zyh03alw","slide":8,"text":"确定性规则","textPreview":"确定性规则","textChars":5,"textLines":1,"bbox":[476,246,328,54]}
+{"kind":"textbox","id":"sh/cvq18fm5","slide":8,"text":"新品年龄使用批次业务截止日\n同一批次 + 同一规则版本可重放\n不用上传日、访问日改变历史结论","textPreview":"新品年龄使用批次业务截止日 | 同一批次 + 同一规则版本可重放 | 不用上传日、访问日改变历史结论","textChars":46,"textLines":3,"bbox":[476,308,328,238]}
+{"kind":"shape","id":"sh/xwzi1k3q","slide":8,"bbox":[866,184,372,382]}
+{"kind":"shape","id":"sh/atoj654f","slide":8,"bbox":[866,184,372,8]}
+{"kind":"textbox","id":"sh/bux0zalk","slide":8,"text":"DEGRADE","textPreview":"DEGRADE","textChars":7,"textLines":1,"bbox":[888,210,62,26]}
+{"kind":"textbox","id":"sh/o76h4vm9","slide":8,"text":"字段级降级","textPreview":"字段级降级","textChars":5,"textLines":1,"bbox":[888,246,328,54]}
+{"kind":"textbox","id":"sh/psfix03u","slide":8,"text":"库存缺失：不生成补货\n品退周期未证明：不据此观察/加投\nLiteLLM 失败：仍输出结构化规则建议","textPreview":"库存缺失：不生成补货 | 品退周期未证明：不据此观察/加投 | LiteLLM 失败：仍输出结构化规则建议","textChars":49,"textLines":3,"bbox":[888,308,328,238]}
+{"kind":"shape","id":"sh/5cnqlsr6","slide":8,"bbox":[42,592,1196,46]}
+{"kind":"textbox","id":"sh/4bepcnal","slide":8,"text":"不使用默认值、推广费用或 AI 推测补齐经营事实","textPreview":"不使用默认值、推广费用或 AI 推测补齐经营事实","textChars":24,"textLines":1,"bbox":[64,603,1152,28]}
+{"kind":"notes","id":"nt/qid684","slide":8,"text":"阶段五定型点：新品年龄绑定批次业务截止日；字段不足只阻断依赖它的判断。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/lt4o85","slide":9,"title":"技术方案 2","textShapes":10}
+{"kind":"textbox","id":"sh/8r2dcfip","slide":9,"text":"技术方案 2","textPreview":"技术方案 2","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/7qtcja14","slide":9,"text":"权限、追溯与 LiteLLM 形成三层控制","textPreview":"权限、追溯与 LiteLLM 形成三层控制","textChars":21,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/mpkva50j","slide":9,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/lobuhkjy","slide":9,"text":"09 / 11","textPreview":"09 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/kn2d8fid","slide":9,"bbox":[42,182,1196,104]}
+{"kind":"textbox","id":"sh/zmtcfa1s","slide":9,"text":"01 权限边界","textPreview":"01 权限边界","textChars":7,"textLines":1,"bbox":[66,206,240,44]}
+{"kind":"textbox","id":"sh/yl0b650n","slide":9,"text":"运营/主管看完整经营信息；采购只见补货、库存和销量必要依据。","textPreview":"运营/主管看完整经营信息；采购只见补货、库存和销量必要依据。","textChars":30,"textLines":1,"bbox":[330,204,850,58]}
+{"kind":"shape","id":"sh/5kvut4j2","slide":9,"bbox":[42,314,1196,104]}
+{"kind":"textbox","id":"sh/4jmdkzix","slide":9,"text":"02 决策追溯","textPreview":"02 决策追溯","textChars":7,"textLines":1,"bbox":[66,338,240,44]}
+{"kind":"textbox","id":"sh/ep8ryloz","slide":9,"text":"批次、业务截止日、期间、规则版本、原始关键值、状态与操作者全部保留。","textPreview":"批次、业务截止日、期间、规则版本、原始关键值、状态与操作者全部保留。","textChars":34,"textLines":1,"bbox":[330,336,850,58]}
+{"kind":"shape","id":"sh/fqhs7q5k","slide":9,"bbox":[42,446,1196,104]}
+{"kind":"textbox","id":"sh/0ra90v65","slide":9,"text":"03 网关安全","textPreview":"03 网关安全","textChars":7,"textLines":1,"bbox":[66,470,240,44]}
+{"kind":"textbox","id":"sh/1sja90na","slide":9,"text":"运维维护系统级部署密钥；普通用户无配置入口；AI 失败不阻塞清单。","textPreview":"运维维护系统级部署密钥；普通用户无配置入口；AI 失败不阻塞清单。","textChars":33,"textLines":1,"bbox":[330,468,850,58]}
+{"kind":"shape","id":"sh/q18rulon","slide":9,"bbox":[42,590,1196,48]}
+{"kind":"textbox","id":"sh/rmhs3qp8","slide":9,"text":"并发保护：状态更新携带 version；过期提交被拒绝，并返回最新状态","textPreview":"并发保护：状态更新携带 version；过期提交被拒绝，并返回最新状态","textChars":35,"textLines":1,"bbox":[64,601,1152,28]}
+{"kind":"notes","id":"nt/lt4o85","slide":9,"text":"采购最小权限、部署密钥与全链路审计是轻闭环可控的三条底线。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}
+{"kind":"slide","id":"sl/93t5t0","slide":10,"title":"完整路线图","textShapes":15}
+{"kind":"textbox","id":"sh/32xg7elg","slide":10,"text":"完整路线图","textPreview":"完整路线图","textChars":5,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/436hgj21","slide":10,"text":"先跑通轻闭环，再按数据成熟度扩展","textPreview":"先跑通轻闭环，再按数据成熟度扩展","textChars":16,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/54fy9o3m","slide":10,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/qp8zitk7","slide":10,"text":"10 / 11","textPreview":"10 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/rqhgby1s","slide":10,"bbox":[42,206,372,342]}
+{"kind":"textbox","id":"sh/srqhk32x","slide":10,"text":"现在｜已承诺","textPreview":"现在｜已承诺","textChars":6,"textLines":1,"bbox":[68,232,320,28]}
+{"kind":"textbox","id":"sh/dszyd8ji","slide":10,"text":"V0 MVP","textPreview":"V0 MVP","textChars":6,"textLines":1,"bbox":[68,300,320,42]}
+{"kind":"textbox","id":"sh/694f6pkn","slide":10,"text":"周度导入、固定规则、AI 解释、整体审核、分动作执行、结果与审计","textPreview":"周度导入、固定规则、AI 解释、整体审核、分动作执行、结果与审计","textChars":32,"textLines":1,"bbox":[68,376,318,112]}
+{"kind":"textbox","id":"sh/7udgzul8","slide":10,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[418,350,36,38]}
+{"kind":"shape","id":"sh/725k32d0","slide":10,"bbox":[454,206,372,342]}
+{"kind":"textbox","id":"sh/61w3uhcf","slide":10,"text":"下一步｜前置补齐","textPreview":"下一步｜前置补齐","textChars":8,"textLines":1,"bbox":[480,232,320,28]}
+{"kind":"textbox","id":"sh/to725cv6","slide":10,"text":"数据成熟","textPreview":"数据成熟","textChars":4,"textLines":1,"bbox":[480,300,320,42]}
+{"kind":"textbox","id":"sh/83ylw7ul","slide":10,"text":"库存/在途、最近 14 天销量、可信最近 7 天品退","textPreview":"库存/在途、最近 14 天销量、可信最近 7 天品退","textChars":26,"textLines":1,"bbox":[480,376,318,112]}
+{"kind":"textbox","id":"sh/jy5kz2d4","slide":10,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[830,350,36,38]}
+{"kind":"shape","id":"sh/yxw3qxcj","slide":10,"bbox":[866,206,372,342]}
+{"kind":"textbox","id":"sh/l0n21cvu","slide":10,"text":"以后｜候选范围","textPreview":"以后｜候选范围","textChars":7,"textLines":1,"bbox":[892,232,320,28]}
+{"kind":"textbox","id":"sh/kzels7up","slide":10,"text":"另行立项","textPreview":"另行立项","textChars":4,"textLines":1,"bbox":[892,300,320,42]}
+{"kind":"textbox","id":"sh/bulkvids","slide":10,"text":"评价/退款原因、广告明细、外部系统写回、SKU 级能力","textPreview":"评价/退款原因、广告明细、外部系统写回、SKU 级能力","textChars":27,"textLines":1,"bbox":[892,376,318,112]}
+{"kind":"textbox","id":"sh/atcjmxc7","slide":10,"text":"扩展顺序由真实数据可得性决定，不提前承诺候选能力。","textPreview":"扩展顺序由真实数据可得性决定，不提前承诺候选能力。","textChars":25,"textLines":1,"bbox":[42,588,1196,38]}
+{"kind":"notes","id":"nt/93t5t0","slide":10,"text":"路线图必须区分已承诺、需要补齐的前置数据和仅候选的后续能力。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md"}
+{"kind":"slide","id":"sl/ohxvz0","slide":11,"title":"当前 MVP","textShapes":16}
+{"kind":"textbox","id":"sh/jy14za5s","slide":11,"text":"当前 MVP","textPreview":"当前 MVP","textChars":6,"textLines":1,"bbox":[42,30,520,26]}
+{"kind":"textbox","id":"sh/kzalsf6d","slide":11,"text":"第一版完成，以真实业务评审通过为准","textPreview":"第一版完成，以真实业务评审通过为准","textChars":17,"textLines":1,"bbox":[42,62,1170,72]}
+{"kind":"shape","id":"sh/l0jm1kni","slide":11,"bbox":[42,141,1196,2]}
+{"kind":"textbox","id":"sh/at83m5ov","slide":11,"text":"11 / 11","textPreview":"11 / 11","textChars":7,"textLines":1,"bbox":[1150,676,88,20]}
+{"kind":"shape","id":"sh/bu14vq5g","slide":11,"bbox":[42,184,588,162]}
+{"kind":"shape","id":"sh/cvalov61","slide":11,"bbox":[66,236,48,48]}
+{"kind":"textbox","id":"sh/xwjmx0nm","slide":11,"text":"✓","textPreview":"✓","textChars":1,"textLines":1,"bbox":[66,237,48,46]}
+{"kind":"textbox","id":"sh/upcnyp4f","slide":11,"text":"01  真实范围","textPreview":"01  真实范围","textChars":8,"textLines":1,"bbox":[136,222,450,36]}
+{"kind":"textbox","id":"sh/vql47u50","slide":11,"text":"玩具事业部导入 10—20 个真实 SPU","textPreview":"玩具事业部导入 10—20 个真实 SPU","textChars":21,"textLines":1,"bbox":[136,272,450,48]}
+{"kind":"shape","id":"sh/zipw7mhs","slide":11,"bbox":[650,184,588,162]}
+{"kind":"shape","id":"sh/ehgveh07","slide":11,"bbox":[674,236,48,48]}
+{"kind":"textbox","id":"sh/1k7e9wzy","slide":11,"text":"✓","textPreview":"✓","textChars":1,"textLines":1,"bbox":[674,237,48,46]}
+{"kind":"textbox","id":"sh/0jydgrid","slide":11,"text":"02  真实问题","textPreview":"02  真实问题","textChars":8,"textLines":1,"bbox":[744,222,450,36]}
+{"kind":"textbox","id":"sh/nm9wb6h4","slide":11,"text":"识别至少 3 个由真实数据触发的经营问题","textPreview":"识别至少 3 个由真实数据触发的经营问题","textChars":20,"textLines":1,"bbox":[744,272,450,48]}
+{"kind":"shape","id":"sh/mlgvi10j","slide":11,"bbox":[42,374,588,162]}
+{"kind":"shape","id":"sh/9oredgzu","slide":11,"bbox":[66,426,48,48]}
+{"kind":"textbox","id":"sh/onidkbi9","slide":11,"text":"✓","textPreview":"✓","textChars":1,"textLines":1,"bbox":[66,427,48,46]}
+{"kind":"textbox","id":"sh/ba9wf6h0","slide":11,"text":"03  建议完整","textPreview":"03  建议完整","textChars":8,"textLines":1,"bbox":[136,412,450,36]}
+{"kind":"textbox","id":"sh/a90fm10f","slide":11,"text":"对象、问题、依据、动作齐全且可追溯","textPreview":"对象、问题、依据、动作齐全且可追溯","textChars":17,"textLines":1,"bbox":[136,462,450,48]}
+{"kind":"shape","id":"sh/6h47u9oz","slide":11,"bbox":[650,374,588,162]}
+{"kind":"shape","id":"sh/rid83e5k","slide":11,"bbox":[674,426,48,48]}
+{"kind":"textbox","id":"sh/sj6pwj65","slide":11,"text":"✓","textPreview":"✓","textChars":1,"textLines":1,"bbox":[674,427,48,46]}
+{"kind":"textbox","id":"sh/tkfq5ona","slide":11,"text":"04  闭环走通","textPreview":"04  闭环走通","textChars":8,"textLines":1,"bbox":[744,412,450,36]}
+{"kind":"textbox","id":"sh/it47qpon","slide":11,"text":"主管审核，运营/采购执行并记录结果；运营验收","textPreview":"主管审核，运营/采购执行并记录结果；运营验收","textChars":22,"textLines":1,"bbox":[744,462,450,48]}
+{"kind":"shape","id":"sh/jed8zu58","slide":11,"bbox":[42,584,1196,54]}
+{"kind":"textbox","id":"sh/kfmpsz6t","slide":11,"text":"下一步：用数据支持部门的真实经营表完成首轮导入与业务评审","textPreview":"下一步：用数据支持部门的真实经营表完成首轮导入与业务评审","textChars":28,"textLines":1,"bbox":[64,598,1152,30]}
+{"kind":"notes","id":"nt/ohxvz0","slide":11,"text":"收尾回到验收结果：真实数据、真实问题、完整建议、真实闭环。 \n\n[Sources]\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/PRD详细版.md\n- /Users/peter123/Documents/work/商品经营利润决策/趣然AI商品经营利润决策助手/output/requirements.md"}

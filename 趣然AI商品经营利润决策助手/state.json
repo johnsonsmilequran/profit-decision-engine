@@ -1,0 +1,184 @@
+{
+  "state_schema_version": 1,
+  "project_name": "趣然AI商品经营利润决策助手",
+  "project_started_at_utc": "2026-08-03T04:12:29Z",
+  "last_updated_at_utc": "2026-08-03T11:06:24Z",
+  "work_type": "feature",
+  "workflow_mode": "standard",
+  "value_confirmation": {
+    "status": "pending",
+    "decision": null,
+    "confirmed_at_utc": null,
+    "basis": null
+  },
+  "stage_confirmations": {
+    "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-03T08:59:04Z"},
+    "stage3_research_sufficiency": {"status": "pending", "confirmed_at_utc": null},
+    "stage4_5_v1": {"status": "pending", "confirmed_at_utc": null},
+    "stage4_6_mvp": {"status": "pending", "confirmed_at_utc": null},
+    "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
+    "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
+  },
+  "contract_revision": 1,
+  "source_ids_changed": [],
+  "current_stage": "6.3",
+  "current_substep": "stage6-regenerated-from-stage5-and-verified",
+  "completed_stages": ["0", "1", "5", "6"],
+  "skipped_stages": ["2", "3", "4"],
+  "next_action": {
+    "type": "ready_for_user_review_or_design",
+    "description": "阶段 6 已依据阶段 5 正式输出重新生成并通过 HTML 浏览器校验、PPTX 再渲染和溢出测试；可由用户审阅或进入设计阶段"
+  },
+  "open_questions": [],
+  "key_decisions_made": [
+    {
+      "id": "D-1",
+      "decision": "商品先按上架不满两个月识别新品，再按月销售额分为大爆款、小爆款或淘汰商品",
+      "stage": "0",
+      "rationale": "用户明确新品定义与低销售额商品淘汰规则，决定每个 SPU/商品链接采用哪套经营阈值"
+    },
+    {
+      "id": "D-2",
+      "decision": "主动作优先级为清仓、止损、观察、加投；止损或清仓时禁止补货，加投可与补货并存",
+      "stage": "0",
+      "rationale": "避免同一 SPU/商品链接同时收到补货与清仓等互相矛盾的建议"
+    },
+    {
+      "id": "D-3",
+      "decision": "库存补货指标采用库存可售天数，低于 30 天触发补货判断",
+      "stage": "0",
+      "rationale": "用户确认原库存周转天数实际指当前库存还能销售多少天"
+    },
+    {
+      "id": "D-4",
+      "decision": "运营和采购计划直接使用行动清单；运营主管审核；运营执行加投、广告止损和清仓并对经营结果负责，采购计划执行补货",
+      "stage": "1",
+      "rationale": "角色边界决定建议的可见范围、审核流程和跨部门动作闭环"
+    },
+    {
+      "id": "D-5",
+      "decision": "首版直接采用商品链接表内的经营准利润率，不按早先的管理8%+营销7%+税8%公式重算",
+      "stage": "1",
+      "rationale": "该口径直接决定商品分类后的加投、止损和清仓结论"
+    },
+    {
+      "id": "D-6",
+      "decision": "首轮采用人工轻闭环：生成建议、运营主管审核、运营或采购计划确认执行、记录结果；不自动操作外部系统",
+      "stage": "1",
+      "rationale": "既解决515案例的跨部门断点，又控制自动写入广告和采购系统的误操作风险"
+    },
+    {
+      "id": "D-7",
+      "decision": "利润率公式中的销售额采用扣除退款后的净销售额",
+      "stage": "1",
+      "rationale": "确保退款对贡献利润的影响进入统一经营判断口径"
+    },
+    {
+      "id": "D-8",
+      "decision": "月销售额按自然月累计；库存可售天数按仓内加在途库存除以最近14天平均日销量计算",
+      "stage": "1",
+      "rationale": "固定商品分类和补货规则所使用的时间口径，保证可复算"
+    },
+    {
+      "id": "D-9",
+      "decision": "首轮真实经营数据不包含个人信息，可以发送给AI服务处理",
+      "stage": "1",
+      "rationale": "明确首轮数据处理边界与外部AI使用条件"
+    },
+    {
+      "id": "D-10",
+      "decision": "固定规则最终判定经营动作，AI不覆盖阈值，只负责解释、排序和补充优化建议",
+      "stage": "1",
+      "rationale": "保证加投止损补货清仓结论稳定、可审计且不会随模型漂移"
+    },
+    {
+      "id": "D-11",
+      "decision": "新品首版不生成补货建议；采购计划仅查看补货或禁补结论及库存销量必要依据",
+      "stage": "1",
+      "rationale": "避免新品补货扩大亏损库存，并按岗位职责落实最小必要数据权限"
+    },
+    {
+      "id": "D-12",
+      "decision": "非新品使用上一个完整自然月销售额进行商品分类",
+      "stage": "1",
+      "rationale": "避免月初使用本月累计销售额将成熟商品误判为淘汰清仓"
+    },
+    {
+      "id": "D-13",
+      "decision": "每周一导入新数据后生成一次新行动清单，一周内每天更新审核执行和结果状态",
+      "stage": "1",
+      "rationale": "与每周一供数频率一致，避免用相同数据伪造每日新判断"
+    },
+    {
+      "id": "D-14",
+      "decision": "LiteLLM由运维通过系统级部署密钥配置并负责轮换，首版不建设管理员后台或用户自助配置",
+      "stage": "1",
+      "rationale": "复用统一网关、减少凭据暴露并避免无必要的配置界面建设"
+    },
+    {
+      "id": "D-15",
+      "decision": "当前项目只处理 SPU，SPU 即商品链接；所有费用、利润、库存和经营动作均停留在 SPU 粒度，不建立 SKU 依赖",
+      "stage": "1",
+      "rationale": "用户明确收缩首版范围，源表也以商品链接/SPU为费用核算层级"
+    },
+    {
+      "id": "D-16",
+      "decision": "新品年龄以数据批次业务截止日计算，而不是导入日、处理日或访问日",
+      "stage": "5",
+      "rationale": "保证同一历史批次使用同一规则版本重放时得到相同分类；该项明确标注为阶段5派生产品决策"
+    },
+    {
+      "id": "D-17",
+      "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；观察归运营负责并以记录观察或有证据的优化结果闭环",
+      "stage": "5",
+      "rationale": "既避免止损/清仓与禁补被拆散，也允许运营和采购计划分别执行并保留独立状态"
+    }
+  ],
+  "category": "saas",
+  "deliverables": {
+    "scene_anchor": null,
+    "proposal_v0": null,
+    "proposal_v1": null,
+    "debate_log": "debate-log.md",
+    "assumptions": "assumptions.md",
+    "conversation": "conversation.md",
+    "evidence": ["evidence/商品链接字段核验.md"],
+    "drafts": [
+      "output/PRD-V0.md",
+      "drafts/r0-chapter-negotiation.md",
+      "drafts/r1-pm.md",
+      "drafts/r1-architect.md",
+      "drafts/r1-engineer.md",
+      "drafts/r2-pm-reviews-others.md",
+      "drafts/r2-architect-reviews-others.md",
+      "drafts/r2-engineer-reviews-others.md",
+      "drafts/r3-pm.md",
+      "drafts/r3-architect.md",
+      "drafts/r3-engineer.md",
+      "drafts/r4-cross-chapter-review.md"
+    ],
+    "final_prd": "output/PRD详细版.md",
+    "requirements_contract": "output/requirements.md",
+    "requirements_analysis": "output/requirements-analysis.md",
+    "bugfix_contract": null,
+    "prd_summary": "output/PRD-summary.md",
+    "prd_dev": "output/PRD-dev.md",
+    "ppt_outline": "output/ppt.md",
+    "ppt_pages": [
+      "output/ppt/p01.html",
+      "output/ppt/p02.html",
+      "output/ppt/p03.html",
+      "output/ppt/p04.html",
+      "output/ppt/p05.html",
+      "output/ppt/p06.html",
+      "output/ppt/p07.html",
+      "output/ppt/p08.html",
+      "output/ppt/p09.html",
+      "output/ppt/p10.html",
+      "output/ppt/p11.html"
+    ],
+    "final_pptx": "output/AI商品经营与利润决策助手-阶段5正式版.pptx",
+    "legacy_pptx": "output/AI商品经营与利润决策助手-方案V0.pptx",
+    "stage6_report": "drafts/stage6-consistency.md"
+  }
+}

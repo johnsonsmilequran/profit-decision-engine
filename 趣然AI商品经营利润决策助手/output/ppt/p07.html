@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P07｜一条建议必须包含什么</title>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --ink: #101214;
+      --muted: #5C6470;
+      --panel: #EDEDED;
+      --rule: #B8BCC4;
+      --accent: #6DCBF4;
+      --accent-strong: #3D8DFF;
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    body { overflow-x: hidden; }
+
+    .stage {
+      position: relative;
+      width: 1920px;
+      min-height: 1080px;
+      padding: 76px 96px 52px;
+      background: var(--bg);
+      transform-origin: top left;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 30px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 48px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent-strong);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 1320px;
+      font-size: 70px;
+      line-height: 1.08;
+      letter-spacing: -2px;
+    }
+
+    .header-note {
+      margin: 42px 0 0;
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1.02fr;
+      gap: 34px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 0;
+      padding: 28px 30px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-md);
+      background: var(--panel);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 22px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .index {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 0;
+      align-self: center;
+      font-size: 29px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .evidence {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .example {
+      padding: 34px 38px;
+      border-radius: var(--radius-md);
+      background: var(--ink);
+      color: var(--bg);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 25px;
+    }
+
+    .example-label {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 0.78fr auto 1.32fr auto 1.2fr;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .flow-step {
+      min-height: 156px;
+      padding: 24px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .flow-step small {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .flow-step strong {
+      font-size: 25px;
+      line-height: 1.35;
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .action {
+      margin: 0;
+      padding: 24px 26px;
+      border-left: 8px solid var(--accent-strong);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.38;
+      font-weight: 700;
+    }
+
+    .owners {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .owner {
+      padding: 20px 24px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .owner strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--accent-strong);
+      font-size: 20px;
+    }
+
+    .footer {
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 40px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .trace { white-space: nowrap; }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav a {
+      min-width: 118px;
+      padding: 10px 16px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      text-decoration: none;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .page {
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <section class="stage" aria-label="P07 一条建议必须包含什么">
+    <header class="header">
+      <div>
+        <p class="eyebrow">P07 · ACTION TASK</p>
+        <h1>建议不是“高风险”标签，<br>而是一份行动任务</h1>
+      </div>
+      <p class="header-note">建议四要素</p>
+    </header>
+
+    <main>
+      <section class="cards" aria-label="建议四要素">
+        <article class="card">
+          <div class="card-head"><span class="index">01</span>具体对象</div>
+          <p>明确到 SPU／商品链接</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="index">02</span>发现的问题</div>
+          <p>说明触发了哪一类经营问题</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="index">03</span>关键依据</div>
+          <p>展示原始指标与规则版本</p>
+        </article>
+        <article class="card">
+          <div class="card-head"><span class="index">04</span>推荐动作</div>
+          <p>给出负责人可执行的动作</p>
+        </article>
+      </section>
+
+      <section class="evidence" aria-label="SPU 515 示例与责任分工">
+        <div class="example">
+          <div class="example-label">示例 · SPU 515</div>
+          <div>
+            <div class="flow">
+              <div class="flow-step"><small>对象</small><strong>SPU 515</strong></div>
+              <span class="arrow">→</span>
+              <div class="flow-step"><small>问题</small><strong>经营准利润率<br>触发止损线</strong></div>
+              <span class="arrow">→</span>
+              <div class="flow-step"><small>依据</small><strong>原始利润率<br>＋规则版本</strong></div>
+            </div>
+            <p class="action">动作｜减少／停止 SPU 整体推广，并禁止补货</p>
+          </div>
+        </div>
+        <div class="owners">
+          <div class="owner"><strong>运营负责</strong>观察 · 加投 · 止损 · 清仓</div>
+          <div class="owner"><strong>采购计划负责</strong>补货 · 禁补</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span class="trace">趣然 AI 经营助手｜PRD §2.2 · §6.4 · §7.2｜F04-01 / F06-02</span>
+      <nav class="nav" aria-label="幻灯片导航">
+        <a href="p06.html" aria-label="上一页">← 上一页</a>
+        <a href="p08.html" aria-label="下一页">下一页 →</a>
+      </nav>
+      <span class="page">07 / 11</span>
+    </footer>
+  </section>
+
+  <script>
+    function fit() {
+      var s = innerWidth / 1920;
+      var stage = document.querySelector('.stage');
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.height = (stage.offsetHeight * s) + 'px';
+    }
+
+    addEventListener('resize', fit);
+    addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') location.href = 'p06.html';
+      if (event.key === 'ArrowRight') location.href = 'p08.html';
+    });
+    fit();
+  </script>
+</body>
+</html>

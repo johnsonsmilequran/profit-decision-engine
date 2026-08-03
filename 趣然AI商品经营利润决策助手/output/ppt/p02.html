@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>执行摘要｜每周形成一次新判断</title>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --ink: #101214;
+      --muted: #5C6470;
+      --panel: #EDEDED;
+      --rule: #B8BCC4;
+      --accent: #6DCBF4;
+      --accent-strong: #3D8DFF;
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
+    .stage {
+      position: relative;
+      width: 1920px;
+      min-height: 1080px;
+      overflow: hidden;
+      transform-origin: top left;
+      background: var(--bg);
+    }
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--panel) 1px, var(--bg) 1px),
+        linear-gradient(to bottom, var(--panel) 1px, var(--bg) 1px);
+      background-size: 96px 96px;
+      opacity: .38;
+      pointer-events: none;
+    }
+    .page {
+      position: relative;
+      z-index: 1;
+      height: 1080px;
+      padding: 76px 96px 48px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 30px;
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 20px;
+    }
+    .eyebrow {
+      margin: 0;
+      color: var(--accent-strong);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .16em;
+    }
+    .section {
+      margin: 0;
+      color: var(--muted);
+      font-size: 20px;
+      letter-spacing: .08em;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      gap: 62px;
+      align-items: center;
+      min-height: 0;
+    }
+    .statement h1 {
+      margin: 0;
+      max-width: 920px;
+      font-size: 76px;
+      line-height: 1.08;
+      letter-spacing: -.04em;
+    }
+    .statement .lead {
+      margin: 30px 0 0;
+      max-width: 850px;
+      color: var(--muted);
+      font-size: 28px;
+      line-height: 1.55;
+    }
+    .results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-self: stretch;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+    }
+    .result {
+      min-width: 0;
+      padding: 38px 30px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .result + .result { border-left: 1px solid var(--rule); }
+    .result .index {
+      color: var(--accent-strong);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+    .result h2 {
+      margin: 0 0 20px;
+      font-size: 34px;
+      line-height: 1.18;
+    }
+    .result p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1.45;
+    }
+    .rhythm {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      align-items: stretch;
+      min-height: 154px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    .rhythm-label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 34px;
+      border-right: 1px solid var(--rule);
+    }
+    .rhythm-label strong { font-size: 30px; }
+    .rhythm-label span { margin-top: 8px; color: var(--muted); font-size: 20px; }
+    .week {
+      display: grid;
+      grid-template-columns: 1fr 2.45fr;
+      align-items: center;
+      gap: 16px;
+      padding-left: 34px;
+    }
+    .week-block {
+      min-height: 94px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+    }
+    .week-block.secondary { background: var(--panel); }
+    .week-block strong { font-size: 27px; }
+    .week-block span { margin-top: 6px; color: var(--muted); font-size: 20px; }
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 28px;
+      min-height: 42px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .brand { color: var(--ink); font-weight: 700; }
+    .page-no { font-variant-numeric: tabular-nums; }
+    .nav { display: flex; gap: 8px; }
+    .nav a {
+      width: 48px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--bg);
+      text-decoration: none;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid" aria-hidden="true"></div>
+    <main class="page">
+      <header class="topline">
+        <p class="eyebrow">EXECUTIVE SUMMARY</p>
+        <p class="section">02 · 执行摘要</p>
+      </header>
+
+      <section class="hero">
+        <div class="statement">
+          <h1>每周形成一次新判断<br>一周内持续推进动作</h1>
+          <p class="lead">周一导入经营表，固定规则生成唯一主动作，AI 负责解释和排序；主管审核后，运营与采购分别执行并回填结果。</p>
+        </div>
+
+        <div class="results" aria-label="三个业务结果">
+          <article class="result">
+            <span class="index">01</span>
+            <div>
+              <h2>统一利润标准</h2>
+              <p>同一批数据只走一套固定规则。</p>
+            </div>
+          </article>
+          <article class="result">
+            <span class="index">02</span>
+            <div>
+              <h2>阻断继续补货</h2>
+              <p>止损或清仓同步禁止补货。</p>
+            </div>
+          </article>
+          <article class="result">
+            <span class="index">03</span>
+            <div>
+              <h2>保留全程追溯</h2>
+              <p>批次、规则、依据和状态历史均留存。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="rhythm" aria-label="周度运行节奏">
+        <div class="rhythm-label">
+          <strong>周度节奏</strong>
+          <span>新数据驱动新清单</span>
+        </div>
+        <div class="week">
+          <div class="week-block">
+            <strong>周一</strong>
+            <span>导入新数据 · 生成新清单</span>
+          </div>
+          <div class="week-block secondary">
+            <strong>周内</strong>
+            <span>只更新审核、执行与结果状态，不重复生成判断</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span class="brand">AI 商品经营与利润决策助手</span>
+        <span class="page-no">02 / 11</span>
+        <nav class="nav" aria-label="幻灯片导航">
+          <a href="p01.html" aria-label="上一页">←</a>
+          <a href="p03.html" aria-label="下一页">→</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function fit() {
+      var s = innerWidth / 1920;
+      var stage = document.querySelector('.stage');
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.height = (stage.offsetHeight * s) + 'px';
+    }
+    addEventListener('resize', fit); fit();
+    addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') location.href = 'p01.html';
+      if (event.key === 'ArrowRight') location.href = 'p03.html';
+    });
+  </script>
+</body>
+</html>

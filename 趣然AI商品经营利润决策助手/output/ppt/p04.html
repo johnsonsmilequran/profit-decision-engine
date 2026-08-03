@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>价值证据｜先验证真实问题</title>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --ink: #101214;
+      --muted: #5C6470;
+      --panel: #EDEDED;
+      --rule: #B8BCC4;
+      --accent: #6DCBF4;
+      --accent-strong: #3D8DFF;
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: var(--panel);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    .stage {
+      position: relative;
+      width: 1920px;
+      min-height: 1080px;
+      height: 1080px;
+      overflow: hidden;
+      transform-origin: top left;
+      background: var(--bg);
+    }
+
+    .slide {
+      height: 100%;
+      padding: 76px 96px 54px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 42px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 56px;
+      align-items: end;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent-strong);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .18em;
+    }
+
+    h1 {
+      max-width: 1330px;
+      margin: 0;
+      font-size: 72px;
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .evidence-source {
+      min-width: 280px;
+      padding: 18px 22px;
+      border-left: 6px solid var(--accent-strong);
+      background: var(--panel);
+    }
+
+    .evidence-source span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+
+    .evidence-source strong {
+      font-size: 25px;
+      line-height: 1.35;
+    }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 30px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .metric {
+      position: relative;
+      min-height: 430px;
+      padding: 44px 42px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--rule);
+      border-top: 10px solid var(--accent);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      background: var(--bg);
+    }
+
+    .metric::after {
+      content: "";
+      position: absolute;
+      right: 42px;
+      bottom: 40px;
+      width: 72px;
+      height: 10px;
+      background: var(--accent-strong);
+    }
+
+    .metric-index {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .16em;
+    }
+
+    .metric-value {
+      margin-top: auto;
+      color: var(--accent-strong);
+      font-size: 104px;
+      font-weight: 800;
+      line-height: .95;
+      letter-spacing: -.055em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-unit {
+      margin: 18px 0 0;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .boundary {
+      min-height: 100px;
+      padding: 22px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+    }
+
+    .boundary-label {
+      padding: 10px 14px;
+      background: var(--accent);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .boundary p {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .roi-tag {
+      padding-left: 24px;
+      border-left: 1px solid var(--rule);
+      color: var(--accent-strong);
+      font-size: 24px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 30px;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .footer strong { color: var(--ink); }
+
+    .page-no {
+      color: var(--ink);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav a {
+      min-width: 104px;
+      height: 42px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <section class="stage">
+    <div class="slide">
+      <header class="header">
+        <div>
+          <p class="eyebrow">P04 · VALUE EVIDENCE</p>
+          <h1>先验证真实问题，不外推未经确认的年度收益</h1>
+        </div>
+        <aside class="evidence-source" aria-label="价值证据来源">
+          <span>证据口径</span>
+          <strong>515 真实案例<br>＋ 首轮业务验收</strong>
+        </aside>
+      </header>
+
+      <main class="content">
+        <section class="metrics" aria-label="515 案例量化证据">
+          <article class="metric">
+            <span class="metric-index">01 · STAGNANT STOCK</span>
+            <div>
+              <div class="metric-value">≈3,000</div>
+              <p class="metric-unit">件滞销</p>
+            </div>
+          </article>
+          <article class="metric">
+            <span class="metric-index">02 · CAPITAL OCCUPIED</span>
+            <div>
+              <div class="metric-value">≈10万</div>
+              <p class="metric-unit">元库存占用</p>
+            </div>
+          </article>
+          <article class="metric">
+            <span class="metric-index">03 · PROFIT LOSS</span>
+            <div>
+              <div class="metric-value">≈6万</div>
+              <p class="metric-unit">元利润损失</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="boundary" aria-label="价值边界">
+          <span class="boundary-label">价值边界</span>
+          <p>这些数字证明跨部门决策断点会造成损失，但不能直接外推为全公司收益。</p>
+          <span class="roi-tag">不推算公司级 ROI</span>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <strong>AI 商品经营与利润决策助手</strong>
+        <span>追溯：PRD §1.4</span>
+        <span class="page-no">04 / 11</span>
+        <nav class="nav" aria-label="幻灯片导航">
+          <a href="p03.html" aria-label="上一页">← 上一页</a>
+          <a href="p05.html" aria-label="下一页">下一页 →</a>
+        </nav>
+      </footer>
+    </div>
+  </section>
+
+  <script>
+    function fit() {
+      var s = innerWidth / 1920;
+      var stage = document.querySelector('.stage');
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.height = (stage.offsetHeight * s) + 'px';
+    }
+    addEventListener('resize', fit); fit();
+
+    addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') location.href = 'p03.html';
+      if (event.key === 'ArrowRight') location.href = 'p05.html';
+    });
+  </script>
+</body>
+</html>

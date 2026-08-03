@@ -1,0 +1,11 @@
+# CODEOWNERS —— 谁负责 review 哪些目录
+# 格式：<文件/目录规则>  @GitHub用户名  @团队名
+# 详见 https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# 默认负责人（所有没被更具体规则覆盖的改动）
+*                              @johnsonsmilequran
+
+# 协作配置与产品文档均由仓库负责人复核
+/.github/                      @johnsonsmilequran
+/doc/                          @johnsonsmilequran
+/趣然AI商品经营利润决策助手/   @johnsonsmilequran

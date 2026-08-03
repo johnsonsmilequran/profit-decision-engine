@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>技术方案｜缺什么就降级什么</title>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --ink: #101214;
+      --muted: #5C6470;
+      --panel: #EDEDED;
+      --rule: #B8BCC4;
+      --accent: #6DCBF4;
+      --accent-strong: #3D8DFF;
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
+    .stage {
+      position: relative;
+      width: 1920px;
+      min-height: 1080px;
+      overflow: hidden;
+      transform-origin: top left;
+      background: var(--bg);
+    }
+    .page {
+      height: 1080px;
+      padding: 76px 96px 48px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 26px;
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .eyebrow,
+    .section {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: .12em;
+    }
+    .eyebrow { color: var(--accent-strong); font-weight: 700; }
+    .section { color: var(--muted); }
+    .headline {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 48px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 1190px;
+      font-size: 68px;
+      line-height: 1.08;
+      letter-spacing: -.04em;
+    }
+    .headline p {
+      margin: 0 0 8px;
+      max-width: 470px;
+      color: var(--muted);
+      font-size: 25px;
+      line-height: 1.5;
+      text-align: right;
+    }
+    .time-anchor {
+      min-height: 96px;
+      display: grid;
+      grid-template-columns: 260px 1fr auto;
+      align-items: center;
+      gap: 28px;
+      padding: 18px 24px;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+    }
+    .time-anchor .label {
+      color: var(--muted);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .time-anchor strong { font-size: 34px; }
+    .time-anchor span:last-child {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .pipeline {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr 64px 1fr;
+      align-items: stretch;
+    }
+    .stage-card {
+      min-width: 0;
+      padding: 30px 30px 26px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+    }
+    .stage-card.rules { border-top: 8px solid var(--accent-strong); }
+    .stage-card.degrade { background: var(--panel); }
+    .stage-index {
+      color: var(--accent-strong);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+    .stage-card h2 {
+      margin: 0;
+      font-size: 38px;
+      line-height: 1.15;
+    }
+    .items {
+      display: grid;
+      gap: 12px;
+      align-content: end;
+    }
+    .item {
+      min-height: 61px;
+      padding: 14px 17px;
+      display: flex;
+      align-items: center;
+      border-left: 5px solid var(--accent);
+      background: var(--panel);
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    .degrade .item { background: var(--bg); }
+    .rule-core {
+      align-self: end;
+      padding: 28px 22px;
+      border: 1px solid var(--accent-strong);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .rule-core strong {
+      display: block;
+      font-size: 29px;
+      line-height: 1.25;
+    }
+    .rule-core span {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.4;
+    }
+    .arrow {
+      display: grid;
+      place-items: center;
+      color: var(--accent-strong);
+      font-size: 42px;
+      font-weight: 700;
+    }
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 28px;
+      min-height: 42px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .brand { color: var(--ink); font-weight: 700; }
+    .page-no { font-variant-numeric: tabular-nums; }
+    .nav { display: flex; gap: 8px; }
+    .nav a {
+      width: 48px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--bg);
+      text-decoration: none;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <main class="page">
+      <header class="topline">
+        <p class="eyebrow">TECH DESIGN 01</p>
+        <p class="section">08 · 数据与降级</p>
+      </header>
+
+      <section class="headline">
+        <h1>数据边界决定建议边界<br>缺什么，就降级什么</h1>
+        <p>字段不足，保留可判定动作；不补默认值，不让 AI 猜。</p>
+      </section>
+
+      <section class="time-anchor" aria-label="时间确定性">
+        <span class="label">时间锚点</span>
+        <strong>批次业务截止日</strong>
+        <span>决定新品年龄 · 不使用上传日或访问日</span>
+      </section>
+
+      <section class="pipeline" aria-label="输入到规则再到字段级降级">
+        <article class="stage-card input">
+          <span class="stage-index">01 · 输入</span>
+          <h2>关键输入</h2>
+          <div class="items">
+            <div class="item">SPU 身份</div>
+            <div class="item">上月净销售额 · 经营准利润率</div>
+            <div class="item">最近 7 天品退</div>
+            <div class="item">条件库存 · 14 天销量</div>
+          </div>
+        </article>
+
+        <div class="arrow" aria-hidden="true">→</div>
+
+        <article class="stage-card rules">
+          <span class="stage-index">02 · 规则</span>
+          <h2>确定性规则</h2>
+          <div class="rule-core">
+            <strong>结果可复算</strong>
+            <span>分类 · 阈值 · 主动作</span>
+          </div>
+        </article>
+
+        <div class="arrow" aria-hidden="true">→</div>
+
+        <article class="stage-card degrade">
+          <span class="stage-index">03 · 降级</span>
+          <h2>字段级降级</h2>
+          <div class="items">
+            <div class="item">库存缺失 → 不生成补货</div>
+            <div class="item">品退周期未证明 → 不触发观察/加投</div>
+            <div class="item">LiteLLM 不可用 → 保留结构化规则建议</div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="footer">
+        <span class="brand">AI 商品经营与利润决策助手</span>
+        <span class="page-no">08 / 11</span>
+        <nav class="nav" aria-label="幻灯片导航">
+          <a href="p07.html" aria-label="上一页">←</a>
+          <a href="p09.html" aria-label="下一页">→</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function fit() {
+      var s = innerWidth / 1920;
+      var stage = document.querySelector('.stage');
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.height = (stage.offsetHeight * s) + 'px';
+    }
+    addEventListener('resize', fit); fit();
+    addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') location.href = 'p07.html';
+      if (event.key === 'ArrowRight') location.href = 'p09.html';
+    });
+  </script>
+</body>
+</html>
