@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>趣然经营决策设计系统 · Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+  --surface-hover: #edf3f9;
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #122033;
+  --fg-2: var(--fg);
+  --muted: #53657a;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #c9d5e2;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #123b66;
+  --accent-on: #ffffff;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #137a4a;
+  --warn: #9a5b00;
+  --danger: #b42318;
+  --action-clear: #b42318;
+  --action-stop: #c4510c;
+  --action-watch: #9a5b00;
+  --action-invest: #137a4a;
+  --action-replenish: #1769aa;
+  --ai: #5b5f8a;
+  --success-soft: #e8f5ee;
+  --warn-soft: #fff4d6;
+  --danger-soft: #fdecea;
+  --accent-soft: #e7eff8;
+  --ai-soft: #efeff8;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.6;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 40px;
+  --section-y-tablet: 28px;
+  --section-y-phone: 20px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1440px;
+  --container-gutter-desktop: 28px;
+  --container-gutter-tablet: 20px;
+  --container-gutter-phone: 16px;
+}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: var(--text-base); line-height: var(--leading-body); }
+    button, input { font: inherit; }
+    .shell { width: min(calc(100% - 56px), 1320px); margin: 0 auto; }
+    .section { padding: var(--section-y-desktop) 0; border-top: 1px solid var(--border-soft); }
+    .eyebrow { color: var(--accent); font-size: var(--text-xs); font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    h1,h2,h3 { font-family: var(--font-display); letter-spacing: var(--tracking-display); line-height: var(--leading-tight); }
+    h1 { margin: var(--space-4) 0; font-size: var(--text-4xl); }
+    h2 { margin: 0 0 var(--space-6); font-size: var(--text-3xl); }
+    h3 { margin: 0 0 var(--space-3); font-size: var(--text-xl); }
+    p { margin: 0; }
+    .muted { color: var(--muted); }
+    .meta { color: var(--meta); font-size: var(--text-xs); }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--elev-flat); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--space-4); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--space-4); }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: var(--space-4); }
+    .stack { display: grid; gap: var(--space-4); }
+    .hero { padding: var(--space-12) 0; }
+    .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: var(--space-8); align-items: center; }
+    .pill { display: inline-flex; gap: var(--space-2); align-items: center; padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: var(--text-sm); }
+    .spine { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--elev-raised); }
+    .rail { display: grid; grid-template-columns: 124px 1fr 108px; gap: var(--space-3); align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--border-soft); }
+    .rail:last-child { border: 0; }
+    .node { width: 11px; height: 11px; border-radius: var(--radius-pill); background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+    .rail-line { height: 2px; background: var(--border); position: relative; }
+    .rail-line .node { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+    .tag { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-weight: 700; font-size: var(--text-xs); }
+    .tag-clear { color: var(--action-clear); background: var(--danger-soft); }
+    .tag-stop { color: var(--action-stop); background: var(--warn-soft); }
+    .tag-watch { color: var(--action-watch); background: var(--warn-soft); }
+    .tag-invest { color: var(--action-invest); background: var(--success-soft); }
+    .tag-replenish { color: var(--action-replenish); background: var(--accent-soft); }
+    .tag-ai { color: var(--ai); background: var(--ai-soft); }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    th,td { padding: var(--space-3); border-bottom: 1px solid var(--border-soft); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: var(--text-xs); font-weight: 750; background: var(--bg); }
+    .swatch { min-height: 136px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; justify-content: space-between; }
+    .swatch-bg { background: var(--bg); }
+    .swatch-surface { background: var(--surface); }
+    .swatch-warm { background: var(--surface-warm); }
+    .swatch-hover { background: var(--surface-hover); }
+    .fg-demo { min-height: 110px; border-radius: var(--radius-md); background: var(--surface); padding: var(--space-4); border: 1px solid var(--border); }
+    .fg-primary { color: var(--fg); }
+    .fg-secondary { color: var(--fg-2); }
+    .fg-muted { color: var(--muted); }
+    .fg-meta { color: var(--meta); }
+    .border-demo { height: 96px; background: var(--surface); border-radius: var(--radius-md); display: grid; place-items: center; }
+    .border-strong { border: 2px solid var(--border); }
+    .border-soft { border: 1px solid var(--border-soft); }
+    .btn { border: 0; border-radius: var(--radius-sm); padding: 9px var(--space-4); font-weight: 700; cursor: pointer; transition: color var(--motion-fast) var(--ease-standard), background var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard); }
+    .btn-primary { color: var(--accent-on); background: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { background: var(--accent-active); }
+    .btn-secondary { color: var(--fg); background: var(--surface); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .btn:focus-visible { outline: 0; box-shadow: var(--focus-ring); }
+    .btn:disabled { opacity: .46; cursor: not-allowed; }
+    .semantic { border-radius: var(--radius-md); padding: var(--space-4); border-left: 4px solid; }
+    .semantic-success { color: var(--success); background: var(--success-soft); border-color: var(--success); }
+    .semantic-warn { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+    .semantic-danger { color: var(--danger); background: var(--danger-soft); border-color: var(--danger); }
+    .type-row { display: grid; grid-template-columns: 110px 70px 1fr; align-items: baseline; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border-soft); }
+    .text-xs { font-size: var(--text-xs); }.text-sm { font-size: var(--text-sm); }.text-base { font-size: var(--text-base); }.text-lg { font-size: var(--text-lg); }
+    .text-xl { font-size: var(--text-xl); }.text-2xl { font-size: var(--text-2xl); }.text-3xl { font-size: var(--text-3xl); }.text-4xl { font-size: var(--text-4xl); }
+    .font-display { font-family: var(--font-display); }.font-body { font-family: var(--font-body); }.font-mono { font-family: var(--font-mono); }
+    .tight { line-height: var(--leading-tight); }.body-leading { line-height: var(--leading-body); }
+    .space-row { display: grid; grid-template-columns: 112px 64px 1fr; align-items: center; gap: var(--space-3); }
+    .space-bar { height: 18px; border-radius: var(--radius-sm); background: var(--accent); }
+    .s1{width:var(--space-1)}.s2{width:var(--space-2)}.s3{width:var(--space-3)}.s4{width:var(--space-4)}.s5{width:var(--space-5)}.s6{width:var(--space-6)}.s8{width:var(--space-8)}.s12{width:var(--space-12)}
+    .rhythm { display: flex; align-items: flex-end; gap: var(--space-6); min-height: 150px; }
+    .rhythm-bar { width: 120px; background: var(--accent-soft); border: 1px solid var(--accent); display: grid; place-items: center; color: var(--accent); font-weight: 750; }
+    .r-desktop{height:var(--section-y-desktop)}.r-tablet{height:var(--section-y-tablet)}.r-phone{height:var(--section-y-phone)}
+    .bento { display: grid; grid-template-columns: 1.2fr .8fr .8fr; grid-template-rows: 140px 140px; gap: var(--space-4); }
+    .bento > div { border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-lg); padding: var(--space-5); }
+    .bento .wide { grid-row: 1 / 3; }
+    .bento .long { grid-column: 2 / 4; }
+    .elev-flat { box-shadow: var(--elev-flat); }.elev-ring{box-shadow:var(--elev-ring)}.elev-raised{box-shadow:var(--elev-raised)}.elev-float{box-shadow:var(--elev-float)}
+    .radius { height: 100px; background: var(--accent-soft); border: 1px solid var(--accent); display: grid; place-items: center; color: var(--accent); }
+    .radius-sm{border-radius:var(--radius-sm)}.radius-md{border-radius:var(--radius-md)}.radius-lg{border-radius:var(--radius-lg)}.radius-pill{border-radius:var(--radius-pill)}
+    .field { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg); padding: 9px var(--space-3); transition: box-shadow var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard); }
+    .field:focus { outline: 0; border-color: var(--accent); box-shadow: var(--focus-ring); }
+    .field.error { border-color: var(--danger); }.field:disabled{background:var(--surface-hover);color:var(--muted)}
+    .component-card { transition: background var(--motion-base) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard); }
+    .component-card:hover { background: var(--surface-hover); box-shadow: var(--elev-raised); }
+    .motion-demo { position: relative; height: 72px; border: 1px dashed var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+    .motion-dot { position: absolute; top: 22px; left: var(--space-4); width: 28px; height: 28px; border-radius: var(--radius-pill); background: var(--accent); transition: left var(--motion-base) var(--ease-standard); }
+    .motion-demo:hover .motion-dot { left: calc(100% - 44px); }
+    .fast-demo { transition-duration: var(--motion-fast); }.base-demo{transition-duration:var(--motion-base)}
+    .stagger > * { opacity: 0; animation: reveal var(--motion-base) var(--ease-standard) forwards; }
+    .stagger > :nth-child(2){animation-delay:60ms}.stagger > :nth-child(3){animation-delay:120ms}
+    @keyframes reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .emotion { min-height: 180px; display: grid; place-items: center; text-align: center; }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: var(--radius-pill); animation: spin 700ms linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .do { border-left: 4px solid var(--success); }.dont { border-left: 4px solid var(--danger); }
+    code { font-family: var(--font-mono); font-size: var(--text-sm); }
+    @media(max-width:1023px){.hero-grid,.grid-4,.grid-3,.grid-2,.do-dont{grid-template-columns:1fr}.bento{grid-template-columns:1fr;grid-template-rows:auto}.bento .wide,.bento .long{grid-column:auto;grid-row:auto}.shell{width:min(calc(100% - 40px),1320px)}.section{padding:var(--section-y-tablet) 0}}
+    @media(max-width:639px){.shell{width:min(calc(100% - 32px),1320px)}.section{padding:var(--section-y-phone) 0}.rail{grid-template-columns:90px 1fr 84px}.type-row{grid-template-columns:88px 54px 1fr}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <span class="pill"><i class="ph ph-storefront"></i> E-Commerce &amp; Retail</span>
+          <h1>趣然经营决策设计系统</h1>
+          <p class="text-xl muted">冷静、可信、可追溯的数据密集型经营工作台。</p>
+          <p style="margin-top:var(--space-6)">它像一条经营决策脊线：冻结数据是骨架，固定规则是关节，经营动作与库存动作并行向前；AI 只负责把证据讲清楚，绝不改变动作方向。</p>
+        </div>
+        <div class="spine" aria-label="双轨决策脊线设计签名">
+          <div class="eyebrow">Signature · 双轨决策脊线</div>
+          <div class="rail"><span class="tag tag-stop">止损推广</span><div class="rail-line"><span class="node"></span></div><span class="tag tag-replenish">禁止补货</span></div>
+          <div class="rail"><span class="tag tag-invest">增加投放</span><div class="rail-line"><span class="node"></span></div><span class="tag tag-replenish">建议补货</span></div>
+          <div class="rail"><span class="tag tag-watch">观察优化</span><div class="rail-line"><span class="node"></span></div><span class="tag tag-ai">AI 解释</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section"><div class="shell">
+      <div class="eyebrow">01 · Philosophy</div><h2>设计理念</h2>
+      <div class="grid-2">
+        <article class="panel"><h3>用户情绪</h3><p>面对利润、库存和售后风险时，用户应感到结论稳定、证据充分、下一步明确，而不是被炫技、动画或模糊 AI 话术打断。</p></article>
+        <article class="panel"><h3>设计决策理由</h3><p>浅色冷静中台适合长期办公与高密度表格；深海军蓝建立权威感，动作语义色只在决策节点出现，降低风险信息的视觉噪声。</p></article>
+        <article class="panel"><h3>风格定位</h3><p>位于传统 ERP 的可靠克制与现代数据产品的清晰效率之间：不做营销型大留白，也不做旧式密集灰表格。</p></article>
+        <article class="panel"><h3>Prior Art</h3><table><thead><tr><th>参考</th><th>吸收原则</th></tr></thead><tbody><tr><td>Linear</td><td>信息层级与快捷反馈</td></tr><tr><td>Shopify Polaris</td><td>电商语义与可信操作</td></tr><tr><td>Ant Design Pro</td><td>企业工作台密度与模式</td></tr></tbody></table></article>
+      </div>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">02 · Color</div><h2>色彩系统</h2></div>
+      <article class="panel stack"><h3>Surface</h3><div class="grid-4"><div class="swatch swatch-bg"><b>--bg</b><code>#f4f7fb · 全局底色</code></div><div class="swatch swatch-surface"><b>--surface</b><code>--surface-raised / --surface-overlay<br>#ffffff · 工作面</code></div><div class="swatch swatch-warm"><b>--surface-warm</b><code>继承 surface · 克制统一</code></div><div class="swatch swatch-hover"><b>--surface-hover</b><code>#edf3f9 · 色彩响应</code></div></div></article>
+      <article class="panel stack"><h3>Foreground / Text</h3><div class="grid-4"><div class="fg-demo fg-primary"><b>--fg</b><p>核心结论与标题</p><code>#122033</code></div><div class="fg-demo fg-secondary"><b>--fg-2</b><p>同级主要信息</p><code>继承 --fg</code></div><div class="fg-demo fg-muted"><b>--muted</b><p>辅助说明与弱提示</p><code>#53657a</code></div><div class="fg-demo fg-meta"><b>--meta</b><p>时间、周期和元数据</p><code>继承 --muted</code></div></div></article>
+      <article class="panel stack"><h3>Border</h3><div class="grid-2"><div class="border-demo border-strong"><code>--border · #c9d5e2</code></div><div class="border-demo border-soft"><code>--border-soft · 继承 --border</code></div></div></article>
+      <article class="panel stack"><h3>Accent</h3><div style="display:flex;gap:var(--space-3);flex-wrap:wrap"><button class="btn btn-primary">默认 #123b66</button><button class="btn btn-primary">悬停 / 激活</button><span class="pill">--accent-soft · #e7eff8</span><span class="pill" style="color:var(--accent-on);background:var(--accent)">--accent-on · #ffffff</span></div><p class="muted">纪律：每屏最多 2 处可见强调；中性色 70–90%，accent 5–10%，语义色 0–5%。</p></article>
+      <article class="panel stack"><h3>Semantic / Action</h3><div class="grid-3"><div class="semantic semantic-success"><b>成功 #137a4a</b><p>数据批次已生成行动清单</p></div><div class="semantic semantic-warn"><b>警告 #9a5b00</b><p>近 7 天品退率数据不足</p></div><div class="semantic semantic-danger"><b>错误 #b42318</b><p>导入失败，原批次未改变</p></div></div><div style="display:flex;gap:var(--space-2);flex-wrap:wrap"><span class="tag tag-clear">清仓 #b42318</span><span class="tag tag-stop">止损 #c4510c</span><span class="tag tag-watch">观察 #9a5b00</span><span class="tag tag-invest">加投 #137a4a</span><span class="tag tag-replenish">补货 #1769aa</span><span class="tag tag-ai">AI #5b5f8a</span></div><p class="meta">柔和底色：success-soft #e8f5ee · warn-soft #fff4d6 · danger-soft #fdecea · ai-soft #efeff8</p></article>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">03 · Typography</div><h2>排版系统</h2></div>
+      <div class="grid-3"><article class="panel"><h3 class="font-display">Display / 经营判断</h3><p class="meta">系统无衬线 · 层级清楚、中文稳定</p></article><article class="panel"><h3 class="font-body">Body / 依据必须读得完</h3><p class="muted">用于表格、表单、解释与说明。</p></article><article class="panel font-mono"><h3>Mono / 515 · 12.6%</h3><p class="meta">数据、ID 与版本保持列对齐。</p></article></div>
+      <article class="panel"><h3>Type Scale</h3><div class="type-row"><code>--text-xs</code><span>12px</span><span class="text-xs">周期、来源、辅助元数据</span></div><div class="type-row"><code>--text-sm</code><span>13px</span><span class="text-sm">紧凑表格与标签</span></div><div class="type-row"><code>--text-base</code><span>14px</span><span class="text-base">工作台默认正文</span></div><div class="type-row"><code>--text-lg</code><span>16px</span><span class="text-lg">组件标题</span></div><div class="type-row"><code>--text-xl</code><span>18px</span><span class="text-xl">卡片主结论</span></div><div class="type-row"><code>--text-2xl</code><span>22px</span><span class="text-2xl">页面标题</span></div><div class="type-row"><code>--text-3xl</code><span>28px</span><span class="text-3xl">评审章节标题</span></div><div class="type-row"><code>--text-4xl</code><span>36px</span><span class="text-4xl">产品名片</span></div></article>
+      <div class="grid-2"><article class="panel"><h3>字距规则</h3><table><tbody><tr><td style="letter-spacing:.12em;text-transform:uppercase">STATUS</td><td>eyebrow / ALL CAPS</td></tr><tr><td style="letter-spacing:var(--tracking-display)">决策助手</td><td>Display -0.02em</td></tr><tr><td>建议详情</td><td>标题默认</td></tr><tr><td style="letter-spacing:.02em">业务截止日</td><td>小文本轻微放宽</td></tr><tr><td style="font-weight:700">确认执行</td><td>UI 标签默认</td></tr><tr><td>数据来自冻结批次</td><td>正文默认</td></tr></tbody></table></article><article class="panel stack"><h3>行高对照</h3><p class="tight">--leading-tight 1.25：标题和短结论紧凑成组，避免数据页高度失控。</p><p class="body-leading muted">--leading-body 1.6：长依据、错误恢复说明与 AI 辅助解释保持可扫描和可理解。</p></article></div>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">04 · Spacing</div><h2>间距体系</h2></div>
+      <div class="grid-2"><article class="panel stack"><div class="space-row"><code>--space-1</code><span>4px</span><div class="space-bar s1"></div></div><div class="space-row"><code>--space-2</code><span>8px</span><div class="space-bar s2"></div></div><div class="space-row"><code>--space-3</code><span>12px</span><div class="space-bar s3"></div></div><div class="space-row"><code>--space-4</code><span>16px</span><div class="space-bar s4"></div></div><div class="space-row"><code>--space-5</code><span>20px</span><div class="space-bar s5"></div></div><div class="space-row"><code>--space-6</code><span>24px</span><div class="space-bar s6"></div></div><div class="space-row"><code>--space-8</code><span>32px</span><div class="space-bar s8"></div></div><div class="space-row"><code>--space-12</code><span>48px</span><div class="space-bar s12"></div></div></article><article class="panel"><h3>Section rhythm</h3><div class="rhythm"><div><div class="rhythm-bar r-desktop">40</div><code>desktop</code></div><div><div class="rhythm-bar r-tablet">28</div><code>tablet</code></div><div><div class="rhythm-bar r-phone">20</div><code>phone</code></div></div></article></div>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">05 · Layout</div><h2>布局与空间</h2></div>
+      <div class="bento"><div class="wide"><h3>证据主区</h3><p class="muted">实际值 → 阈值 → 优先级 → 动作</p></div><div><h3>经营动作</h3><span class="tag tag-stop">止损推广</span></div><div><h3>库存动作</h3><span class="tag tag-replenish">禁止补货</span></div><div class="long"><h3>双轨时间线</h3><p class="muted">主管审核后，两条动作独立执行、统一追溯。</p></div></div>
+      <p class="meta">Container：--container-max 1440px；--container-gutter-desktop 28px；--container-gutter-tablet 20px；--container-gutter-phone 16px。</p>
+      <div class="grid-4"><article class="panel elev-flat"><h3>Flat</h3><code>--elev-flat</code></article><article class="panel elev-ring"><h3>Ring</h3><code>--elev-ring</code></article><article class="panel elev-raised"><h3>Raised</h3><code>--elev-raised</code></article><article class="panel elev-float"><h3>Float</h3><code>--elev-float</code></article></div>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">06 · Shape &amp; Focus</div><h2>圆角与焦点</h2></div>
+      <div class="grid-4"><div class="radius radius-sm">sm · 6px</div><div class="radius radius-md">md · 10px</div><div class="radius radius-lg">lg · 14px</div><div class="radius radius-pill">pill · 9999px</div></div>
+      <article class="panel"><h3>Focus Ring</h3><input class="field" value="点击或按 Tab 查看聚焦状态" aria-label="焦点演示"><p class="meta" style="margin-top:var(--space-2)">--focus-ring 保证键盘用户可识别当前操作对象。</p></article>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">07 · Components</div><h2>组件库</h2></div>
+      <article class="panel stack"><h3>按钮</h3><div style="display:flex;gap:var(--space-3);flex-wrap:wrap"><button class="btn btn-primary">确认审核</button><button class="btn btn-secondary">返回清单</button><button class="btn btn-primary" disabled>状态处理中</button></div><p class="meta">悬停只改变色彩与阴影，不产生位置位移；按下使用 active 色。</p></article>
+      <div class="grid-2"><article class="panel component-card"><h3>可交互卡片</h3><p class="muted">悬停查看 surface-hover 与 elev-raised。</p></article><article class="panel"><h3>徽章</h3><div style="display:flex;gap:var(--space-2);flex-wrap:wrap"><span class="tag tag-clear">清仓</span><span class="tag tag-stop">止损</span><span class="tag tag-watch">观察</span><span class="tag tag-invest">加投</span><span class="tag tag-replenish">补货</span><span class="tag tag-ai">AI 已生成</span></div></article></div>
+      <article class="panel stack"><h3>输入框</h3><div class="grid-2"><input class="field" placeholder="默认 / 聚焦"><input class="field error" value="文件期间与业务期间不一致" aria-invalid="true"><input class="field" value="禁用状态" disabled><input class="field" value="SPU 515 · 忙碌屋玩具"></div></article>
+      <article class="panel"><h3>密集表格</h3><table><thead><tr><th>SPU</th><th>上月净销售额</th><th>经营准利润率</th><th>经营动作</th><th>库存动作</th></tr></thead><tbody><tr><td>515 · 忙碌屋</td><td>¥82,640</td><td>-7.3%</td><td><span class="tag tag-stop">止损</span></td><td><span class="tag tag-replenish">禁止补货</span></td></tr><tr><td>620 · 拼搭积木</td><td>¥126,300</td><td>16.2%</td><td><span class="tag tag-invest">加投</span></td><td><span class="tag tag-replenish">补货</span></td></tr></tbody></table></article>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">08 · Motion</div><h2>动效与交互物理</h2></div>
+      <div class="grid-2"><article class="panel"><h3>--motion-fast · 150ms</h3><div class="motion-demo"><div class="motion-dot fast-demo"></div></div></article><article class="panel"><h3>--motion-base · 200ms</h3><div class="motion-demo"><div class="motion-dot base-demo"></div></div></article></div>
+      <article class="panel"><h3>--ease-standard · cubic-bezier(0.2, 0, 0, 1)</h3><p class="muted">快速进入、平稳停住；只服务状态确认，不制造表演感。</p></article>
+      <div class="grid-3 stagger"><article class="panel"><b>01 批次固化</b></article><article class="panel"><b>02 规则生成</b></article><article class="panel"><b>03 双轨执行</b></article></div>
+      <p class="meta">系统尊重 prefers-reduced-motion：关闭非必要动画、过渡和自动滚动。</p>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">09 · Voice</div><h2>品牌情感与声音</h2></div>
+      <div class="grid-4"><div class="text-2xl">冷静</div><div class="text-2xl">可信</div><div class="text-2xl">明确</div><div class="text-2xl">可追溯</div></div>
+      <div class="grid-3"><article class="panel emotion"><div><i class="ph ph-check-circle text-3xl"></i><h3>当前没有待办</h3><p class="muted">当前批次的任务均已处理。</p></div></article><article class="panel emotion"><div><div class="spinner" style="margin:0 auto var(--space-3)"></div><h3>正在生成规则结论</h3><p class="muted">可离开页面，完成后状态自动更新。</p></div></article><article class="panel emotion"><div><div class="text-4xl">404</div><h3>页面未找到</h3><p class="muted">返回本人工作台继续处理。</p></div></article></div>
+      <article class="panel"><h3>Agent Prompt Guide</h3><p>使用浅色冷静经营中台；先展示固定规则和冻结证据，再展示 AI 辅助说明；经营与库存动作必须双轨呈现；表格紧凑、详情 Bento 分区、交互以色彩响应为主；禁止用移动、夸张渐变或 AI 发光效果争夺经营结论的权威。</p></article>
+    </div></section>
+
+    <section class="section"><div class="shell stack">
+      <div><div class="eyebrow">10 · Guardrails</div><h2>设计禁忌</h2></div>
+      <div class="do-dont"><article class="panel do"><h3>✓ 正确</h3><p>固定规则先于 AI；证据带周期和来源；动作颜色配合文字与图标；采购只显示必要字段。</p></article><article class="panel dont"><h3>✕ 禁止</h3><p>用 AI 气泡抢占主结论；仅靠红绿传义；缺失值填 0；把利润和推广字段泄露给采购。</p></article></div>
+      <div class="do-dont"><article class="panel do"><h3>✓ 正确</h3><p>悬停改变背景和阴影；正式动作二次确认；状态冲突保留输入并显示最新状态。</p></article><article class="panel dont"><h3>✕ 禁止</h3><p>卡片上移抖动；整页大面积渐变；批量审核或执行；失败时清空用户备注。</p></article></div>
+      <div class="do-dont"><article class="panel do"><h3>✓ 正确</h3><p>高密度表格承载扫描，详情页解释原因，历史读取不可变快照。</p></article><article class="panel dont"><h3>✕ 禁止</h3><p>每个指标做成孤立大卡片；用趋势图冒充追溯；覆盖旧批次、规则或事件。</p></article></div>
+    </div></section>
+  </main>
+</body>
+</html>
