@@ -145,5 +145,22 @@
       </div>
     </main>
   </div>
+
+
+<script data-page-wiring>
+(() => {
+  const routes = {"PAGE-F08-01":"阶段1_历史追溯_历史追溯索引.html","PAGE-F06-01":"阶段1_审核执行_建议审核表单.html","PAGE-F06-02":"阶段1_审核执行_经营动作执行表单.html","PAGE-F06-04":"阶段1_审核执行_经营结果记录表单.html","PAGE-F06-03":"阶段1_审核执行_采购动作执行表单.html","PAGE-F00-01":"阶段1_工作台_角色待办工作台.html","PAGE-F01-01":"阶段1_数据批次_批次列表.html","PAGE-F01-03":"阶段1_数据批次_批次详情与校验结果.html","PAGE-F01-02":"阶段1_数据批次_新建数据导入.html","PAGE-F05-02":"阶段1_行动清单_建议详情.html","PAGE-F05-01":"阶段1_行动清单_行动清单列表.html","PAGE-F07-02":"阶段1_身份权限_权限不足.html","PAGE-F07-01":"阶段1_身份权限_钉钉认证门禁.html"};
+  const labels = {"工作台":"PAGE-F00-01","数据批次":"PAGE-F01-01","批次管理":"PAGE-F01-01","行动清单":"PAGE-F05-01","历史追溯":"PAGE-F08-01","新建导入":"PAGE-F01-02","导入数据":"PAGE-F01-02","查看批次":"PAGE-F01-03","批次详情":"PAGE-F01-03","查看清单":"PAGE-F05-01","查看详情":"PAGE-F05-02","建议详情":"PAGE-F05-02","审核建议":"PAGE-F06-01","去审核":"PAGE-F06-01","执行经营动作":"PAGE-F06-02","确认经营动作":"PAGE-F06-02","执行采购动作":"PAGE-F06-03","确认采购动作":"PAGE-F06-03","记录经营结果":"PAGE-F06-04","返回建议详情":"PAGE-F05-02","返回工作台":"PAGE-F00-01"};
+  const candidates = document.querySelectorAll('a[href="#"], button[data-target-page]');
+  for (const el of candidates) {
+    const text = el.textContent.replace(/\s+/g, ' ').trim();
+    const key = Object.keys(labels).find((label) => text === label || text.includes(label));
+    const pageId = el.dataset.targetPage || (key && labels[key]);
+    if (!pageId || !routes[pageId]) continue;
+    if (el.tagName === 'A') el.href = routes[pageId];
+    else el.addEventListener('click', () => { location.href = routes[pageId]; });
+  }
+})();
+</script>
 </body>
 </html>
