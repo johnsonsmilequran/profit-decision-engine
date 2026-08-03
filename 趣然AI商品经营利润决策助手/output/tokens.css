@@ -1,0 +1,102 @@
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+  --surface-hover: #edf3f9;
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #122033;
+  --fg-2: var(--fg);
+  --muted: #53657a;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #c9d5e2;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #123b66;
+  --accent-on: #ffffff;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #137a4a;
+  --warn: #9a5b00;
+  --danger: #b42318;
+  --action-clear: #b42318;
+  --action-stop: #c4510c;
+  --action-watch: #9a5b00;
+  --action-invest: #137a4a;
+  --action-replenish: #1769aa;
+  --ai: #5b5f8a;
+  --success-soft: #e8f5ee;
+  --warn-soft: #fff4d6;
+  --danger-soft: #fdecea;
+  --accent-soft: #e7eff8;
+  --ai-soft: #efeff8;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.6;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 40px;
+  --section-y-tablet: 28px;
+  --section-y-phone: 20px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1440px;
+  --container-gutter-desktop: 28px;
+  --container-gutter-tablet: 20px;
+  --container-gutter-phone: 16px;
+}
