@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F01-01">
+  <title>批次列表</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #F7F5F0;
+  --surface: #FFFFFF;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #18202B;
+  --fg-2: var(--fg);
+  --muted: #536170;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #C8CDD3;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #3347A8;
+  --accent-on: #FFFFFF;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #087A62;
+  --warn: #9A5B00;
+  --danger: #B42318;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "Roboto Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+  --text-4xl: 48px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.65;
+  --leading-tight: 1.25;
+  --tracking-display: -0.025em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 80px;
+  --section-y-tablet: 64px;
+  --section-y-phone: 48px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1320px;
+  --container-gutter-desktop: 32px;
+  --container-gutter-tablet: 24px;
+  --container-gutter-phone: 16px;
+}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body)}
+    .sidebar{width:224px;background:var(--fg);color:var(--accent-on)} .nav{color:color-mix(in oklab,var(--accent-on),transparent 28%);border-radius:var(--radius-md)} .nav:hover,.nav.active{background:color-mix(in oklab,var(--accent),var(--fg) 35%);color:var(--accent-on)}
+    .card{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-lg)} .click{transition:background var(--motion-fast),border-color var(--motion-fast)} .click:hover{border-color:var(--accent);background:color-mix(in oklab,var(--accent),var(--surface) 97%)} .click:focus-visible{outline:0;box-shadow:var(--focus-ring)}
+    .badge{display:inline-flex;align-items:center;min-height:24px;padding:0 var(--space-2);border-radius:var(--radius-pill);font-size:var(--text-xs);font-weight:600}.danger{color:var(--danger);background:color-mix(in oklab,var(--danger),var(--surface) 93%)}.warn{color:var(--warn);background:color-mix(in oklab,var(--warn),var(--surface) 93%)}.success{color:var(--success);background:color-mix(in oklab,var(--success),var(--surface) 93%)}.accent{color:var(--accent);background:color-mix(in oklab,var(--accent),var(--surface) 93%)}
+    .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}.field{min-height:40px;padding:var(--space-2) var(--space-3);color:var(--fg);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)}.field:hover{border-color:var(--accent)}.field:focus-visible{outline:0;box-shadow:var(--focus-ring)}.data-row{border-bottom:1px solid var(--border-soft)}.data-row:hover{background:color-mix(in oklab,var(--accent),var(--surface) 97%)}.btn{min-height:40px;border-radius:var(--radius-md);background:var(--accent);color:var(--accent-on);font-weight:600;padding:0 var(--space-4)}.btn:hover{background:var(--accent-hover)}.btn:focus-visible{outline:0;box-shadow:var(--focus-ring)}
+  </style>
+</head>
+<body><div class="flex min-h-screen min-w-[1024px]"><aside class="sidebar fixed inset-y-0 p-5"><b class="text-lg">趣然经营助手</b><nav class="mt-8 space-y-2 text-sm"><a class="nav block px-3 py-2">工作台</a><a class="nav active block px-3 py-2">数据批次</a><a class="nav block px-3 py-2">行动清单</a><a class="nav block px-3 py-2">历史追溯</a></nav></aside><main class="ml-[224px] flex-1 p-8"><div class="max-w-[1320px] mx-auto space-y-6"><div class="text-sm text-[var(--muted)]">数据批次 / 批次列表</div><header class="flex justify-between items-end"><div><h1 class="text-3xl font-bold">数据批次</h1><p class="text-[var(--muted)] mt-2">每个批次保留独立数据口径、处理状态与唯一行动清单。</p></div><button class="btn"><i class="ph ph-upload-simple mr-2"></i>新建数据导入</button></header><section class="card p-4 grid grid-cols-[1.4fr_1fr_1fr_auto] gap-3"><label class="field flex items-center gap-2"><i class="ph ph-magnifying-glass"></i><input class="w-full outline-none" placeholder="搜索批次 ID 或文件名"></label><select class="field"><option>全部处理状态</option><option>清单已就绪</option><option>处理中</option></select><select class="field"><option>全部期间</option><option>2026 年 7 月</option><option>2026 年 6 月</option></select><button class="btn">查询</button></section><section class="card overflow-hidden"><table class="w-full text-sm"><thead class="bg-[var(--bg)] text-[var(--muted)]"><tr><th class="p-3 text-left">批次 / 数据期间</th><th class="p-3 text-left">业务截止日</th><th class="p-3 text-right">有效 / 拒绝 / 降级</th><th class="p-3 text-left">固定规则</th><th class="p-3 text-left">AI 解释</th><th class="p-3 text-left">创建信息</th><th class="p-3"></th></tr></thead><tbody id="rows"></tbody></table><div class="p-4 border-t flex justify-between items-center" style="border-color:var(--border)"><span class="text-sm text-[var(--muted)]">共 34 个批次 · 第 1—10 条</span><div class="flex gap-2"><button class="card px-3 py-2">上一页</button><button class="btn">1</button><button class="card px-3 py-2">2</button><button class="card px-3 py-2">下一页</button></div></div></section></div></main></div><script>const data=[['BAT-202607-001','07-01—07-31','07-31','18 / 0 / 3','清单已就绪','生成中','林思远 · 08-03 09:16'],['BAT-202606-003','06-01—06-30','06-30','16 / 2 / 5','清单已就绪','已生成','陈怡 · 07-27 09:08'],['BAT-202606-002','06-01—06-30','06-30','18 / 0 / 4','清单已就绪','生成失败','陈怡 · 07-20 09:21'],['BAT-202606-001','06-01—06-30','06-30','20 / 1 / 6','清单已就绪','已生成','陈怡 · 07-13 08:59'],['BAT-202605-004','05-01—05-31','05-31','14 / 0 / 2','清单已就绪','已生成','周文 · 07-06 09:11'],['BAT-202605-003','05-01—05-31','05-31','19 / 2 / 7','清单已就绪','已生成','周文 · 06-29 09:04'],['BAT-202605-002','05-01—05-31','05-31','17 / 0 / 4','清单已就绪','已生成','周文 · 06-22 09:15'],['BAT-202605-001','05-01—05-31','05-31','18 / 1 / 3','清单已就绪','已生成','周文 · 06-15 09:06'],['BAT-202604-002','04-01—04-30','04-30','16 / 0 / 5','清单已就绪','已生成','陈怡 · 06-08 09:12'],['BAT-202604-001','04-01—04-30','04-30','15 / 3 / 6','清单已就绪','已生成','陈怡 · 06-01 09:03']];document.querySelector('#rows').innerHTML=data.map((r,i)=>`<tr class="data-row"><td class="p-3"><b class="mono">${r[0]}</b><p class="text-xs text-[var(--muted)] mt-1">${r[1]} · 玩具事业部</p></td><td class="p-3 mono">${r[2]}</td><td class="p-3 text-right mono">${r[3]}</td><td class="p-3"><span class="badge success">${r[4]}</span></td><td class="p-3"><span class="badge ${r[5]=='生成失败'?'danger':r[5]=='生成中'?'warn':'success'}">${r[5]}</span></td><td class="p-3 text-[var(--muted)]">${r[6]}</td><td class="p-3"><button class="text-[var(--accent)] font-semibold">查看详情 <i class="ph ph-arrow-right"></i></button></td></tr>`).join('');</script></body>
+</html>
