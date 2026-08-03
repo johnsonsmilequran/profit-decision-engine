@@ -4,9 +4,9 @@
 - 约束：遵循 PRD 大师阶段 0–6；需求、设计、页面与测试文档后续保持全链路同步；项目将由当前工作区根目录建立 Git 管理并推送至指定 GitHub 仓库。
 
 ## 当前状态
-- ✅ 已完成：阶段 0 产品理解与规则确认、阶段 1 范围收敛、纯 SPU 的 PRD V0；阶段 5 正式详细 PRD、机器需求契约、正确性分析、摘要版与开发版；R0—R4 多角色写作/复核及四视角终审；阶段 6 已依据阶段 5 正式输出重新生成 11 页 PPT 大纲、逐页 HTML 和可编辑正式 PPTX，并通过浏览器、再渲染和溢出校验。
-- ▶️ 进行中：初始化 Git 仓库、配置 GitHub 协作基础文件并首次推送远程。
-- ⏸️ 待办：用户可审阅阶段 6 正式版，或进入后续设计阶段；阶段 2—4 仍按用户指令保持跳过。
+- ✅ 已完成：阶段 0、1、5、6 全部既定产物；阶段 6 正式版通过浏览器、再渲染和溢出校验；当前工作区已初始化为 `main` 分支 Git 仓库，生成 GitHub Issue/PR/CODEOWNERS/贡献指南等协作基线，并将首次提交 `e0afac0` 推送至 `git@github.com:johnsonsmilequran/profit-decision-engine.git`。
+- ▶️ 进行中：无。
+- ⏸️ 待办：按 `仓库协作设置指引.md` 在 GitHub 网页启用 main 分支保护；出现真实代码与测试命令后再生成 CI；产品工作可进入用户审阅或后续设计阶段。
 - ❓ 待确认：无；缺失的 SPU 库存、最近 14 天销量和最近 7 天品退数据已作为限制写入 PRD V0。
 
 ## 决策记录（实时维护）
@@ -70,3 +70,10 @@
 - `趣然AI商品经营利润决策助手/output/ppt/p01.html` 至 `p11.html`
 - `趣然AI商品经营利润决策助手/output/AI商品经营与利润决策助手-方案V0.pptx`
 - `趣然AI商品经营利润决策助手/output/AI商品经营与利润决策助手-阶段5正式版.pptx`
+- `.github/ISSUE_TEMPLATE/提需求.yml`
+- `.github/ISSUE_TEMPLATE/报bug.yml`
+- `.github/pull_request_template.md`
+- `.github/CODEOWNERS`
+- `README.md`
+- `CONTRIBUTING.md`
+- `仓库协作设置指引.md`
