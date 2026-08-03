@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F07-01">
+  <title>钉钉登录页｜趣然 AI 商品经营与利润决策助手</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+  --surface-hover: #edf3f9;
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #122033;
+  --fg-2: var(--fg);
+  --muted: #53657a;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #c9d5e2;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #123b66;
+  --accent-on: #ffffff;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #137a4a;
+  --warn: #9a5b00;
+  --danger: #b42318;
+  --action-clear: #b42318;
+  --action-stop: #c4510c;
+  --action-watch: #9a5b00;
+  --action-invest: #137a4a;
+  --action-replenish: #1769aa;
+  --ai: #5b5f8a;
+  --success-soft: #e8f5ee;
+  --warn-soft: #fff4d6;
+  --danger-soft: #fdecea;
+  --accent-soft: #e7eff8;
+  --ai-soft: #efeff8;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.6;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 40px;
+  --section-y-tablet: 28px;
+  --section-y-phone: 20px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1440px;
+  --container-gutter-desktop: 28px;
+  --container-gutter-tablet: 20px;
+  --container-gutter-phone: 16px;
+}
+
+    * { box-sizing: border-box; }
+
+    html,
+    body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; }
+
+    .desktop-shell {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        linear-gradient(to right, color-mix(in oklab, var(--border), transparent 72%) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in oklab, var(--border), transparent 72%) 1px, transparent 1px),
+        var(--bg);
+      background-size: 48px 48px;
+    }
+
+    .desktop-shell::before,
+    .desktop-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: var(--radius-pill);
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    .desktop-shell::before {
+      width: 440px;
+      height: 440px;
+      top: -240px;
+      right: 5%;
+      background: color-mix(in oklab, var(--accent-soft), transparent 15%);
+    }
+
+    .desktop-shell::after {
+      width: 320px;
+      height: 320px;
+      bottom: -210px;
+      left: 8%;
+      background: color-mix(in oklab, var(--ai-soft), transparent 28%);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, calc(100% - 56px));
+      height: 76px;
+      margin: 0 auto;
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 28%);
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: var(--accent-on);
+      box-shadow: var(--elev-raised);
+    }
+
+    .brand-title {
+      color: var(--fg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .internal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 28px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: color-mix(in oklab, var(--surface), transparent 12%);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .login-stage {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 56px));
+      min-height: calc(100vh - 138px);
+      margin: 0 auto;
+      padding: var(--space-8) 0 var(--space-12);
+    }
+
+    .login-frame {
+      width: 100%;
+      min-height: 660px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--elev-float);
+      overflow: hidden;
+    }
+
+    .story-panel {
+      position: relative;
+      min-height: 660px;
+      padding: 58px 52px 44px;
+      border-right: 1px solid var(--border-soft);
+      background:
+        linear-gradient(155deg, color-mix(in oklab, var(--accent-soft), var(--surface) 35%), var(--surface) 72%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 28px;
+      margin-bottom: var(--space-6);
+      padding: 0 var(--space-3);
+      border: 1px solid color-mix(in oklab, var(--accent), transparent 64%);
+      border-radius: var(--radius-pill);
+      background: color-mix(in oklab, var(--accent-soft), transparent 28%);
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .product-title {
+      max-width: 470px;
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(var(--text-3xl), 3vw, var(--text-4xl));
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+    }
+
+    .product-copy {
+      max-width: 440px;
+      margin: var(--space-5) 0 0;
+      color: var(--muted);
+      font-size: var(--text-base);
+      line-height: 1.8;
+    }
+
+    .decision-rails {
+      position: relative;
+      margin-top: var(--space-12);
+      padding: var(--space-6);
+      border: 1px solid color-mix(in oklab, var(--border), transparent 14%);
+      border-radius: var(--radius-md);
+      background: color-mix(in oklab, var(--surface), transparent 6%);
+    }
+
+    .decision-rails::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 42px;
+      right: 42px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .rail-node {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 88px;
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+
+    .rail-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--elev-raised);
+      font-size: var(--text-xl);
+    }
+
+    .story-note {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .story-note i {
+      margin-top: 2px;
+      color: var(--success);
+      font-size: var(--text-lg);
+    }
+
+    .auth-panel {
+      min-height: 660px;
+      padding: 48px 52px 36px;
+      background: var(--surface);
+    }
+
+    .auth-heading {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: var(--leading-tight);
+      letter-spacing: -0.01em;
+    }
+
+    .auth-kicker {
+      margin: 0;
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-subtitle {
+      margin: var(--space-2) 0 0;
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .status-line {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 30px;
+      margin-top: var(--space-5);
+      padding: 0 var(--space-3);
+      border: 1px solid color-mix(in oklab, var(--success), transparent 68%);
+      border-radius: var(--radius-pill);
+      background: var(--success-soft);
+      color: var(--success);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background: var(--success);
+      box-shadow: 0 0 0 4px color-mix(in oklab, var(--success), transparent 86%);
+    }
+
+    .auth-content {
+      margin-top: var(--space-6);
+      padding: var(--space-6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+    }
+
+    .qr-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 218px;
+      height: 218px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      box-shadow: var(--elev-raised);
+    }
+
+    .qr-code {
+      width: 176px;
+      height: 176px;
+    }
+
+    .scan-copy {
+      margin: var(--space-4) 0 0;
+      color: var(--fg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .scan-meta {
+      margin: var(--space-1) 0 0;
+      color: var(--muted);
+      font-size: var(--text-xs);
+      text-align: center;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin: var(--space-5) 0;
+      color: var(--meta);
+      font-size: var(--text-xs);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      width: 100%;
+      min-height: 44px;
+      padding: 0 var(--space-4);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--accent-on);
+      font: 600 var(--text-base)/1 var(--font-body);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard);
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn-primary:active { background: var(--accent-active); border-color: var(--accent-active); }
+    .btn-primary:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .btn-primary:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
+
+    .auth-feedback {
+      min-height: 22px;
+      margin: var(--space-3) 0 0;
+      color: var(--muted);
+      font-size: var(--text-xs);
+      text-align: center;
+    }
+
+    .trust-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+
+    .trust-item {
+      min-width: 0;
+      padding: var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+    }
+
+    .trust-item i {
+      color: var(--accent);
+      font-size: var(--text-lg);
+    }
+
+    .trust-title {
+      display: block;
+      margin-top: var(--space-2);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 700;
+    }
+
+    .trust-copy {
+      display: block;
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: 1.5;
+    }
+
+    .auth-footnote {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .auth-footnote i {
+      flex: 0 0 auto;
+      margin-top: 2px;
+      color: var(--accent);
+      font-size: var(--text-sm);
+    }
+
+    .device-notice {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      background: var(--bg);
+    }
+
+    .device-card {
+      width: min(100%, 420px);
+      padding: var(--space-8) var(--space-6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      box-shadow: var(--elev-raised);
+      text-align: center;
+    }
+
+    .device-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: var(--text-3xl);
+    }
+
+    .device-title {
+      margin: var(--space-5) 0 0;
+      font-size: var(--text-xl);
+      line-height: var(--leading-tight);
+    }
+
+    .device-copy {
+      margin: var(--space-3) 0 0;
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    @keyframes enter-calm {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin-calm {
+      to { transform: rotate(360deg); }
+    }
+
+    .page-enter { animation: enter-calm var(--motion-base) var(--ease-standard) both; }
+    .spin { animation: spin-calm 900ms linear infinite; }
+
+    @media (max-width: 1179px) {
+      .story-panel,
+      .auth-panel { padding-left: var(--space-8); padding-right: var(--space-8); }
+    }
+
+    @media (max-width: 1023px) {
+      .desktop-shell { display: none; }
+      .device-notice { display: flex; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-enter,
+      .spin { animation: none; }
+      .btn-primary { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-shell">
+    <header class="topbar flex items-center justify-between" aria-label="产品身份">
+      <div class="flex items-center gap-3">
+        <span class="brand-mark" aria-hidden="true"><i class="ph ph-chart-line-up"></i></span>
+        <div>
+          <div class="brand-title">趣然经营决策</div>
+          <div class="brand-subtitle">AI 商品经营与利润决策助手</div>
+        </div>
+      </div>
+      <span class="internal-chip">
+        <i class="ph ph-buildings" aria-hidden="true"></i>
+        仅供趣然内部经营协作使用
+      </span>
+    </header>
+
+    <main class="login-stage flex items-center" aria-labelledby="page-title">
+      <section class="login-frame page-enter grid grid-cols-12">
+        <div class="story-panel col-span-5 flex flex-col justify-between">
+          <div>
+            <div class="eyebrow">
+              <i class="ph ph-shield-check" aria-hidden="true"></i>
+              INTERNAL DECISION WORKSPACE
+            </div>
+            <h1 id="page-title" class="product-title">让经营判断有统一依据，让每个动作找到负责人。</h1>
+            <p class="product-copy">
+              汇总玩具事业部的 SPU 经营数据，由固定规则形成行动建议，再由运营主管、运营与采购计划完成审核、执行和结果记录。
+            </p>
+
+            <div class="decision-rails" aria-label="经营决策工作流程">
+              <div class="flex items-start justify-between">
+                <div class="rail-node">
+                  <span class="rail-icon"><i class="ph ph-database" aria-hidden="true"></i></span>
+                  <span>数据批次</span>
+                </div>
+                <div class="rail-node">
+                  <span class="rail-icon"><i class="ph ph-git-branch" aria-hidden="true"></i></span>
+                  <span>固定规则</span>
+                </div>
+                <div class="rail-node">
+                  <span class="rail-icon"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+                  <span>行动清单</span>
+                </div>
+                <div class="rail-node">
+                  <span class="rail-icon"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i></span>
+                  <span>轻闭环</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-note">
+            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            <span>固定规则决定商品类型与动作，AI 只负责解释；每周数据批次与后续状态均可追溯。</span>
+          </div>
+        </div>
+
+        <div class="auth-panel col-span-7 flex flex-col">
+          <div>
+            <p class="auth-kicker">统一身份认证</p>
+            <h2 class="auth-heading">使用钉钉安全进入</h2>
+            <p class="auth-subtitle">请使用本人的钉钉身份完成确认，系统将按已审批配置开放相应功能。</p>
+            <div class="status-line" aria-label="当前访问环境">
+              <span class="status-dot" aria-hidden="true"></span>
+              普通浏览器 · 安全连接已就绪
+            </div>
+          </div>
+
+          <div class="auth-content">
+            <div class="qr-shell">
+              <svg class="qr-code" viewBox="0 0 29 29" role="img" aria-label="钉钉登录二维码">
+                <rect x="0" y="0" width="29" height="29" rx="1.2" fill="var(--surface)"/>
+                <g fill="currentColor">
+                  <path fill-rule="evenodd" d="M2 2h8v8H2V2Zm2 2v4h4V4H4ZM19 2h8v8h-8V2Zm2 2v4h4V4h-4ZM2 19h8v8H2v-8Zm2 2v4h4v-4H4Z"/>
+                  <rect x="12" y="2" width="2" height="2"/><rect x="15" y="2" width="2" height="2"/>
+                  <rect x="11" y="5" width="2" height="2"/><rect x="14" y="6" width="3" height="2"/>
+                  <rect x="12" y="9" width="2" height="2"/><rect x="16" y="10" width="2" height="2"/>
+                  <rect x="2" y="12" width="2" height="2"/><rect x="5" y="11" width="3" height="2"/>
+                  <rect x="9" y="12" width="2" height="2"/><rect x="12" y="12" width="3" height="3"/>
+                  <rect x="16" y="13" width="2" height="2"/><rect x="19" y="11" width="2" height="3"/>
+                  <rect x="22" y="12" width="2" height="2"/><rect x="25" y="11" width="2" height="4"/>
+                  <rect x="3" y="15" width="3" height="2"/><rect x="7" y="15" width="2" height="3"/>
+                  <rect x="10" y="16" width="2" height="2"/><rect x="14" y="16" width="2" height="2"/>
+                  <rect x="17" y="16" width="3" height="2"/><rect x="21" y="15" width="2" height="3"/>
+                  <rect x="24" y="16" width="3" height="2"/><rect x="12" y="19" width="2" height="2"/>
+                  <rect x="15" y="20" width="2" height="2"/><rect x="18" y="19" width="2" height="4"/>
+                  <rect x="21" y="20" width="3" height="2"/><rect x="25" y="19" width="2" height="2"/>
+                  <rect x="11" y="23" width="3" height="2"/><rect x="15" y="24" width="2" height="3"/>
+                  <rect x="18" y="25" width="2" height="2"/><rect x="21" y="23" width="2" height="2"/>
+                  <rect x="24" y="24" width="3" height="3"/>
+                </g>
+              </svg>
+            </div>
+            <p class="scan-copy">请使用本人钉钉扫码并完成确认</p>
+            <p class="scan-meta">认证成功后将直接进入你有权访问的工作台</p>
+
+            <div class="divider" aria-hidden="true">或</div>
+
+            <button id="ding-login" class="btn-primary" type="button">
+              <i class="ph ph-sign-in" aria-hidden="true"></i>
+              使用钉钉登录
+            </button>
+            <p id="auth-feedback" class="auth-feedback" aria-live="polite">无需填写其他信息</p>
+          </div>
+
+          <div class="trust-list" aria-label="身份与权限说明">
+            <div class="trust-item">
+              <i class="ph ph-user-circle-check" aria-hidden="true"></i>
+              <span class="trust-title">本人身份</span>
+              <span class="trust-copy">每位用户使用自己的钉钉身份进入</span>
+            </div>
+            <div class="trust-item">
+              <i class="ph ph-seal-check" aria-hidden="true"></i>
+              <span class="trust-title">审批配置</span>
+              <span class="trust-copy">业务权限依据已审批配置自动生效</span>
+            </div>
+            <div class="trust-item">
+              <i class="ph ph-lock-key" aria-hidden="true"></i>
+              <span class="trust-title">最小可见</span>
+              <span class="trust-copy">仅开放当前职责所需的数据与功能</span>
+            </div>
+          </div>
+
+          <p class="auth-footnote">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            <span>继续即表示使用当前钉钉身份进入趣然内部系统。认证完成前，本页面不会展示任何经营数据。</span>
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <main class="device-notice" aria-labelledby="device-title">
+    <section class="device-card">
+      <span class="device-icon" aria-hidden="true"><i class="ph ph-desktop"></i></span>
+      <h1 id="device-title" class="device-title">请使用电脑访问</h1>
+      <p class="device-copy">趣然经营决策工作台适用于宽度不低于 1024px 的电脑屏幕，请在电脑端重新打开。</p>
+    </section>
+  </main>
+
+  <script>
+    const loginButton = document.getElementById('ding-login');
+    const authFeedback = document.getElementById('auth-feedback');
+
+    loginButton.addEventListener('click', () => {
+      loginButton.disabled = true;
+      loginButton.setAttribute('aria-busy', 'true');
+      loginButton.innerHTML = '<i class="ph ph-circle-notch spin" aria-hidden="true"></i><span>等待钉钉确认</span>';
+      authFeedback.textContent = '已发起钉钉认证，请在钉钉完成确认';
+    });
+  </script>
+</body>
+</html>
