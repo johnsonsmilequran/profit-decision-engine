@@ -89,6 +89,8 @@
 - `趣然AI商品经营利润决策助手/output/PRD-dev.md`
 - `趣然AI商品经营利润决策助手/output/设计决策蓝图.md`
 - `趣然AI商品经营利润决策助手/output/页面清单.md`
+- `趣然AI商品经营利润决策助手/output/DESIGN.md`
+- `趣然AI商品经营利润决策助手/output/tokens.css`
 - `趣然AI商品经营利润决策助手/debate-log.md`
 - `趣然AI商品经营利润决策助手/drafts/validation-report.md`
 - `趣然AI商品经营利润决策助手/drafts/stage6-consistency.md`
