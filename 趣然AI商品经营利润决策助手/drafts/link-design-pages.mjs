@@ -44,6 +44,7 @@ for (const name of files) {
   const target = path.join(pagesDir, name);
   let html = fs.readFileSync(target, 'utf8');
   html = html.replace(/\n?<script data-page-wiring>[\s\S]*?<\/script>\n?/g, '\n');
+  html = html.replace(/\n{3,}(?=<\/body>)/g, '\n\n');
   html = html.replace('</body>', `${wiring}</body>`);
   fs.writeFileSync(target, html);
 }
