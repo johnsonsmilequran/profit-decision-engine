@@ -14,6 +14,8 @@ export type PreviousActionItem = components['schemas']['PreviousActionItem']
 export type ActionListResponse = components['schemas']['ActionListResponse']
 export type WorkbenchResponse = components['schemas']['Workbench']
 export type SuggestionDetail = components['schemas']['SuggestionDetail']
+export type HistoryItem = components['schemas']['HistoryItem']
+export type HistoryResponse = components['schemas']['HistoryResponse']
 
 export async function getSession(signal?: AbortSignal): Promise<SessionResponse> {
   const response = await fetch('/api/session', { credentials: 'include', signal })
@@ -95,9 +97,24 @@ export async function getWorkbench(signal?: AbortSignal): Promise<WorkbenchRespo
   return businessResponse<WorkbenchResponse>(response)
 }
 
-export async function getSuggestion(linkId: string, signal?: AbortSignal): Promise<SuggestionDetail> {
-  const response = await fetch(`/api/suggestions/${encodeURIComponent(linkId)}`, { credentials: 'include', signal })
+export async function getSuggestion(linkId: string, signal?: AbortSignal, historyMode = false): Promise<SuggestionDetail> {
+  const response = await fetch(`/api/suggestions/${encodeURIComponent(linkId)}${historyMode?'?mode=history':''}`, { credentials: 'include', signal })
   return businessResponse<SuggestionDetail>(response)
+}
+
+export interface HistoryFilters { batchId:string;search:string;action:string;reviewStatus:string;executionState:string;periodStart:string;periodEnd:string;page:number;limit:number }
+export async function listHistory(filters:HistoryFilters,signal?:AbortSignal):Promise<HistoryResponse>{
+  const query=new URLSearchParams()
+  if(filters.batchId)query.set('batch_id',filters.batchId)
+  if(filters.search)query.set('search',filters.search)
+  if(filters.action)query.append('action',filters.action)
+  if(filters.reviewStatus)query.append('review_status',filters.reviewStatus)
+  if(filters.executionState)query.append('execution_state',filters.executionState)
+  if(filters.periodStart)query.set('period_start',filters.periodStart)
+  if(filters.periodEnd)query.set('period_end',filters.periodEnd)
+  query.set('page',String(filters.page));query.set('limit',String(filters.limit))
+  const response=await fetch(`/api/history?${query}`,{credentials:'include',signal})
+  return businessResponse<HistoryResponse>(response)
 }
 
 export async function reviewSuggestion(linkId: string, decision: 'approved' | 'rejected', note: string, reviewVersion: number): Promise<SuggestionDetail> {

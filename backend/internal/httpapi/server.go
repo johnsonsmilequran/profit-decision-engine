@@ -48,6 +48,7 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Get("/api/batches/{batchID}", s.getBatch)
 	r.Get("/api/actions", s.listActions)
 	r.Get("/api/workbench", s.workbench)
+	r.Get("/api/history", s.history)
 	r.Get("/api/suggestions/{linkID}", s.getSuggestion)
 	r.Post("/api/suggestions/{linkID}/review", s.reviewSuggestion)
 	r.Post("/api/suggestions/{linkID}/override", s.overrideSuggestion)
@@ -61,6 +62,37 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Post("/api/actions/{taskID}/oa-notifications", s.sendOANotification)
 	r.Post("/api/actions/{taskID}/oa-notifications/{notificationID}/retry", s.retryOANotification)
 	return r
+}
+
+func (s *Server) history(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	limit := queryInt(r, "limit", 50)
+	if limit != 20 && limit != 50 && limit != 100 {
+		limit = 50
+	}
+	result, err := s.actions.History(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, action.HistoryFilters{
+		BatchID: r.URL.Query().Get("batch_id"), Search: r.URL.Query().Get("search"), Actions: r.URL.Query()["action"],
+		ReviewStatuses: r.URL.Query()["review_status"], Execution: r.URL.Query()["execution_state"],
+		PeriodStart: r.URL.Query().Get("period_start"), PeriodEnd: r.URL.Query().Get("period_end"), Page: queryInt(r, "page", 1), Limit: limit,
+	})
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if errors.Is(err, action.ErrInvalidState) {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_history_filter")
+		return
+	}
+	if err != nil {
+		s.logger.Error("list history", "error", err)
+		writeError(w, http.StatusInternalServerError, "history_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 func (s *Server) retryAIExplanation(w http.ResponseWriter, r *http.Request) {
@@ -246,7 +278,13 @@ func (s *Server) getSuggestion(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnauthorized, "authentication_required")
 		return
 	}
-	result, err := s.actions.Get(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "linkID"))
+	actionPrincipal := action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}
+	var result action.Detail
+	if r.URL.Query().Get("mode") == "history" {
+		result, err = s.actions.GetHistory(r.Context(), actionPrincipal, chi.URLParam(r, "linkID"))
+	} else {
+		result, err = s.actions.Get(r.Context(), actionPrincipal, chi.URLParam(r, "linkID"))
+	}
 	if errors.Is(err, action.ErrNotFound) {
 		writeError(w, http.StatusNotFound, "not_found")
 		return

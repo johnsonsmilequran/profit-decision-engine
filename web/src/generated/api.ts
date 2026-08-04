@@ -84,6 +84,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/suggestions/{linkId}": {
         parameters: {
             query?: never;
@@ -463,6 +479,44 @@ export interface components {
             limit: number;
             total: number;
         };
+        HistoryItem: {
+            /** Format: uuid */
+            link_id: string;
+            /** Format: uuid */
+            batch_id: string;
+            batch_code: string;
+            /** Format: date */
+            period_start: string;
+            /** Format: date */
+            period_end: string;
+            /** Format: date */
+            business_cutoff_date: string;
+            spu_id: string;
+            name: string;
+            operator_ref: string;
+            rule_version: string;
+            product_type: string | null;
+            business_action: string | null;
+            inventory_action: string | null;
+            trigger_rule: string;
+            /** @enum {string} */
+            review_status: "pending" | "approved" | "rejected";
+            business_state: string;
+            inventory_state: string;
+            audit_count: number;
+            /** Format: date-time */
+            generated_at: string;
+            latest_event_type: string | null;
+            latest_event_actor: string | null;
+            /** Format: date-time */
+            latest_event_at: string | null;
+        };
+        HistoryResponse: {
+            items: components["schemas"]["HistoryItem"][];
+            page: number;
+            limit: number;
+            total: number;
+        };
         Workbench: {
             role: components["schemas"]["BusinessRole"];
             latest_batch_id: string;
@@ -782,9 +836,42 @@ export interface operations {
             401: components["responses"]["Error"];
         };
     };
+    listHistory: {
+        parameters: {
+            query?: {
+                batch_id?: string;
+                search?: string;
+                action?: string[];
+                review_status?: string[];
+                execution_state?: string[];
+                period_start?: string;
+                period_end?: string;
+                page?: number;
+                limit?: 20 | 50 | 100;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 历史建议分页列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryResponse"];
+                };
+            };
+            401: components["responses"]["Error"];
+        };
+    };
     getSuggestion: {
         parameters: {
-            query?: never;
+            query?: {
+                mode?: "history";
+            };
             header?: never;
             path: {
                 linkId: string;

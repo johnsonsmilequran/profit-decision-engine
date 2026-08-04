@@ -26,6 +26,8 @@ OA 协同由 API/Worker 通过 `OA_MESSAGE_URL` 和 `OA_TOKEN` 调用公司适�
 
 AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
 
+历史追溯使用 `GET /api/history` 和 React `/history`，按批次/SPU 独立列出不可变决策快照，并以链接级追加事件重放审核与双轨进度。只读详情复用 `/suggestions/:linkId?mode=history`，保留原规则建议和当时生效版本，隐藏全部写入口；筛选、分页及返回上下文保存在 URL。
+
 ## 当前成果
 
 - 正式 PRD：`趣然AI商品经营利润决策助手/output/PRD详细版.md`

@@ -17,6 +17,14 @@ var (
 )
 
 func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Detail, error) {
+	return s.get(ctx, actor, linkID, false)
+}
+
+func (s *Service) GetHistory(ctx context.Context, actor Principal, linkID string) (Detail, error) {
+	return s.get(ctx, actor, linkID, true)
+}
+
+func (s *Service) get(ctx context.Context, actor Principal, linkID string, history bool) (Detail, error) {
 	if actor.Role != "operations" && actor.Role != "supervisor" {
 		return Detail{}, ErrForbidden
 	}
@@ -38,8 +46,14 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 		return Detail{}, err
 	}
 	result := Detail{Item: item, Events: []Event{}, Notifications: []Notification{}, AIStatus: "not_configured", AIContent: map[string]interface{}{}}
+	eventWhere := "task_id=$1"
+	eventArgs := []interface{}{item.TaskID}
+	if history {
+		eventWhere = "link_id=$1"
+		eventArgs = []interface{}{item.LinkID}
+	}
 	rows, err := s.db.Query(ctx, `SELECT event_id::text,event_type,actor_ref,from_state,to_state,reason,details,created_at
-		FROM business_event WHERE task_id=$1 ORDER BY created_at,event_id`, item.TaskID)
+		FROM business_event WHERE `+eventWhere+` ORDER BY created_at,event_id`, eventArgs...)
 	if err != nil {
 		return Detail{}, err
 	}
@@ -94,6 +108,11 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 	}
 	if err := notificationRows.Err(); err != nil {
 		return Detail{}, err
+	}
+	if history {
+		if err := s.projectHistory(ctx, &result); err != nil {
+			return Detail{}, err
+		}
 	}
 	return result, rows.Err()
 }

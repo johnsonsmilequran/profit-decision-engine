@@ -212,3 +212,47 @@ type OARetryInput struct {
 type AIRetryInput struct {
 	IdempotencyKey string `json:"idempotency_key"`
 }
+
+type HistoryFilters struct {
+	BatchID        string
+	Search         string
+	Actions        []string
+	ReviewStatuses []string
+	Execution      []string
+	PeriodStart    string
+	PeriodEnd      string
+	Page           int
+	Limit          int
+}
+
+type HistoryItem struct {
+	LinkID           string     `json:"link_id"`
+	BatchID          string     `json:"batch_id"`
+	BatchCode        string     `json:"batch_code"`
+	PeriodStart      string     `json:"period_start"`
+	PeriodEnd        string     `json:"period_end"`
+	CutoffDate       string     `json:"business_cutoff_date"`
+	SPUID            string     `json:"spu_id"`
+	Name             string     `json:"name"`
+	OperatorRef      string     `json:"operator_ref"`
+	RuleVersion      string     `json:"rule_version"`
+	ProductType      *string    `json:"product_type"`
+	BusinessAction   *string    `json:"business_action"`
+	InventoryAction  *string    `json:"inventory_action"`
+	TriggerRule      string     `json:"trigger_rule"`
+	ReviewStatus     string     `json:"review_status"`
+	BusinessState    string     `json:"business_state"`
+	InventoryState   string     `json:"inventory_state"`
+	AuditCount       int        `json:"audit_count"`
+	GeneratedAt      time.Time  `json:"generated_at"`
+	LatestEventType  *string    `json:"latest_event_type"`
+	LatestEventActor *string    `json:"latest_event_actor"`
+	LatestEventAt    *time.Time `json:"latest_event_at"`
+}
+
+type HistoryResponse struct {
+	Items []HistoryItem `json:"items"`
+	Page  int           `json:"page"`
+	Limit int           `json:"limit"`
+	Total int           `json:"total"`
+}

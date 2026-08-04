@@ -64,10 +64,28 @@ paths:
       responses:
         '200': { description: 当前角色工作台, content: { application/json: { schema: { $ref: '#/components/schemas/Workbench' } } } }
         '401': { $ref: '#/components/responses/Error' }
+  /api/history:
+    get:
+      operationId: listHistory
+      parameters:
+        - { name: batch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: action, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: review_status, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: execution_state, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: period_start, in: query, schema: { type: string, pattern: '^\\d{4}-\\d{2}$' } }
+        - { name: period_end, in: query, schema: { type: string, pattern: '^\\d{4}-\\d{2}$' } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 历史建议分页列表, content: { application/json: { schema: { $ref: '#/components/schemas/HistoryResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
   /api/suggestions/{linkId}:
     get:
       operationId: getSuggestion
-      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      parameters:
+        - { name: linkId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: mode, in: query, schema: { type: string, enum: [history] } }
       responses:
         '200': { description: 建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
         '404': { $ref: '#/components/responses/Error' }
@@ -328,6 +346,40 @@ components:
       required: [items, page, limit, total]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/ActionItem' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+    HistoryItem:
+      type: object
+      required: [link_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, spu_id, name, operator_ref, rule_version, product_type, business_action, inventory_action, trigger_rule, review_status, business_state, inventory_state, audit_count, generated_at, latest_event_type, latest_event_actor, latest_event_at]
+      properties:
+        link_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        spu_id: { type: string }
+        name: { type: string }
+        operator_ref: { type: string }
+        rule_version: { type: string }
+        product_type: { type: [string, 'null'] }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        review_status: { type: string, enum: [pending, approved, rejected] }
+        business_state: { type: string }
+        inventory_state: { type: string }
+        audit_count: { type: integer, minimum: 0 }
+        generated_at: { type: string, format: date-time }
+        latest_event_type: { type: [string, 'null'] }
+        latest_event_actor: { type: [string, 'null'] }
+        latest_event_at: { type: [string, 'null'], format: date-time }
+    HistoryResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/HistoryItem' } }
         page: { type: integer }
         limit: { type: integer }
         total: { type: integer }

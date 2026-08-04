@@ -5,6 +5,7 @@ import { BatchDetailPage } from './pages/BatchDetailPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
 import { ActionListPage } from './pages/ActionListPage'
 import { SuggestionDetailPage } from './pages/SuggestionDetailPage'
+import { HistoryPage } from './pages/HistoryPage'
 
 function ProtectedPlaceholder() {
   const returnTo = window.location.pathname + window.location.search
@@ -21,6 +22,7 @@ export function App() {
   if (path === '/workbench/operations') return <WorkbenchPage expectedRole="operations" />
   if (path === '/workbench/supervisor') return <WorkbenchPage expectedRole="supervisor" />
   if (path === '/actions') return <ActionListPage />
+  if (path === '/history') return <HistoryPage />
   const suggestion = path.match(/^\/suggestions\/([^/]+)$/)
   if (suggestion) return <SuggestionDetailPage linkId={decodeURIComponent(suggestion[1])} />
   const detail = path.match(/^\/batches\/([^/]+)$/)

@@ -12,7 +12,7 @@ export function AppShell({ children, active = 'batches' }: { children: ReactNode
         <a className={active === 'workbench' ? 'active' : ''} href={workbench}>我的工作台</a>
         <a className={active === 'batches' ? 'active' : ''} href="/batches">数据批次</a>
         <a className={active === 'actions' ? 'active' : ''} href="/actions">行动中心</a>
-        <a href="/history">历史追溯</a>
+        <a className={active === 'history' ? 'active' : ''} href="/history">历史追溯</a>
       </nav>
       <p className="sidebar-note">固定规则形成结论<br />AI 仅辅助解释</p>
     </aside>
