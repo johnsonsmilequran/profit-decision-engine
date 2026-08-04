@@ -125,6 +125,44 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
     );
     expect(Number(actions.rows[0]!.count)).toBe(4);
 
+    const actionList = await app.inject({
+      method: "GET",
+      url: `/api/action-lists/${firstBody.batchId}`,
+      headers: { cookie: `profit_session=${token}` },
+    });
+    expect(actionList.statusCode).toBe(200);
+    const actionListBody = actionList.json<{
+      total: number;
+      items: Array<{ decision_id: string; spu_id: string; main_action: string; inventory_action: string }>;
+    }>();
+    expect(actionListBody.total).toBe(2);
+    expect(actionListBody.items.map(({ spu_id, main_action, inventory_action }) => ({ spu_id, main_action, inventory_action }))).toEqual([
+      { spu_id: "SPU-515", main_action: "clearance", inventory_action: "block_restock" },
+      { spu_id: "SPU-加投补货", main_action: "increase_investment", inventory_action: "restock" },
+    ]);
+
+    const detail = await app.inject({
+      method: "GET",
+      url: `/api/decisions/${actionListBody.items[0]!.decision_id}`,
+      headers: { cookie: `profit_session=${token}` },
+    });
+    expect(detail.statusCode).toBe(200);
+    expect(detail.json()).toMatchObject({
+      currentRole: "operator",
+      decision: {
+        spu_id: "SPU-515",
+        profit_rate: "-0.18600000",
+        main_action: "clearance",
+        inventory_action: "block_restock",
+        approval_status: "pending",
+      },
+      actions: [
+        { action_track: "business", action_code: "clearance", status: "awaiting_review" },
+        { action_track: "inventory", action_code: "block_restock", status: "awaiting_review" },
+      ],
+    });
+    expect(Object.keys(detail.json().decision.structured_advice).sort()).toEqual(["action", "evidence", "object", "problem"]);
+
     const duplicate = await app.inject({
       method: "POST",
       url: "/api/batches/import",
