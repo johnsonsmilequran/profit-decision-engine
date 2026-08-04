@@ -20,6 +20,9 @@ interface ActionList {
 interface BatchDetailSummary {
   batch: Batch;
 }
+interface BatchOptions {
+  items: Batch[];
+}
 
 export function ActionListPage() {
   const [, navigate] = useLocation();
@@ -36,14 +39,20 @@ export function ActionListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const queryString = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  if (batchFilter) queryString.set("batch_id", batchFilter);
   if (mainAction) queryString.set("action", mainAction);
   if (review) queryString.set("review_state", review);
   const query = useQuery({
-    queryKey: ["actions", mainAction, review, page, pageSize],
+    queryKey: ["actions", batchFilter, mainAction, review, page, pageSize],
     queryFn: () => api<ActionList>(`/actions?${queryString}`),
   });
   const source = query.data?.items ?? [];
   const activeBatchId = batchFilter ?? source[0]?.batch_id;
+  const batchesQuery = useQuery({
+    queryKey: ["action-list-batches"],
+    queryFn: () => api<BatchOptions>("/batches?page=1&page_size=100"),
+    enabled: !procurement,
+  });
   const batchQuery = useQuery({
     queryKey: ["action-list-batch", activeBatchId],
     queryFn: () => api<BatchDetailSummary>(`/batches/${activeBatchId}`),
@@ -94,7 +103,19 @@ export function ActionListPage() {
         <Card className="batch-banner" size="small">
           <div>
             <span className="eyebrow">当前批次</span>
-            <strong className="mono">{activeBatchId}</strong>
+            <Select
+              className="batch-history-select"
+              aria-label="切换历史批次"
+              value={activeBatchId}
+              onChange={(value) => {
+                setBatchFilter(value);
+                setPage(1);
+              }}
+              options={(batchesQuery.data?.items ?? []).map((batch) => ({
+                value: batch.batch_id,
+                label: `${batch.period_start.slice(0, 7)} · ${batch.batch_id}`,
+              }))}
+            />
           </div>
           <div>
             <span className="muted">数据期间</span>

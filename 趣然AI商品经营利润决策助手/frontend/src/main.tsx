@@ -104,7 +104,13 @@ createRoot(rootElement).render(
         },
         components: {
           Table: { cellPaddingBlock: 11 },
-          Menu: { darkItemBg: "#132238", darkItemSelectedBg: "#075ead" },
+          Menu: {
+            itemBg: "transparent",
+            itemColor: "#465870",
+            itemSelectedBg: "#e8f2fd",
+            itemSelectedColor: "#075ead",
+            itemBorderRadius: 7,
+          },
         },
       }}
     >

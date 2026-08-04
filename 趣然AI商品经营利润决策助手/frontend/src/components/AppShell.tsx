@@ -1,10 +1,12 @@
 import {
   AuditOutlined,
+  CompassOutlined,
   DatabaseOutlined,
   HomeOutlined,
   LogoutOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Layout, Menu, Skeleton, Space, Tag } from "antd";
 import { type ReactNode, useEffect } from "react";
 import { useLocation } from "wouter";
@@ -17,6 +19,11 @@ const { Sider } = Layout;
 export function ProtectedShell({ children }: { children: ReactNode }) {
   const { status, loading, refresh } = useAuth();
   const [location, navigate] = useLocation();
+  const workspace = useQuery({
+    queryKey: ["shell-workspace"],
+    queryFn: () => api<{ batch: { batch_id: string } | null }>("/workspace"),
+    enabled: Boolean(status?.authenticated),
+  });
 
   useEffect(() => {
     if (!loading && !status?.authenticated) navigate("/login?reason=session", { replace: true });
@@ -56,27 +63,42 @@ export function ProtectedShell({ children }: { children: ReactNode }) {
 
   return (
     <Layout className="app-shell">
-      <Sider width={232} className="app-sider">
+      <Sider width={232} className="app-sider" theme="light">
         <div className="brand">
-          <div className="brand-title">趣然 AI 经营决策</div>
-          <div className="brand-subtitle">商品经营与利润助手</div>
+          <div className="brand-mark">
+            <CompassOutlined />
+          </div>
+          <div>
+            <div className="brand-title">趣然 AI 决策</div>
+            <div className="brand-subtitle">经营利润工作台</div>
+          </div>
         </div>
+        <div className="nav-label">WORKSPACE</div>
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
           selectedKeys={[selected]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
           style={{ padding: "12px 8px" }}
         />
+        <div className="sidebar-source">
+          <div>
+            <span className="status-dot" /> 同源状态
+          </div>
+          <p>页面数据来自已发布批次，规则结论与执行结果全程留痕。</p>
+        </div>
       </Sider>
       <Layout className="main-layout">
         <header className="topbar">
           <div className="topbar-context">
-            <span className="status-dot" />
-            <span>实时连接</span>
-            <span>·</span>
-            <span>当前数据以最新发布批次为准</span>
+            <strong>玩具事业部</strong>
+            <span className="topbar-divider" />
+            <span>当前批次</span>
+            <strong className="mono">{workspace.data?.batch?.batch_id ?? "暂无可用批次"}</strong>
+            <Tag color="success" bordered={false}>
+              清单可用
+            </Tag>
           </div>
           <Space size={14}>
             <Tag color="blue">{status.role_label}</Tag>

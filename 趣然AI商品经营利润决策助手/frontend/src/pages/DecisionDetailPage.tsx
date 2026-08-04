@@ -1,4 +1,4 @@
-import { CheckOutlined, CloseOutlined, HistoryOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, HistoryOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
@@ -218,6 +218,13 @@ export function DecisionDetailPage() {
 
   return (
     <>
+      <div className="breadcrumb-row">
+        <Button type="link" onClick={() => navigate("/actions")}>
+          行动清单
+        </Button>
+        <span>/</span>
+        <span>{decision.spu_name || decision.spu_id}</span>
+      </div>
       <PageHeader
         kicker="PAGE-F05-03 · 固化建议快照"
         title={decision.spu_name || decision.spu_id}
@@ -236,6 +243,9 @@ export function DecisionDetailPage() {
               onClick={() => navigate(`/trace?decision_id=${decision.decision_id}`)}
             >
               全部追溯
+            </Button>
+            <Button icon={<ReloadOutlined />} onClick={() => void refresh()}>
+              刷新状态
             </Button>
           </Space>
         }

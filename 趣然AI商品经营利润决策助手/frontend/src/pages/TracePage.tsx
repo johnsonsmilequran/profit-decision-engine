@@ -1,5 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Card, DatePicker, Empty, Input, Select, Skeleton, Space, Table } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  DatePicker,
+  Empty,
+  Input,
+  Select,
+  Skeleton,
+  Space,
+  Table,
+} from "antd";
 import { useMemo, useState } from "react";
 import { useLocation, useSearchParams } from "wouter";
 
@@ -79,6 +90,19 @@ export function TracePage() {
             : "从审核、分轨执行与结果反向定位原批次、SPU、规则版本和操作人；历史快照不可覆盖。"
         }
       />
+      <Alert
+        showIcon
+        type="info"
+        className="section-card trace-scope"
+        message={
+          query.data?.role === "procurement" ? "当前为采购计划授权视图" : "当前为运营主管授权视图"
+        }
+        description={
+          query.data?.role === "procurement"
+            ? "仅返回本人采购任务所需事件字段；追溯用途不会扩大经营数据权限。"
+            : "当前可查看审核、经营与采购分轨事件；页面仅展示当前角色有权读取的批次和对象。"
+        }
+      />
       <Card className="section-card">
         <div className="filter-bar trace-filters">
           <Input
@@ -133,6 +157,22 @@ export function TracePage() {
               label: eventLabels[item.value] ?? item.value,
             }))}
           />
+          <Button type="primary" onClick={() => void query.refetch()}>
+            应用筛选
+          </Button>
+          <Button
+            onClick={() => {
+              setBatchId("");
+              setSpuId("");
+              setAction(undefined);
+              setState(undefined);
+              setActor("");
+              setDateRange(undefined);
+              setEventType(undefined);
+            }}
+          >
+            清除筛选
+          </Button>
         </div>
         {decisionId ? (
           <div className="trace-lock muted">
@@ -167,16 +207,36 @@ export function TracePage() {
                 render: (value: string) => eventLabels[value] ?? value,
               },
               {
+                title: "状态变化",
+                width: 180,
+                render: (_, item) => (
+                  <Space>
+                    <StatusTag value={item.from_state} />→<StatusTag value={item.to_state} />
+                  </Space>
+                ),
+              },
+              { title: "操作人", dataIndex: "actor_ref", width: 135 },
+              ...(query.data?.role === "procurement"
+                ? []
+                : [{ title: "规则版本", dataIndex: "rule_version", width: 120 }]),
+              {
+                title: "备注",
+                dataIndex: "note",
+                width: 210,
+                ellipsis: true,
+                render: (value: string | null) => value || "—",
+              },
+              { title: "SPU", dataIndex: "spu_id", width: 110 },
+              {
                 title: "动作",
                 dataIndex: "action",
-                width: 130,
+                width: 110,
                 render: (value: string) => (value ? <StatusTag value={value} /> : "—"),
               },
-              { title: "SPU", dataIndex: "spu_id", width: 130 },
               {
                 title: "批次",
                 dataIndex: "batch_id",
-                width: 220,
+                width: 190,
                 render: (value: string) => (
                   <Button
                     type="link"
@@ -187,26 +247,6 @@ export function TracePage() {
                     {value}
                   </Button>
                 ),
-              },
-              {
-                title: "状态变化",
-                width: 210,
-                render: (_, item) => (
-                  <Space>
-                    <StatusTag value={item.from_state} />→<StatusTag value={item.to_state} />
-                  </Space>
-                ),
-              },
-              { title: "操作人", dataIndex: "actor_ref", width: 150 },
-              ...(query.data?.role === "procurement"
-                ? []
-                : [{ title: "规则版本", dataIndex: "rule_version", width: 140 }]),
-              {
-                title: "备注",
-                dataIndex: "note",
-                width: 240,
-                ellipsis: true,
-                render: (value: string | null) => value || "—",
               },
               {
                 title: "建议",

@@ -1,6 +1,18 @@
 import { ArrowLeftOutlined, HistoryOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Button, Card, Descriptions, Skeleton, Space, Table, Tabs } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  Descriptions,
+  Input,
+  Select,
+  Skeleton,
+  Space,
+  Table,
+  Tabs,
+} from "antd";
+import { useState } from "react";
 import { useLocation, useParams } from "wouter";
 
 import { api } from "../api";
@@ -19,6 +31,8 @@ interface BatchDetail {
 export function BatchDetailPage() {
   const { batchId = "" } = useParams<{ batchId: string }>();
   const [, navigate] = useLocation();
+  const [qualityLevel, setQualityLevel] = useState<string>();
+  const [qualityKeyword, setQualityKeyword] = useState("");
   const query = useQuery({
     queryKey: ["batch", batchId],
     queryFn: () => api<BatchDetail>(`/batches/${batchId}`),
@@ -30,6 +44,14 @@ export function BatchDetailPage() {
   });
   if (query.isLoading || !query.data) return <Skeleton active paragraph={{ rows: 14 }} />;
   const { batch, issues, snapshots, decisions } = query.data;
+  const visibleIssues = issues.filter(
+    (item) =>
+      (!qualityLevel || item.severity === qualityLevel) &&
+      (!qualityKeyword ||
+        `${item.field}${item.original_value}${item.message}`
+          .toLowerCase()
+          .includes(qualityKeyword.trim().toLowerCase())),
+  );
   const issueColumns = [
     { title: "源行", dataIndex: "source_row", width: 74 },
     { title: "字段", dataIndex: "field", width: 150 },
@@ -123,20 +145,52 @@ export function BatchDetailPage() {
               key: "quality",
               label: `校验与质量 ${issues.length}`,
               children: (
-                <Table
-                  rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
-                  dataSource={issues}
-                  pagination={{ pageSize: 10 }}
-                  columns={[
-                    {
-                      title: "级别",
-                      dataIndex: "severity",
-                      width: 110,
-                      render: (value: string) => <StatusTag value={value} />,
-                    },
-                    ...issueColumns,
-                  ]}
-                />
+                <>
+                  <div className="filter-bar quality-filters">
+                    <Select
+                      allowClear
+                      placeholder="全部质量分区"
+                      value={qualityLevel}
+                      onChange={setQualityLevel}
+                      options={[
+                        { value: "rejected", label: "拒绝行" },
+                        { value: "degraded", label: "降级字段" },
+                        { value: "warning", label: "普通警告" },
+                      ]}
+                    />
+                    <Input.Search
+                      allowClear
+                      placeholder="搜索字段、原值或原因"
+                      value={qualityKeyword}
+                      onChange={(event) => setQualityKeyword(event.target.value)}
+                    />
+                    <Button
+                      onClick={() => {
+                        setQualityLevel(undefined);
+                        setQualityKeyword("");
+                      }}
+                    >
+                      清除质量筛选
+                    </Button>
+                    <span className="muted">
+                      当前显示 {visibleIssues.length} / {issues.length} 条质量记录
+                    </span>
+                  </div>
+                  <Table
+                    rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
+                    dataSource={visibleIssues}
+                    pagination={{ pageSize: 10 }}
+                    columns={[
+                      {
+                        title: "级别",
+                        dataIndex: "severity",
+                        width: 110,
+                        render: (value: string) => <StatusTag value={value} />,
+                      },
+                      ...issueColumns,
+                    ]}
+                  />
+                </>
               ),
             },
             {
