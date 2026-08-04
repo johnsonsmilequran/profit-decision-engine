@@ -10,6 +10,11 @@
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
 ## 决策记录（实时维护）
+- [08-05-2026 01:34:41] 钉钉机器人发布已生效｜背景：用户说明机器人刚发布后，使用当前 Client 凭据、当前 robotCode 与明确不存在的验收 User ID 重新执行官方单聊负向检查｜结论：Access Token HTTP 200/有效期 7200 秒；单聊接口已从 `invalidParameter.robotCode.notExsit` 变为 HTTP 400 `staffId.notExisted`，证明当前应用已识别机器人并进入收件人校验。机器人存在性阻塞解除，外部消息验收现在仅等待真实公司 User ID 与实际收件账号｜来源：用户/AI
+- [08-05-2026 01:33:40] 钉钉机器人刚发布｜背景：当前机器人编码已配置但官方单聊接口仍返回 `invalidParameter.robotCode.notExsit`；用户说明机器人刚完成发布，可能尚未生效｜结论：暂不把该响应判定为编码错误，按钉钉发布传播窗口复验；在官方开始识别机器人前不伪造外部消息验收通过｜来源：用户
+- [08-05-2026 01:29:43] 钉钉机器人编码定位结果｜背景：用户确认已经提供 ROBOT_CODE，重新检查当前 `.env` 后确认该值非空且与当前 Client ID 相同｜结论：不再把 `DINGTALK_ROBOT_CODE` 缺失列为阻塞；当前凭据取 token HTTP 200，但官方单聊接口仍返回 `invalidParameter.robotCode.notExsit`，说明当前应用下机器人未被该编码识别。下一步须在钉钉开放平台为当前应用创建并发布企业内部机器人，或确认属于当前应用的实际 robotCode；取得可识别机器人后再验证权限与实际收件｜来源：用户/AI
+- [08-05-2026 01:27:37] 钉钉测试账号配置｜背景：用户确认需要配置真实测试身份并询问操作方法｜结论：测试账号直接使用公司现有钉钉账号，不新增产品账号密码；登录映射以 OAuth 返回的稳定 unionId 写入 `role_mapping.actor_ref` 并明确选择运营或运营主管，机器人收件另以公司 User ID 写入 `role_mapping.dingtalk_user_id`，两种标识不得混用｜来源：用户/AI
+- [08-05-2026 01:26:37] 钉钉机器人编码已提供｜背景：此前真实消息验收因当前 `.env` 未发现 `DINGTALK_ROBOT_CODE` 而停在 `invalidParameter.robotCode.notExsit`；用户明确纠正已经提供 ROBOT_CODE，并询问测试身份含义｜结论：后续不再把“用户未提供机器人编码”作为事实，先在项目配置范围内定位已提供值且不输出明文；测试身份定义为可实际完成钉钉 OAuth 的公司账号，其稳定 unionId 已按审批映射到 PostgreSQL `role_mapping` 的运营或运营主管角色，不新增账号密码或共享测试账号｜来源：用户
 - [08-05-2026 01:18:43] 钉钉机器人最新外部阻塞｜背景：当前环境仍未配置 `DINGTALK_ROBOT_CODE`，重新使用当前 Client 凭据和明确不存在的验收 User ID 做无真实收件人的官方负向检查｜结论：Access Token 仍为 HTTP 200/有效期 7200 秒；消息接口最新返回 HTTP 400 `invalidParameter.robotCode.notExsit`，旧的权限 403 不再作为当前应用的最终失败证据。下一验收前置改为先取得本应用真实机器人编码，再复核 `qyapi_robot_sendmsg` 并使用公司 User ID/实际账号验收收件｜来源：AI
 - [08-05-2026 01:13:23] LiteLLM 真实生产恢复参数｜背景：真实 `商品链接.xlsx` 经生产 API/Worker 后首轮 10 条模型调用出现 6 条形状/动作越界和 4 条 20 秒传输超时，固定规则主链正确保持可用｜结论：模型提示必须写入本条精确动作组合并明确四字段均为字符串，HTTP 超时按本轮真实延迟调整为 45 秒；越界和网络失败仍失败关闭、不保存原文、不修改业务状态，用户或主管通过同一建议重试 API 只追加版本。修复后 7 条行动建议最新解释 7/7 生成，固定决策与任务摘要前后一致｜来源：AI
 - [08-05-2026 00:48:43] 钉钉应用凭据更换｜背景：旧 Client ID/Secret 的授权页显示“市场情报助手”，且组织目录与机器人接口分别报缺少权限；用户已更换当前环境中的 Client ID 和 Secret，新凭据复验为 Access Token HTTP 200/OAuth 302，但机器人请求仍明确缺少 `qyapi_robot_sendmsg`，组织目录请求缺少 `qyapi_get_department_list`｜结论：候选只使用新凭据证据；生产机器人必须由钉钉管理员开通 `qyapi_robot_sendmsg`，完整组织同步不属于产品范围，因此不为此新增通讯录同步能力，User ID 仍由运维按审批配置｜来源：用户/AI
@@ -128,7 +133,7 @@
 - 认证入口阻塞已解除；评价文本、退款/退货原因、广告明细、SPU 库存、最近 14 天销量和可信近 7 天品退数据仍作为后续扩展或数据补齐项，不阻塞规则型 V0。
 - 页面门禁警告：`PAGE-F06-02` 的 MD/HTML 唯一配对仍作为退役历史设计证据保留；页面清单已明确标为 `retired @ revision 7`，不计入 9 个运行态 MVP 页面，不得进入导航、运行路由或视觉验收。
 - 真实钉钉 OAuth 已以用户更换后的 `DINGTALK_CLIENT_ID` / `DINGTALK_CLIENT_SECRET` 验证 Access Token HTTP 200 与官方授权跳转 302；最终授权回调仍需可登录测试身份及已审批的站内角色映射，不伪造登录 pass。
-- 钉钉单聊实际收件仍需补充当前应用真实 `DINGTALK_ROBOT_CODE`、责任运营/相关人员的公司 User ID 及可收件账号；2026-08-05 01:18 当前 Client ID/Secret 取 token 成功，但无机器人编码时官方负向请求返回 `invalidParameter.robotCode.notExsit`。取得机器人编码后再复核 `qyapi_robot_sendmsg`，不伪造接口受理、实际送达或已读。
+- 钉钉单聊机器人发布现已生效：当前凭据取 token HTTP 200，当前 robotCode 的官方单聊负向检查已进入收件人校验并返回 `staffId.notExisted`；下一步只需补责任运营/相关人员公司 User ID 与可收件账号，执行真实接口受理和实际收件验收，不伪造送达或已读。
 - LiteLLM 已以当前系统配置和用户真实 XLSX 完成生产 API→Worker→网关→PostgreSQL 连通、越界/超时失败关闭及产品重试恢复；7 条行动建议最新解释 7/7 生成。RULE-03 仍需可替换的测试密钥、轮换权限及旧密钥失效观测窗口，不伪造轮换成功。
 - 正式 `商品链接.xlsx` 不含 TDD/高保真指定的 SPU 515；真实导入闭环使用该文件，涉及 515 的 SMOKE/DESIGN 证据不得伪造，解决路径仅为补充含 515 的真实验收文件或回到上游正式修订契约。
 - 内置浏览器控制通道已恢复并完成 RC2 双角色真实 E2E；9 项 DESIGN 仍缺同状态 baseline/actual 截图与 independent-visual 复核，继续保持 pending，不能以 UI 自动化或代码审查代签。
