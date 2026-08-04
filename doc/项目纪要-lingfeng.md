@@ -10,6 +10,7 @@
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
 ## 决策记录（实时维护）
+- [08-05-2026 01:18:43] 钉钉机器人最新外部阻塞｜背景：当前环境仍未配置 `DINGTALK_ROBOT_CODE`，重新使用当前 Client 凭据和明确不存在的验收 User ID 做无真实收件人的官方负向检查｜结论：Access Token 仍为 HTTP 200/有效期 7200 秒；消息接口最新返回 HTTP 400 `invalidParameter.robotCode.notExsit`，旧的权限 403 不再作为当前应用的最终失败证据。下一验收前置改为先取得本应用真实机器人编码，再复核 `qyapi_robot_sendmsg` 并使用公司 User ID/实际账号验收收件｜来源：AI
 - [08-05-2026 01:13:23] LiteLLM 真实生产恢复参数｜背景：真实 `商品链接.xlsx` 经生产 API/Worker 后首轮 10 条模型调用出现 6 条形状/动作越界和 4 条 20 秒传输超时，固定规则主链正确保持可用｜结论：模型提示必须写入本条精确动作组合并明确四字段均为字符串，HTTP 超时按本轮真实延迟调整为 45 秒；越界和网络失败仍失败关闭、不保存原文、不修改业务状态，用户或主管通过同一建议重试 API 只追加版本。修复后 7 条行动建议最新解释 7/7 生成，固定决策与任务摘要前后一致｜来源：AI
 - [08-05-2026 00:48:43] 钉钉应用凭据更换｜背景：旧 Client ID/Secret 的授权页显示“市场情报助手”，且组织目录与机器人接口分别报缺少权限；用户已更换当前环境中的 Client ID 和 Secret，新凭据复验为 Access Token HTTP 200/OAuth 302，但机器人请求仍明确缺少 `qyapi_robot_sendmsg`，组织目录请求缺少 `qyapi_get_department_list`｜结论：候选只使用新凭据证据；生产机器人必须由钉钉管理员开通 `qyapi_robot_sendmsg`，完整组织同步不属于产品范围，因此不为此新增通讯录同步能力，User ID 仍由运维按审批配置｜来源：用户/AI
 - [08-05-2026 00:34:38] 钉钉真实 OAuth 配置复核｜背景：用户确认 AppKey/AppSecret 就是现有 Client ID/Secret 后，隔离空库候选已用该配置进入钉钉官方授权页，官方 Access Token 接口返回 HTTP 200/有效期 7200 秒，但授权页显示应用名为“市场情报助手”且当前无可完成回调的测试身份｜结论：Client 变量映射、凭据有效性与 OAuth 前半程均已真实验证，但应用显示名须由钉钉管理端改为本产品名或换用正确应用，并补测试身份+站内角色映射完成回调后才能将 FLOW-01/SMOKE-02 记 pass｜来源：AI
@@ -127,7 +128,7 @@
 - 认证入口阻塞已解除；评价文本、退款/退货原因、广告明细、SPU 库存、最近 14 天销量和可信近 7 天品退数据仍作为后续扩展或数据补齐项，不阻塞规则型 V0。
 - 页面门禁警告：`PAGE-F06-02` 的 MD/HTML 唯一配对仍作为退役历史设计证据保留；页面清单已明确标为 `retired @ revision 7`，不计入 9 个运行态 MVP 页面，不得进入导航、运行路由或视觉验收。
 - 真实钉钉 OAuth 已以用户更换后的 `DINGTALK_CLIENT_ID` / `DINGTALK_CLIENT_SECRET` 验证 Access Token HTTP 200 与官方授权跳转 302；最终授权回调仍需可登录测试身份及已审批的站内角色映射，不伪造登录 pass。
-- 钉钉单聊实际收件仍需钉钉管理端开通 `qyapi_robot_sendmsg`，并补充 `DINGTALK_ROBOT_CODE`、责任运营/相关人员的公司 User ID 及可收件账号；当前新 Client ID/Secret 已真实驱动 OAuth 与 Access Token，但真实机器人负向请求在收件人校验前被缺权限 403 拒绝，不伪造实际送达/已读。
+- 钉钉单聊实际收件仍需补充当前应用真实 `DINGTALK_ROBOT_CODE`、责任运营/相关人员的公司 User ID 及可收件账号；2026-08-05 01:18 当前 Client ID/Secret 取 token 成功，但无机器人编码时官方负向请求返回 `invalidParameter.robotCode.notExsit`。取得机器人编码后再复核 `qyapi_robot_sendmsg`，不伪造接口受理、实际送达或已读。
 - LiteLLM 已以当前系统配置和用户真实 XLSX 完成生产 API→Worker→网关→PostgreSQL 连通、越界/超时失败关闭及产品重试恢复；7 条行动建议最新解释 7/7 生成。RULE-03 仍需可替换的测试密钥、轮换权限及旧密钥失效观测窗口，不伪造轮换成功。
 - 正式 `商品链接.xlsx` 不含 TDD/高保真指定的 SPU 515；真实导入闭环使用该文件，涉及 515 的 SMOKE/DESIGN 证据不得伪造，解决路径仅为补充含 515 的真实验收文件或回到上游正式修订契约。
 - 内置浏览器控制通道已恢复并完成 RC2 双角色真实 E2E；9 项 DESIGN 仍缺同状态 baseline/actual 截图与 independent-visual 复核，继续保持 pending，不能以 UI 自动化或代码审查代签。
