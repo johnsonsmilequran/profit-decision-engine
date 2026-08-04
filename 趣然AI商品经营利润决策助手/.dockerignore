@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+!.env.example
+backend/.venv*
+backend/.coverage
+backend/htmlcov
+backend/*.egg-info
+frontend/node_modules
+frontend/.npm-cache
+frontend/dist
+output
+evidence
+drafts

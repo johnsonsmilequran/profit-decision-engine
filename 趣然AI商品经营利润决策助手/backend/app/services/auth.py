@@ -57,7 +57,7 @@ def consume_state(db: Session, raw_state: str) -> None:
             detail={"code": "INVALID_CALLBACK", "message": "登录未完成，请重新使用钉钉登录。"},
         )
     oauth_state.used_at = utc_now()
-    db.flush()
+    db.commit()
 
 
 def exchange_code(settings: Settings, code: str) -> tuple[str, str]:

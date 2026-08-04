@@ -1,0 +1,88 @@
+name: quran-profit-decision
+
+services:
+  postgres:
+    image: postgres:16.14-bookworm@sha256:92620daddcd947f8d5ab5ba66e848702fe443d87fed30c4cea8e389fd78dfc55
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: quran
+      POSTGRES_USER: quran_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quran_app -d quran"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [backend]
+
+  migrate:
+    build: .
+    image: quran-profit-decision:${APP_IMAGE_TAG:-local}
+    command: ["python", "-m", "app.migrate"]
+    env_file: ${APP_ENV_FILE:-.env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [backend]
+    restart: "no"
+
+  web:
+    build: .
+    image: quran-profit-decision:${APP_IMAGE_TAG:-local}
+    restart: unless-stopped
+    env_file: ${APP_ENV_FILE:-.env}
+    volumes:
+      - upload-spool:/var/lib/quran/uploads
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8000}:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks: [frontend, backend]
+
+  worker:
+    image: quran-profit-decision:${APP_IMAGE_TAG:-local}
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
+    env_file: ${APP_ENV_FILE:-.env}
+    volumes:
+      - upload-spool:/var/lib/quran/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [backend]
+
+  backup:
+    image: postgres:16.14-bookworm@sha256:92620daddcd947f8d5ab5ba66e848702fe443d87fed30c4cea8e389fd78dfc55
+    restart: unless-stopped
+    environment:
+      PGHOST: postgres
+      PGDATABASE: quran
+      PGUSER: quran_app
+      PGPASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      BACKUP_ENCRYPTION_PASSWORD: ${BACKUP_ENCRYPTION_PASSWORD:?BACKUP_ENCRYPTION_PASSWORD is required}
+    volumes:
+      - ./infra/backup.sh:/usr/local/bin/backup.sh:ro
+      - postgres-backups:/backups
+    command: ["sh", "-c", "while true; do /usr/local/bin/backup.sh; sleep 86400; done"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [backend]
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  postgres-data:
+  postgres-backups:
+  upload-spool:

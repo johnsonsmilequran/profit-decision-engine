@@ -136,6 +136,23 @@ def decision_summary(db: Session, decision: DecisionRecord, actor: Actor) -> dic
     actions = db.scalars(
         select(ActionItem).where(ActionItem.decision_id == decision.decision_id)
     ).all()
+    if actor.role == "procurement":
+        actions = [action for action in actions if action.owner_role == "procurement"]
+        return {
+            "decision_id": decision.decision_id,
+            "batch_id": decision.batch_id,
+            "spu_id": decision.spu_id,
+            "spu_name": snapshot.spu_name if snapshot else "",
+            "store": snapshot.store if snapshot else "",
+            "replenishment_action": decision.replenishment_action,
+            "replenishment_label": action_label(decision.replenishment_action),
+            "actions": [action_dict(action) for action in actions],
+            "created_at": decision.created_at,
+            "warehouse_qty": snapshot.warehouse_qty if snapshot else None,
+            "in_transit_qty": snapshot.in_transit_qty if snapshot else None,
+            "sales_units_14d": snapshot.sales_units_14d if snapshot else None,
+            "inventory_days": snapshot.inventory_days if snapshot else None,
+        }
     base: dict[str, object] = {
         "decision_id": decision.decision_id,
         "batch_id": decision.batch_id,
@@ -153,22 +170,13 @@ def decision_summary(db: Session, decision: DecisionRecord, actor: Actor) -> dic
         "actions": [action_dict(action) for action in actions],
         "created_at": decision.created_at,
     }
-    if actor.role != "procurement" and snapshot is not None:
+    if snapshot is not None:
         base.update(
             {
                 "net_sales": snapshot.net_sales,
                 "profit_rate": snapshot.profit_rate,
                 "promotion_expense": snapshot.promotion_expense,
                 "return_rate_7d": snapshot.return_rate_7d,
-            }
-        )
-    elif snapshot is not None:
-        base.update(
-            {
-                "warehouse_qty": snapshot.warehouse_qty,
-                "in_transit_qty": snapshot.in_transit_qty,
-                "sales_units_14d": snapshot.sales_units_14d,
-                "inventory_days": snapshot.inventory_days,
             }
         )
     return base
@@ -229,8 +237,19 @@ def auth_callback(
     settings: Settings = Depends(get_settings),
 ) -> Response:
     consume_state(db, state_value)
-    actor_ref, actor_name = exchange_code(settings, code)
-    mapping = resolve_role(db, actor_ref)
+    try:
+        actor_ref, actor_name = exchange_code(settings, code)
+        mapping = resolve_role(db, actor_ref)
+    except HTTPException as exc:
+        detail: dict[str, object] = exc.detail if isinstance(exc.detail, dict) else {}
+        destination = (
+            "forbidden?reason=role"
+            if detail.get("code") == "ROLE_MAPPING_INVALID"
+            else "login?error=auth"
+        )
+        return RedirectResponse(
+            f"{str(settings.frontend_base_url).rstrip('/')}/{destination}", status_code=303
+        )
     token, csrf = create_user_session(db, settings, actor_ref, actor_name, mapping.role)
     response = RedirectResponse(
         f"{str(settings.frontend_base_url).rstrip('/')}/workspace", status_code=303
@@ -300,17 +319,44 @@ def workspace(
         .unique()
         .all()
     )
-    metrics = [
-        {"label": "待审核建议", "value": sum(item.review_state == "pending" for item in decisions)},
-        {
-            "label": "高优先级待办",
-            "value": sum(item.main_action in {"clearance", "stop_loss"} for item in decisions),
-        },
-        {
-            "label": "跨角色执行中",
-            "value": sum(item.review_state == "approved" for item in decisions),
-        },
-    ]
+    if actor.role == "procurement":
+        procurement_actions = db.scalars(
+            select(ActionItem)
+            .join(DecisionRecord)
+            .where(
+                DecisionRecord.batch_id == latest.batch_id,
+                ActionItem.owner_role == "procurement",
+            )
+        ).all()
+        metrics = [
+            {
+                "label": "待处理采购任务",
+                "value": sum(item.execution_state == "pending" for item in procurement_actions),
+            },
+            {
+                "label": "补货任务",
+                "value": sum(item.action_value == "replenish" for item in procurement_actions),
+            },
+            {
+                "label": "禁止补货任务",
+                "value": sum(item.action_value == "forbid" for item in procurement_actions),
+            },
+        ]
+    else:
+        metrics = [
+            {
+                "label": "待审核建议",
+                "value": sum(item.review_state == "pending" for item in decisions),
+            },
+            {
+                "label": "高优先级待办",
+                "value": sum(item.main_action in {"clearance", "stop_loss"} for item in decisions),
+            },
+            {
+                "label": "跨角色执行中",
+                "value": sum(item.review_state == "approved" for item in decisions),
+            },
+        ]
     return {
         "role": actor.role,
         "role_label": role_label(actor.role),
@@ -553,6 +599,8 @@ def decision_detail(
             status_code=403, detail={"code": "ACCESS_DENIED", "message": "当前账号无权访问此内容。"}
         )
     summary = decision_summary(db, decision, actor)
+    if actor.role == "procurement":
+        return summary
     explanation = db.scalar(select(AIExplanation).where(AIExplanation.decision_id == decision_id))
     summary.update(
         {

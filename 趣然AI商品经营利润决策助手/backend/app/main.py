@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api import router
 from app.config import get_settings
@@ -27,6 +29,16 @@ if settings.app_env != "production":
         allow_headers=["Content-Type", "X-CSRF-Token"],
     )
 app.include_router(router)
+
+static_root = Path(__file__).resolve().parent / "static"
+if static_root.is_dir():
+    app.mount("/assets", StaticFiles(directory=static_root / "assets"), name="assets")
+
+    @app.get("/{frontend_path:path}", include_in_schema=False)
+    def frontend(frontend_path: str) -> FileResponse:
+        if frontend_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        return FileResponse(static_root / "index.html")
 
 
 @app.exception_handler(Exception)

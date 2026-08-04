@@ -13,6 +13,7 @@ export function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const sessionExpired = params.get("reason") === "session";
+  const callbackFailed = params.get("error") === "auth";
 
   useEffect(() => {
     if (!loading && status?.authenticated) navigate("/workspace", { replace: true });
@@ -73,6 +74,14 @@ export function LoginPage() {
           <Space direction="vertical" size={14} style={{ width: "100%", marginTop: 22 }}>
             {sessionExpired ? (
               <Alert type="warning" showIcon message="登录状态已失效，请重新使用钉钉登录。" />
+            ) : null}
+            {callbackFailed ? (
+              <Alert
+                type="error"
+                showIcon
+                message="暂时无法完成钉钉登录，请重新尝试。"
+                description={status?.support_guidance}
+              />
             ) : null}
             {error ? (
               <Alert type="error" showIcon message={error} description={status?.support_guidance} />

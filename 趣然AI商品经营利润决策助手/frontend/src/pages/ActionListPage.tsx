@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
 
 import { api } from "../api";
+import { useAuth } from "../components/AuthContext";
 import { PageHeader } from "../components/PageHeader";
 import { StatusTag } from "../components/StatusTag";
 import type { Decision } from "../types";
@@ -17,6 +18,8 @@ interface ActionList {
 
 export function ActionListPage() {
   const [, navigate] = useLocation();
+  const { status } = useAuth();
+  const procurement = status?.role === "procurement";
   const [action, setAction] = useState<string>();
   const [review, setReview] = useState<string>();
   const [keyword, setKeyword] = useState("");
@@ -71,30 +74,40 @@ export function ActionListPage() {
               setPage(1);
             }}
             options={[
-              { value: "clearance", label: "清仓" },
-              { value: "stop_loss", label: "止损" },
-              { value: "observe", label: "观察" },
-              { value: "invest", label: "加投" },
+              ...(procurement
+                ? []
+                : [
+                    { value: "clearance", label: "清仓" },
+                    { value: "stop_loss", label: "止损" },
+                    { value: "observe", label: "观察" },
+                    { value: "invest", label: "加投" },
+                  ]),
               { value: "replenish", label: "补货" },
               { value: "forbid", label: "禁止补货" },
             ]}
           />
-          <Select
-            allowClear
-            placeholder="全部审核状态"
-            style={{ width: 180 }}
-            value={review}
-            onChange={(value) => {
-              setReview(value);
-              setPage(1);
-            }}
-            options={[
-              { value: "pending", label: "待审核" },
-              { value: "approved", label: "已通过" },
-              { value: "rejected", label: "已驳回" },
-            ]}
-          />
-          <span className="muted">排序：清仓 › 止损 › 观察 › 加投 › 补货</span>
+          {procurement ? null : (
+            <Select
+              allowClear
+              placeholder="全部审核状态"
+              style={{ width: 180 }}
+              value={review}
+              onChange={(value) => {
+                setReview(value);
+                setPage(1);
+              }}
+              options={[
+                { value: "pending", label: "待审核" },
+                { value: "approved", label: "已通过" },
+                { value: "rejected", label: "已驳回" },
+              ]}
+            />
+          )}
+          <span className="muted">
+            {procurement
+              ? "仅显示与当前账号关联的补货/禁止补货任务"
+              : "排序：清仓 › 止损 › 观察 › 加投 › 补货"}
+          </span>
         </div>
         {query.isLoading ? (
           <Skeleton active />
@@ -121,22 +134,30 @@ export function ActionListPage() {
                 ),
               },
               { title: "店铺", dataIndex: "store" },
-              { title: "责任运营", dataIndex: "operator_ref" },
-              {
-                title: "经营动作",
-                dataIndex: "main_action",
-                render: (value: string) => <StatusTag value={value} />,
-              },
+              ...(procurement ? [] : [{ title: "责任运营", dataIndex: "operator_ref" }]),
+              ...(procurement
+                ? []
+                : [
+                    {
+                      title: "经营动作",
+                      dataIndex: "main_action",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
+                  ]),
               {
                 title: "库存动作",
                 dataIndex: "replenishment_action",
                 render: (value: string) => <StatusTag value={value} />,
               },
-              {
-                title: "审核",
-                dataIndex: "review_state",
-                render: (value: string) => <StatusTag value={value} />,
-              },
+              ...(procurement
+                ? []
+                : [
+                    {
+                      title: "审核",
+                      dataIndex: "review_state",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
+                  ]),
               {
                 title: "执行轨道",
                 render: (_, item) => (

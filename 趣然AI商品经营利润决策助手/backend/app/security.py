@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.config import Settings
 from app.db import get_db
-from app.models import UserSession, utc_now
+from app.models import RoleMapping, UserSession, utc_now
 
 SESSION_COOKIE = "quran_session"
 CSRF_COOKIE = "quran_csrf"
@@ -69,6 +69,14 @@ def optional_actor(
         or user_session.expires_at <= utc_now()
         or user_session.csrf_hash != digest(csrf_token)
     ):
+        return None
+    active_roles = db.scalars(
+        select(RoleMapping.role).where(
+            RoleMapping.actor_ref == user_session.actor_ref,
+            RoleMapping.active.is_(True),
+        )
+    ).all()
+    if active_roles != [user_session.role]:
         return None
     return Actor(
         actor_ref=user_session.actor_ref,

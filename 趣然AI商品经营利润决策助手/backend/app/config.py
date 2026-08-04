@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field, HttpUrl, field_validator
+from pydantic import Field, HttpUrl, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="QURAN_", extra="ignore")
 
     app_env: str = "development"
-    database_url: str = "postgresql+psycopg://quran:quran@127.0.0.1:5432/quran"
+    database_url: str = Field(
+        default="postgresql+psycopg://quran:quran@127.0.0.1:5432/quran", repr=False
+    )
     public_base_url: HttpUrl = HttpUrl("http://localhost:8000")
     frontend_base_url: HttpUrl = HttpUrl("http://localhost:5173")
     session_ttl_seconds: int = 28_800
@@ -39,6 +41,23 @@ class Settings(BaseSettings):
         if value not in allowed:
             raise ValueError(f"app_env 必须为 {sorted(allowed)} 中的一项")
         return value
+
+    @model_validator(mode="after")
+    def validate_production_security(self) -> "Settings":
+        if self.app_env != "production":
+            return self
+        failures: list[str] = []
+        if not self.cookie_secure:
+            failures.append("cookie_secure")
+        if self.public_base_url.scheme != "https" or self.frontend_base_url.scheme != "https":
+            failures.append("https_base_urls")
+        if not self.dingtalk_ready:
+            failures.append("dingtalk_credentials")
+        if self.database_url == "postgresql+psycopg://quran:quran@127.0.0.1:5432/quran":
+            failures.append("database_credentials")
+        if failures:
+            raise ValueError(f"生产安全配置不完整: {', '.join(failures)}")
+        return self
 
     @property
     def dingtalk_ready(self) -> bool:

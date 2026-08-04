@@ -115,7 +115,7 @@ export function DecisionDetailPage() {
         description={`SPU ${decision.spu_id} · 批次 ${decision.batch_id}`}
         actions={
           <Space>
-            <StatusTag value={decision.review_state} />
+            {decision.review_state ? <StatusTag value={decision.review_state} /> : null}
             <Button
               icon={<HistoryOutlined />}
               onClick={() => navigate(`/trace?decision_id=${decision.decision_id}`)}
@@ -141,14 +141,14 @@ export function DecisionDetailPage() {
       ) : null}
       <Card className="detail-hero">
         <Space size={10} wrap>
-          <StatusTag value={decision.category} />
-          {!procurement ? <StatusTag value={decision.main_action} /> : null}
+          {!procurement && decision.category ? <StatusTag value={decision.category} /> : null}
+          {!procurement && decision.main_action ? <StatusTag value={decision.main_action} /> : null}
           <StatusTag value={decision.replenishment_action} />
         </Space>
         <Typography.Title level={3} style={{ margin: "14px 0 4px" }}>
           {procurement
             ? `采购结论：${decision.replenishment_label}`
-            : `经营建议：${decision.main_action_label} · ${decision.replenishment_label}`}
+            : `经营建议：${decision.main_action_label ?? "—"} · ${decision.replenishment_label}`}
         </Typography.Title>
         <div className="muted">
           结论由固定规则生成，AI
@@ -292,7 +292,7 @@ export function DecisionDetailPage() {
         <div className="detail-stack">
           <Card className="section-card" title="审核结果">
             <Space>
-              <StatusTag value={decision.review_state} />
+              {decision.review_state ? <StatusTag value={decision.review_state} /> : null}
               {decision.reviewed_by ? (
                 <span className="muted">
                   {decision.reviewed_by} ·{" "}

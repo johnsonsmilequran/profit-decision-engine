@@ -104,30 +104,42 @@ export function WorkspacePage() {
                   ),
                 },
                 {
-                  title: "店铺 / 责任运营",
+                  title: data.role === "procurement" ? "店铺" : "店铺 / 责任运营",
                   render: (_, item) => (
                     <span>
                       {item.store || "—"}
-                      <br />
-                      <span className="muted">{item.operator_ref || "—"}</span>
+                      {data.role === "procurement" ? null : (
+                        <>
+                          <br />
+                          <span className="muted">{item.operator_ref || "—"}</span>
+                        </>
+                      )}
                     </span>
                   ),
                 },
-                {
-                  title: "经营动作",
-                  dataIndex: "main_action",
-                  render: (value: string) => <StatusTag value={value} />,
-                },
+                ...(data.role === "procurement"
+                  ? []
+                  : [
+                      {
+                        title: "经营动作",
+                        dataIndex: "main_action",
+                        render: (value: string) => <StatusTag value={value} />,
+                      },
+                    ]),
                 {
                   title: "库存动作",
                   dataIndex: "replenishment_action",
                   render: (value: string) => <StatusTag value={value} />,
                 },
-                {
-                  title: "审核状态",
-                  dataIndex: "review_state",
-                  render: (value: string) => <StatusTag value={value} />,
-                },
+                ...(data.role === "procurement"
+                  ? []
+                  : [
+                      {
+                        title: "审核状态",
+                        dataIndex: "review_state",
+                        render: (value: string) => <StatusTag value={value} />,
+                      },
+                    ]),
                 {
                   title: "动作进度",
                   render: (_, item) =>

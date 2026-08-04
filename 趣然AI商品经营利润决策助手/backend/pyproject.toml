@@ -16,6 +16,9 @@ dependencies = [
   "uvicorn[standard]==0.39.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["app*"]
+
 [project.optional-dependencies]
 dev = [
   "mypy==1.19.1",
