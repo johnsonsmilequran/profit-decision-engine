@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/action"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/batch"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/config"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/httpapi"
@@ -34,7 +35,8 @@ func main() {
 	identities := identity.NewService(db)
 	dingTalk := identity.NewDingTalkClient(cfg.DingTalkClientID, cfg.DingTalkClientSecret, cfg.PublicBaseURL+"/auth/dingtalk/callback")
 	batches := batch.NewService(db, cfg.ImportFileDir)
-	server := &http.Server{Addr: cfg.Address, Handler: httpapi.New(db, identities, dingTalk, batches, cfg.PublicBaseURL, cfg.CookieSecure, logger), ReadHeaderTimeout: 5 * time.Second}
+	actions := action.NewService(db)
+	server := &http.Server{Addr: cfg.Address, Handler: httpapi.New(db, identities, dingTalk, batches, actions, cfg.PublicBaseURL, cfg.CookieSecure, logger), ReadHeaderTimeout: 5 * time.Second}
 	go func() {
 		<-ctx.Done()
 		shutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)

@@ -42,6 +42,61 @@ paths:
       responses:
         '200': { description: 批次详情, content: { application/json: { schema: { $ref: '#/components/schemas/BatchDetail' } } } }
         '404': { $ref: '#/components/responses/Error' }
+  /api/actions:
+    get:
+      operationId: listActions
+      parameters:
+        - { name: batch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: action, in: query, schema: { type: string } }
+        - { name: store, in: query, schema: { type: string } }
+        - { name: operator, in: query, schema: { type: string } }
+        - { name: review_status, in: query, schema: { type: string } }
+        - { name: business_state, in: query, schema: { type: string } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 行动清单, content: { application/json: { schema: { $ref: '#/components/schemas/ActionListResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/workbench:
+    get:
+      operationId: getWorkbench
+      responses:
+        '200': { description: 当前角色工作台, content: { application/json: { schema: { $ref: '#/components/schemas/Workbench' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}:
+    get:
+      operationId: getSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: 建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/review:
+    post:
+      operationId: reviewSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/ReviewInput' } } }
+      responses:
+        '200': { description: 审核后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/execute:
+    post:
+      operationId: executeAction
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExecuteInput' } } } }
+      responses:
+        '200': { description: 执行后的建议, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/result:
+    post:
+      operationId: recordActionResult
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ResultInput' } } } }
+      responses:
+        '200': { description: 记录结果后的建议, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
 components:
   responses:
     Error: { description: 业务错误, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
@@ -142,3 +197,136 @@ components:
         page: { type: integer }
         limit: { type: integer }
         total: { type: integer }
+    PreviousActionItem:
+      type: object
+      required: [link_id, batch_id, batch_code, spu_id, name, business_action, inventory_action, trigger_rule, business_state, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days]
+      properties:
+        link_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        spu_id: { type: string }
+        name: { type: string }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        business_state: { type: string }
+        task_created_at: { type: string, format: date-time }
+        linked_at: { type: string, format: date-time }
+        business_executed_at: { type: [string, 'null'], format: date-time }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+    ActionItem:
+      type: object
+      required: [link_id, task_id, decision_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, rule_version, spu_id, name, store, platform, operator_ref, suggested_business_action, suggested_inventory_action, effective_business_action, effective_inventory_action, trigger_rule, evidence, review_status, review_version, business_state, inventory_state, business_version, inventory_version, relation_type, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, previous]
+      properties:
+        link_id: { type: string, format: uuid }
+        task_id: { type: string, format: uuid }
+        decision_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        rule_version: { type: string }
+        spu_id: { type: string }
+        name: { type: string }
+        store: { type: string }
+        platform: { type: string }
+        operator_ref: { type: string }
+        suggested_business_action: { type: [string, 'null'] }
+        suggested_inventory_action: { type: [string, 'null'] }
+        effective_business_action: { type: [string, 'null'] }
+        effective_inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        evidence: { type: object, additionalProperties: true }
+        review_status: { type: string, enum: [pending, approved, rejected] }
+        review_version: { type: integer }
+        business_state: { type: string }
+        inventory_state: { type: string }
+        business_version: { type: integer }
+        inventory_version: { type: integer }
+        relation_type: { type: string, enum: [new_task, same_action_continuation, action_change_pending] }
+        task_created_at: { type: string, format: date-time }
+        linked_at: { type: string, format: date-time }
+        business_executed_at: { type: [string, 'null'], format: date-time }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+        quality: { type: object, additionalProperties: { type: string } }
+        previous: { anyOf: [{ $ref: '#/components/schemas/PreviousActionItem' }, { type: 'null' }] }
+    ActionListResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/ActionItem' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+    Workbench:
+      type: object
+      required: [role, latest_batch_id, latest_batch_code, batch_completed_at, pending_review_count, pending_execution_count, clearance_confirm_count, exception_count, items]
+      properties:
+        role: { $ref: '#/components/schemas/BusinessRole' }
+        latest_batch_id: { type: string }
+        latest_batch_code: { type: string }
+        batch_completed_at: { type: string, format: date-time }
+        pending_review_count: { type: integer }
+        pending_execution_count: { type: integer }
+        clearance_confirm_count: { type: integer }
+        exception_count: { type: integer }
+        items: { type: array, items: { $ref: '#/components/schemas/ActionItem' } }
+    BusinessEvent:
+      type: object
+      required: [id, type, actor_ref, from_state, to_state, reason, details, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: string }
+        actor_ref: { type: string }
+        from_state: { type: [string, 'null'] }
+        to_state: { type: [string, 'null'] }
+        reason: { type: [string, 'null'] }
+        details: { type: object, additionalProperties: true }
+        created_at: { type: string, format: date-time }
+    SuggestionDetail:
+      allOf:
+        - { $ref: '#/components/schemas/ActionItem' }
+        - type: object
+          required: [events, ai_status, ai_content]
+          properties:
+            events: { type: array, items: { $ref: '#/components/schemas/BusinessEvent' } }
+            ai_status: { type: string }
+            ai_content: { type: object, additionalProperties: true }
+    ReviewInput:
+      type: object
+      required: [decision, note, review_version, idempotency_key]
+      properties:
+        decision: { type: string, enum: [approved, rejected] }
+        note: { type: string }
+        review_version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ExecuteInput:
+      type: object
+      required: [track, version, note, idempotency_key]
+      properties:
+        track: { type: string, enum: [business, inventory] }
+        version: { type: integer, minimum: 1 }
+        note: { type: string }
+        idempotency_key: { type: string, minLength: 1 }
+    ResultInput:
+      type: object
+      required: [period_start, period_end, sales_value, profit_value, inventory_value, sales_unavailable, profit_unavailable, inventory_unavailable, note, version, idempotency_key]
+      properties:
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        sales_value: { type: [number, 'null'] }
+        profit_value: { type: [number, 'null'] }
+        inventory_value: { type: [number, 'null'] }
+        sales_unavailable: { type: boolean }
+        profit_unavailable: { type: boolean }
+        inventory_unavailable: { type: boolean }
+        note: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }

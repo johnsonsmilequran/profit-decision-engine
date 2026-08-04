@@ -52,6 +52,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listActions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workbench": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getWorkbench"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/suggestions/{linkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSuggestion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/suggestions/{linkId}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["reviewSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/execute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["executeAction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["recordActionResult"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -155,6 +251,151 @@ export interface components {
             page: number;
             limit: number;
             total: number;
+        };
+        PreviousActionItem: {
+            /** Format: uuid */
+            link_id: string;
+            /** Format: uuid */
+            batch_id: string;
+            batch_code: string;
+            spu_id: string;
+            name: string;
+            business_action: string | null;
+            inventory_action: string | null;
+            trigger_rule: string;
+            business_state: string;
+            /** Format: date-time */
+            task_created_at: string;
+            /** Format: date-time */
+            linked_at: string;
+            /** Format: date-time */
+            business_executed_at: string | null;
+            net_sales_prev_month: number | null;
+            operating_profit_rate: number | null;
+            quality_return_rate_7d: number | null;
+            inventory_days: number | null;
+        };
+        ActionItem: {
+            /** Format: uuid */
+            link_id: string;
+            /** Format: uuid */
+            task_id: string;
+            /** Format: uuid */
+            decision_id: string;
+            /** Format: uuid */
+            batch_id: string;
+            batch_code: string;
+            /** Format: date */
+            period_start: string;
+            /** Format: date */
+            period_end: string;
+            /** Format: date */
+            business_cutoff_date: string;
+            rule_version: string;
+            spu_id: string;
+            name: string;
+            store: string;
+            platform: string;
+            operator_ref: string;
+            suggested_business_action: string | null;
+            suggested_inventory_action: string | null;
+            effective_business_action: string | null;
+            effective_inventory_action: string | null;
+            trigger_rule: string;
+            evidence: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            review_status: "pending" | "approved" | "rejected";
+            review_version: number;
+            business_state: string;
+            inventory_state: string;
+            business_version: number;
+            inventory_version: number;
+            /** @enum {string} */
+            relation_type: "new_task" | "same_action_continuation" | "action_change_pending";
+            /** Format: date-time */
+            task_created_at: string;
+            /** Format: date-time */
+            linked_at: string;
+            /** Format: date-time */
+            business_executed_at: string | null;
+            net_sales_prev_month: number | null;
+            operating_profit_rate: number | null;
+            quality_return_rate_7d: number | null;
+            inventory_days: number | null;
+            quality: {
+                [key: string]: string;
+            };
+            previous: components["schemas"]["PreviousActionItem"] | null;
+        };
+        ActionListResponse: {
+            items: components["schemas"]["ActionItem"][];
+            page: number;
+            limit: number;
+            total: number;
+        };
+        Workbench: {
+            role: components["schemas"]["BusinessRole"];
+            latest_batch_id: string;
+            latest_batch_code: string;
+            /** Format: date-time */
+            batch_completed_at: string;
+            pending_review_count: number;
+            pending_execution_count: number;
+            clearance_confirm_count: number;
+            exception_count: number;
+            items: components["schemas"]["ActionItem"][];
+        };
+        BusinessEvent: {
+            /** Format: uuid */
+            id: string;
+            type: string;
+            actor_ref: string;
+            from_state: string | null;
+            to_state: string | null;
+            reason: string | null;
+            details: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            created_at: string;
+        };
+        SuggestionDetail: components["schemas"]["ActionItem"] & {
+            events: components["schemas"]["BusinessEvent"][];
+            ai_status: string;
+            ai_content: {
+                [key: string]: unknown;
+            };
+        };
+        ReviewInput: {
+            /** @enum {string} */
+            decision: "approved" | "rejected";
+            note: string;
+            review_version: number;
+            idempotency_key: string;
+        };
+        ExecuteInput: {
+            /** @enum {string} */
+            track: "business" | "inventory";
+            version: number;
+            note: string;
+            idempotency_key: string;
+        };
+        ResultInput: {
+            /** Format: date */
+            period_start: string;
+            /** Format: date */
+            period_end: string;
+            sales_value: number | null;
+            profit_value: number | null;
+            inventory_value: number | null;
+            sales_unavailable: boolean;
+            profit_unavailable: boolean;
+            inventory_unavailable: boolean;
+            note: string;
+            version: number;
+            idempotency_key: string;
         };
     };
     responses: {
@@ -285,6 +526,162 @@ export interface operations {
                 };
             };
             404: components["responses"]["Error"];
+        };
+    };
+    listActions: {
+        parameters: {
+            query?: {
+                batch_id?: string;
+                search?: string;
+                action?: string;
+                store?: string;
+                operator?: string;
+                review_status?: string;
+                business_state?: string;
+                page?: number;
+                limit?: 20 | 50 | 100;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 行动清单 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionListResponse"];
+                };
+            };
+            401: components["responses"]["Error"];
+        };
+    };
+    getWorkbench: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 当前角色工作台 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Workbench"];
+                };
+            };
+            401: components["responses"]["Error"];
+        };
+    };
+    getSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    reviewSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewInput"];
+            };
+        };
+        responses: {
+            /** @description 审核后的建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    executeAction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExecuteInput"];
+            };
+        };
+        responses: {
+            /** @description 执行后的建议 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    recordActionResult: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultInput"];
+            };
+        };
+        responses: {
+            /** @description 记录结果后的建议 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
         };
     };
 }

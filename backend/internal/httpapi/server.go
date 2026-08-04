@@ -16,6 +16,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/action"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/batch"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/identity"
 )
@@ -27,13 +28,14 @@ type Server struct {
 	identity     *identity.Service
 	dingTalk     *identity.DingTalkClient
 	batches      *batch.Service
+	actions      *action.Service
 	publicURL    string
 	cookieSecure bool
 	logger       *slog.Logger
 }
 
-func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.DingTalkClient, batches *batch.Service, publicURL string, cookieSecure bool, logger *slog.Logger) http.Handler {
-	s := &Server{db: db, identity: identities, dingTalk: dingTalk, batches: batches, publicURL: publicURL, cookieSecure: cookieSecure, logger: logger}
+func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.DingTalkClient, batches *batch.Service, actions *action.Service, publicURL string, cookieSecure bool, logger *slog.Logger) http.Handler {
+	s := &Server{db: db, identity: identities, dingTalk: dingTalk, batches: batches, actions: actions, publicURL: publicURL, cookieSecure: cookieSecure, logger: logger}
 	r := chi.NewRouter()
 	r.Get("/health/live", s.live)
 	r.Get("/health/ready", s.ready)
@@ -44,7 +46,179 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Get("/api/batches", s.listBatches)
 	r.Post("/api/batches", s.createBatch)
 	r.Get("/api/batches/{batchID}", s.getBatch)
+	r.Get("/api/actions", s.listActions)
+	r.Get("/api/workbench", s.workbench)
+	r.Get("/api/suggestions/{linkID}", s.getSuggestion)
+	r.Post("/api/suggestions/{linkID}/review", s.reviewSuggestion)
+	r.Post("/api/actions/{taskID}/execute", s.executeAction)
+	r.Post("/api/actions/{taskID}/result", s.recordActionResult)
 	return r
+}
+
+func (s *Server) executeAction(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	var input action.ExecuteInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.Execute(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "taskID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "execute action")
+}
+
+func (s *Server) recordActionResult(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	var input action.ResultInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.RecordResult(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "taskID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "record action result")
+}
+
+func decodeJSON(r *http.Request, target interface{}) error {
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	return decoder.Decode(target)
+}
+
+func writeActionCommandResult(w http.ResponseWriter, result action.Detail, err error, logger *slog.Logger, operation string) {
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if errors.Is(err, action.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "not_found")
+		return
+	}
+	if errors.Is(err, action.ErrConflict) {
+		writeError(w, http.StatusConflict, "version_conflict")
+		return
+	}
+	if errors.Is(err, action.ErrInvalidState) {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_state")
+		return
+	}
+	if err != nil {
+		logger.Error(operation, "error", err)
+		writeError(w, http.StatusInternalServerError, "command_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) getSuggestion(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	result, err := s.actions.Get(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "linkID"))
+	if errors.Is(err, action.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "not_found")
+		return
+	}
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err != nil {
+		s.logger.Error("get suggestion", "error", err)
+		writeError(w, http.StatusInternalServerError, "suggestion_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) reviewSuggestion(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	var input action.ReviewInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.Review(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "linkID"), input)
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if errors.Is(err, action.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "not_found")
+		return
+	}
+	if errors.Is(err, action.ErrConflict) {
+		writeError(w, http.StatusConflict, "version_conflict")
+		return
+	}
+	if errors.Is(err, action.ErrInvalidState) {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_review")
+		return
+	}
+	if err != nil {
+		s.logger.Error("review suggestion", "error", err)
+		writeError(w, http.StatusInternalServerError, "review_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) listActions(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	limit := queryInt(r, "limit", 50)
+	if limit != 20 && limit != 50 && limit != 100 {
+		limit = 50
+	}
+	result, err := s.actions.List(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, action.Filters{
+		BatchID: r.URL.Query().Get("batch_id"), Search: r.URL.Query().Get("search"), Action: r.URL.Query().Get("action"),
+		Store: r.URL.Query().Get("store"), Operator: r.URL.Query().Get("operator"), ReviewStatus: r.URL.Query().Get("review_status"),
+		BusinessState: r.URL.Query().Get("business_state"), Page: queryInt(r, "page", 1), Limit: limit,
+	})
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err != nil {
+		s.logger.Error("list actions", "error", err)
+		writeError(w, http.StatusInternalServerError, "action_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) workbench(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	result, err := s.actions.Workbench(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role})
+	if errors.Is(err, action.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err != nil {
+		s.logger.Error("load workbench", "error", err)
+		writeError(w, http.StatusInternalServerError, "workbench_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 func (s *Server) createBatch(w http.ResponseWriter, r *http.Request) {

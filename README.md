@@ -20,6 +20,8 @@
 
 数据批次使用 `POST /api/batches` 接收真实 XLSX，Go Worker 从 PostgreSQL 持久任务表领取解析任务，并在单一事务内写入冻结 SPU 快照、字段质量、固定规则决策和行动清单。原始文件保存在 API/Worker 共用的持久卷中；同一文件、事业部、期间和截止日重复上传时返回既有批次。
 
+行动域将每周不可变决策与跨周稳定任务分离：`spu_action_task` 保持 SPU 任务身份，`decision_task_link` 精确关联当周决策和最近更早前序，`action_revision` 保存固定规则或主管改判版本。运营与主管工作台、行动清单和建议详情均读取这些真实投影；审核、双轨执行和经营结果通过版本号与幂等键写入 PostgreSQL 追加事件。
+
 ## 当前成果
 
 - 正式 PRD：`趣然AI商品经营利润决策助手/output/PRD详细版.md`

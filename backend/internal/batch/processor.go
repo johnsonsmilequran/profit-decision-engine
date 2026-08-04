@@ -132,11 +132,17 @@ func (p *Processor) process(ctx context.Context, jobID, batchID string) error {
 		if err != nil {
 			return err
 		}
-		if _, err := tx.Exec(ctx, `INSERT INTO decision_record(list_id, snapshot_id, rule_version,
+		var decisionID string
+		if err := tx.QueryRow(ctx, `INSERT INTO decision_record(list_id, snapshot_id, rule_version,
 			product_type, business_action, inventory_action, trigger_rule, structured_evidence)
-			VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, listID, snapshotID, RuleVersion, decision.ProductType,
-			decision.BusinessAction, decision.InventoryAction, decision.TriggerRule, evidenceJSON); err != nil {
+			VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING decision_id::text`, listID, snapshotID, RuleVersion, decision.ProductType,
+			decision.BusinessAction, decision.InventoryAction, decision.TriggerRule, evidenceJSON).Scan(&decisionID); err != nil {
 			return err
+		}
+		if shouldCreateTask(decision) {
+			if err := linkDecisionToTask(ctx, tx, batchID, decisionID, snapshot, decision); err != nil {
+				return err
+			}
 		}
 	}
 	rejectedRows := make(map[int]struct{})
@@ -162,6 +168,108 @@ func (p *Processor) process(ctx context.Context, jobID, batchID string) error {
 		return err
 	}
 	return tx.Commit(ctx)
+}
+
+func shouldCreateTask(decision Decision) bool {
+	if decision.BusinessAction != nil && *decision.BusinessAction != "maintain" {
+		return true
+	}
+	return decision.InventoryAction != nil && *decision.InventoryAction == "restock"
+}
+
+func executableInventoryAction(value *string) *string {
+	if value != nil && (*value == "restock" || *value == "prohibit_restock") {
+		return value
+	}
+	return nil
+}
+
+func linkDecisionToTask(ctx context.Context, tx pgx.Tx, batchID, decisionID string, snapshot Snapshot, decision Decision) error {
+	inventoryAction := executableInventoryAction(decision.InventoryAction)
+	var taskID, currentBusiness, businessState, inventoryState string
+	var currentInventory *string
+	var businessExecutedAt *time.Time
+	var reviewStatus string
+	err := tx.QueryRow(ctx, `SELECT task_id::text, coalesce(current_business_action,''), current_inventory_action,
+		review_status,business_state,inventory_state,business_executed_at FROM spu_action_task
+		WHERE business_unit = '玩具事业部' AND spu_id = $1 FOR UPDATE`, snapshot.SPUID).
+		Scan(&taskID, &currentBusiness, &currentInventory, &reviewStatus, &businessState, &inventoryState, &businessExecutedAt)
+	newTask := errors.Is(err, pgx.ErrNoRows)
+	if err != nil && !newTask {
+		return err
+	}
+	relationType := "new_task"
+	revisionStatus := "pending_review"
+	if newTask {
+		businessState = "pending_review"
+		inventoryState = "not_generated"
+		if inventoryAction != nil {
+			inventoryState = "pending_review"
+		}
+		if err := tx.QueryRow(ctx, `INSERT INTO spu_action_task(business_unit, spu_id, operator_ref,
+			current_business_action, current_inventory_action, review_status, business_state, inventory_state)
+			VALUES ('玩具事业部',$1,$2,$3,$4,'pending',$5,$6) RETURNING task_id::text`, snapshot.SPUID,
+			snapshot.OperatorRef, decision.BusinessAction, inventoryAction, businessState, inventoryState).Scan(&taskID); err != nil {
+			return err
+		}
+		reviewStatus = "pending"
+	} else if pointerValue(decision.BusinessAction) == currentBusiness && pointerValue(inventoryAction) == pointerValue(currentInventory) {
+		relationType = "same_action_continuation"
+		revisionStatus = "active"
+	} else {
+		relationType = "action_change_pending"
+		reviewStatus = "pending"
+	}
+	var revisionID string
+	if relationType == "same_action_continuation" {
+		err = tx.QueryRow(ctx, `SELECT revision_id::text FROM action_revision WHERE task_id = $1
+			AND status IN ('active','pending_review') ORDER BY created_at DESC LIMIT 1`, taskID).Scan(&revisionID)
+		if errors.Is(err, pgx.ErrNoRows) {
+			status := "pending_review"
+			if reviewStatus == "approved" {
+				status = "active"
+			}
+			err = tx.QueryRow(ctx, `INSERT INTO action_revision(task_id,source_decision_id,source,business_action,inventory_action,status,reason,created_by)
+				VALUES ($1,$2,'fixed_rule',$3,$4,$5,'同动作续接既有生效动作','system:worker') RETURNING revision_id::text`,
+				taskID, decisionID, decision.BusinessAction, inventoryAction, status).Scan(&revisionID)
+		}
+		if err != nil {
+			return err
+		}
+	} else {
+		if err := tx.QueryRow(ctx, `INSERT INTO action_revision(task_id,source_decision_id,source,business_action,inventory_action,status,reason,created_by)
+			VALUES ($1,$2,'fixed_rule',$3,$4,$5,$6,'system:worker') RETURNING revision_id::text`, taskID, decisionID,
+			decision.BusinessAction, inventoryAction, revisionStatus, decision.TriggerRule).Scan(&revisionID); err != nil {
+			return err
+		}
+	}
+	var previousLinkID *string
+	if err := tx.QueryRow(ctx, `SELECT l.link_id::text FROM decision_task_link l
+		JOIN decision_record d ON d.decision_id = l.decision_id
+		JOIN action_list al ON al.list_id = d.list_id
+		JOIN import_batch b ON b.batch_id = al.batch_id
+		WHERE l.task_id = $1 AND b.business_cutoff_date < (SELECT business_cutoff_date FROM import_batch WHERE batch_id = $2)
+		ORDER BY b.business_cutoff_date DESC, l.linked_at DESC LIMIT 1`, taskID, batchID).Scan(&previousLinkID); err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+	var linkID string
+	if err := tx.QueryRow(ctx, `INSERT INTO decision_task_link(decision_id,task_id,previous_link_id,revision_id,relation_type,
+		review_status,review_version,business_state_at_link,inventory_state_at_link,business_executed_at_at_link)
+		VALUES ($1,$2,$3,$4,$5,$6,1,$7,$8,$9) RETURNING link_id::text`, decisionID, taskID, previousLinkID, revisionID,
+		relationType, reviewStatus, businessState, inventoryState, businessExecutedAt).Scan(&linkID); err != nil {
+		return err
+	}
+	_, err = tx.Exec(ctx, `INSERT INTO business_event(task_id,link_id,event_type,actor_ref,to_state,reason,details)
+		VALUES ($1,$2,$3,'system:worker',$4,$5,jsonb_build_object('batch_id',$6::text,'decision_id',$7::text))`, taskID,
+		linkID, relationType, reviewStatus, decision.TriggerRule, batchID, decisionID)
+	return err
+}
+
+func pointerValue(value *string) string {
+	if value == nil {
+		return ""
+	}
+	return *value
 }
 
 func (p *Processor) markFailed(ctx context.Context, jobID, batchID, code string) error {

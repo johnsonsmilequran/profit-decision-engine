@@ -1,0 +1,184 @@
+package action
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"strings"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+var ErrForbidden = errors.New("forbidden")
+
+type Service struct{ db *pgxpool.Pool }
+
+func NewService(db *pgxpool.Pool) *Service { return &Service{db: db} }
+
+func (s *Service) List(ctx context.Context, actor Principal, filters Filters) (ListResponse, error) {
+	if actor.Role != "operations" && actor.Role != "supervisor" {
+		return ListResponse{}, ErrForbidden
+	}
+	if filters.Page < 1 {
+		filters.Page = 1
+	}
+	if filters.Limit != 20 && filters.Limit != 50 && filters.Limit != 100 {
+		filters.Limit = 50
+	}
+	batchID := filters.BatchID
+	if batchID == "" {
+		if err := s.db.QueryRow(ctx, `SELECT batch_id::text FROM import_batch WHERE status='ready'
+			ORDER BY business_cutoff_date DESC,completed_at DESC,batch_id DESC LIMIT 1`).Scan(&batchID); err != nil {
+			if errors.Is(err, pgx.ErrNoRows) {
+				return ListResponse{Items: []Item{}, Page: filters.Page, Limit: filters.Limit}, nil
+			}
+			return ListResponse{}, err
+		}
+	}
+	where, args := buildWhere(actor, filters, batchID)
+	var total int
+	if err := s.db.QueryRow(ctx, `SELECT count(*) `+actionFrom+where, args...).Scan(&total); err != nil {
+		return ListResponse{}, err
+	}
+	args = append(args, filters.Limit, (filters.Page-1)*filters.Limit)
+	query := actionSelect + actionFrom + where + ` ORDER BY CASE d.business_action
+		WHEN 'clearance' THEN 1 WHEN 'stop_loss' THEN 2 WHEN 'observe' THEN 3 WHEN 'invest' THEN 4 ELSE 5 END,
+		s.spu_id, l.link_id LIMIT $` + fmt.Sprint(len(args)-1) + ` OFFSET $` + fmt.Sprint(len(args))
+	rows, err := s.db.Query(ctx, query, args...)
+	if err != nil {
+		return ListResponse{}, err
+	}
+	defer rows.Close()
+	items := make([]Item, 0)
+	for rows.Next() {
+		item, err := scanItem(rows)
+		if err != nil {
+			return ListResponse{}, err
+		}
+		if item.Previous, err = s.loadPrevious(ctx, item.LinkID); err != nil {
+			return ListResponse{}, err
+		}
+		items = append(items, item)
+	}
+	return ListResponse{Items: items, Page: filters.Page, Limit: filters.Limit, Total: total}, rows.Err()
+}
+
+func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, error) {
+	list, err := s.List(ctx, actor, Filters{Page: 1, Limit: 20})
+	if err != nil {
+		return Workbench{}, err
+	}
+	result := Workbench{Role: actor.Role, Items: list.Items}
+	if len(list.Items) == 0 {
+		return result, nil
+	}
+	result.LatestBatchID, result.LatestBatchCode = list.Items[0].BatchID, list.Items[0].BatchCode
+	if err := s.db.QueryRow(ctx, `SELECT completed_at FROM import_batch WHERE batch_id=$1`, result.LatestBatchID).Scan(&result.BatchCompletedAt); err != nil {
+		return Workbench{}, err
+	}
+	for _, item := range list.Items {
+		if item.ReviewStatus == "pending" {
+			result.PendingReviewCount++
+		}
+		if item.BusinessState == "pending_execution" || item.InventoryState == "pending_execution" {
+			result.PendingExecutionCount++
+		}
+		if item.RelationType == "action_change_pending" {
+			result.ExceptionCount++
+		}
+	}
+	clearanceQuery := `SELECT count(*) FROM clearance_completion c JOIN spu_action_task t ON t.task_id=c.task_id
+		JOIN decision_task_link l ON l.task_id=t.task_id JOIN decision_record d ON d.decision_id=l.decision_id
+		JOIN action_list al ON al.list_id=d.list_id JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		WHERE al.batch_id=$1 AND c.status='pending_confirmation'`
+	args := []interface{}{result.LatestBatchID}
+	if actor.Role == "operations" {
+		clearanceQuery += ` AND s.operator_ref=$2`
+		args = append(args, actor.Name)
+	}
+	if err := s.db.QueryRow(ctx, clearanceQuery, args...).Scan(&result.ClearanceConfirmCount); err != nil {
+		return Workbench{}, err
+	}
+	return result, nil
+}
+
+const actionFrom = `FROM decision_task_link l
+	JOIN decision_record d ON d.decision_id=l.decision_id
+	JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+	JOIN action_list al ON al.list_id=d.list_id
+	JOIN import_batch b ON b.batch_id=al.batch_id
+	JOIN spu_action_task t ON t.task_id=l.task_id `
+
+const actionSelect = `SELECT l.link_id::text,t.task_id::text,d.decision_id::text,b.batch_id::text,b.batch_code,
+	b.period_start::text,b.period_end::text,b.business_cutoff_date::text,d.rule_version,s.spu_id,s.spu_name,s.store,
+	s.platform,s.operator_ref,d.business_action,d.inventory_action,t.current_business_action,t.current_inventory_action,
+	d.trigger_rule,d.structured_evidence,l.review_status,l.review_version,t.business_state,t.inventory_state,t.business_version,t.inventory_version,l.relation_type,
+	t.task_created_at,l.linked_at,t.business_executed_at,s.net_sales_prev_month::float8,s.operating_profit_rate::float8,
+	s.quality_return_rate_7d::float8,s.inventory_days::float8,s.quality `
+
+func buildWhere(actor Principal, filters Filters, batchID string) (string, []interface{}) {
+	conditions := []string{"b.batch_id=$1"}
+	args := []interface{}{batchID}
+	add := func(expression string, value string) {
+		if strings.TrimSpace(value) != "" {
+			args = append(args, value)
+			conditions = append(conditions, fmt.Sprintf(expression, len(args)))
+		}
+	}
+	if actor.Role == "operations" {
+		add("s.operator_ref=$%d", actor.Name)
+	}
+	if strings.TrimSpace(filters.Search) != "" {
+		args = append(args, filters.Search)
+		position := len(args)
+		conditions = append(conditions, fmt.Sprintf("(s.spu_id ILIKE '%%'||$%d||'%%' OR s.spu_name ILIKE '%%'||$%d||'%%')", position, position))
+	}
+	add("d.business_action=$%d", filters.Action)
+	add("s.store=$%d", filters.Store)
+	add("s.operator_ref=$%d", filters.Operator)
+	add("l.review_status=$%d", filters.ReviewStatus)
+	add("t.business_state=$%d", filters.BusinessState)
+	return "WHERE " + strings.Join(conditions, " AND "), args
+}
+
+type rowScanner interface{ Scan(...interface{}) error }
+
+func scanItem(row rowScanner) (Item, error) {
+	var item Item
+	var evidence, quality []byte
+	err := row.Scan(&item.LinkID, &item.TaskID, &item.DecisionID, &item.BatchID, &item.BatchCode, &item.PeriodStart, &item.PeriodEnd,
+		&item.CutoffDate, &item.RuleVersion, &item.SPUID, &item.Name, &item.Store, &item.Platform, &item.OperatorRef,
+		&item.SuggestedBusiness, &item.SuggestedInventory, &item.EffectiveBusiness, &item.EffectiveInventory, &item.TriggerRule,
+		&evidence, &item.ReviewStatus, &item.ReviewVersion, &item.BusinessState, &item.InventoryState, &item.BusinessVersion, &item.InventoryVersion, &item.RelationType,
+		&item.TaskCreatedAt, &item.LinkedAt, &item.BusinessExecutedAt, &item.NetSales, &item.ProfitRate, &item.QualityReturnRate,
+		&item.InventoryDays, &quality)
+	if err != nil {
+		return Item{}, err
+	}
+	if err := json.Unmarshal(evidence, &item.Evidence); err != nil {
+		return Item{}, err
+	}
+	if err := json.Unmarshal(quality, &item.Quality); err != nil {
+		return Item{}, err
+	}
+	return item, nil
+}
+
+func (s *Service) loadPrevious(ctx context.Context, linkID string) (*PreviousItem, error) {
+	var item PreviousItem
+	err := s.db.QueryRow(ctx, `SELECT p.link_id::text,b.batch_id::text,b.batch_code,s.spu_id,s.spu_name,d.business_action,
+		d.inventory_action,d.trigger_rule,p.business_state_at_link,t.task_created_at,p.linked_at,p.business_executed_at_at_link,
+		s.net_sales_prev_month::float8,s.operating_profit_rate::float8,s.quality_return_rate_7d::float8,s.inventory_days::float8
+		FROM decision_task_link current JOIN decision_task_link p ON p.link_id=current.previous_link_id
+		JOIN decision_record d ON d.decision_id=p.decision_id JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		JOIN action_list al ON al.list_id=d.list_id JOIN import_batch b ON b.batch_id=al.batch_id
+		JOIN spu_action_task t ON t.task_id=p.task_id WHERE current.link_id=$1`, linkID).Scan(&item.LinkID, &item.BatchID,
+		&item.BatchCode, &item.SPUID, &item.Name, &item.BusinessAction, &item.InventoryAction, &item.TriggerRule, &item.BusinessState,
+		&item.TaskCreatedAt, &item.LinkedAt, &item.BusinessExecutedAt, &item.NetSales, &item.ProfitRate, &item.QualityReturnRate, &item.InventoryDays)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	return &item, err
+}
