@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-04T06:51:51Z",
+  "last_updated_at_utc": "2026-08-04T07:04:49Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -21,13 +21,13 @@
   },
   "contract_revision": 8,
   "source_ids_changed": ["REQ-F05-05", "AC-F05-09"],
-  "current_stage": "design-master-stage-II",
-  "current_substep": "previous-todo-isomorphic-row-completed",
+  "current_stage": "tdd-master",
+  "current_substep": "acceptance-contract-completed",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
-    "type": "ready_for_tdd",
-    "description": "requirements revision 8 与 Design Master 增量已完成；最近前序待办默认折叠并以与当前待办同构的整行历史记录展开，83 个 MVP source 追溯通过，可进入 TDD Master"
+    "type": "ready_for_coding_goal",
+    "description": "TDD 验收契约已覆盖 83 个 required source、9 个运行态 MVP 页面和 28 条验收；Coding Agent 开工前必须先按契约建立全量 pending 结果台账，再按最小闭环实现并在发布候选阶段提供本轮真实证据"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -209,6 +209,7 @@
     ],
     "final_pptx": "output/AI商品经营与利润决策助手-阶段5正式版.pptx",
     "legacy_pptx": "output/AI商品经营与利润决策助手-方案V0.pptx",
-    "stage6_report": "drafts/stage6-consistency.md"
+    "stage6_report": "drafts/stage6-consistency.md",
+    "tdd_contract": "output/tests/TDD验收契约.md"
   }
 }
