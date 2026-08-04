@@ -118,3 +118,24 @@ export async function recordActionResult(taskId:string,input:ResultSubmission):P
   const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/result`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({period_start:input.periodStart,period_end:input.periodEnd,sales_value:input.salesValue,profit_value:input.profitValue,inventory_value:input.inventoryValue,sales_unavailable:input.salesUnavailable,profit_unavailable:input.profitUnavailable,inventory_unavailable:input.inventoryUnavailable,note:input.note,version:input.version,idempotency_key:crypto.randomUUID()})})
   return businessResponse<SuggestionDetail>(response)
 }
+
+export async function overrideSuggestion(linkId:string,businessAction:string,inventoryAction:string|null,reason:string,version:number):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/suggestions/${encodeURIComponent(linkId)}/override`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_action:businessAction,inventory_action:inventoryAction,reason,version,idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}
+
+export async function terminateSuggestion(linkId:string,reason:string,version:number):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/suggestions/${encodeURIComponent(linkId)}/terminate`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason,version,idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}
+
+export async function submitClearanceCompletion(taskId:string,actualCompletedAt:string,note:string,version:number):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/clearance-completion`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({actual_completed_at:new Date(actualCompletedAt).toISOString(),note,version,idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}
+
+export async function reviewClearanceCompletion(taskId:string,decision:'confirmed'|'returned',reason:string,version:number):Promise<SuggestionDetail>{
+  const path=decision==='confirmed'?'confirm':'return'
+  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/${path}`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason,version,idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}

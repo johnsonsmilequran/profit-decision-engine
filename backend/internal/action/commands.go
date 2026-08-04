@@ -64,6 +64,16 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 	} else if !errors.Is(err, pgx.ErrNoRows) {
 		return Detail{}, err
 	}
+	var completion ClearanceCompletion
+	err = s.db.QueryRow(ctx, `SELECT completion_id::text,submission_version,actual_completed_at,note,status,submitted_by,submitted_at,
+		reviewed_by,reviewed_at,return_reason FROM clearance_completion WHERE task_id=$1 ORDER BY submission_version DESC LIMIT 1`, item.TaskID).
+		Scan(&completion.ID, &completion.SubmissionVersion, &completion.ActualCompletedAt, &completion.Note, &completion.Status,
+			&completion.SubmittedBy, &completion.SubmittedAt, &completion.ReviewedBy, &completion.ReviewedAt, &completion.ReturnReason)
+	if err == nil {
+		result.ClearanceCompletion = &completion
+	} else if !errors.Is(err, pgx.ErrNoRows) {
+		return Detail{}, err
+	}
 	return result, rows.Err()
 }
 

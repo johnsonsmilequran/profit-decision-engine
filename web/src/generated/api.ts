@@ -116,6 +116,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/suggestions/{linkId}/override": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["overrideSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/suggestions/{linkId}/terminate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["terminateSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/actions/{taskId}/execute": {
         parameters: {
             query?: never;
@@ -142,6 +174,54 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["recordActionResult"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/clearance-completion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["submitClearanceCompletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["confirmClearanceCompletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/return": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["returnClearanceCompletion"];
         delete?: never;
         options?: never;
         head?: never;
@@ -367,6 +447,24 @@ export interface components {
             ai_content: {
                 [key: string]: unknown;
             };
+            clearance_completion: components["schemas"]["ClearanceCompletion"] | null;
+        };
+        ClearanceCompletion: {
+            /** Format: uuid */
+            id: string;
+            submission_version: number;
+            /** Format: date-time */
+            actual_completed_at: string;
+            note: string | null;
+            /** @enum {string} */
+            status: "pending_confirmation" | "confirmed" | "returned";
+            submitted_by: string;
+            /** Format: date-time */
+            submitted_at: string;
+            reviewed_by: string | null;
+            /** Format: date-time */
+            reviewed_at: string | null;
+            return_reason: string | null;
         };
         ReviewInput: {
             /** @enum {string} */
@@ -394,6 +492,32 @@ export interface components {
             profit_unavailable: boolean;
             inventory_unavailable: boolean;
             note: string;
+            version: number;
+            idempotency_key: string;
+        };
+        OverrideInput: {
+            /** @enum {string} */
+            business_action: "clearance" | "stop_loss" | "observe" | "invest" | "maintain";
+            /** @enum {string|null} */
+            inventory_action: "restock" | "no_restock" | "prohibit_restock" | null;
+            reason: string;
+            version: number;
+            idempotency_key: string;
+        };
+        TerminateInput: {
+            reason: string;
+            version: number;
+            idempotency_key: string;
+        };
+        ClearanceSubmitInput: {
+            /** Format: date-time */
+            actual_completed_at: string;
+            note: string;
+            version: number;
+            idempotency_key: string;
+        };
+        ClearanceDecisionInput: {
+            reason: string;
             version: number;
             idempotency_key: string;
         };
@@ -630,6 +754,60 @@ export interface operations {
             409: components["responses"]["Error"];
         };
     };
+    overrideSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OverrideInput"];
+            };
+        };
+        responses: {
+            /** @description 改判后的建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    terminateSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TerminateInput"];
+            };
+        };
+        responses: {
+            /** @description 终止后的建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
     executeAction: {
         parameters: {
             query?: never;
@@ -673,6 +851,87 @@ export interface operations {
         };
         responses: {
             /** @description 记录结果后的建议 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    submitClearanceCompletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClearanceSubmitInput"];
+            };
+        };
+        responses: {
+            /** @description 提交后的清仓完成详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    confirmClearanceCompletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClearanceDecisionInput"];
+            };
+        };
+        responses: {
+            /** @description 已确认的清仓完成详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    returnClearanceCompletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClearanceDecisionInput"];
+            };
+        };
+        responses: {
+            /** @description 已退回的清仓完成详情 */
             200: {
                 headers: {
                     [name: string]: unknown;

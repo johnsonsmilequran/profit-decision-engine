@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -62,6 +63,107 @@ func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
 	_, err = service.Review(ctx, actor, linkID, ReviewInput{Decision: "rejected", Note: "旧页面驳回", ReviewVersion: 1, IdempotencyKey: "旧版本-" + linkID})
 	if !errors.Is(err, ErrConflict) {
 		t.Fatalf("stale review error=%v, want conflict", err)
+	}
+}
+
+func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	supervisor := Principal{ActorRef: "supervisor-override-test", Name: "改判主管", Role: "supervisor"}
+	operator := Principal{ActorRef: "operator-override-test", Name: "缘一", Role: "operations"}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "改判前审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 1, Note: "已经启动清仓", IdempotencyKey: "改判前执行-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	noRestock := "no_restock"
+	_, err = service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 2, IdempotencyKey: "直接改判-" + linkID})
+	if !errors.Is(err, ErrInvalidState) {
+		t.Fatalf("override after execution error=%v, want invalid state", err)
+	}
+	terminated, err := service.Terminate(ctx, supervisor, linkID, TerminateInput{Reason: "终止原清仓和禁补任务后重新判断", Version: 2, IdempotencyKey: "终止旧轨-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if terminated.BusinessState != "terminated" || terminated.InventoryState != "terminated" {
+		t.Fatalf("terminated states=%s/%s", terminated.BusinessState, terminated.InventoryState)
+	}
+	overridden, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 3, IdempotencyKey: "终止后改判-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if overridden.EffectiveBusiness == nil || *overridden.EffectiveBusiness != "invest" || overridden.EffectiveInventory == nil || *overridden.EffectiveInventory != "no_restock" {
+		t.Fatalf("effective actions=%v/%v", overridden.EffectiveBusiness, overridden.EffectiveInventory)
+	}
+	if overridden.BusinessState != "pending_execution" || overridden.InventoryState != "pending_execution" {
+		t.Fatalf("override states=%s/%s", overridden.BusinessState, overridden.InventoryState)
+	}
+	var fixedCount, activeOverrideCount int
+	if err := db.QueryRow(ctx, `SELECT count(*) FILTER (WHERE source='fixed_rule'),count(*) FILTER (WHERE source='supervisor_override' AND status='active') FROM action_revision WHERE task_id=$1`, taskID).Scan(&fixedCount, &activeOverrideCount); err != nil {
+		t.Fatal(err)
+	}
+	if fixedCount != 1 || activeOverrideCount != 1 {
+		t.Fatalf("revision counts fixed=%d active_override=%d", fixedCount, activeOverrideCount)
+	}
+}
+
+func TestClearanceCompletionNeedsSupervisorConfirmation(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	supervisor := Principal{ActorRef: "supervisor-clearance-test", Name: "清仓主管", Role: "supervisor"}
+	operator := Principal{ActorRef: "operator-clearance-test", Name: "缘一", Role: "operations"}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "清仓审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 1, Note: "清仓执行完毕", IdempotencyKey: "清仓执行-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	actual := time.Now().Add(-time.Hour).UTC().Format(time.RFC3339)
+	submitted, err := service.SubmitClearance(ctx, operator, taskID, ClearanceSubmitInput{ActualCompletedAt: actual, Note: "仓内商品已全部清理", Version: 2, IdempotencyKey: "清仓提交-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if submitted.ClearanceCompletion == nil || submitted.ClearanceCompletion.Status != "pending_confirmation" || submitted.BusinessState != "executed" {
+		t.Fatalf("submitted completion=%+v state=%s", submitted.ClearanceCompletion, submitted.BusinessState)
+	}
+	returned, err := service.ReviewClearance(ctx, supervisor, taskID, ClearanceReviewInput{Decision: "returned", Reason: "实际完成时间需按仓库签收时间修正", Version: 1, IdempotencyKey: "清仓退回-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if returned.ClearanceCompletion == nil || returned.ClearanceCompletion.Status != "returned" || returned.BusinessState != "executed" {
+		t.Fatalf("returned completion=%+v state=%s", returned.ClearanceCompletion, returned.BusinessState)
+	}
+	resubmitted, err := service.SubmitClearance(ctx, operator, taskID, ClearanceSubmitInput{ActualCompletedAt: actual, Note: "已按仓库签收时间复核", Version: 3, IdempotencyKey: "清仓重提-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	confirmed, err := service.ReviewClearance(ctx, supervisor, taskID, ClearanceReviewInput{Decision: "confirmed", Version: resubmitted.ClearanceCompletion.SubmissionVersion, IdempotencyKey: "清仓确认-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if confirmed.ClearanceCompletion == nil || confirmed.ClearanceCompletion.Status != "confirmed" || confirmed.BusinessState != "closed" {
+		t.Fatalf("confirmed completion=%+v state=%s", confirmed.ClearanceCompletion, confirmed.BusinessState)
 	}
 }
 

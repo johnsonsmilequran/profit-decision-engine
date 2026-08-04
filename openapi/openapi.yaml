@@ -81,6 +81,22 @@ paths:
       responses:
         '200': { description: 审核后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
         '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/override:
+    post:
+      operationId: overrideSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OverrideInput' } } } }
+      responses:
+        '200': { description: 改判后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/terminate:
+    post:
+      operationId: terminateSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TerminateInput' } } } }
+      responses:
+        '200': { description: 终止后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
   /api/actions/{taskId}/execute:
     post:
       operationId: executeAction
@@ -96,6 +112,30 @@ paths:
       requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ResultInput' } } } }
       responses:
         '200': { description: 记录结果后的建议, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/clearance-completion:
+    post:
+      operationId: submitClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceSubmitInput' } } } }
+      responses:
+        '200': { description: 提交后的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/confirm:
+    post:
+      operationId: confirmClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceDecisionInput' } } } }
+      responses:
+        '200': { description: 已确认的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/return:
+    post:
+      operationId: returnClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceDecisionInput' } } } }
+      responses:
+        '200': { description: 已退回的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
         '409': { $ref: '#/components/responses/Error' }
 components:
   responses:
@@ -294,11 +334,26 @@ components:
       allOf:
         - { $ref: '#/components/schemas/ActionItem' }
         - type: object
-          required: [events, ai_status, ai_content]
+          required: [events, ai_status, ai_content, clearance_completion]
           properties:
             events: { type: array, items: { $ref: '#/components/schemas/BusinessEvent' } }
             ai_status: { type: string }
             ai_content: { type: object, additionalProperties: true }
+            clearance_completion: { anyOf: [{ $ref: '#/components/schemas/ClearanceCompletion' }, { type: 'null' }] }
+    ClearanceCompletion:
+      type: object
+      required: [id, submission_version, actual_completed_at, note, status, submitted_by, submitted_at, reviewed_by, reviewed_at, return_reason]
+      properties:
+        id: { type: string, format: uuid }
+        submission_version: { type: integer, minimum: 1 }
+        actual_completed_at: { type: string, format: date-time }
+        note: { type: [string, 'null'] }
+        status: { type: string, enum: [pending_confirmation, confirmed, returned] }
+        submitted_by: { type: string }
+        submitted_at: { type: string, format: date-time }
+        reviewed_by: { type: [string, 'null'] }
+        reviewed_at: { type: [string, 'null'], format: date-time }
+        return_reason: { type: [string, 'null'] }
     ReviewInput:
       type: object
       required: [decision, note, review_version, idempotency_key]
@@ -328,5 +383,36 @@ components:
         profit_unavailable: { type: boolean }
         inventory_unavailable: { type: boolean }
         note: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    OverrideInput:
+      type: object
+      required: [business_action, inventory_action, reason, version, idempotency_key]
+      properties:
+        business_action: { type: string, enum: [clearance, stop_loss, observe, invest, maintain] }
+        inventory_action: { type: [string, 'null'], enum: [restock, no_restock, prohibit_restock, null] }
+        reason: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    TerminateInput:
+      type: object
+      required: [reason, version, idempotency_key]
+      properties:
+        reason: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ClearanceSubmitInput:
+      type: object
+      required: [actual_completed_at, note, version, idempotency_key]
+      properties:
+        actual_completed_at: { type: string, format: date-time }
+        note: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ClearanceDecisionInput:
+      type: object
+      required: [reason, version, idempotency_key]
+      properties:
+        reason: { type: string }
         version: { type: integer, minimum: 1 }
         idempotency_key: { type: string, minLength: 1 }

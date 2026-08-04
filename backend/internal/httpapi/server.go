@@ -50,9 +50,88 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Get("/api/workbench", s.workbench)
 	r.Get("/api/suggestions/{linkID}", s.getSuggestion)
 	r.Post("/api/suggestions/{linkID}/review", s.reviewSuggestion)
+	r.Post("/api/suggestions/{linkID}/override", s.overrideSuggestion)
+	r.Post("/api/suggestions/{linkID}/terminate", s.terminateSuggestion)
 	r.Post("/api/actions/{taskID}/execute", s.executeAction)
 	r.Post("/api/actions/{taskID}/result", s.recordActionResult)
+	r.Post("/api/actions/{taskID}/clearance-completion", s.submitClearanceCompletion)
+	r.Post("/api/actions/{taskID}/confirm", s.confirmClearanceCompletion)
+	r.Post("/api/actions/{taskID}/return", s.returnClearanceCompletion)
 	return r
+}
+
+func (s *Server) overrideSuggestion(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.OverrideInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.Override(r.Context(), principal, chi.URLParam(r, "linkID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "override suggestion")
+}
+
+func (s *Server) terminateSuggestion(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.TerminateInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.Terminate(r.Context(), principal, chi.URLParam(r, "linkID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "terminate suggestion")
+}
+
+func (s *Server) submitClearanceCompletion(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.ClearanceSubmitInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.SubmitClearance(r.Context(), principal, chi.URLParam(r, "taskID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "submit clearance completion")
+}
+
+func (s *Server) confirmClearanceCompletion(w http.ResponseWriter, r *http.Request) {
+	s.reviewClearanceCompletion(w, r, "confirmed")
+}
+
+func (s *Server) returnClearanceCompletion(w http.ResponseWriter, r *http.Request) {
+	s.reviewClearanceCompletion(w, r, "returned")
+}
+
+func (s *Server) reviewClearanceCompletion(w http.ResponseWriter, r *http.Request, decision string) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.ClearanceReviewInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	input.Decision = decision
+	result, err := s.actions.ReviewClearance(r.Context(), principal, chi.URLParam(r, "taskID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "review clearance completion")
+}
+
+func (s *Server) commandPrincipal(w http.ResponseWriter, r *http.Request) (action.Principal, bool) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return action.Principal{}, false
+	}
+	return action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, true
 }
 
 func (s *Server) executeAction(w http.ResponseWriter, r *http.Request) {

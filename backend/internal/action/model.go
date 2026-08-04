@@ -110,9 +110,23 @@ type Event struct {
 
 type Detail struct {
 	Item
-	Events    []Event                `json:"events"`
-	AIStatus  string                 `json:"ai_status"`
-	AIContent map[string]interface{} `json:"ai_content"`
+	Events              []Event                `json:"events"`
+	AIStatus            string                 `json:"ai_status"`
+	AIContent           map[string]interface{} `json:"ai_content"`
+	ClearanceCompletion *ClearanceCompletion   `json:"clearance_completion"`
+}
+
+type ClearanceCompletion struct {
+	ID                string     `json:"id"`
+	SubmissionVersion int        `json:"submission_version"`
+	ActualCompletedAt time.Time  `json:"actual_completed_at"`
+	Note              *string    `json:"note"`
+	Status            string     `json:"status"`
+	SubmittedBy       string     `json:"submitted_by"`
+	SubmittedAt       time.Time  `json:"submitted_at"`
+	ReviewedBy        *string    `json:"reviewed_by"`
+	ReviewedAt        *time.Time `json:"reviewed_at"`
+	ReturnReason      *string    `json:"return_reason"`
 }
 
 type ReviewInput struct {
@@ -141,4 +155,32 @@ type ResultInput struct {
 	Note                 string   `json:"note"`
 	Version              int      `json:"version"`
 	IdempotencyKey       string   `json:"idempotency_key"`
+}
+
+type OverrideInput struct {
+	BusinessAction  string  `json:"business_action"`
+	InventoryAction *string `json:"inventory_action"`
+	Reason          string  `json:"reason"`
+	Version         int     `json:"version"`
+	IdempotencyKey  string  `json:"idempotency_key"`
+}
+
+type TerminateInput struct {
+	Reason         string `json:"reason"`
+	Version        int    `json:"version"`
+	IdempotencyKey string `json:"idempotency_key"`
+}
+
+type ClearanceSubmitInput struct {
+	ActualCompletedAt string `json:"actual_completed_at"`
+	Note              string `json:"note"`
+	Version           int    `json:"version"`
+	IdempotencyKey    string `json:"idempotency_key"`
+}
+
+type ClearanceReviewInput struct {
+	Decision       string `json:"decision"`
+	Reason         string `json:"reason"`
+	Version        int    `json:"version"`
+	IdempotencyKey string `json:"idempotency_key"`
 }
