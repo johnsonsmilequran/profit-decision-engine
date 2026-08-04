@@ -19,12 +19,12 @@
 | FLOW-10 | pending | 执行双轨责任人、OA 失败补发、白名单、重复/旧版本与结果持久化测试；待本轮真实钉钉状态查询和浏览器闭环 | `TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency`、`TestOAFailureCanRetryWithoutChangingInventoryState` 及 `internal/oa` 协议测试均 pass；尚未取得本轮机器人官方回执和页面证据 |
 | FLOW-11 | pending | 执行清仓完成双人确认、跨日并发提醒、唯一/未配置/歧义收件映射和改判/终止停催测试；待本轮真实 Worker 回执与双角色浏览器 | `TestClearanceCompletionNeedsSupervisorConfirmation`、`TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfirmation`、映射歧义/未配置、改判/终止停催测试均 pass；尚缺本轮外部与页面证据 |
 | FLOW-12 | pending | 执行历史冻结投影、驳回/部分执行/改判、权限裁剪与不可变约束测试；待历史组合检索和只读详情浏览器 E2E | `TestHistoryKeepsFrozenBatchDecisionAndAppliesRoleProjection`、`TestHistoryProjectsRejectedAndPartiallyExecutedSuggestions`、直接访问隐藏对象测试均 pass；缺本轮浏览器证据 |
-| DESIGN-01 | pending | 本轮尚未执行 | 本轮尚无证据 |
-| DESIGN-02 | pending | 本轮尚未执行 | 本轮尚无证据 |
+| DESIGN-01 | pass | 以 1440×900 打开真实 RC2 `/login` 待登录状态，重建后重截并由独立验收官实际查看同状态截图对 | baseline=`tests/visual/PAGE-F07-01-baseline.png` sha256=`409746680355aabcd675aff3560eab4ff927d37e846d512d30c18585a046d605`; actual=`tests/visual/PAGE-F07-01-actual.png` sha256=`7c06941debf3014632cb0da81291c3bb626a77ef7381873c1be4154aa211a32a`; reviewer=independent-visual; review=pass; blocking=0 |
+| DESIGN-02 | pass | 以 1440×900 打开真实 RC2 `/auth/recovery` 会话失效状态并由独立验收官实际查看同状态截图对 | baseline=`tests/visual/PAGE-F07-02-baseline.png` sha256=`c0a6ac891680056a34beb7a723673ab5b53b1ff73a40d477259c23bf2a8c80bc`; actual=`tests/visual/PAGE-F07-02-actual.png` sha256=`baee17c9d61970fed235c07ec833067fef87963b7cd13391df82362164fbdac0`; reviewer=independent-visual; review=pass; blocking=0 |
 | DESIGN-03 | pending | 本轮尚未执行 | 本轮尚无证据 |
 | DESIGN-04 | pending | 本轮尚未执行 | 本轮尚无证据 |
-| DESIGN-05 | pending | 本轮尚未执行 | 本轮尚无证据 |
-| DESIGN-06 | pending | 本轮尚未执行 | 本轮尚无证据 |
+| DESIGN-05 | pass | 以 1440×900 和真实运营会话打开 RC2 `/batches`，装载真实 PostgreSQL 批次并验证批次/文件名搜索与每页入口后重截，两轮独立看图消除唯一阻塞 | baseline=`tests/visual/PAGE-F01-01-baseline.png` sha256=`2b1899cc92bc046edb88ed213f65bf1d30f4c6c6325404b9b4bf534b9a1e4242`; actual=`tests/visual/PAGE-F01-01-actual.png` sha256=`28915e53fd3e721ef71573b371b8f8d26017c69213aac32c72fc9503a35ea4ec`; API hit=`search=商品链接.xlsx => total=1`; API miss=`search=不存在的批次 => total=0`; reviewer=independent-visual; review=pass; blocking=0 |
+| DESIGN-06 | pass | 以 1440×900 和真实运营会话打开 RC2 批次详情，装载真实 PostgreSQL 冻结批次、六阶段、校验摘要与唯一行动清单入口并由独立验收官看图 | baseline=`tests/visual/PAGE-F01-02-baseline.png` sha256=`a4a18d8524546e930941116228adde0f25b014e4f24c6dc5ab87eb14e3b71178`; actual=`tests/visual/PAGE-F01-02-actual.png` sha256=`a87792610ebe71f7b9dab03f282a6fe8c538b037f4897740ada4b21b6d5ee067`; reviewer=independent-visual; review=pass; blocking=0 |
 | DESIGN-07 | pending | 本轮尚未执行 | 本轮尚无证据 |
 | DESIGN-08 | pending | 本轮尚未执行 | 本轮尚无证据 |
 | DESIGN-09 | pending | 本轮尚未执行 | 本轮尚无证据 |
