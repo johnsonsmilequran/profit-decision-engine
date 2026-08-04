@@ -59,8 +59,14 @@ func TestActionListUsesLatestReadyBatchAndAppliesRoleProjection(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	insertReviewFixture(t, ctx, db)
+	fixtureLinkID, _ := insertReviewFixture(t, ctx, db)
 	service := NewService(db)
+	var fixtureBatchID string
+	if err := db.QueryRow(ctx, `SELECT al.batch_id::text FROM decision_task_link l
+		JOIN decision_record d ON d.decision_id=l.decision_id JOIN action_list al ON al.list_id=d.list_id
+		WHERE l.link_id=$1`, fixtureLinkID).Scan(&fixtureBatchID); err != nil {
+		t.Fatal(err)
+	}
 
 	supervisor, err := service.List(ctx, Principal{ActorRef: "主管测试", Name: "主管测试", Role: "supervisor"}, Filters{Tab: "all", Page: 1, Limit: 50})
 	if err != nil {
@@ -90,7 +96,7 @@ func TestActionListUsesLatestReadyBatchAndAppliesRoleProjection(t *testing.T) {
 		t.Fatalf("workbench data limitations=%v", workbench.DataLimitations)
 	}
 
-	operator, err := service.List(ctx, Principal{ActorRef: "运营测试", Name: "缘一", Role: "operations"}, Filters{Tab: "all", Page: 1, Limit: 20})
+	operator, err := service.List(ctx, Principal{ActorRef: "运营测试", Name: "缘一", Role: "operations"}, Filters{BatchID: fixtureBatchID, Tab: "all", Page: 1, Limit: 20})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -207,7 +207,7 @@ func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T)
 			return
 		}
 		w.Header().Set("x-acs-request-id", "钉钉双轨验收-001")
-		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
+		_, _ = w.Write([]byte(`{"processQueryKey":"双轨协同查询键-001","invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
 	service.SetOASender(oa.NewDingTalkClient("钉钉双轨应用", "钉钉双轨密钥", "钉钉双轨机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
@@ -309,7 +309,7 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("x-acs-request-id", "钉钉补发成功-001")
-		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
+		_, _ = w.Write([]byte(`{"processQueryKey":"人工补发查询键-001","invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
 	service.SetOASender(oa.NewDingTalkClient("钉钉集成应用", "钉钉集成密钥", "钉钉集成机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
@@ -363,7 +363,8 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 		t.Fatal(err)
 	}
 	defer db.Close()
-	linkID, taskID := insertReviewFixture(t, ctx, db)
+	operatorName := "催办运营-" + time.Now().UTC().Format("20060102150405.000000000")
+	linkID, taskID := insertReviewFixtureForOperator(t, ctx, db, operatorName)
 	service := NewService(db)
 	if _, err := service.Review(ctx, Principal{ActorRef: "supervisor-reminder-test", Name: "催办主管", Role: "supervisor"}, linkID,
 		ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "催办审核-" + linkID}); err != nil {
@@ -371,7 +372,7 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 	}
 	actorRef := "oa-reminder-" + linkID
 	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by,dingtalk_user_id)
-		VALUES($1,'缘一','operations','催办集成测试批准','催办集成测试配置','ding-operator-reminder')`, actorRef); err != nil {
+		VALUES($1,$2,'operations','催办集成测试批准','催办集成测试配置',$3)`, actorRef, operatorName, "ding-operator-reminder-"+linkID); err != nil {
 		t.Fatal(err)
 	}
 	location, err := time.LoadLocation("Asia/Shanghai")
@@ -393,7 +394,7 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("x-acs-request-id", "钉钉每日催办-跨日")
-		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
+		_, _ = w.Write([]byte(`{"processQueryKey":"催办查询键-跨日","invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
 	service.SetOASender(oa.NewDingTalkClient("钉钉催办应用", "钉钉催办密钥", "钉钉催办机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
@@ -430,7 +431,7 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 	if firstStatus != "failed" {
 		t.Fatalf("first reminder status=%s", firstStatus)
 	}
-	operator := Principal{ActorRef: actorRef, Name: "缘一", Role: "operations"}
+	operator := Principal{ActorRef: actorRef, Name: operatorName, Role: "operations"}
 	if _, err := service.RetryOA(ctx, operator, taskID, firstID, OARetryInput{IdempotencyKey: "跨日催办补发-" + linkID}); err != nil {
 		t.Fatal(err)
 	}
@@ -464,6 +465,109 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 	}
 	if created != 0 || attempts.Load() != 3 {
 		t.Fatalf("confirmed task created=%d HTTP_attempts=%d", created, attempts.Load())
+	}
+}
+
+func TestClearanceReminderFailsClosedForAmbiguousOperatorMapping(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	operatorName := "同名催办运营-" + time.Now().UTC().Format("20060102150405.000000000")
+	linkID, taskID := insertReviewFixtureForOperator(t, ctx, db, operatorName)
+	service := NewService(db)
+	if _, err := service.Review(ctx, Principal{ActorRef: "supervisor-ambiguous-reminder", Name: "同名催办主管", Role: "supervisor"}, linkID,
+		ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "同名催办审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by,dingtalk_user_id,configured_at)
+		VALUES($1,$3,'operations','同名催办测试批准','同名催办测试配置',$4,now()),
+		($2,$3,'operations','同名催办测试批准','同名催办测试配置',$5,now()+interval '1 second')`,
+		"ambiguous-reminder-first-"+linkID, "ambiguous-reminder-second-"+linkID, operatorName,
+		"ding-ambiguous-first-"+linkID, "ding-ambiguous-second-"+linkID); err != nil {
+		t.Fatal(err)
+	}
+	var attempts atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		attempts.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"processQueryKey":"不应生成的查询键","invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
+	}))
+	defer server.Close()
+	service.SetOASender(oa.NewDingTalkClient("同名催办应用", "同名催办密钥", "同名催办机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
+	created, err := service.runClearanceReminders(ctx, taskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if created != 1 {
+		t.Fatalf("ambiguous reminder created=%d, want 1 failed record", created)
+	}
+	var status, errorCode, recipient string
+	var attemptCount int
+	if err := db.QueryRow(ctx, `SELECT status,error_code,recipient_actor_ref,attempt_count FROM oa_notification
+		WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&status, &errorCode, &recipient, &attemptCount); err != nil {
+		t.Fatal(err)
+	}
+	if status != "failed" || errorCode != "dingtalk_recipient_ambiguous" || recipient != "ambiguous:"+operatorName || attemptCount != 0 || attempts.Load() != 0 {
+		t.Fatalf("ambiguous reminder status=%s error=%s recipient=%s stored_attempts=%d HTTP_attempts=%d",
+			status, errorCode, recipient, attemptCount, attempts.Load())
+	}
+	var businessState, inventoryState string
+	if err := db.QueryRow(ctx, `SELECT business_state,inventory_state FROM spu_action_task WHERE task_id=$1`, taskID).Scan(&businessState, &inventoryState); err != nil {
+		t.Fatal(err)
+	}
+	if businessState != "pending_execution" || inventoryState != "pending_execution" {
+		t.Fatalf("ambiguous reminder changed task state=%s/%s", businessState, inventoryState)
+	}
+}
+
+func TestClearanceReminderFailsClosedForMissingOperatorMapping(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	operatorName := "未映射催办运营-" + time.Now().UTC().Format("20060102150405.000000000")
+	linkID, taskID := insertReviewFixtureForOperator(t, ctx, db, operatorName)
+	service := NewService(db)
+	if _, err := service.Review(ctx, Principal{ActorRef: "supervisor-missing-reminder", Name: "未映射催办主管", Role: "supervisor"}, linkID,
+		ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "未映射催办审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	var attempts atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		attempts.Add(1)
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer server.Close()
+	service.SetOASender(oa.NewDingTalkClient("未映射催办应用", "未映射催办密钥", "未映射催办机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
+	created, err := service.runClearanceReminders(ctx, taskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if created != 1 {
+		t.Fatalf("missing reminder created=%d, want 1 failed record", created)
+	}
+	var status, errorCode, recipient string
+	var attemptCount int
+	if err := db.QueryRow(ctx, `SELECT status,error_code,recipient_actor_ref,attempt_count FROM oa_notification
+		WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&status, &errorCode, &recipient, &attemptCount); err != nil {
+		t.Fatal(err)
+	}
+	if status != "failed" || errorCode != "dingtalk_recipient_unresolved" || recipient != "unresolved:"+operatorName || attemptCount != 0 || attempts.Load() != 0 {
+		t.Fatalf("missing reminder status=%s error=%s recipient=%s stored_attempts=%d HTTP_attempts=%d",
+			status, errorCode, recipient, attemptCount, attempts.Load())
 	}
 }
 
@@ -837,6 +941,10 @@ func TestCommandAuditPersistsDeniedAndConflictWithoutChangingTask(t *testing.T) 
 }
 
 func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (string, string) {
+	return insertReviewFixtureForOperator(t, ctx, db, "缘一")
+}
+
+func insertReviewFixtureForOperator(t *testing.T, ctx context.Context, db *pgxpool.Pool, operatorName string) (string, string) {
 	t.Helper()
 	var actor, batchID, listID, snapshotID, decisionID, taskID, revisionID, linkID string
 	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by)
@@ -856,9 +964,9 @@ func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (s
 	}
 	if err := db.QueryRow(ctx, `INSERT INTO spu_snapshot(batch_id,spu_id,spu_name,store,platform,operator_ref,source_sheet,source_row,
 		net_sales_prev_month,operating_profit_rate,quality_return_rate_7d,warehouse_qty,in_transit_qty,sales_units_14d,inventory_days,raw_values,quality)
-		VALUES($1,'审核集成测试SPU-'||gen_random_uuid()::text,'审核状态机真实商品','趣然旗舰店','天猫','缘一','测试表',3,
+		VALUES($1,'审核集成测试SPU-'||gen_random_uuid()::text,'审核状态机真实商品','趣然旗舰店','天猫',$2,'测试表',3,
 		86420,-0.128,0.018,3000,260,112,407.5,'{}',
-		'{"launch_date":"valid","net_sales_prev_month":"valid","operating_profit_rate":"valid","quality_return_rate_7d":"not_verified","inventory_days":"insufficient"}') RETURNING snapshot_id::text`, batchID).Scan(&snapshotID); err != nil {
+		'{"launch_date":"valid","net_sales_prev_month":"valid","operating_profit_rate":"valid","quality_return_rate_7d":"not_verified","inventory_days":"insufficient"}') RETURNING snapshot_id::text`, batchID, operatorName).Scan(&snapshotID); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.QueryRow(ctx, `INSERT INTO decision_record(list_id,snapshot_id,rule_version,business_action,inventory_action,trigger_rule,structured_evidence)

@@ -173,8 +173,10 @@ func (s *Service) RunClearanceReminders(ctx context.Context) (int, error) {
 
 func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) (int, error) {
 	query := `SELECT t.task_id::text,t.operator_ref,s.spu_id,l.link_id::text,
-		(SELECT rm.dingtalk_user_id FROM role_mapping rm WHERE rm.active AND rm.role='operations' AND rm.display_name=t.operator_ref
-		 ORDER BY rm.configured_at DESC LIMIT 1) FROM spu_action_task t
+		(SELECT min(rm.dingtalk_user_id) FROM role_mapping rm WHERE rm.active AND rm.role='operations'
+		 AND rm.display_name=t.operator_ref AND rm.dingtalk_user_id IS NOT NULL),
+		(SELECT count(*) FROM role_mapping rm WHERE rm.active AND rm.role='operations'
+		 AND rm.display_name=t.operator_ref AND rm.dingtalk_user_id IS NOT NULL) FROM spu_action_task t
 		JOIN decision_task_link l ON l.task_id=t.task_id JOIN decision_record d ON d.decision_id=l.decision_id
 		JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id JOIN action_list al ON al.list_id=d.list_id
 		JOIN import_batch b ON b.batch_id=al.batch_id WHERE t.current_business_action='clearance'
@@ -194,12 +196,13 @@ func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) 
 	type candidate struct {
 		taskID, operator, spuID, linkID string
 		recipient                       *string
+		mappingCount                    int
 	}
 	candidates := make([]candidate, 0)
 	seen := make(map[string]bool)
 	for rows.Next() {
 		var item candidate
-		if err := rows.Scan(&item.taskID, &item.operator, &item.spuID, &item.linkID, &item.recipient); err != nil {
+		if err := rows.Scan(&item.taskID, &item.operator, &item.spuID, &item.linkID, &item.recipient, &item.mappingCount); err != nil {
 			return 0, err
 		}
 		if !seen[item.taskID] {
@@ -215,7 +218,10 @@ func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) 
 		recipient := "unresolved:" + item.operator
 		status := "failed"
 		errorCode := "dingtalk_recipient_unresolved"
-		if item.recipient != nil {
+		if item.mappingCount > 1 {
+			recipient = "ambiguous:" + item.operator
+			errorCode = "dingtalk_recipient_ambiguous"
+		} else if item.mappingCount == 1 && item.recipient != nil {
 			recipient, status, errorCode = *item.recipient, "pending", ""
 		}
 		message := oa.Message{RecipientUserID: recipient, TemplateCode: "clearance_daily_reminder", SPUID: item.spuID,
