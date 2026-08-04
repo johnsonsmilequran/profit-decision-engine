@@ -798,12 +798,15 @@ func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (s
 	if err := db.QueryRow(ctx, `INSERT INTO action_list(batch_id) VALUES($1) RETURNING list_id::text`, batchID).Scan(&listID); err != nil {
 		t.Fatal(err)
 	}
-	if err := db.QueryRow(ctx, `INSERT INTO spu_snapshot(batch_id,spu_id,spu_name,store,platform,operator_ref,source_sheet,source_row,raw_values,quality)
-		VALUES($1,'审核集成测试SPU-'||gen_random_uuid()::text,'审核状态机真实商品','趣然旗舰店','天猫','缘一','测试表',3,'{}','{}') RETURNING snapshot_id::text`, batchID).Scan(&snapshotID); err != nil {
+	if err := db.QueryRow(ctx, `INSERT INTO spu_snapshot(batch_id,spu_id,spu_name,store,platform,operator_ref,source_sheet,source_row,
+		net_sales_prev_month,operating_profit_rate,quality_return_rate_7d,warehouse_qty,in_transit_qty,sales_units_14d,inventory_days,raw_values,quality)
+		VALUES($1,'审核集成测试SPU-'||gen_random_uuid()::text,'审核状态机真实商品','趣然旗舰店','天猫','缘一','测试表',3,
+		86420,-0.128,0.018,3000,260,112,407.5,'{}','{}') RETURNING snapshot_id::text`, batchID).Scan(&snapshotID); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.QueryRow(ctx, `INSERT INTO decision_record(list_id,snapshot_id,rule_version,business_action,inventory_action,trigger_rule,structured_evidence)
-		VALUES($1,$2,'RULE-V1.0','clearance','prohibit_restock','利润率低于清仓阈值','{}') RETURNING decision_id::text`, listID, snapshotID).Scan(&decisionID); err != nil {
+		VALUES($1,$2,'RULE-V1.0','clearance','prohibit_restock','利润率 -12.8% 低于清仓阈值 5%',
+		'{"metric":"operating_profit_rate","actual":-0.128,"threshold":0.05,"comparison":"<"}') RETURNING decision_id::text`, listID, snapshotID).Scan(&decisionID); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.QueryRow(ctx, `INSERT INTO spu_action_task(business_unit,spu_id,operator_ref,current_business_action,current_inventory_action,review_status,business_state,inventory_state)
