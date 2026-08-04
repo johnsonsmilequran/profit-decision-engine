@@ -4,10 +4,10 @@
 
 - work_type: feature
 - workflow_mode: standard
-- revision: 4
+- revision: 5
 - source_prd: PRD详细版.md
 - status: active
-- derived_decision: 新品年龄使用批次业务截止日以保证历史重放确定性；这是阶段 5 派生产品决策，不冒充用户原始事实
+- derived_decision: 新品年龄使用批次业务截止日以保证历史重放确定性；跨周动作变化时继承现有主管审核边界，相同动作免重复审核，变化动作待主管确认后生效；这些是阶段 5 派生产品决策，不冒充用户原始事实
 
 ## External capability configuration
 
@@ -405,6 +405,14 @@ THE SYSTEM SHALL 立即保留可审核、可执行的固定规则清单与结构
 - Status: active
 - Behavior: 只有需处理的经营动作、补货或禁补进入行动清单；纯维持且无补货或禁补的 SPU 默认不进入清单。
 
+### REQ-F05-04 · 跨批次续接同一 SPU 动作任务
+
+- Story: US-F05-01
+- Stage: MVP
+- Revision: 5
+- Status: active
+- Behavior: 系统必须将每周不可变决策快照与跨批次执行任务分离；同一 SPU 的新决策与当前生效动作相同时沿用原任务和状态，不重复建任；动作变化时追加待主管确认的动作版本，确认后更新当前生效动作，历史不覆盖。
+
 ### AC-F05-01 · 产品场景 AC-21
 
 - Parent: REQ-F05-01
@@ -458,6 +466,39 @@ THE SYSTEM SHALL 建议应先按清仓、止损、观察、加投、补货的固
 ```text
 WHEN  SPU 的唯一主动作是维持且没有补货或禁补动作
 THE SYSTEM SHALL 该 SPU 默认不应出现在行动清单；数据完整得出的“不补货”不单独生成采购执行任务。
+```
+
+### AC-F05-06 · 产品场景 AC-45
+
+- Parent: REQ-F05-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 同一 SPU 上一个有效批次的当前生效经营动作为“清仓”且新批次固定规则仍判定为“清仓”
+THE SYSTEM SHALL 保留原经营任务 ID、审核结果、执行状态和责任人，不新建或重置清仓任务；新批次决策快照应关联该任务并追加“同动作续接”事件。
+```
+
+### AC-F05-07 · 产品场景 AC-46
+
+- Parent: REQ-F05-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 同一 SPU 上一个有效批次的当前生效经营动作为“清仓”而新批次固定规则改为“观察”
+THE SYSTEM SHALL 保留上周清仓决策、任务和已执行事实，在原稳定任务上追加“观察”动作版本并置为待运营主管确认；确认后将当前生效经营动作更新为“观察”，驳回时保持原生效动作。
+```
+
+### AC-F05-08 · 产品场景 AC-47
+
+- Parent: REQ-F05-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 新批次对同一 SPU 生成经营动作与库存动作
+THE SYSTEM SHALL 分别比较经营轨和库存轨的当前生效动作；同动作仅续接原任务，变化动作追加新版本并按审核结果激活、关闭或替换对应任务；两轨的批次关联与历史事件必须完整保留。
 ```
 
 ## Feature F06 · 审核与执行跟踪
@@ -811,7 +852,7 @@ THE SYSTEM SHALL 显示完整且按角色裁剪的建议审核记录、各动作
 
 ### NFR-005 · 审计可追溯
 
-- Applies-to: REQ-F01-01、REQ-F05-01、REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F06-04、REQ-F08-01、REQ-F08-02
+- Applies-to: REQ-F01-01、REQ-F05-01、REQ-F05-04、REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F06-04、REQ-F08-01、REQ-F08-02
 - Revision: 1
 - Status: active
 - Measure: 每条决策及每次状态事件均包含关联批次、业务期间、规则或对象版本、关键值或状态变化、操作者与时间；历史事件不可被状态更新覆盖。

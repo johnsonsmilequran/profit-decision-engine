@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-03T15:42:54Z",
+  "last_updated_at_utc": "2026-08-04T02:58:56Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -19,15 +19,15 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 4,
-  "source_ids_changed": ["REQ-F06-04", "AC-F06-07", "AC-F06-08", "AC-F06-09"],
-  "current_stage": "6.3",
-  "current_substep": "stage6-regenerated-from-stage5-and-verified",
+  "contract_revision": 5,
+  "source_ids_changed": ["REQ-F05-04", "AC-F05-06", "AC-F05-07", "AC-F05-08"],
+  "current_stage": "design-master-stage-II",
+  "current_substep": "cross-week-task-continuity-increment-completed",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
-    "type": "ready_for_user_review_or_design",
-    "description": "阶段 6 已依据阶段 5 正式输出重新生成并通过 HTML 浏览器校验、PPTX 再渲染和溢出测试；可由用户审阅或进入设计阶段"
+    "type": "ready_for_tdd",
+    "description": "Design Master 阶段 II 及跨周任务续接增量设计已完成并通过追溯和页面冒烟校验；可进入 TDD Master"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -138,6 +138,12 @@
       "decision": "使用钉钉统一身份认证；三类业务角色变更由事业部负责人审批，运维/系统管理员按审批结果配置",
       "stage": "5",
       "rationale": "统一身份可追溯到个人，并将业务授权与技术配置分离，避免共享账号或技术管理员自行扩大经营数据权限"
+    },
+    {
+      "id": "D-19",
+      "decision": "同一 SPU 每周决策快照独立保留，但相同经营/库存动作续接稳定任务且不重复审核；动作变化追加待主管确认版本，通过后替换当前生效动作",
+      "stage": "design-master",
+      "rationale": "避免连续清仓等同动作周周重复建任，同时保留清仓变观察等动作变更的审核边界与完整历史"
     }
   ],
   "category": "saas",

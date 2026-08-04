@@ -705,7 +705,7 @@
               <div class="flex items-start gap-4">
                 <div class="product-mark"><i class="ph ph-cube text-xl" aria-hidden="true"></i></div>
                 <div>
-                  <div class="flex flex-wrap items-center gap-2"><span id="heroActionBadge" class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>生效动作：清仓</span><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>主管已通过</span><span id="overrideBadge" class="badge badge-ai" hidden><i class="ph ph-user-switch" aria-hidden="true"></i>人工改判</span></div>
+                  <div class="flex flex-wrap items-center gap-2"><span id="heroActionBadge" class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>生效动作：清仓</span><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>主管已通过</span><span class="badge badge-ai"><i class="ph ph-link" aria-hidden="true"></i>延续上周 · 未重建</span><span id="overrideBadge" class="badge badge-ai" hidden><i class="ph ph-user-switch" aria-hidden="true"></i>人工改判</span></div>
                   <h1 id="product-heading" class="page-title mt-3">布乐迪忙碌屋益智玩具</h1>
                   <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"><span class="mono font-semibold">SPU-515</span><span class="muted text-sm">商品链接粒度</span><span class="muted text-sm">建议 <span class="mono">DEC-20260630-515</span></span></div>
                 </div>
@@ -798,6 +798,19 @@
             </section>
 
             <section aria-labelledby="tracks-heading">
+              <article class="surface p-5 mb-5" aria-labelledby="continuity-heading">
+                <div class="flex items-start justify-between gap-6">
+                  <div><div class="eyebrow">CROSS-BATCH CONTINUITY</div><h2 id="continuity-heading" class="section-title mt-1">跨周任务续接</h2><p class="muted mt-2 text-sm">本周固定规则仍为“清仓 + 禁止补货”，系统已关联原任务，不重复创建待办，审核和执行状态保持。</p></div>
+                  <span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>同动作续接</span>
+                </div>
+                <div class="mt-4 grid grid-cols-4 gap-3">
+                  <div class="metric-tile"><div class="meta">稳定任务 ID</div><div class="mono mt-2 font-bold">TASK-TOY-515</div></div>
+                  <div class="metric-tile"><div class="meta">前序批次</div><div class="mono mt-2 font-bold">BATCH-20260531-01</div><div class="meta mt-2">生效：清仓</div></div>
+                  <div class="metric-tile"><div class="meta">当前批次</div><div class="mono mt-2 font-bold">BATCH-20260630-01</div><div class="meta mt-2">规则：清仓</div></div>
+                  <div class="metric-tile"><div class="meta">续接结果</div><div class="mt-2 font-bold">原任务保持</div><div class="meta mt-2">已通过 · 双轨待处理</div></div>
+                </div>
+                <div class="mt-4 rounded-md p-4" style="background:var(--warn-soft);border:1px solid var(--warn);"><strong>如果本周变为观察</strong><p class="muted mt-1 text-sm">页面将显示“清仓 → 观察 · 待主管确认”；通过后观察成为当前生效动作，上周清仓快照和已执行事实仍保留。</p></div>
+              </article>
               <div class="mb-3 flex items-end justify-between"><div><div class="eyebrow">DUAL-TRACK DECISION SPINE</div><h2 id="tracks-heading" class="section-title mt-1">经营与库存双轨</h2></div><span class="meta">同一建议 · 整体审核 · 分角色执行</span></div>
               <div class="decision-spine">
                 <article class="track-card business">
@@ -842,6 +855,7 @@
               <div class="timeline mt-5">
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">批次数据与经营指标已冻结</div><p class="muted mt-1 text-sm">锁定业务期间、截止日、SPU 身份及销售、利润、品退、库存口径。</p></div><time class="meta mono">07.06 09:16</time></div></article>
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">固定规则生成双轨建议</div><p class="muted mt-1 text-sm">清仓作为唯一经营主动作，并同步生成禁止补货；规则版本 RULE-V1.0。</p></div><time class="meta mono">07.06 09:18</time></div></article>
+                <article class="timeline-item"><div class="timeline-node"><i class="ph ph-link text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">本周清仓续接原任务</div><p class="muted mt-1 text-sm">TASK-TOY-515 保持原审核与执行状态，未重复创建清仓或禁补待办。</p></div><time class="meta mono">07.06 09:18</time></div></article>
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">运营主管已整体通过</div><p class="muted mt-1 text-sm">一次审核同时激活经营动作和库存动作，审核记录不可覆盖。</p></div><time class="meta mono">07.06 10:05</time></div></article>
                 <article class="timeline-item"><div class="timeline-node current"><i class="ph ph-hourglass-medium text-sm" aria-hidden="true"></i></div><div class="font-semibold">运营执行与采购计划处理</div><p class="meta mt-1">经营动作待执行，采购计划待确认禁止补货。</p></article>
                 <article class="timeline-item"><div class="timeline-node future"><i class="ph ph-circle text-sm" aria-hidden="true"></i></div><div class="font-semibold muted">经营结果记录</div><p class="meta mt-1">运营在执行后补录销售、利润与库存变化。</p></article>
@@ -849,12 +863,13 @@
             </section>
 
             <details class="surface p-5" aria-labelledby="audit-heading">
-              <summary id="audit-heading" class="flex cursor-pointer items-center justify-between gap-4 font-semibold"><span>审计详情（3）</span><span class="meta">展开查看不可变事件</span></summary>
+              <summary id="audit-heading" class="flex cursor-pointer items-center justify-between gap-4 font-semibold"><span>审计详情（4）</span><span class="meta">展开查看不可变事件</span></summary>
               <div class="mt-4 overflow-x-auto">
                 <table class="rule-table">
                   <thead><tr><th>事件</th><th>前后状态</th><th>操作者</th><th>时间</th><th>备注</th></tr></thead>
                   <tbody id="auditRows">
                     <tr><td>规则结论固化</td><td>无 → 清仓 / 禁止补货</td><td>系统规则 RULE-V1.0</td><td class="mono">07.06 09:18</td><td>同一事务原子生成双动作</td></tr>
+                    <tr><td>跨周任务续接</td><td>清仓 / 禁补 → 保持</td><td>系统任务协调器</td><td class="mono">07.06 09:18</td><td>TASK-TOY-515 未重建，关联批次 BATCH-20260630-01</td></tr>
                     <tr><td>主管整体审核</td><td>待审核 → 已通过</td><td>王敏 · 运营主管</td><td class="mono">07.06 10:05</td><td>运营制定清仓节奏，采购停止新增补货</td></tr>
                     <tr><td>AI 解释采用</td><td>生成中 → 已采用</td><td>系统 AI 适配器</td><td class="mono">07.06 10:06</td><td>只解释冻结数据，未改变规则动作</td></tr>
                   </tbody>
