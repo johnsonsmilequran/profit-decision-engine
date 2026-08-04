@@ -125,7 +125,8 @@ const commonDecisionSchema = z.object({
 const actionItemSchema = z.object({
   id: z.string().uuid(), action_track: z.string(), action_code: z.string(), owner_role: z.string(), status: z.string(), version: z.number(),
   executed_at: z.string().nullable(), execution_note: z.string().nullable(), result_period_start: z.string().nullable(), result_period_end: z.string().nullable(),
-  result_values: z.record(z.string(), z.unknown()).nullable(), result_note: z.string().nullable(), result_recorded_at: z.string().nullable(),
+  execution_result: z.string().nullable(), result_values: z.record(z.string(), z.unknown()).nullable(), result_note: z.string().nullable(),
+  result_recorded_at: z.string().nullable(), result_recorded_by_name: z.string().nullable(),
 });
 const timelineSchema = z.object({
   id: z.coerce.number(), event_type: z.string(), previous_state: z.string().nullable(), next_state: z.string().nullable(),
@@ -203,6 +204,26 @@ export async function loadDecisionDetail(decisionId: string): Promise<DecisionDe
   const response = await fetch(`${API_ORIGIN}/api/decisions/${encodeURIComponent(decisionId)}`, { credentials: "include" });
   if (!response.ok) throw await errorFrom(response, "建议详情暂不可用");
   return decisionDetailSchema.parse(await response.json());
+}
+
+const operationResponseSchema = z.object({ actionItemId: z.string().uuid(), status: z.string(), version: z.number() });
+export async function reviewDecision(decisionId: string, payload: { result: "approved" | "rejected"; note?: string; version: number }, idempotencyKey: string) {
+  const response = await fetch(`${API_ORIGIN}/api/decisions/${encodeURIComponent(decisionId)}/review`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "idempotency-key": idempotencyKey }, body: JSON.stringify(payload) });
+  if (!response.ok) throw await errorFrom(response, "审核提交失败");
+  return z.object({ decisionId: z.string().uuid(), approvalStatus: z.string(), reviewVersion: z.number(), activatedActionCount: z.number() }).parse(await response.json());
+}
+
+export async function executeAction(actionItemId: string, payload: { executedAt: string; note: string; result: string; confirmation?: "restock" | "block_restock"; version: number }, idempotencyKey: string) {
+  const response = await fetch(`${API_ORIGIN}/api/action-items/${encodeURIComponent(actionItemId)}/execute`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "idempotency-key": idempotencyKey }, body: JSON.stringify(payload) });
+  if (!response.ok) throw await errorFrom(response, "执行记录提交失败");
+  return operationResponseSchema.parse(await response.json());
+}
+
+export type OutcomeAvailability = { status: "provided"; value: string } | { status: "not_provided" };
+export async function recordOutcome(actionItemId: string, payload: { periodStart: string; periodEnd: string; sales: OutcomeAvailability; profit: OutcomeAvailability; inventory: OutcomeAvailability; note: string; version: number }, idempotencyKey: string) {
+  const response = await fetch(`${API_ORIGIN}/api/action-items/${encodeURIComponent(actionItemId)}/outcome`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "idempotency-key": idempotencyKey }, body: JSON.stringify(payload) });
+  if (!response.ok) throw await errorFrom(response, "经营结果提交失败");
+  return operationResponseSchema.parse(await response.json());
 }
 
 export function dingtalkStartUrl(returnTo: string): string {

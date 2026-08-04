@@ -9,6 +9,7 @@ import { NewBatchPage } from "./pages/NewBatchPage.tsx";
 import { BatchDetailPage } from "./pages/BatchDetailPage.tsx";
 import { ActionListPage } from "./pages/ActionListPage.tsx";
 import { DecisionDetailPage } from "./pages/DecisionDetailPage.tsx";
+import { BusinessExecutePage, OutcomePage, ProcurementExecutePage, ReviewPage } from "./pages/OperationPages.tsx";
 import { z } from "zod";
 
 const rootRoute = createRootRoute({ component: Outlet });
@@ -125,8 +126,28 @@ const decisionDetailRoute = createRoute({
     return { user };
   }, component: function DecisionDetailRoute() { const { user } = decisionDetailRoute.useRouteContext(); return <DecisionDetailPage user={user} />; },
 });
+const reviewRoute = createRoute({
+  getParentRoute: () => rootRoute, path: "/decisions/$decisionId/review",
+  beforeLoad: async ({ location }) => { const user = await queryClient.fetchQuery({ queryKey: ["current-user"], queryFn: loadCurrentUser, staleTime: 30_000 }); if (!user) throw redirect({ to: "/auth/dingtalk", search: { return_to: location.href } }); if (user.role !== "manager") throw redirect({ to: "/forbidden" }); return { user }; },
+  component: function ReviewRoute() { return <ReviewPage user={reviewRoute.useRouteContext().user} />; },
+});
+const businessExecuteRoute = createRoute({
+  getParentRoute: () => rootRoute, path: "/decisions/$decisionId/operations-action/execute",
+  beforeLoad: async ({ location }) => { const user = await queryClient.fetchQuery({ queryKey: ["current-user"], queryFn: loadCurrentUser, staleTime: 30_000 }); if (!user) throw redirect({ to: "/auth/dingtalk", search: { return_to: location.href } }); if (user.role !== "operator") throw redirect({ to: "/forbidden" }); return { user }; },
+  component: function BusinessExecuteRoute() { return <BusinessExecutePage user={businessExecuteRoute.useRouteContext().user} />; },
+});
+const procurementExecuteRoute = createRoute({
+  getParentRoute: () => rootRoute, path: "/decisions/$decisionId/procurement-action/execute",
+  beforeLoad: async ({ location }) => { const user = await queryClient.fetchQuery({ queryKey: ["current-user"], queryFn: loadCurrentUser, staleTime: 30_000 }); if (!user) throw redirect({ to: "/auth/dingtalk", search: { return_to: location.href } }); if (user.role !== "procurement") throw redirect({ to: "/forbidden" }); return { user }; },
+  component: function ProcurementExecuteRoute() { return <ProcurementExecutePage user={procurementExecuteRoute.useRouteContext().user} />; },
+});
+const outcomeRoute = createRoute({
+  getParentRoute: () => rootRoute, path: "/decisions/$decisionId/operations-outcome",
+  beforeLoad: async ({ location }) => { const user = await queryClient.fetchQuery({ queryKey: ["current-user"], queryFn: loadCurrentUser, staleTime: 30_000 }); if (!user) throw redirect({ to: "/auth/dingtalk", search: { return_to: location.href } }); if (user.role !== "operator") throw redirect({ to: "/forbidden" }); return { user }; },
+  component: function OutcomeRoute() { return <OutcomePage user={outcomeRoute.useRouteContext().user} />; },
+});
 
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, forbiddenRoute, workspaceRoute, batchesRoute, newBatchRoute, batchDetailRoute, actionsIndexRoute, actionListRoute, decisionDetailRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, authRoute, forbiddenRoute, workspaceRoute, batchesRoute, newBatchRoute, batchDetailRoute, actionsIndexRoute, actionListRoute, decisionDetailRoute, reviewRoute, businessExecuteRoute, procurementExecuteRoute, outcomeRoute]);
 export const router = createRouter({ routeTree });
 
 declare module "@tanstack/react-router" {
