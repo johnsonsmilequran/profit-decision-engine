@@ -13,6 +13,7 @@ type Config struct {
 	DingTalkClientID     string
 	DingTalkClientSecret string
 	CookieSecure         bool
+	ImportFileDir        string
 }
 
 func Load() (Config, error) {
@@ -23,12 +24,24 @@ func Load() (Config, error) {
 		DingTalkClientID:     strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_ID")),
 		DingTalkClientSecret: strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_SECRET")),
 		CookieSecure:         value("COOKIE_SECURE", "true") == "true",
+		ImportFileDir:        value("IMPORT_FILE_DIR", "./var/imports"),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")
 	}
 	if cfg.PublicBaseURL == "" {
 		return Config{}, errors.New("PUBLIC_BASE_URL is required")
+	}
+	return cfg, nil
+}
+
+func LoadWorker() (Config, error) {
+	cfg := Config{
+		DatabaseURL:   strings.TrimSpace(os.Getenv("DATABASE_URL")),
+		ImportFileDir: value("IMPORT_FILE_DIR", "./var/imports"),
+	}
+	if cfg.DatabaseURL == "" {
+		return Config{}, errors.New("DATABASE_URL is required")
 	}
 	return cfg, nil
 }

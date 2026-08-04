@@ -5,14 +5,18 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 	"net/url"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/batch"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/identity"
 )
 
@@ -22,13 +26,14 @@ type Server struct {
 	db           *pgxpool.Pool
 	identity     *identity.Service
 	dingTalk     *identity.DingTalkClient
+	batches      *batch.Service
 	publicURL    string
 	cookieSecure bool
 	logger       *slog.Logger
 }
 
-func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.DingTalkClient, publicURL string, cookieSecure bool, logger *slog.Logger) http.Handler {
-	s := &Server{db: db, identity: identities, dingTalk: dingTalk, publicURL: publicURL, cookieSecure: cookieSecure, logger: logger}
+func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.DingTalkClient, batches *batch.Service, publicURL string, cookieSecure bool, logger *slog.Logger) http.Handler {
+	s := &Server{db: db, identity: identities, dingTalk: dingTalk, batches: batches, publicURL: publicURL, cookieSecure: cookieSecure, logger: logger}
 	r := chi.NewRouter()
 	r.Get("/health/live", s.live)
 	r.Get("/health/ready", s.ready)
@@ -36,7 +41,139 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Get("/auth/dingtalk/callback", s.finishDingTalk)
 	r.Post("/auth/logout", s.logout)
 	r.Get("/api/session", s.session)
+	r.Get("/api/batches", s.listBatches)
+	r.Post("/api/batches", s.createBatch)
+	r.Get("/api/batches/{batchID}", s.getBatch)
 	return r
+}
+
+func (s *Server) createBatch(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	if principal.Role != identity.RoleOperations {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_multipart_form")
+		return
+	}
+	periodStart, err := parseBusinessDate(r.FormValue("period_start"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_period_start")
+		return
+	}
+	periodEnd, err := parseBusinessDate(r.FormValue("period_end"))
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_period_end")
+		return
+	}
+	cutoff, err := parseBusinessDate(r.FormValue("business_cutoff_date"))
+	if err != nil || batch.ValidatePeriod(periodStart, periodEnd, cutoff) != nil {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_complete_natural_month")
+		return
+	}
+	if r.FormValue("business_unit") != "玩具事业部" {
+		writeError(w, http.StatusUnprocessableEntity, "invalid_business_unit")
+		return
+	}
+	file, header, err := r.FormFile("xlsx_file")
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "xlsx_file_required")
+		return
+	}
+	defer file.Close()
+	fileName := filepath.Base(strings.TrimSpace(header.Filename))
+	if !strings.EqualFold(filepath.Ext(fileName), ".xlsx") {
+		writeError(w, http.StatusUnprocessableEntity, "xlsx_file_required")
+		return
+	}
+	filePath, digest, err := s.batches.StoreUpload(file)
+	if err != nil {
+		s.logger.Error("store batch upload", "error", err)
+		writeError(w, http.StatusInternalServerError, "file_storage_unavailable")
+		return
+	}
+	created, err := s.batches.Create(r.Context(), batch.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, batch.CreateInput{
+		BusinessUnit: "玩具事业部", PeriodStart: periodStart, PeriodEnd: periodEnd, CutoffDate: cutoff,
+		FileName: fileName, FilePath: filePath, FileSHA256: digest, CreatedBy: principal.ActorRef,
+	})
+	if err != nil {
+		s.logger.Error("create batch", "error", err)
+		writeError(w, http.StatusInternalServerError, "batch_creation_failed")
+		return
+	}
+	status := http.StatusCreated
+	if created.Idempotent {
+		status = http.StatusOK
+	}
+	writeJSON(w, status, created)
+}
+
+func (s *Server) listBatches(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	limit := queryInt(r, "limit", 50)
+	if limit != 20 && limit != 50 && limit != 100 {
+		limit = 50
+	}
+	page := queryInt(r, "page", 1)
+	if page < 1 {
+		page = 1
+	}
+	items, total, err := s.batches.List(r.Context(), batch.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, limit, (page-1)*limit)
+	if errors.Is(err, batch.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err != nil {
+		s.logger.Error("list batches", "error", err)
+		writeError(w, http.StatusInternalServerError, "batch_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]interface{}{"items": items, "page": page, "limit": limit, "total": total})
+}
+
+func (s *Server) getBatch(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	item, err := s.batches.Get(r.Context(), batch.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "batchID"))
+	if errors.Is(err, batch.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if errors.Is(err, batch.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "not_found")
+		return
+	}
+	if err != nil {
+		s.logger.Error("get batch", "error", err)
+		writeError(w, http.StatusInternalServerError, "batch_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, item)
+}
+
+func parseBusinessDate(raw string) (time.Time, error) {
+	location, _ := time.LoadLocation("Asia/Shanghai")
+	return time.ParseInLocation("2006-01-02", strings.TrimSpace(raw), location)
+}
+
+func queryInt(r *http.Request, key string, fallback int) int {
+	value, err := strconv.Atoi(r.URL.Query().Get(key))
+	if err != nil {
+		return fallback
+	}
+	return value
 }
 
 func (s *Server) live(w http.ResponseWriter, _ *http.Request) {

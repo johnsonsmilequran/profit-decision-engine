@@ -1,0 +1,144 @@
+openapi: 3.1.0
+info: { title: 趣然 AI 商品经营与利润决策助手 API, version: 1.0.0 }
+paths:
+  /api/session:
+    get:
+      operationId: getSession
+      responses:
+        '200': { description: 当前会话, content: { application/json: { schema: { $ref: '#/components/schemas/SessionResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/batches:
+    get:
+      operationId: listBatches
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 批次分页列表, content: { application/json: { schema: { $ref: '#/components/schemas/BatchListResponse' } } } }
+    post:
+      operationId: createBatch
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [business_unit, period_start, period_end, business_cutoff_date, xlsx_file]
+              properties:
+                business_unit: { type: string, const: 玩具事业部 }
+                period_start: { type: string, format: date }
+                period_end: { type: string, format: date }
+                business_cutoff_date: { type: string, format: date }
+                xlsx_file: { type: string, format: binary }
+      responses:
+        '201': { description: 新批次, content: { application/json: { schema: { $ref: '#/components/schemas/BatchSummary' } } } }
+        '200': { description: 幂等命中, content: { application/json: { schema: { $ref: '#/components/schemas/BatchSummary' } } } }
+        '422': { $ref: '#/components/responses/Error' }
+  /api/batches/{batchId}:
+    get:
+      operationId: getBatch
+      parameters:
+        - { name: batchId, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: 批次详情, content: { application/json: { schema: { $ref: '#/components/schemas/BatchDetail' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+components:
+  responses:
+    Error: { description: 业务错误, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
+  schemas:
+    BusinessRole: { type: string, enum: [operations, supervisor] }
+    SessionUser:
+      type: object
+      required: [name, role]
+      properties: { name: { type: string }, role: { $ref: '#/components/schemas/BusinessRole' } }
+    SessionResponse:
+      type: object
+      required: [authenticated, user]
+      properties: { authenticated: { type: boolean, const: true }, user: { $ref: '#/components/schemas/SessionUser' } }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties: { error: { type: string } }
+    BatchStatus: { type: string, enum: [received, processing, ready, failed] }
+    BatchSummary:
+      type: object
+      required: [id, code, business_unit, period_start, period_end, business_cutoff_date, source_file_name, status, valid_count, rejected_count, degraded_count, warning_count, rule_version, failure_code, created_by, created_at, completed_at]
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        business_unit: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        source_file_name: { type: string }
+        status: { $ref: '#/components/schemas/BatchStatus' }
+        valid_count: { type: [integer, 'null'] }
+        rejected_count: { type: [integer, 'null'] }
+        degraded_count: { type: [integer, 'null'] }
+        warning_count: { type: [integer, 'null'] }
+        rule_version: { type: [string, 'null'] }
+        failure_code: { type: [string, 'null'] }
+        created_by: { type: string }
+        created_at: { type: string, format: date-time }
+        completed_at: { type: [string, 'null'], format: date-time }
+        idempotent: { type: boolean }
+    ImportIssue:
+      type: object
+      required: [source_sheet, source_row, spu_id, field, raw_value, code, reason, impact, resolution, severity]
+      properties:
+        source_sheet: { type: string }
+        source_row: { type: [integer, 'null'] }
+        spu_id: { type: [string, 'null'] }
+        field: { type: string }
+        raw_value: { type: [string, 'null'] }
+        code: { type: string }
+        reason: { type: string }
+        impact: { type: string }
+        resolution: { type: string }
+        severity: { type: string, enum: [rejected, degraded, warning] }
+    Decision:
+      type: object
+      required: [id, product_type, business_action, inventory_action, trigger_rule, evidence]
+      properties:
+        id: { type: string, format: uuid }
+        product_type: { type: [string, 'null'] }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        evidence: { type: object, additionalProperties: true }
+    Snapshot:
+      type: object
+      required: [id, spu_id, name, store, platform, operator_ref, source_sheet, source_row, launch_date, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, raw_values]
+      properties:
+        id: { type: string, format: uuid }
+        spu_id: { type: string }
+        name: { type: string }
+        store: { type: string }
+        platform: { type: string }
+        operator_ref: { type: string }
+        source_sheet: { type: string }
+        source_row: { type: integer }
+        launch_date: { type: [string, 'null'], format: date }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+        quality: { type: object, additionalProperties: { type: string } }
+        raw_values: { type: object, additionalProperties: { type: string } }
+        decision: { $ref: '#/components/schemas/Decision' }
+    BatchDetail:
+      allOf:
+        - { $ref: '#/components/schemas/BatchSummary' }
+        - type: object
+          required: [issues, snapshots]
+          properties:
+            issues: { type: array, items: { $ref: '#/components/schemas/ImportIssue' } }
+            snapshots: { type: array, items: { $ref: '#/components/schemas/Snapshot' } }
+    BatchListResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/BatchSummary' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }

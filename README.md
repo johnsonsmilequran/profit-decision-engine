@@ -12,9 +12,13 @@
 - API / Worker：`make dev-api` / `make dev-worker`（Compose 数据库默认在本机 `55432` 端口可达）
 - 校验：`make lint typecheck test build`
 - 真实数据库集成测试：先迁移 PostgreSQL，再执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" go test -race ./...`
+- 真实 XLSX 批次集成测试：额外设置 `TEST_XLSX_PATH`，执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" TEST_XLSX_PATH="/绝对路径/商品链接.xlsx" go test -v ./internal/batch`
+- OpenAPI 类型同步：`cd web && npm run generate:api`（契约源为 `openapi/openapi.yaml`）
 - Compose：复制 `.env.example` 为 `.env`，填入真实环境值后执行 `make compose-up`
 
 认证只接受钉钉 OAuth。角色映射由运维依据事业部负责人审批写入 PostgreSQL `role_mapping`；应用没有默认账号、密码登录、共享账号或角色选择入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
+
+数据批次使用 `POST /api/batches` 接收真实 XLSX，Go Worker 从 PostgreSQL 持久任务表领取解析任务，并在单一事务内写入冻结 SPU 快照、字段质量、固定规则决策和行动清单。原始文件保存在 API/Worker 共用的持久卷中；同一文件、事业部、期间和截止日重复上传时返回既有批次。
 
 ## 当前成果
 
@@ -33,6 +37,7 @@
 ├── backend/                         # Go API、Worker、迁移与领域模块
 ├── deploy/                          # Nginx 生产同源入口
 ├── doc/                             # 跨会话项目纪要
+├── openapi/                         # 版本化 API 契约
 ├── web/                             # React/TypeScript/Vite PC Web
 ├── compose.yaml                     # PostgreSQL、迁移、API、Worker、Web
 ├── 趣然AI商品经营利润决策助手/       # PRD、证据、评审与演示产物

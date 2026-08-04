@@ -1,5 +1,7 @@
 import { LoginPage } from './pages/LoginPage'
 import { RecoveryPage } from './pages/RecoveryPage'
+import { BatchListPage } from './pages/BatchListPage'
+import { BatchDetailPage } from './pages/BatchDetailPage'
 
 function ProtectedPlaceholder() {
   const returnTo = window.location.pathname + window.location.search
@@ -8,7 +10,12 @@ function ProtectedPlaceholder() {
 }
 
 export function App() {
-  if (window.location.pathname === '/login') return <LoginPage />
-  if (window.location.pathname === '/auth/recovery') return <RecoveryPage />
+  const path = window.location.pathname
+  if (path === '/login') return <LoginPage />
+  if (path === '/auth/recovery') return <RecoveryPage />
+  if (path === '/batches') return <BatchListPage />
+  if (path === '/batches/new') return <BatchDetailPage />
+  const detail = path.match(/^\/batches\/([^/]+)$/)
+  if (detail) return <BatchDetailPage batchId={decodeURIComponent(detail[1])} />
   return <ProtectedPlaceholder />
 }
