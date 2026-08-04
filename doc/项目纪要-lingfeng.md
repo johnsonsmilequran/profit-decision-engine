@@ -5,11 +5,12 @@
 
 ## 当前状态
 - ✅ 已完成：阶段 0、1、5、6 既定产物；Design Master 阶段 I—II 已完成；requirements revision 9 已收敛为运营/运营主管双角色及钉钉企业内部机器人单聊；页面清单 9 个运行态 MVP 页面已全部接入真实 Go API 与 PostgreSQL；钉钉通知使用现有 Client ID/Secret、机器人编码和公司 User ID，00005 已建立责任运营 User ID 映射；`lingfeng` 分支跟踪远程。
-- ▶️ 进行中：页面开发 9/9；因渠道契约变更，受影响的 SMOKE-01、FLOW-10/11、DESIGN-01、RULE-05 已失效并回到 pending，当前 TDD pass 11/28、pending 17/28。钉钉精确协议、失败名单、消息不自动重试、手动补发、跨日幂等催办已通过受控 Go 竞态测试，前端 lint/typecheck/test/build 已通过；待干净检出全量门禁、重新视觉复核及真实钉钉环境验收。
+- ▶️ 进行中：页面开发 9/9；钉钉渠道变更后的登录页已重新完成独立视觉双验收，当前 TDD pass 12/28、pending 16/28。钉钉精确协议、失败名单、消息不自动重试、手动补发、跨日幂等催办已通过受控 Go 竞态测试，前端 lint/typecheck/test/build 已通过；待干净检出全量门禁、其余视觉复核及真实钉钉环境验收。
 - ⏸️ 待办：完成生产 CI 与 `.dockerignore`，重建候选并按 17 条 pending 台账正式验收；按 `仓库协作设置指引.md` 在 GitHub 网页启用 main 分支保护。
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
 ## 决策记录（实时维护）
+- [08-05-2026 00:13:50] 登录流程图标视觉门禁｜背景：钉钉文案同步后重验 DESIGN-01，独立视觉验收官判定流程节点的 `⌘` 等系统字符有原生违和且语义不符｜结论：四个节点改用与 HTML 基线一致的数据库、规则分支、行动清单、循环闭环内联线性 SVG；重建重截后独立复核 blocking=0，DESIGN-01 恢复 pass｜来源：AI
 - [08-05-2026 00:00:44] 钉钉参考代码取舍落地｜背景：用户提供的 `backend/pkg/ding` 来自旧项目且依赖当前模块未使用的阿里云 SDK｜结论：生产实现以现有标准库架构复刻官方两步协议与 User ID/失败名单语义，不引入旧 SDK、不自动重试消息 POST；参考目录保持用户未跟踪文件且不纳入交付提交｜来源：AI
 - [08-04-2026 23:51:27] 钉钉应用凭据命名｜背景：旧代码与钉钉文档使用 AppKey/AppSecret，当前项目认证配置使用 Client ID/Client Secret｜结论：`DINGTALK_APP_KEY` 等同 `DINGTALK_CLIENT_ID`，`DINGTALK_APP_SECRET` 等同 `DINGTALK_CLIENT_SECRET`；项目统一只保留现有 `DINGTALK_CLIENT_ID`/`DINGTALK_CLIENT_SECRET`，不新增重复别名｜来源：用户
 - [08-04-2026 23:46:33] 钉钉通知契约迁移｜背景：用户确认 OA 即钉钉，原通用 OA 适配器及“已送达”文案不符合真实渠道语义｜结论：契约改为钉钉企业内部机器人单聊，使用应用 Access Token、机器人编码和公司 User ID；接口受理不等于送达/已读/业务确认，并将受影响的 SMOKE-01、FLOW-10、FLOW-11、DESIGN-01、RULE-05 旧 pass 置回 pending 后重验｜来源：AI

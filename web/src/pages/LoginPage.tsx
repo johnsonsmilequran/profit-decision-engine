@@ -37,7 +37,7 @@ export function LoginPage() {
             <span className="eyebrow">INTERNAL DECISION WORKSPACE</span>
             <h1>让经营判断有统一依据，让每个动作找到负责人。</h1>
             <p>汇总玩具事业部的 SPU 经营数据，由固定规则形成行动建议，再由运营与运营主管完成审核、执行、钉钉协同和结果确认。</p>
-            <div className="decision-rails" aria-label="经营决策工作流程"><Rail icon="▣" label="数据批次" /><Rail icon="⌘" label="固定规则" /><Rail icon="☷" label="行动清单" /><Rail icon="↻" label="轻闭环" /></div>
+            <div className="decision-rails" aria-label="经营决策工作流程"><Rail icon="database" label="数据批次" /><Rail icon="branch" label="固定规则" /><Rail icon="list" label="行动清单" /><Rail icon="cycle" label="轻闭环" /></div>
           </div>
           <p className="story-note"><span aria-hidden="true">✓</span>固定规则决定商品类型与动作，AI 只负责解释；每周数据批次与后续状态均可追溯。</p>
         </article>
@@ -64,5 +64,14 @@ export function LoginPage() {
 }
 
 function Brand() { return <div className="brand"><span className="brand-mark">趣</span><span><strong>趣然经营决策</strong><small>AI 商品经营与利润决策助手</small></span></div> }
-function Rail({ icon, label }: { icon: string; label: string }) { return <div className="rail-node"><span className="rail-icon" aria-hidden="true">{icon}</span><span>{label}</span></div> }
+function Rail({ icon, label }: { icon: 'database' | 'branch' | 'list' | 'cycle'; label: string }) { return <div className="rail-node"><span className="rail-icon" aria-hidden="true"><RailIcon name={icon} /></span><span>{label}</span></div> }
+function RailIcon({ name }: { name: 'database' | 'branch' | 'list' | 'cycle' }) {
+  const paths = {
+    database: <><ellipse cx="12" cy="5" rx="7" ry="3" /><path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" /></>,
+    branch: <><circle cx="7" cy="5" r="2" /><circle cx="17" cy="7" r="2" /><circle cx="7" cy="19" r="2" /><path d="M7 7v10M9 11h3a5 5 0 0 0 5-2" /></>,
+    list: <><path d="m5 6 1.5 1.5L9 5M5 12l1.5 1.5L9 11M5 18l1.5 1.5L9 17M12 6h7M12 12h7M12 18h7" /></>,
+    cycle: <><path d="M19 7V3l-2 2a8 8 0 0 0-12 3M5 17v4l2-2a8 8 0 0 0 12-3" /></>,
+  }
+  return <svg viewBox="0 0 24 24" focusable="false">{paths[name]}</svg>
+}
 function Trust({ title, body }: { title: string; body: string }) { return <div className="trust-item"><strong>{title}</strong><span>{body}</span></div> }
