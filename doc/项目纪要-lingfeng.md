@@ -10,6 +10,7 @@
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
 ## 决策记录（实时维护）
+- [08-05-2026 03:24:16] 历史 515 案例与当前真实验收数据分离｜背景：用户已明确本轮真实 XLSX 唯一为仓库根目录 `商品链接.xlsx`；实际生产 API→Worker→PostgreSQL 解析得 10 个 SPU，其中不含 515，而旧 Design/TDD 将 PRD 中已确认的 SPU 515 历史价值案例误当为当前导入候选数据，导致持续索要用户未承诺的另一份“含 515 真实文件”｜结论：保留 515 在 PRD 中作为历史价值/损失案例，不再把它作为本轮真实导入前置；候选 E2E、高保真明确呈现状态与视觉截图全部下推为 `商品链接.xlsx` 的真实 SPU、单期与字段缺失状态；跨周续接/动作变化/多期历史仍保留为 MVP 行为契约，用真实 PostgreSQL 持久化集成验收，HTML 未呈现时不脑补视觉基线｜来源：用户/AI
 - [08-05-2026 03:11:14] 每日清仓催办真实验收通过｜背景：用户说明机器人刚发布可能尚未生效，FLOW-11 需在收件人唯一性修复后以真实 Worker 和真实账号验证｜结论：全新空库 Compose 从真实 XLSX 生成清仓任务，唯一真实运营 User ID 映射下由生产 Worker 发送一条当日催办；官方 `readStatus` 返回 `SUCCESS`、1 个收件人当时未读，同日再运行无重复记录/尝试，业务与库存状态不变，候选会话已撤销；FLOW-11 记为 pass｜来源：AI
 - [08-05-2026 02:19:55] 钉钉消息查询引用语义｜背景：钉钉官方 Go SDK 明确规定 `batchSend` 响应正文返回 `processQueryKey`，`readStatus` 以该值查询发送/已读；当前实现却把 HTTP `x-acs-request-id` 保存为 `provider_reference`，用真实已发送记录调用官方查询得到 HTTP 400 `invalid.processQueryKey`｜结论：修正为持久化 `processQueryKey`，请求 ID 仅作排障且不替代消息查询键；查询结果不得自动推进产品业务状态，修复过程不重复发送现有真实消息｜来源：AI
 - [08-05-2026 02:09:28] 钉钉真实单聊平台接受｜背景：机器人负向探测已由 `robotCode.notExSit` 转为 `staffId.notExisted`；候选环境注入新 client_id/secret/robotCode 后，用真实 XLSX 中“缘一”的一条待审任务执行产品审批与 OA 发送 API｜结论：审批 HTTP 200 并持久化为 `approved/pending_execution`；消息 HTTP 200，`oa_notification` 为 `sent`、attempt_count=1、provider_reference 非空、error_code 为空，且产生 1 条 `oa_delivery` 事件；候选会话已撤销。该结果仅证明钉钉平台接受，FLOW-10/RULE-02 继续 pending，直到用户确认钉钉实际收到｜来源：AI
