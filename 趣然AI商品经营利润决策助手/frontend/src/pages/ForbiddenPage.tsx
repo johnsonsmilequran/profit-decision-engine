@@ -1,5 +1,5 @@
 import { LockOutlined } from "@ant-design/icons";
-import { Button, Card, Space, Typography } from "antd";
+import { Alert, Button, Card, Collapse, Space, Typography } from "antd";
 import { useLocation, useSearchParams } from "wouter";
 
 import { useAuth } from "../components/AuthContext";
@@ -19,12 +19,17 @@ export function ForbiddenPage() {
 
   return (
     <div className="forbidden-screen">
+      <div className="forbidden-brand">
+        <span className="brand-mark">趣然</span>
+        <span>AI 商品经营利润决策助手</span>
+      </div>
       <Card className="forbidden-card">
         <div className="forbidden-icon">
           <LockOutlined />
         </div>
-        <Typography.Title level={2}>
-          {noRole ? "未配置有效业务角色" : "无法查看该内容"}
+        <Typography.Title level={2}>当前无法访问此内容</Typography.Title>
+        <Typography.Title level={5} className="forbidden-reason">
+          {noRole ? "未配置唯一有效的业务角色" : "当前角色没有该对象的查看权限"}
         </Typography.Title>
         <Typography.Paragraph className="muted">
           {noRole
@@ -42,9 +47,24 @@ export function ForbiddenPage() {
             重新登录
           </Button>
         </Space>
-        <div className="login-footer">
-          {status?.support_guidance ?? "如需开通或调整角色，请联系公司 IT。"}
-        </div>
+        <Collapse
+          ghost
+          className="support-collapse"
+          items={[
+            {
+              key: "support",
+              label: "联系 IT 处理",
+              children: (
+                <Alert
+                  type="info"
+                  showIcon
+                  message={status?.support_guidance ?? "请联系公司 IT 开通或调整角色。"}
+                  description="处理完成后返回本页点击“重新检查权限”，无需重复提交业务数据。"
+                />
+              ),
+            },
+          ]}
+        />
       </Card>
     </div>
   );

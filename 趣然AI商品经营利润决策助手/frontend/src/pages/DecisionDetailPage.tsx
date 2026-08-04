@@ -9,6 +9,7 @@ import {
   Modal,
   Skeleton,
   Space,
+  Tabs,
   Timeline,
   Typography,
 } from "antd";
@@ -99,6 +100,36 @@ function humanDisplay(value: unknown): string {
       .join("；");
   }
   return display(value);
+}
+
+function ruleDescription(rule: string, decision: Decision): string {
+  const sales = formatCurrency(decision.net_sales);
+  const profit = formatPercent(decision.profit_rate);
+  const returns = formatPercent(decision.return_rate_7d);
+  const days = `${formatNumber(decision.inventory_days)} 天`;
+  const descriptions: Record<string, string> = {
+    "non-new-sales-below-20000": `非新品且净销售额 ${sales}＜¥20,000.00，分类为淘汰品并优先清仓。`,
+    "loss-action-forbids-replenishment": "清仓/止损动作优先级已生效，库存动作原子设为禁止补货。",
+    "large_hit-fixed-priority": `大爆品按清仓＞止损＞观察＞加投顺序判定；当前利润率 ${profit}、品退率 ${returns}。`,
+    "small_hit-fixed-priority": `小爆品按清仓＞止损＞观察＞加投顺序判定；当前利润率 ${profit}、品退率 ${returns}。`,
+    "inventory-days-boundary-30": `当前库存可售 ${days}，以 30 天为补货边界。`,
+    "new-product-no-replenishment-v1": "新品阶段不生成补货结论，避免用短周期销量推导采购动作。",
+    "classification-input-invalid": "分类必要输入不可用，本批次不生成经营结论。",
+    "profit-rate-unavailable": "经营准利润率不可用，停止依赖利润率的动作判断。",
+  };
+  return descriptions[rule] ?? `规则 ${rule} 已按 ${decision.rule_version ?? "固化版本"} 执行。`;
+}
+
+function traceEventLabel(eventType: string): string {
+  return (
+    {
+      review_approve: "主管通过",
+      review_reject: "主管驳回",
+      action_executed: "动作执行",
+      action_result_recorded: "结果回填",
+      result_recorded: "结果回填",
+    }[eventType] ?? eventType
+  );
 }
 
 export function DecisionDetailPage() {
@@ -239,6 +270,30 @@ export function DecisionDetailPage() {
           仅做解释，不能改写动作。执行状态是本产品内人工记录，不代表外部系统回执。
         </div>
       </Card>
+      {!procurement ? (
+        <Card className="section-card detail-context" style={{ marginTop: 16 }}>
+          <div>
+            <span>店铺 / 平台</span>
+            <strong>
+              {decision.store || "—"} · {decision.platform || "—"}
+            </strong>
+          </div>
+          <div>
+            <span>数据期间</span>
+            <strong>
+              {decision.period_start || "—"} 至 {decision.period_end || "—"}
+            </strong>
+          </div>
+          <div>
+            <span>业务截止日</span>
+            <strong>{decision.business_date || "—"}</strong>
+          </div>
+          <div>
+            <span>规则快照</span>
+            <strong>{decision.rule_version || "—"}</strong>
+          </div>
+        </Card>
+      ) : null}
       <div className="detail-grid" style={{ marginTop: 16 }}>
         <div className="detail-stack">
           {!procurement ? (
@@ -270,6 +325,21 @@ export function DecisionDetailPage() {
               ))}
             </div>
           </Card>
+          {!procurement ? (
+            <Card className="section-card" title="固定规则路径">
+              <div className="rule-path">
+                {(decision.triggered_rules ?? []).map((rule, index) => (
+                  <div className="rule-step" key={rule}>
+                    <span>{index + 1}</span>
+                    <div>
+                      <strong>{ruleDescription(rule, decision)}</strong>
+                      <div className="mono muted">{rule}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ) : null}
           {!procurement ? (
             <Card className="section-card" title="AI 解释状态">
               <Alert
@@ -362,24 +432,48 @@ export function DecisionDetailPage() {
               </Space>
             ) : null}
           </Card>
-          <Card className="section-card" title="最近追溯事件">
-            <Timeline
-              items={(trace.data?.items ?? []).slice(0, 6).map((event) => ({
-                children: (
-                  <div className="trace-row">
-                    <div className="trace-title">{event.event_type}</div>
-                    <div className="trace-meta">
-                      {event.actor_ref} · {new Date(event.occurred_at).toLocaleString("zh-CN")}
-                    </div>
-                    <div>
-                      {event.from_state} → {event.to_state}
-                    </div>
-                    {event.note ? <div className="muted">{event.note}</div> : null}
-                  </div>
-                ),
-              }))}
+          <Card className="section-card" title="审核 / 经营 / 采购时间线">
+            <Tabs
+              items={[
+                ["review", "审核", (event: TraceEvent) => event.event_type.startsWith("review_")],
+                ["operation", "经营", (event: TraceEvent) => event.action === decision.main_action],
+                [
+                  "procurement",
+                  "采购",
+                  (event: TraceEvent) => event.action === decision.replenishment_action,
+                ],
+              ].map(([key, label, predicate]) => {
+                const events = (trace.data?.items ?? []).filter(
+                  predicate as (event: TraceEvent) => boolean,
+                );
+                return {
+                  key: key as string,
+                  label: `${label as string} ${events.length}`,
+                  children: events.length ? (
+                    <Timeline
+                      items={events.map((event) => ({
+                        children: (
+                          <div className="trace-row">
+                            <div className="trace-title">{traceEventLabel(event.event_type)}</div>
+                            <div className="trace-meta">
+                              {event.actor_ref} ·{" "}
+                              {new Date(event.occurred_at).toLocaleString("zh-CN")}
+                            </div>
+                            <div>
+                              <StatusTag value={event.from_state} /> →{" "}
+                              <StatusTag value={event.to_state} />
+                            </div>
+                            {event.note ? <div className="muted">{event.note}</div> : null}
+                          </div>
+                        ),
+                      }))}
+                    />
+                  ) : (
+                    <div className="muted">本轨暂无事件</div>
+                  ),
+                };
+              })}
             />
-            {!trace.data?.items.length ? <div className="muted">暂无审核或执行事件</div> : null}
           </Card>
         </div>
       </div>
@@ -394,6 +488,32 @@ export function DecisionDetailPage() {
           layout="vertical"
           onFinish={(values) => reviewMode && reviewMutation.mutate({ mode: reviewMode, values })}
         >
+          <div className="review-confirm-summary">
+            <div>
+              <span>审核对象</span>
+              <strong>
+                {decision.spu_name} · {decision.spu_id}
+              </strong>
+            </div>
+            <div>
+              <span>整条建议</span>
+              <Space wrap>
+                <StatusTag value={decision.main_action ?? "undetermined"} />
+                <StatusTag value={decision.replenishment_action} />
+              </Space>
+            </div>
+          </div>
+          <Alert
+            type={reviewMode === "reject" ? "warning" : "info"}
+            showIcon
+            style={{ marginBottom: 16 }}
+            message={
+              reviewMode === "reject"
+                ? "驳回后两条动作轨道均不能执行"
+                : "通过后经营与采购轨道分别进入可执行状态"
+            }
+            description="审核只改变本产品内的建议状态，不会自动执行经营动作，也不会直接向采购或外部系统下单。"
+          />
           <Form.Item
             name="note"
             label={reviewMode === "reject" ? "驳回原因" : "审核备注"}

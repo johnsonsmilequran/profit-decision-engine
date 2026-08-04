@@ -49,6 +49,7 @@ export interface Decision {
   spu_id: string;
   spu_name: string;
   store: string;
+  platform?: string;
   operator_ref?: string;
   category?: string;
   main_action?: string;
@@ -59,6 +60,9 @@ export interface Decision {
   review_version?: number;
   actions: ActionItem[];
   created_at: string;
+  period_start?: string | null;
+  period_end?: string | null;
+  business_date?: string | null;
   net_sales?: string | number | null;
   profit_rate?: string | number | null;
   promotion_expense?: string | number | null;

@@ -37,9 +37,9 @@ export function LoginPage() {
         <div className="login-mark">QR</div>
         <div className="login-copy">
           <h1>
-            让每一个商品决策
+            使用统一规则
             <br />
-            有依据、有行动、有追溯
+            让经营建议可审核、可执行、可追溯
           </h1>
           <p>
             汇总玩具事业部 SPU
@@ -67,7 +67,8 @@ export function LoginPage() {
       <section className="login-panel">
         <Card className="login-card">
           <SafetyCertificateOutlined style={{ color: "#075ead", fontSize: 32, marginBottom: 18 }} />
-          <h2>使用公司身份登录</h2>
+          <h2>欢迎回来</h2>
+          <strong>使用公司身份登录</strong>
           <p className="muted">
             请使用本人钉钉身份。运营、运营主管和采购计划角色由 IT 统一维护，产品内不可自行选择。
           </p>

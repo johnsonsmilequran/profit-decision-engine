@@ -133,6 +133,7 @@ def action_dict(action: ActionItem) -> dict[str, object]:
 
 def decision_summary(db: Session, decision: DecisionRecord, actor: Actor) -> dict[str, object]:
     snapshot = db.get(SpuSnapshot, decision.snapshot_id)
+    batch = db.get(ImportBatch, decision.batch_id)
     actions = db.scalars(
         select(ActionItem).where(ActionItem.decision_id == decision.decision_id)
     ).all()
@@ -159,6 +160,7 @@ def decision_summary(db: Session, decision: DecisionRecord, actor: Actor) -> dic
         "spu_id": decision.spu_id,
         "spu_name": snapshot.spu_name if snapshot else "",
         "store": snapshot.store if snapshot else "",
+        "platform": snapshot.platform if snapshot else "",
         "operator_ref": snapshot.operator_ref if snapshot else "",
         "category": decision.category,
         "main_action": decision.main_action,
@@ -169,6 +171,9 @@ def decision_summary(db: Session, decision: DecisionRecord, actor: Actor) -> dic
         "review_version": decision.review_version,
         "actions": [action_dict(action) for action in actions],
         "created_at": decision.created_at,
+        "period_start": batch.period_start if batch else None,
+        "period_end": batch.period_end if batch else None,
+        "business_date": batch.business_date if batch else None,
     }
     if snapshot is not None:
         base.update(

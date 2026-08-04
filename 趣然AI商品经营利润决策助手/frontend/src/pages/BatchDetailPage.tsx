@@ -1,4 +1,4 @@
-import { ReloadOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, HistoryOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Alert, Button, Card, Descriptions, Skeleton, Space, Table, Tabs } from "antd";
 import { useLocation, useParams } from "wouter";
@@ -52,6 +52,15 @@ export function BatchDetailPage() {
         actions={
           <Space>
             <StatusTag value={batch.status} />
+            <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/batches")}>
+              返回批次
+            </Button>
+            <Button
+              icon={<HistoryOutlined />}
+              onClick={() => navigate(`/trace?batch_id=${encodeURIComponent(batch.batch_id)}`)}
+            >
+              查看追溯
+            </Button>
             <Button icon={<ReloadOutlined />} onClick={() => void query.refetch()}>
               刷新
             </Button>
@@ -76,7 +85,7 @@ export function BatchDetailPage() {
           style={{ marginBottom: 16 }}
         />
       ) : null}
-      <div className="metric-grid">
+      <div className="metric-grid metric-grid-four">
         <MetricCard label="有效 SPU" value={batch.valid_row_count} hint="已进入指标与规则处理" />
         <MetricCard label="拒绝行" value={batch.rejected_row_count} hint="身份缺失或批次内重复" />
         <MetricCard
@@ -99,6 +108,11 @@ export function BatchDetailPage() {
               label: "建立时间",
               children: new Date(batch.created_at).toLocaleString("zh-CN"),
             },
+            {
+              key: "rule",
+              label: "固定规则版本",
+              children: decisions[0]?.rule_version ?? "等待规则固化",
+            },
           ]}
         />
       </Card>
@@ -106,92 +120,28 @@ export function BatchDetailPage() {
         <Tabs
           items={[
             {
-              key: "decisions",
-              label: `规则结果 ${decisions.length}`,
+              key: "quality",
+              label: `校验与质量 ${issues.length}`,
               children: (
                 <Table
-                  rowKey="decision_id"
-                  dataSource={decisions}
+                  rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
+                  dataSource={issues}
                   pagination={{ pageSize: 10 }}
                   columns={[
                     {
-                      title: "SPU",
-                      dataIndex: "spu_name",
-                      render: (value: string, item) => (
-                        <Button
-                          type="link"
-                          style={{ padding: 0 }}
-                          onClick={() => navigate(`/actions/${item.decision_id}`)}
-                        >
-                          {value || item.spu_id}
-                        </Button>
-                      ),
-                    },
-                    {
-                      title: "类型",
-                      dataIndex: "category",
+                      title: "级别",
+                      dataIndex: "severity",
+                      width: 110,
                       render: (value: string) => <StatusTag value={value} />,
                     },
-                    {
-                      title: "经营动作",
-                      dataIndex: "main_action",
-                      render: (value: string) => <StatusTag value={value} />,
-                    },
-                    {
-                      title: "库存动作",
-                      dataIndex: "replenishment_action",
-                      render: (value: string) => <StatusTag value={value} />,
-                    },
-                    {
-                      title: "审核",
-                      dataIndex: "review_state",
-                      render: (value: string) => (
-                        <StatusTag value={value === "pending" ? "awaiting_review" : value} />
-                      ),
-                    },
+                    ...issueColumns,
                   ]}
                 />
               ),
             },
             {
-              key: "rejected",
-              label: `拒绝行 ${issues.filter((item) => item.severity === "rejected").length}`,
-              children: (
-                <Table
-                  rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
-                  dataSource={issues.filter((item) => item.severity === "rejected")}
-                  columns={issueColumns}
-                  pagination={false}
-                />
-              ),
-            },
-            {
-              key: "degraded",
-              label: `字段降级 ${issues.filter((item) => item.severity === "degraded").length}`,
-              children: (
-                <Table
-                  rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
-                  dataSource={issues.filter((item) => item.severity === "degraded")}
-                  columns={issueColumns}
-                  pagination={{ pageSize: 10 }}
-                />
-              ),
-            },
-            {
-              key: "warnings",
-              label: `普通警告 ${issues.filter((item) => item.severity === "warning").length}`,
-              children: (
-                <Table
-                  rowKey={(item) => `${item.source_row}-${item.field}-${item.code}`}
-                  dataSource={issues.filter((item) => item.severity === "warning")}
-                  columns={issueColumns}
-                  pagination={{ pageSize: 10 }}
-                />
-              ),
-            },
-            {
               key: "snapshots",
-              label: `SPU 快照 ${snapshots.length}`,
+              label: `指标快照 ${snapshots.length}`,
               children: (
                 <Table
                   rowKey="spu_id"
@@ -219,6 +169,83 @@ export function BatchDetailPage() {
                     { title: "经营准利润率", dataIndex: "profit_rate" },
                     { title: "7 日品退率", dataIndex: "return_rate_7d" },
                     { title: "库存可售天数", dataIndex: "inventory_days" },
+                  ]}
+                />
+              ),
+            },
+            {
+              key: "rules",
+              label: `固定规则 ${decisions.length}`,
+              children: (
+                <Table
+                  rowKey="decision_id"
+                  dataSource={decisions}
+                  pagination={{ pageSize: 10 }}
+                  columns={[
+                    { title: "SPU", dataIndex: "spu_name" },
+                    {
+                      title: "命中规则",
+                      dataIndex: "triggered_rules",
+                      render: (values: string[]) => values?.join("、") || "—",
+                    },
+                    { title: "规则版本", dataIndex: "rule_version" },
+                    {
+                      title: "经营动作",
+                      dataIndex: "main_action",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
+                    {
+                      title: "库存动作",
+                      dataIndex: "replenishment_action",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
+                  ]}
+                />
+              ),
+            },
+            {
+              key: "actions",
+              label: `行动清单 ${decisions.length}`,
+              children: (
+                <Table
+                  rowKey="decision_id"
+                  dataSource={decisions}
+                  pagination={{ pageSize: 10 }}
+                  columns={[
+                    {
+                      title: "SPU",
+                      dataIndex: "spu_name",
+                      render: (value: string, item) => (
+                        <Button
+                          type="link"
+                          style={{ padding: 0 }}
+                          onClick={() => navigate(`/actions/${item.decision_id}`)}
+                        >
+                          {value || item.spu_id}
+                        </Button>
+                      ),
+                    },
+                    { title: "责任运营", dataIndex: "operator_ref" },
+                    {
+                      title: "经营动作",
+                      dataIndex: "main_action",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
+                    {
+                      title: "审核",
+                      dataIndex: "review_state",
+                      render: (value: string) => (
+                        <StatusTag value={value === "pending" ? "awaiting_review" : value} />
+                      ),
+                    },
+                    {
+                      title: "进入",
+                      render: (_, item) => (
+                        <Button onClick={() => navigate(`/actions/${item.decision_id}`)}>
+                          查看建议
+                        </Button>
+                      ),
+                    },
                   ]}
                 />
               ),

@@ -19,3 +19,9 @@ quran_profit_decision.egg-info/SOURCES.txt
 quran_profit_decision.egg-info/dependency_links.txt
 quran_profit_decision.egg-info/requires.txt
 quran_profit_decision.egg-info/top_level.txt
+tests/test_ai.py
+tests/test_config.py
+tests/test_import_parsing.py
+tests/test_permissions.py
+tests/test_postgres_import.py
+tests/test_rules.py

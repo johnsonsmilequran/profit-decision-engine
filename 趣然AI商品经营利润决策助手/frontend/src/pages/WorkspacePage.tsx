@@ -1,4 +1,9 @@
-import { ArrowRightOutlined, DatabaseOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  ClockCircleOutlined,
+  DatabaseOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Card, Empty, Skeleton, Space, Table, Typography } from "antd";
 import { useLocation } from "wouter";
@@ -62,15 +67,31 @@ export function WorkspacePage() {
         </div>
       ) : (
         <>
+          <Card className="section-card batch-banner">
+            <div>
+              <span>当前发布批次</span>
+              <strong className="mono">{data.batch.batch_id}</strong>
+            </div>
+            <div>
+              <span>完整自然月期间</span>
+              <strong>
+                {data.batch.period_start} 至 {data.batch.period_end}
+              </strong>
+            </div>
+            <div>
+              <span>业务截止日</span>
+              <strong>{data.batch.business_date}</strong>
+            </div>
+            <div>
+              <span>规则快照</span>
+              <strong>RULE-V1.0</strong>
+            </div>
+            <Button onClick={() => navigate(`/batches/${data.batch?.batch_id}`)}>查看批次</Button>
+          </Card>
           <div className="metric-grid">
-            {data.metrics.map((metric) => (
+            {data.metrics.slice(0, 3).map((metric) => (
               <MetricCard key={metric.label} {...metric} hint={`批次 ${data.batch?.batch_id}`} />
             ))}
-            <MetricCard
-              label="本批次有效 SPU"
-              value={data.batch.valid_row_count}
-              hint={`${data.batch.period_start} 至 ${data.batch.period_end}`}
-            />
           </div>
           <Card
             className="section-card"
@@ -154,6 +175,29 @@ export function WorkspacePage() {
               ]}
             />
           </Card>
+          <div className="workspace-support">
+            <Card className="section-card" title="最近动态">
+              <Space direction="vertical" size={12}>
+                <div>
+                  <ClockCircleOutlined /> 批次已完成校验与规则处理
+                  <div className="muted mono">{data.batch.batch_id}</div>
+                </div>
+                <div>
+                  当前角色有 {data.items.length} 条优先事项可继续查看，状态更新会追加追溯记录。
+                </div>
+              </Space>
+            </Card>
+            <Card className="section-card" title="快捷入口">
+              <Space wrap>
+                <Button type="primary" onClick={() => navigate("/actions")}>
+                  打开行动清单
+                </Button>
+                <Button onClick={() => navigate(`/trace?batch_id=${data.batch?.batch_id}`)}>
+                  查看批次追溯
+                </Button>
+              </Space>
+            </Card>
+          </div>
         </>
       )}
     </>
