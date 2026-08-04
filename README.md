@@ -15,6 +15,8 @@
 - 真实 XLSX 批次集成测试：额外设置 `TEST_XLSX_PATH`，执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" TEST_XLSX_PATH="/绝对路径/商品链接.xlsx" go test -v ./internal/batch`
 - OpenAPI 类型同步：`cd web && npm run generate:api`（契约源为 `openapi/openapi.yaml`）
 - Compose：复制 `.env.example` 为 `.env`，填入真实环境值后执行 `make compose-up`
+- 备份：`BACKUP_DESTINATION=/受控异机目录 COMPOSE_PROJECT_NAME=profit-decision make backup`，生成数据库、XLSX、manifest 与 SHA256 校验和快照
+- 隔离恢复：先以相同代码和迁移建立空 Compose 项目，再执行 `RESTORE_SNAPSHOT=/绝对路径/快照 COMPOSE_PROJECT_NAME=目标项目 make restore`；目标数据库或文件卷非空时命令拒绝执行
 
 认证只接受钉钉 OAuth。角色映射由运维依据事业部负责人审批写入 PostgreSQL `role_mapping`；应用没有默认账号、密码登录、共享账号或角色选择入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
 
@@ -25,6 +27,8 @@
 OA 协同由 API/Worker 通过 `OA_MESSAGE_URL` 和 `OA_TOKEN` 调用公司适配入口。消息使用独立最小字段 DTO；发送、失败、人工补发和每日清仓催办均持久化到 `oa_notification`，送达不等同于业务确认。未配置 OA 时默认失败并保留受控错误状态，不伪造回执。
 
 AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
+
+备份恢复通过 `deploy/backup.sh` 与 `deploy/restore.sh` 在 Compose 主机执行。每个快照将 PostgreSQL data-only custom dump、原始 XLSX 卷归档、非敏感版本清单和 SHA256 校验和放在同一目录；恢复只接受空数据库和空 XLSX 卷，不自动删除或覆盖已有数据。
 
 历史追溯使用 `GET /api/history` 和 React `/history`，按批次/SPU 独立列出不可变决策快照，并以链接级追加事件重放审核与双轨进度。只读详情复用 `/suggestions/:linkId?mode=history`，保留原规则建议和当时生效版本，隐藏全部写入口；筛选、分页及返回上下文保存在 URL。
 

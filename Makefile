@@ -1,4 +1,4 @@
-.PHONY: install lint typecheck test build migrate dev-api dev-worker compose-up
+.PHONY: install lint typecheck test build migrate dev-api dev-worker compose-up backup restore
 
 install:
 	cd web && npm ci
@@ -30,3 +30,9 @@ dev-worker:
 
 compose-up:
 	docker compose up --build -d
+
+backup:
+	./deploy/backup.sh
+
+restore:
+	./deploy/restore.sh
