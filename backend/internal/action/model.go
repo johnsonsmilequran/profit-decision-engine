@@ -100,7 +100,9 @@ type Workbench struct {
 	BatchCompletedAt      time.Time        `json:"batch_completed_at"`
 	PendingReviewCount    int              `json:"pending_review_count"`
 	PendingExecutionCount int              `json:"pending_execution_count"`
+	PendingResultCount    int              `json:"pending_result_count"`
 	ClearanceConfirmCount int              `json:"clearance_confirm_count"`
+	NotificationFailCount int              `json:"notification_failure_count"`
 	ExceptionCount        int              `json:"exception_count"`
 	DataLimitations       []DataLimitation `json:"data_limitations"`
 	Items                 []Item           `json:"items"`

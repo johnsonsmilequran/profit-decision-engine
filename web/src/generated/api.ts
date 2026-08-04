@@ -537,7 +537,9 @@ export interface components {
             batch_completed_at: string;
             pending_review_count: number;
             pending_execution_count: number;
+            pending_result_count: number;
             clearance_confirm_count: number;
+            notification_failure_count: number;
             exception_count: number;
             data_limitations: components["schemas"]["DataLimitation"][];
             items: components["schemas"]["ActionItem"][];

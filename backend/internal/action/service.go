@@ -137,6 +137,17 @@ func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, er
 	if err := s.db.QueryRow(ctx, clearanceQuery, args...).Scan(&result.ClearanceConfirmCount); err != nil {
 		return Workbench{}, err
 	}
+	notificationQuery := `SELECT count(*) FROM oa_notification n JOIN spu_action_task t ON t.task_id=n.task_id
+		JOIN decision_task_link l ON l.task_id=t.task_id JOIN decision_record d ON d.decision_id=l.decision_id
+		JOIN action_list al ON al.list_id=d.list_id WHERE al.batch_id=$1 AND n.status='failed'`
+	notificationArgs := []interface{}{result.LatestBatchID}
+	if actor.Role == "operations" {
+		notificationQuery += ` AND t.operator_ref=$2`
+		notificationArgs = append(notificationArgs, actor.Name)
+	}
+	if err := s.db.QueryRow(ctx, notificationQuery, notificationArgs...).Scan(&result.NotificationFailCount); err != nil {
+		return Workbench{}, err
+	}
 	return result, nil
 }
 
@@ -146,6 +157,9 @@ func accumulateWorkbenchSummary(result *Workbench, item Item) {
 	}
 	if item.BusinessState == "pending_execution" {
 		result.PendingExecutionCount++
+	}
+	if item.BusinessState == "executed" {
+		result.PendingResultCount++
 	}
 	if item.RelationType == "action_change_pending" {
 		result.ExceptionCount++
