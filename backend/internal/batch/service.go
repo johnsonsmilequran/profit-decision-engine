@@ -18,8 +18,9 @@ import (
 )
 
 var (
-	ErrForbidden = errors.New("forbidden")
-	ErrNotFound  = errors.New("not found")
+	ErrForbidden    = errors.New("forbidden")
+	ErrNotFound     = errors.New("not found")
+	ErrInvalidInput = errors.New("invalid batch input")
 )
 
 type Service struct {
@@ -74,6 +75,9 @@ func (s *Service) StoreUpload(source io.Reader) (string, []byte, error) {
 func (s *Service) Create(ctx context.Context, actor Principal, input CreateInput) (Summary, error) {
 	if actor.Role != "operations" {
 		return Summary{}, ErrForbidden
+	}
+	if input.BusinessUnit != "玩具事业部" || ValidatePeriod(input.PeriodStart, input.PeriodEnd, input.CutoffDate) != nil {
+		return Summary{}, ErrInvalidInput
 	}
 	fingerprint := sha256.Sum256([]byte(strings.Join([]string{
 		input.BusinessUnit,

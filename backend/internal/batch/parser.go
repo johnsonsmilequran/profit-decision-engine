@@ -3,6 +3,7 @@ package batch
 import (
 	"errors"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -67,7 +68,14 @@ func parseWorkbook(path string, cutoff time.Time) (parsedWorkbook, error) {
 		issues   []Issue
 		rejected bool
 	}
+	type summaryTotal struct {
+		sourceRow int
+		raw       string
+		value     float64
+		valid     bool
+	}
 	candidates := make([]candidate, 0)
+	summaries := make([]summaryTotal, 0)
 	counts := make(map[string]int)
 	for index := headerIndex + 1; index < len(rows); index++ {
 		row := rows[index]
@@ -94,6 +102,9 @@ func parseWorkbook(path string, cutoff time.Time) (parsedWorkbook, error) {
 			Quality:     make(map[string]string),
 		}}
 		if isSummaryRow(item.snapshot) {
+			raw, present := optionalField(row, columns, "net_sales")
+			value, parseErr := parseNumber(raw, false)
+			summaries = append(summaries, summaryTotal{sourceRow: sourceRow, raw: raw, value: value, valid: present && raw != "" && parseErr == nil})
 			continue
 		}
 		for key, value := range map[string]string{
@@ -117,6 +128,24 @@ func parseWorkbook(path string, cutoff time.Time) (parsedWorkbook, error) {
 	if positions := duplicateExactHeaderPositions(headers, "运营"); len(positions) > 1 {
 		result.Issues = append(result.Issues, newIssue(sheet, headerIndex+1, "", "operator_ref", strings.Join(positions, ","),
 			"duplicate_operator_header", "源表存在多个同名“运营”列", "身份区第一个“运营”列作为责任运营", "已保留表头警告并未使用后续同名列", "warning"))
+	}
+	detailTotal := 0.0
+	allDetailsComparable := len(candidates) > 0
+	for _, item := range candidates {
+		if item.snapshot.NetSales == nil {
+			allDetailsComparable = false
+			break
+		}
+		detailTotal += *item.snapshot.NetSales
+	}
+	if allDetailsComparable {
+		for _, summary := range summaries {
+			if summary.valid && math.Abs(summary.value-detailTotal) > 0.01 {
+				result.Issues = append(result.Issues, newIssue(sheet, summary.sourceRow, "", "net_sales_prev_month", summary.raw,
+					"summary_net_sales_mismatch", "源表净销售额汇总与 SPU 明细重汇总不一致", "保留批次复核警告，不参与 SPU 决策或向明细分摊差额",
+					"逐行冻结值保持不变，由数据支持部门复核源表汇总口径", "warning"))
+			}
+		}
 	}
 	for _, item := range candidates {
 		if counts[item.snapshot.SPUID] > 1 {

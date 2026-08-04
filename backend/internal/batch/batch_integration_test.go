@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
+	"errors"
 	"os"
 	"testing"
 	"time"
@@ -55,9 +56,36 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 		FileSHA256: digest, CreatedBy: actorRef,
 	}
 	principal := Principal{ActorRef: actorRef, Name: "批次集成测试运营", Role: "operations"}
-	created, err := service.Create(ctx, principal, input)
-	if err != nil {
-		t.Fatalf("create batch: %v", err)
+	type createOutcome struct {
+		summary Summary
+		err     error
+	}
+	outcomes := make(chan createOutcome, 8)
+	for range 8 {
+		go func() {
+			summary, createErr := service.Create(ctx, principal, input)
+			outcomes <- createOutcome{summary: summary, err: createErr}
+		}()
+	}
+	var created Summary
+	createdCount := 0
+	for range 8 {
+		outcome := <-outcomes
+		if outcome.err != nil {
+			t.Fatalf("concurrent create batch: %v", outcome.err)
+		}
+		if created.ID == "" {
+			created = outcome.summary
+		}
+		if outcome.summary.ID != created.ID {
+			t.Fatalf("concurrent upload IDs=%s/%s", created.ID, outcome.summary.ID)
+		}
+		if !outcome.summary.Idempotent {
+			createdCount++
+		}
+	}
+	if createdCount != 1 {
+		t.Fatalf("concurrent non-idempotent results=%d, want 1", createdCount)
 	}
 	duplicate, err := service.Create(ctx, principal, input)
 	if err != nil {
@@ -65,6 +93,20 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	}
 	if !duplicate.Idempotent || duplicate.ID != created.ID {
 		t.Fatalf("repeat upload created another batch: first=%s repeat=%s idempotent=%v", created.ID, duplicate.ID, duplicate.Idempotent)
+	}
+	invalidInput := input
+	invalidInput.PeriodEnd = mustIntegrationDate(t, "2026-06-29")
+	invalidInput.FileSHA256 = append([]byte(nil), input.FileSHA256...)
+	invalidInput.FileSHA256[0] ^= 0xff
+	if _, err := service.Create(ctx, principal, invalidInput); !errors.Is(err, ErrInvalidInput) {
+		t.Fatalf("invalid natural month error=%v", err)
+	}
+	var invalidBatches int
+	if err := db.QueryRow(ctx, `SELECT count(*) FROM import_batch WHERE source_file_sha256=$1`, invalidInput.FileSHA256).Scan(&invalidBatches); err != nil {
+		t.Fatal(err)
+	}
+	if invalidBatches != 0 {
+		t.Fatalf("invalid period persisted batches=%d", invalidBatches)
 	}
 
 	processed, err := NewProcessor(db).RunOne(ctx)

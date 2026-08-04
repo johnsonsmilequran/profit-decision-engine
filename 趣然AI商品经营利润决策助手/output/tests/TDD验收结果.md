@@ -8,8 +8,8 @@
 | SMOKE-01 | pending | 待发布候选执行完整安装、构建、Compose 与健康检查 | — |
 | SMOKE-02 | pending | 待发布候选执行真实数据核心旅程 | — |
 | FLOW-01 | pending | 待执行 | — |
-| FLOW-02 | pending | 待执行 | — |
-| FLOW-03 | pending | 待执行 | — |
+| FLOW-02 | pending | 已完成真实 XLSX、8 路并发同指纹、领域层非法期间、必要身份缺失、重复 SPU、经营字段降级及批次/清单唯一持久化；等待批次页面浏览器 E2E | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 TEST_XLSX_PATH=…/商品链接.xlsx go test -race -count=1 -v ./internal/batch` exit 0；`TestBatchLifecycleAgainstPostgresAndRealWorkbook` 8 路并发仅 1 个非幂等结果、同一 batch_id、批次/清单 1/1，非法自然月持久化 0；`TestWorkbookValidationPreservesRowsIssuesAndMetricBoundaries` 重复 SPU 2 行拒绝、身份缺失 1 行拒绝、经营降级保留行与完整定位字段；浏览器返回 No browser is available，故不记 pass |
+| FLOW-03 | pending | 已完成净销售额/源利润率、7 日品退率、14 日库存天数、零分母、负库存、汇总行排除与汇总差异警告边界；真实用户 XLSX 缺 7/14 日字段时保持未知且不补 0；等待证据抽屉/详情浏览器 E2E | 同一 `go test -race -count=1 -v ./internal/batch` exit 0；边界 XLSX 的品退率=1/100=0.01、库存天数=(100+20)/(70/14)=24、源利润率=0.1，零销售/负库存/非法利润均为 nil+独立质量态；合计行不进入 2 条有效 SPU，999 对明细 850 生成 1 条 `summary_net_sales_mismatch`；`TestRealWorkbookParsing` 真实 10 行销售/利润保留、7 日品退/库存天数均 nil；浏览器返回 No browser is available，故不记 pass |
 | FLOW-04 | pending | 待执行 | — |
 | FLOW-05 | pending | LiteLLM HTTP 适配器与 PostgreSQL 解释版本故障矩阵已执行；等待浏览器降级态与真实产品网关联调 | `go test -race -count=1 -v ./internal/explanation` exit 0；覆盖拒绝连接、5ms 超时、502、外层非法 JSON、缺 choice、内容非法 JSON、缺字段、冲突动作、虚构 999%、退款归因及合规恢复；每个失败版本无 content、failure_code 精确，规则/任务状态未改变；浏览器不可用且未提供产品 LiteLLM 配置，故不记 pass |
 | FLOW-06 | pending | API/数据库页签、组合筛选、角色默认范围、清仓确认与完成态已执行；等待浏览器双角色 E2E 后才能判定 | `TestActionTabsAndFiltersFollowRoleProgress` 在真实 PostgreSQL 中推进待审核→待执行→执行→结果→清仓待确认→完成并通过；`make lint typecheck test build` exit 0；Compose 真实批次主管页签 `mine=6/all=7/processing=6/completed=1`，动作+运营+审核+经营+清仓+进度组合筛选 total=1；浏览器工具两次返回 `No browser is available`，故不记 pass |
