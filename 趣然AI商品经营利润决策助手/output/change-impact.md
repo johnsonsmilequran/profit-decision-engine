@@ -2,7 +2,7 @@
 
 > 当前上游契约：`requirements.md` revision 2  
 > 比较基线：Design Master 启动时读取的 revision 1  
-> 结论：变更发生在阶段 II 深度产物生成之前；认证、权限和页面骨架已在总蓝图中按 revision 2 重新收敛，无遗留 `stale` 产物。
+> 结论：变更发生在阶段 II 深度产物生成之前；认证、权限和页面骨架已在总蓝图中按 revision 2 重新收敛，阶段 II 深度产物现已全部落盘并复核，无遗留 `stale` 产物。
 
 | Changed Source | Old→New Revision | Affected Design IDs | Artifacts | Action | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -13,6 +13,12 @@
 
 ## 保留范围
 
-- F01—F06、F08 的业务行为、固定规则、批次幂等、AI 降级与审核/分动作状态机语义未变，按已确认蓝图继续生成。
+- F01—F06、F08 的业务行为、固定规则、批次幂等、AI 降级与审核/分动作状态机语义未变；对应页面 MD、HTML 与《技术方案》已按确认蓝图生成并复核。
 - 浅色企业数据风格、“行动罗盘”签名、PC 1440/1280 边界和模块化单体决策在 revision 2 完整契约上确认，不存在需要保留的 revision 1 深度产物。
-- 阶段 II 全部新产物以 revision 2 为生成基线；完成后《设计追溯矩阵》必须将上述条目标记为 `covered`，不得仅更新 revision 数字。
+- 阶段 II 全部产物均以 revision 2 为生成基线；认证页已落在 `pages/阶段1_认证与权限_钉钉登录.md` 与 `pages/阶段1_认证与权限_钉钉登录.html`，默认拒绝页已落在 `pages/阶段1_认证与权限_无权限.md` 与 `pages/阶段1_认证与权限_无权限.html`，角色化工作台已落在 `pages/阶段1_经营协作_角色化工作台.md` 与 `pages/阶段1_经营协作_角色化工作台.html`，服务端认证、角色映射和最小投影契约已落在 `技术方案.md` §2.1、§7.2。
+
+## 闭环复核
+
+- revision 2 增量 source `REQ-F07-03`、`AC-F07-05`、`AC-F07-06`、`NFR-002` 已在 `设计追溯矩阵.md` 中逐项映射到真实 PAGE/API/DATA/SEQ/DEC 设计及对应 MD/HTML/技术方案路径，状态均为 `covered`。
+- 已运行 Design Master 官方 `check_traceability.py` 校验器，结果为 **68 个 MVP source 施工级覆盖 / 0 个后续 source 已规划**，校验通过。
+- 本次增量只补齐钉钉认证、IT 角色映射、默认拒绝和服务端最小可见设计；F01—F06、F08 既有业务语义、固定规则、批次幂等、AI 降级及审核/分动作状态机均未受影响。
