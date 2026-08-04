@@ -800,14 +800,18 @@
             <section aria-labelledby="tracks-heading">
               <article class="surface p-5 mb-5" aria-labelledby="continuity-heading">
                 <div class="flex items-start justify-between gap-6">
-                  <div><div class="eyebrow">CROSS-BATCH CONTINUITY</div><h2 id="continuity-heading" class="section-title mt-1">跨周任务续接</h2><p class="muted mt-2 text-sm">本周固定规则仍为“清仓 + 禁止补货”，系统已关联原任务，不重复创建待办，审核和执行状态保持。</p></div>
+                  <div><div class="eyebrow">CROSS-BATCH CONTINUITY</div><h2 id="continuity-heading" class="section-title mt-1">跨周任务续接</h2><p class="muted mt-2 text-sm">以 SPU/商品链接锚定稳定经营待办。本周固定规则仍为“清仓 + 禁止补货”，系统关联最近前序记录，不重复创建待办。</p></div>
                   <span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>同动作续接</span>
                 </div>
                 <div class="mt-4 grid grid-cols-4 gap-3">
-                  <div class="metric-tile"><div class="meta">稳定任务 ID</div><div class="mono mt-2 font-bold">TASK-TOY-515</div></div>
-                  <div class="metric-tile"><div class="meta">前序批次</div><div class="mono mt-2 font-bold">BATCH-20260531-01</div><div class="meta mt-2">生效：清仓</div></div>
-                  <div class="metric-tile"><div class="meta">当前批次</div><div class="mono mt-2 font-bold">BATCH-20260630-01</div><div class="meta mt-2">规则：清仓</div></div>
-                  <div class="metric-tile"><div class="meta">续接结果</div><div class="mt-2 font-bold">原任务保持</div><div class="meta mt-2">已通过 · 双轨待处理</div></div>
+                  <div class="metric-tile"><div class="meta">稳定任务 ID</div><div class="mono mt-2 font-bold">TASK-TOY-515</div><div class="meta mt-2">SPU 515 精确锚定</div></div>
+                  <div class="metric-tile"><div class="meta">待办产生时间</div><div class="mono mt-2 font-bold">2026-06-29 09:12</div><div class="meta mt-2">首次建任，续接不重置</div></div>
+                  <div class="metric-tile"><div class="meta">当前经营状态</div><div class="mt-2 font-bold">待执行</div><div class="meta mt-2">审核已通过</div></div>
+                  <div class="metric-tile"><div class="meta">经营执行时间</div><div class="mono mt-2 font-bold">—</div><div class="meta mt-2">尚未执行</div></div>
+                  <div class="metric-tile"><div class="meta">本周关联</div><div class="mono mt-2 font-bold">2026-07-06 09:18</div><div class="meta mt-2">BATCH-20260630-01 · 清仓</div></div>
+                  <div class="metric-tile"><div class="meta">最近前序待办</div><div class="mono mt-2 font-bold">BATCH-20260531-01</div><div class="meta mt-2">清仓 · 待执行</div></div>
+                  <div class="metric-tile"><div class="meta">前序产生时间</div><div class="mono mt-2 font-bold">2026-06-29 09:12</div><div class="meta mt-2">同一稳定任务</div></div>
+                  <div class="metric-tile"><div class="meta">前序执行时间</div><div class="mono mt-2 font-bold">—</div><div class="meta mt-2">前序同样尚未执行</div></div>
                 </div>
                 <div class="mt-4 rounded-md p-4" style="background:var(--warn-soft);border:1px solid var(--warn);"><strong>如果本周变为观察</strong><p class="muted mt-1 text-sm">页面将显示“清仓 → 观察 · 待主管确认”；通过后观察成为当前生效动作，上周清仓快照和已执行事实仍保留。</p></div>
               </article>

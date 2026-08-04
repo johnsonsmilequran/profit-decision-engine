@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-04T02:58:56Z",
+  "last_updated_at_utc": "2026-08-04T04:36:18Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -19,15 +19,15 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 5,
-  "source_ids_changed": ["REQ-F05-04", "AC-F05-06", "AC-F05-07", "AC-F05-08"],
+  "contract_revision": 6,
+  "source_ids_changed": ["REQ-F05-05", "AC-F05-09", "AC-F05-10"],
   "current_stage": "design-master-stage-II",
-  "current_substep": "cross-week-task-continuity-increment-completed",
+  "current_substep": "spu-previous-todo-and-business-status-increment-completed",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
     "type": "ready_for_tdd",
-    "description": "Design Master 阶段 II 及跨周任务续接增量设计已完成并通过追溯和页面冒烟校验；可进入 TDD Master"
+    "description": "Design Master 阶段 II 及 SPU 跨周最近前序待办、生命周期时间和经营状态筛选增量已完成；79 个 MVP source 追溯通过，可进入 TDD Master"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -144,6 +144,12 @@
       "decision": "同一 SPU 每周决策快照独立保留，但相同经营/库存动作续接稳定任务且不重复审核；动作变化追加待主管确认版本，通过后替换当前生效动作",
       "stage": "design-master",
       "rationale": "避免连续清仓等同动作周周重复建任，同时保留清仓变观察等动作变更的审核边界与完整历史"
+    },
+    {
+      "id": "D-20",
+      "decision": "经营待办以事业部与 SPU/商品链接精确锚定；新批次显示最近一条前序待办、首次产生时间、本周关联时间、当前经营状态与真实执行时间，并支持按经营状态筛选",
+      "stage": "design-master",
+      "rationale": "让周度导入后的任务续接关系、处理进度和执行事实可见，同时避免审核、采购或更新时间被误当成经营状态或执行时间"
     }
   ],
   "category": "saas",

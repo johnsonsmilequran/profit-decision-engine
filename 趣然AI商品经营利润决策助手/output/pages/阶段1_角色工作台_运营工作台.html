@@ -372,6 +372,17 @@
     }
     .search-field:hover, .search-field:focus { border-color: var(--accent); }
     .search-field:focus-visible { box-shadow: var(--focus-ring); }
+    .state-filter {
+      min-height: 38px;
+      min-width: 148px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      outline: none;
+    }
+    .state-filter:focus-visible { box-shadow: var(--focus-ring); border-color: var(--accent); }
     .filter-button {
       min-height: 34px;
       padding: 0 var(--space-3);
@@ -410,6 +421,8 @@
     .task-row[hidden] { display: none; }
     .product-name { font-weight: 680; color: var(--fg); }
     .evidence { color: var(--muted); font-size: var(--text-xs); line-height: 1.55; }
+    .task-relation { margin-top: 6px; color: var(--accent); font-size: var(--text-xs); line-height: 1.45; }
+    .task-time { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -688,11 +701,26 @@
                 <button class="filter-button" type="button" data-filter="watch">观察 2</button>
                 <button class="filter-button" type="button" data-filter="invest">加投 3</button>
               </div>
-              <label class="relative block">
+              <div class="flex items-center gap-2">
+                <label>
+                  <span class="sr-only">按经营状态筛选</span>
+                  <select id="businessStateFilter" class="state-filter" aria-label="经营状态筛选">
+                    <option value="all">全部经营状态</option>
+                    <option value="待审核">待审核</option>
+                    <option value="变更待确认">变更待确认</option>
+                    <option value="待执行">待执行</option>
+                    <option value="已执行">已执行</option>
+                    <option value="待记录结果">待记录结果</option>
+                    <option value="已记录结果">已记录结果</option>
+                    <option value="已关闭">已关闭</option>
+                  </select>
+                </label>
+                <label class="relative block">
                 <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 muted" aria-hidden="true"></i>
                 <span class="sr-only">搜索 SPU</span>
                 <input id="taskSearch" class="search-field" type="search" placeholder="搜索 SPU 或商品名">
-              </label>
+                </label>
+              </div>
             </div>
             <div class="table-wrap">
               <table class="task-table">
@@ -708,16 +736,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="task-row" data-action="clear" data-search="spu-515 布乐迪忙碌屋益智玩具">
-                    <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515</div></td>
+                  <tr class="task-row" data-action="clear" data-business-state="待执行" data-search="spu-515 布乐迪忙碌屋益智玩具 task-toy-515">
+                    <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515 · TASK-TOY-515</div><div class="task-relation"><i class="ph ph-link" aria-hidden="true"></i> 最近前序：BATCH-20260531-01 · 清仓 / 待执行</div></td>
                     <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
                     <td><div class="numeric font-semibold">上月净销售额 86,240 元</div><div class="evidence">经营准利润率 -12.8% · 近 7 天品退率未校验</div></td>
                     <td><div class="font-semibold">仓内 3,000 件 · 在途 260 件</div><div class="evidence">近 14 天销量 112 件 · 日均 8.0 件 · 可售 407.5 天 · 禁止补货</div></td>
-                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过 · 采购待确认禁补</div></td>
+                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过 · 采购待确认禁补</div><div class="task-time mono">产生 06-29 09:12<br>本周关联 07-06 09:18<br>执行 —</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="布乐迪忙碌屋益智玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="clear" data-search="spu-676 遥控攀爬车">
+                  <tr class="task-row" data-action="clear" data-business-state="待执行" data-search="spu-676 遥控攀爬车">
                     <td><div class="product-name">遥控攀爬车</div><div class="meta mono">SPU-676</div></td>
                     <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
                     <td><div class="numeric font-semibold">净销售额 1.7 万</div><div class="evidence">非新品 · 低于 2 万淘汰线</div></td>
@@ -726,7 +754,7 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="遥控攀爬车">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="stop" data-search="spu-642 儿童电钻工具箱">
+                  <tr class="task-row" data-action="stop" data-business-state="待执行" data-search="spu-642 儿童电钻工具箱">
                     <td><div class="product-name">儿童电钻工具箱</div><div class="meta mono">SPU-642</div></td>
                     <td><span class="badge badge-stop"><i class="ph ph-pause-circle" aria-hidden="true"></i>推广止损</span></td>
                     <td><div class="numeric font-semibold">净销售额 8.6 万</div><div class="evidence">经营准利润率 7.4% · 低于 10%</div></td>
@@ -735,7 +763,7 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童电钻工具箱">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="stop" data-search="spu-734 桌面足球弹射玩具">
+                  <tr class="task-row" data-action="stop" data-business-state="待执行" data-search="spu-734 桌面足球弹射玩具">
                     <td><div class="product-name">桌面足球弹射玩具</div><div class="meta mono">SPU-734</div></td>
                     <td><span class="badge badge-stop"><i class="ph ph-pause-circle" aria-hidden="true"></i>推广止损</span></td>
                     <td><div class="numeric font-semibold">净销售额 3.8 万</div><div class="evidence">经营准利润率 8.2% · 低于 10%</div></td>
@@ -744,7 +772,7 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="桌面足球弹射玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="stop" data-search="spu-560 过家家收银台">
+                  <tr class="task-row" data-action="stop" data-business-state="待执行" data-search="spu-560 过家家收银台">
                     <td><div class="product-name">过家家收银台</div><div class="meta mono">SPU-560</div></td>
                     <td><span class="badge badge-stop"><i class="ph ph-pause-circle" aria-hidden="true"></i>推广止损</span></td>
                     <td><div class="numeric font-semibold">净销售额 11.3 万</div><div class="evidence">经营准利润率 4.4% · 低于 5%</div></td>
@@ -753,16 +781,16 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="过家家收银台">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="watch" data-search="spu-903 木质医生玩具">
+                  <tr class="task-row" data-action="watch" data-business-state="已执行" data-search="spu-903 木质医生玩具">
                     <td><div class="product-name">木质医生玩具</div><div class="meta mono">SPU-903</div></td>
                     <td><span class="badge badge-watch"><i class="ph ph-eye" aria-hidden="true"></i>观察</span></td>
                     <td><div class="numeric font-semibold">净销售额 4.7 万</div><div class="evidence">经营准利润率 16.9% · 品退率 2.1%</div></td>
                     <td><div class="font-semibold">库存 445 件</div><div class="evidence">可售 36 天 · 暂不补货</div></td>
-                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
+                    <td><span class="badge badge-pass">已执行</span><div class="meta mt-1">等待观察结果</div><div class="task-time mono">产生 07-06 09:20<br>执行 07-08 14:32</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="木质医生玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="watch" data-search="spu-991 软胶恐龙套装">
+                  <tr class="task-row" data-action="watch" data-business-state="待执行" data-search="spu-991 软胶恐龙套装">
                     <td><div class="product-name">软胶恐龙套装</div><div class="meta mono">SPU-991</div></td>
                     <td><span class="badge badge-watch"><i class="ph ph-eye" aria-hidden="true"></i>观察</span></td>
                     <td><div class="numeric font-semibold">净销售额 2.9 万</div><div class="evidence">经营准利润率 13.6% · 品退率 1.9%</div></td>
@@ -771,16 +799,16 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="软胶恐龙套装">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="invest" data-search="spu-728 磁力片城堡">
+                  <tr class="task-row" data-action="invest" data-business-state="待记录结果" data-search="spu-728 磁力片城堡">
                     <td><div class="product-name">磁力片城堡</div><div class="meta mono">SPU-728</div></td>
                     <td><span class="badge badge-invest"><i class="ph ph-trend-up" aria-hidden="true"></i>加投</span></td>
                     <td><div class="numeric font-semibold">净销售额 16.7 万</div><div class="evidence">经营准利润率 18.6% · 品退率 0.9%</div></td>
                     <td><div class="font-semibold">库存 608 件</div><div class="evidence">可售 22 天 · 已生成补货</div></td>
-                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过</div></td>
+                    <td><span class="badge badge-invest">待记录结果</span><div class="meta mt-1">经营动作已执行</div><div class="task-time mono">产生 07-06 09:22<br>执行 07-07 10:06</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="磁力片城堡">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="invest" data-search="spu-881 蒙氏忙碌板">
+                  <tr class="task-row" data-action="invest" data-business-state="待执行" data-search="spu-881 蒙氏忙碌板">
                     <td><div class="product-name">蒙氏忙碌板</div><div class="meta mono">SPU-881</div></td>
                     <td><span class="badge badge-invest"><i class="ph ph-trend-up" aria-hidden="true"></i>加投</span></td>
                     <td><div class="numeric font-semibold">净销售额 6.2 万</div><div class="evidence">经营准利润率 17.8% · 品退率 0.7%</div></td>
@@ -789,7 +817,7 @@
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="蒙氏忙碌板">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>
-                  <tr class="task-row" data-action="invest" data-search="spu-845 儿童拍立得相机">
+                  <tr class="task-row" data-action="invest" data-business-state="待执行" data-search="spu-845 儿童拍立得相机">
                     <td><div class="product-name">儿童拍立得相机</div><div class="meta mono">SPU-845</div></td>
                     <td><span class="badge badge-invest"><i class="ph ph-trend-up" aria-hidden="true"></i>加投</span></td>
                     <td><div class="numeric font-semibold">新品 · 净销售额 1.5 万</div><div class="evidence">经营准利润率 -12.4% · 高于 -20%</div></td>
@@ -934,20 +962,23 @@
     const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
     const taskRows = Array.from(document.querySelectorAll('.task-row'));
     const taskSearch = document.getElementById('taskSearch');
+    const businessStateFilter = document.getElementById('businessStateFilter');
     const taskCount = document.getElementById('taskCount');
     let activeFilter = 'all';
 
     function updateTasks() {
       const keyword = taskSearch.value.trim().toLowerCase();
+      const businessState = businessStateFilter.value;
       let visibleCount = 0;
       taskRows.forEach((row) => {
         const matchesAction = activeFilter === 'all' || row.dataset.action === activeFilter;
+        const matchesBusinessState = businessState === 'all' || row.dataset.businessState === businessState;
         const matchesKeyword = !keyword || row.dataset.search.toLowerCase().includes(keyword);
-        const visible = matchesAction && matchesKeyword;
+        const visible = matchesAction && matchesBusinessState && matchesKeyword;
         row.hidden = !visible;
         if (visible) visibleCount += 1;
       });
-      taskCount.textContent = `当前显示 ${visibleCount} 条 · 共 12 条待执行`;
+      taskCount.textContent = `当前显示 ${visibleCount} 条 · 经营状态：${businessState === 'all' ? '全部' : businessState}`;
     }
 
     filterButtons.forEach((button) => {
@@ -958,6 +989,7 @@
       });
     });
     taskSearch.addEventListener('input', updateTasks);
+    businessStateFilter.addEventListener('change', updateTasks);
 
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
