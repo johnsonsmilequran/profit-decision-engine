@@ -5,7 +5,7 @@
 
 ## 当前状态
 - ✅ 已完成：阶段 0、1、5、6 既定产物；Design Master 阶段 I—II 已完成；requirements revision 8 已收敛为运营/运营主管双角色；最近前序待办默认折叠，展开后在运营工作台和行动清单中以与当前待办相同列结构的一整行原批次只读记录显示，当前任务信息常驻且不得用当前周回填历史；责任运营通过 OA 统一协同外部相关人员；清仓完成时间采用运营提交、主管确认/退回，确认前每日幂等催办；采购工作台退役；实现技术基线已切换为 Go API + Go Worker + React/TypeScript/Vite，并同步到 PRD、设计蓝图、技术方案、追溯矩阵与 TDD；TDD 契约仍覆盖 83 项 required source、9 个运行态 MVP 页面和 28 条验收并通过机械校验；`lingfeng` 分支跟踪远程。
-- ▶️ 进行中：按生产上线目标执行规格与页面配对门禁、仓库盘点和 TDD 开工门禁；门禁通过后按最小真实用户闭环实现 Go API、Worker、PostgreSQL 持久化与 React 页面。
+- ▶️ 进行中：页面与 TDD 开工门禁已通过；登录页与认证恢复页已完成 React 运行路由、真实钉钉 OAuth 适配器、PostgreSQL 角色/会话持久化及默认拒绝冒烟，开发进度 2/9、正式验收 0/9；当前进入真实 XLSX 导入与批次处理闭环。
 - ⏸️ 待办：按 28 条 pending TDD 台账完成生产实现和发布候选验收；按 `仓库协作设置指引.md` 在 GitHub 网页启用 main 分支保护；出现真实代码与测试命令后生成 CI。
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
@@ -84,11 +84,16 @@
 - [08-04-2026 15:04:49] TDD required 终止条件｜背景：requirements revision 8 含 83 个 required source，页面清单含 9 个运行态 MVP 页面，且固定规则、权限、OA、密钥、AI 降级与不可变审计均属于高影响风险｜结论：TDD 契约采用 2 条冒烟、12 条核心流程、9 条逐页设计验收和 5 条风险验收，共 28 条 required；采购工作台退役且不进入验收；Coding Agent 必须先建全量 pending 结果台账，最终以本轮命令、退出码、测试和独立看图截图证据全部通过后才能结束｜来源：AI
 - [08-04-2026 15:10:24] 前后端技术栈调整｜背景：已完成的 Design Master 技术方案采用 Next.js 同时承载前端与后端，TDD 契约也沿用全 TypeScript 构建门禁；用户在开发前重新指定实现语言｜结论：后端改用 Go，前端使用 React；同步更新设计蓝图、技术方案、架构追溯与 TDD 构建/运行门禁，业务需求、页面范围、交互和视觉基线保持不变｜来源：用户
 - [08-04-2026 15:26:39] 生产上线交付与验收边界｜背景：规格、设计与 TDD 契约已就绪，用户要求开始 Coding Agent 阶段并明确完成标准｜结论：交付必须是面向真实用户的生产应用，全部 MVP 页面逐页实现并接入真实 Go 后端 API 与 PostgreSQL 持久化，禁止 mock、硬编码占位和仅前端实现；开工前完成全局规格、页面配对及 TDD 台账门禁，开发按最小纵向闭环推进并高频提交推送，全部开发完成后执行逐项 TDD、全量工程、Compose、真实数据端到端和独立视觉验收，三项量化覆盖率均须达到 100% 才可完成｜来源：用户
+- [08-04-2026 15:46:44] TypeScript 兼容版本｜背景：技术方案预选 TypeScript 7.0.2，但实际 `npm install` 证明当前 typescript-eslint 8.57.0 的 peer range 仅接受 TypeScript `<6.0.0`，方案已明确要求遇此情形回退到最新兼容稳定版｜结论：前端锁定 TypeScript 5.9.3，保持 React + TypeScript 架构不变，以可重复安装和 lint/typecheck 兼容为准｜来源：AI
+- [08-04-2026 15:50:58] 前端路由攻击面收敛｜背景：react-router-dom 7.18.2 命中 GHSA-qwww-vcr4-c8h2，回退到 7.11.0 后又被本轮 `npm audit` 证明存在另一组高危 XSS/开放重定向通告，当前 7.x 无可同时避开这些已知高危通告的版本；本项目仅需静态客户端路由，无需 React Router 的 RSC/SSR/Action 能力｜结论：移除 React Router，用浏览器原生 History/Location 完成同一 URL 集合的页面分发与跳转，不改变页面结构、交互或鉴权流程，并以 `npm audit --audit-level=high` 通过为证据｜来源：AI
+- [08-04-2026 16:23:35] 认证页面与 API 同源路由冲突｜背景：运行态冒烟证明宽泛 `/auth/` 代理会将 React `/auth/recovery` 错送到 Go API 并返回 502，而技术契约中真正的认证 API 仅为 `/auth/dingtalk/*` 与 `/auth/logout`｜结论：Vite 与 Nginx 仅代理这两类 API 路径，`/auth/recovery` 始终交由 SPA fallback；修正后恢复页 HTTP 200、未登录 API 401、缺钉钉配置入口 302 到受控恢复页｜来源：AI
+- [08-04-2026 15:57:34] PostgreSQL 18 持久卷路径｜背景：实际启动 postgres:18.4-alpine 时，官方镜像明确拒绝将 18+ 持久卷直接挂载到 `/var/lib/postgresql/data`，要求挂载父目录以保留主版本子目录及升级边界｜结论：Compose 改用新的 `postgres18-data` 卷挂载 `/var/lib/postgresql`；旧的未初始化卷不删除，避免未授权的破坏性操作｜来源：AI
 
 ## 待解决问题
 
 - 认证入口阻塞已解除；评价文本、退款/退货原因、广告明细、SPU 库存、最近 14 天销量和可信近 7 天品退数据仍作为后续扩展或数据补齐项，不阻塞规则型 V0。
 - 页面门禁警告：`PAGE-F06-02` 的 MD/HTML 唯一配对仍作为退役历史设计证据保留；页面清单已明确标为 `retired @ revision 7`，不计入 9 个运行态 MVP 页面，不得进入导航、运行路由或视觉验收。
+- 真实钉钉 OAuth 的最终授权回调验证仍需部署环境提供 `DINGTALK_CLIENT_ID` / `DINGTALK_CLIENT_SECRET`；当前本地已验证缺配置时默认拒绝与受控恢复，不伪造登录 pass。
 
 ## 工作文件集
 

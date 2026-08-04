@@ -6,6 +6,8 @@
 
 # 依赖与缓存
 node_modules/
+web/dist/
+*.tsbuildinfo
 __pycache__/
 *.py[cod]
 

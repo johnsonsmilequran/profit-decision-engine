@@ -1,8 +1,20 @@
 # AI 商品经营与利润决策助手
 
-本仓库用于管理趣然电商“AI 商品经营与利润决策助手”的产品需求、稳定需求契约、演示页面和方案 PPT。
+本仓库用于交付趣然电商“AI 商品经营与利润决策助手”的产品规格与生产应用。生产实现采用 React/TypeScript/Vite PC Web、Go API 与 Worker、PostgreSQL，并由 Nginx 通过同源路径发布。
 
-当前 V0 聚焦玩具事业部，以 SPU/商品链接为唯一决策粒度：每周导入经营数据，由固定规则生成经营与库存动作，AI 只负责解释和排序，再由运营主管、运营和采购计划完成轻闭环。
+当前 V0 聚焦玩具事业部，以 SPU/商品链接为唯一决策粒度：每周导入经营数据，由固定规则生成经营与库存动作，AI 只负责解释和排序，再由运营主管审核、责任运营执行并通过 OA 协调外部相关人员完成轻闭环。
+
+## 工程命令
+
+- 安装：`make install`
+- 前端开发：`cd web && npm run dev`
+- 数据迁移：`make migrate`（需要 `DATABASE_URL`）
+- API / Worker：`make dev-api` / `make dev-worker`（Compose 数据库默认在本机 `55432` 端口可达）
+- 校验：`make lint typecheck test build`
+- 真实数据库集成测试：先迁移 PostgreSQL，再执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" go test -race ./...`
+- Compose：复制 `.env.example` 为 `.env`，填入真实环境值后执行 `make compose-up`
+
+认证只接受钉钉 OAuth。角色映射由运维依据事业部负责人审批写入 PostgreSQL `role_mapping`；应用没有默认账号、密码登录、共享账号或角色选择入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
 
 ## 当前成果
 
@@ -18,7 +30,11 @@
 ```text
 .
 ├── .github/                         # Issue、PR 与 CODEOWNERS 协作配置
+├── backend/                         # Go API、Worker、迁移与领域模块
+├── deploy/                          # Nginx 生产同源入口
 ├── doc/                             # 跨会话项目纪要
+├── web/                             # React/TypeScript/Vite PC Web
+├── compose.yaml                     # PostgreSQL、迁移、API、Worker、Web
 ├── 趣然AI商品经营利润决策助手/       # PRD、证据、评审与演示产物
 ├── CONTRIBUTING.md                  # 贡献流程
 └── 仓库协作设置指引.md               # GitHub 分支保护与 CI 启用指引
