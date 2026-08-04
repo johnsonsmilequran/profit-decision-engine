@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-04T05:21:31Z",
+  "last_updated_at_utc": "2026-08-04T05:59:14Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -22,12 +22,12 @@
   "contract_revision": 7,
   "source_ids_changed": ["REQ-F06-02", "REQ-F06-03", "REQ-F06-05", "REQ-F07-01", "REQ-F07-02", "REQ-F07-03", "AC-F06-03", "AC-F06-04", "AC-F06-05", "AC-F06-06", "AC-F06-10", "AC-F06-11", "AC-F06-12", "AC-F07-03", "AC-F07-04", "AC-F07-06", "NFR-002"],
   "current_stage": "design-master-stage-II",
-  "current_substep": "dual-role-oa-clearance-confirmation-increment-completed",
+  "current_substep": "previous-todo-disclosure-increment-completed",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
     "type": "ready_for_tdd",
-    "description": "Design Master 阶段 II 双角色、责任运营 OA 协同、清仓完成时间确认与每日催办增量已完成；83 个 MVP source 追溯通过，可进入 TDD Master"
+    "description": "Design Master 阶段 II 最近前序待办默认折叠增量已完成；83 个 MVP source 追溯通过，可进入 TDD Master"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -156,6 +156,12 @@
       "decision": "清仓动作跨周不变时沿用同一稳定任务；责任运营提交实际清仓完成时间，运营主管确认或退回；最终确认前系统每天通过 OA 最多催办责任运营一次，确认、改判或终止后停止",
       "stage": "design-master",
       "rationale": "避免重复建任并确保清仓不是由通知送达或运营单方声明直接闭环，同时对长期未确认的完成事实形成可监控催办"
+    },
+    {
+      "id": "D-22",
+      "decision": "运营工作台、行动清单和建议详情中的当前任务信息常驻；最近前序待办的来源批次、动作、状态、产生时间和执行时间按 SPU 默认折叠，用户按需展开",
+      "stage": "design-master",
+      "rationale": "降低主表历史信息密度，同时保留跨周关系的可发现性和完整追溯字段"
     }
   ],
   "category": "saas",

@@ -483,7 +483,14 @@
     .spu-name { font-weight: 700; line-height: 1.42; }
     .spu-meta { margin-top: var(--space-1); color: var(--muted); font-size: var(--text-xs); }
     .category-label { margin-top: var(--space-2); color: var(--meta); font-size: var(--text-xs); }
-    .relation-summary { margin-top: var(--space-2); padding: 7px 9px; border: 1px solid var(--accent-border); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-strong); font-size: 11px; line-height: 1.5; }
+    .previous-todo { margin-top: var(--space-2); overflow: hidden; border: 1px solid var(--accent-border); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-strong); font-size: 11px; }
+    .previous-todo summary { display: flex; align-items: center; gap: var(--space-1); min-height: 30px; padding: 6px 8px; cursor: pointer; list-style: none; font-weight: 700; }
+    .previous-todo summary::-webkit-details-marker { display: none; }
+    .previous-todo summary:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
+    .previous-todo .previous-caret { margin-left: auto; transition: transform var(--motion-fast) var(--ease-standard); }
+    .previous-todo[open] .previous-caret { transform: rotate(180deg); }
+    .previous-detail { padding: 8px; border-top: 1px solid var(--accent-border); color: var(--fg); line-height: 1.6; }
+    .previous-detail .meta-label { display: inline-block; min-width: 58px; color: var(--muted); }
     .lifecycle { margin-top: var(--space-2); color: var(--muted); font-size: 11px; line-height: 1.55; white-space: nowrap; }
     .problem-cell { width: 260px; min-width: 260px; }
     .problem-title { font-weight: 680; line-height: 1.45; }
@@ -600,7 +607,7 @@
       .device-notice { display: grid; place-items: center; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .nav-button, .button-primary, .button-secondary, .icon-button, .link-button, .tab-button, .field, .toast { transition: none; }
+      .nav-button, .button-primary, .button-secondary, .icon-button, .link-button, .tab-button, .field, .toast, .previous-caret { transition: none; }
     }
   </style>
 </head>
@@ -854,7 +861,7 @@
               </thead>
               <tbody id="action-list">
                 <tr data-list-state="pending" data-action="清仓 禁止补货" data-store="趣然天猫旗舰店" data-owner="陈雨欣" data-review="已通过" data-business-state="待提交清仓完成时间" data-execution="待执行" data-search="SPU 515 布乐迪忙碌屋益智玩具 TASK-TOY-515">
-                  <td class="spu-cell sticky-column"><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="spu-meta"><span class="mono">SPU 515</span> · 趣然天猫旗舰店 / 天猫</div><div class="category-label">小爆款 · 责任运营 陈雨欣</div><div class="mt-2"><span class="badge badge-ai"><i class="ph-bold ph-link" aria-hidden="true"></i>延续上周 · 未重建</span></div><div class="spu-meta mono">TASK-TOY-515</div><div class="relation-summary"><strong>最近前序待办</strong><br><span class="mono">BATCH-20260531-01</span> · 清仓 / 待执行<br>产生 06-29 09:12 · 执行 —</div></td>
+                  <td class="spu-cell sticky-column"><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="spu-meta"><span class="mono">SPU 515</span> · 趣然天猫旗舰店 / 天猫</div><div class="category-label">小爆款 · 责任运营 陈雨欣</div><div class="mt-2"><span class="badge badge-ai"><i class="ph-bold ph-link" aria-hidden="true"></i>延续上周 · 未重建</span></div><div class="spu-meta mono">TASK-TOY-515</div><details class="previous-todo"><summary><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i><span>最近前序待办</span><i class="ph-bold ph-caret-down previous-caret" aria-hidden="true"></i></summary><div class="previous-detail"><div><span class="meta-label">来源批次</span><span class="mono">BATCH-20260531-01</span></div><div><span class="meta-label">动作 / 状态</span>清仓 / 待执行</div><div><span class="meta-label">产生时间</span><span class="mono">06-29 09:12</span></div><div><span class="meta-label">执行时间</span><span class="mono">—</span></div></div></details></td>
                   <td class="problem-cell"><div class="problem-title">经营亏损明显，需要淘汰清仓</div><ul class="evidence-list"><li><span>经营准利润率</span><strong>-12.8% &lt; 5%</strong></li><li><span>上月净销售额</span><strong>86,240 元</strong></li><li><span>库存可售</span><strong>407.5 天</strong></li></ul></td>
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">责任运营 · 待确认完成</div></div></div><div class="track"><span class="track-label">库存/OA 协同</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">责任运营 · OA 已送达，待核验</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">任务</span><span class="badge badge-neutral">清仓状态已沿用</span></div><div class="status-line"><span class="status-label">完成确认</span><span class="badge badge-pending">待运营提交时间</span></div><div class="status-line"><span class="status-label">最近催办</span><span class="badge badge-ai">今日 09:00 · OA 已送达</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>主管确认前每日提醒陈雨欣；同日不重复</span></div></td>
