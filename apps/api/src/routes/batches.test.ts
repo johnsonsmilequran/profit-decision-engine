@@ -30,6 +30,8 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
   const token = randomBytes(32).toString("hex");
   const procurementIdentity = `procurement-test-${randomUUID()}`;
   const procurementToken = randomBytes(32).toString("hex");
+  const managerIdentity = `manager-test-${randomUUID()}`;
+  const managerToken = randomBytes(32).toString("hex");
 
   beforeAll(async () => {
     database = createDatabase(databaseUrl!);
@@ -49,6 +51,8 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
       "insert into sessions(id_hash, identity_ref, expires_at) values ($1, $2, now() + interval '1 hour')",
       [hashSessionToken(procurementToken), procurementIdentity],
     );
+    await database.pool.query("insert into role_mappings(identity_ref, display_name, business_role) values ($1, $2, 'manager')", [managerIdentity, "真实导入集成测试主管"]);
+    await database.pool.query("insert into sessions(id_hash, identity_ref, expires_at) values ($1, $2, now() + interval '1 hour')", [hashSessionToken(managerToken), managerIdentity]);
     app = buildApp(database, { uploadDirectory: "../../var/uploads" });
     await app.ready();
   });
@@ -77,10 +81,13 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
       await database.pool.query("delete from batch_quality_issues where batch_id=$1", [batchId]);
       await database.pool.query("delete from import_batches where id=$1", [batchId]);
     }
+    await database.pool.query("delete from operation_idempotency where actor_identity_ref=any($1::text[])", [[identity, procurementIdentity, managerIdentity]]);
     await database.pool.query("delete from sessions where identity_ref=$1", [identity]);
     await database.pool.query("delete from sessions where identity_ref=$1", [procurementIdentity]);
+    await database.pool.query("delete from sessions where identity_ref=$1", [managerIdentity]);
     await database.pool.query("delete from role_mappings where identity_ref=$1", [identity]);
     await database.pool.query("delete from role_mappings where identity_ref=$1", [procurementIdentity]);
+    await database.pool.query("delete from role_mappings where identity_ref=$1", [managerIdentity]);
     await app.close();
   });
 
@@ -184,6 +191,43 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
     expect(procurementDetail.statusCode).toBe(200);
     expect(procurementDetail.json()).toMatchObject({ currentRole: "procurement", decision: { spu_id: "SPU-515", inventory_action: "block_restock", status: "awaiting_review" } });
     expect(procurementDetail.body).not.toMatch(/profit_rate|main_action|approval_status|structured_advice|ai_status|review_note/);
+
+    const reviewKey = randomUUID();
+    const review = await app.inject({ method: "POST", url: `/api/decisions/${actionListBody.items[0]!.decision_id}/review`, headers: { cookie: `profit_session=${managerToken}`, "idempotency-key": reviewKey }, payload: { result: "approved", note: "批准本周清仓与禁补", version: 1 } });
+    expect(review.statusCode).toBe(200);
+    expect(review.json()).toMatchObject({ approvalStatus: "approved", reviewVersion: 2 });
+    const repeatedReview = await app.inject({ method: "POST", url: `/api/decisions/${actionListBody.items[0]!.decision_id}/review`, headers: { cookie: `profit_session=${managerToken}`, "idempotency-key": reviewKey }, payload: { result: "approved", note: "批准本周清仓与禁补", version: 1 } });
+    expect(repeatedReview.statusCode).toBe(200);
+    expect(repeatedReview.json()).toEqual(review.json());
+    const staleReview = await app.inject({ method: "POST", url: `/api/decisions/${actionListBody.items[0]!.decision_id}/review`, headers: { cookie: `profit_session=${managerToken}`, "idempotency-key": randomUUID() }, payload: { result: "rejected", note: "旧版本不得覆盖", version: 1 } });
+    expect(staleReview.statusCode).toBe(409);
+    expect(staleReview.json()).toMatchObject({ code: "VERSION_CONFLICT", latest: { approvalStatus: "approved", reviewVersion: 2 } });
+
+    const actionRows = await database.pool.query<{ id: string; action_track: string }>("select id, action_track from action_items where decision_id=$1 order by action_track", [actionListBody.items[0]!.decision_id]);
+    const businessActionId = actionRows.rows.find((row) => row.action_track === "business")!.id;
+    const inventoryActionId = actionRows.rows.find((row) => row.action_track === "inventory")!.id;
+    const businessExecute = await app.inject({ method: "POST", url: `/api/action-items/${businessActionId}/execute`, headers: { cookie: `profit_session=${token}`, "idempotency-key": randomUUID() }, payload: { executedAt: "2026-08-04T10:00:00.000Z", note: "已建立清仓专区并下架常规推广", result: "清仓安排已生效", version: 2 } });
+    expect(businessExecute.statusCode).toBe(200);
+    expect(businessExecute.json()).toMatchObject({ status: "executed", version: 3 });
+    const inventoryBefore = await database.pool.query("select status, version from action_items where id=$1", [inventoryActionId]);
+    expect(inventoryBefore.rows[0]).toEqual({ status: "pending_execution", version: 2 });
+    const inventoryExecute = await app.inject({ method: "POST", url: `/api/action-items/${inventoryActionId}/execute`, headers: { cookie: `profit_session=${procurementToken}`, "idempotency-key": randomUUID() }, payload: { executedAt: "2026-08-04T10:05:00.000Z", note: "已通知采购计划停止补货", result: "已确认禁补", confirmation: "block_restock", version: 2 } });
+    expect(inventoryExecute.statusCode).toBe(200);
+    expect(inventoryExecute.json()).toMatchObject({ status: "executed", version: 3 });
+    const outcome = await app.inject({ method: "POST", url: `/api/action-items/${businessActionId}/outcome`, headers: { cookie: `profit_session=${token}`, "idempotency-key": randomUUID() }, payload: { periodStart: "2026-08-01", periodEnd: "2026-08-04", sales: { status: "provided", value: "42000" }, profit: { status: "not_provided" }, inventory: { status: "provided", value: "72" }, note: "销售取经营日报，利润尚未结算", version: 3 } });
+    expect(outcome.statusCode).toBe(200);
+    expect(outcome.json()).toMatchObject({ status: "result_recorded", version: 4 });
+    const forbiddenOutcome = await app.inject({ method: "POST", url: `/api/action-items/${businessActionId}/outcome`, headers: { cookie: `profit_session=${procurementToken}`, "idempotency-key": randomUUID() }, payload: { periodStart: "2026-08-01", periodEnd: "2026-08-04", sales: { status: "not_provided" }, profit: { status: "not_provided" }, inventory: { status: "not_provided" }, note: "越权", version: 4 } });
+    expect(forbiddenOutcome.statusCode).toBe(403);
+    const events = await database.pool.query<{ count: string }>("select count(*)::text count from audit_events where decision_id=$1 and event_type in ('decision_reviewed','action_executed','business_outcome_recorded')", [actionListBody.items[0]!.decision_id]);
+    expect(Number(events.rows[0]!.count)).toBe(4);
+    const rejectedDecisionId = actionListBody.items[1]!.decision_id;
+    const blankRejection = await app.inject({ method: "POST", url: `/api/decisions/${rejectedDecisionId}/review`, headers: { cookie: `profit_session=${managerToken}`, "idempotency-key": randomUUID() }, payload: { result: "rejected", note: "   ", version: 1 } });
+    expect(blankRejection.statusCode).toBe(400);
+    const rejection = await app.inject({ method: "POST", url: `/api/decisions/${rejectedDecisionId}/review`, headers: { cookie: `profit_session=${managerToken}`, "idempotency-key": randomUUID() }, payload: { result: "rejected", note: "当前供应安排不支持同步加投与补货", version: 1 } });
+    expect(rejection.statusCode).toBe(200);
+    const rejectedActions = await database.pool.query("select status from action_items where decision_id=$1 order by action_track", [rejectedDecisionId]);
+    expect(rejectedActions.rows).toEqual([{ status: "closed_by_rejection" }, { status: "closed_by_rejection" }]);
 
     const duplicate = await app.inject({
       method: "POST",

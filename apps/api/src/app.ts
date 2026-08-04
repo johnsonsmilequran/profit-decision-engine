@@ -7,6 +7,7 @@ import { registerBatchRoutes } from "./routes/batches.js";
 import { registerAuthRoutes, type AuthRouteConfig } from "./routes/auth.js";
 import { registerWorkspaceRoutes } from "./routes/workspace.js";
 import { registerActionRoutes } from "./routes/actions.js";
+import { registerOperationRoutes } from "./routes/operations.js";
 
 export function buildApp(database: Database, options: { uploadDirectory?: string; auth?: AuthRouteConfig } = {}) {
   const app = Fastify({ logger: true });
@@ -22,6 +23,7 @@ export function buildApp(database: Database, options: { uploadDirectory?: string
   if (options.auth) registerAuthRoutes(app, database, options.auth);
   registerWorkspaceRoutes(app, database);
   registerActionRoutes(app, database);
+  registerOperationRoutes(app, database);
 
   app.get("/health", async () => {
     const result = await database.pool.query<{ database_name: string; checked_at: Date }>(

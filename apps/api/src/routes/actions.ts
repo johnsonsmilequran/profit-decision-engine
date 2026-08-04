@@ -79,7 +79,7 @@ export function registerActionRoutes(app: FastifyInstance, database: Database): 
         `select d.id decision_id, d.batch_id, ss.spu_id, ss.link_name, ss.shop, ss.platform,
                 ms.warehouse_inventory, ms.in_transit_inventory, ms.sold_count_14d, ms.stock_days,
                 ms.metric_periods, ms.quality_statuses, d.inventory_action, d.rule_version,
-                ai.id action_item_id, ai.status, ai.version, ai.executed_at, ai.execution_note,
+                ai.id action_item_id, ai.status, ai.version, ai.executed_at, ai.execution_note, ai.execution_result,
                 ai.result_period_start, ai.result_period_end, ai.result_values, ai.result_note
            from decisions d join spu_snapshots ss on ss.id=d.spu_snapshot_id
            join metric_snapshots ms on ms.spu_snapshot_id=ss.id
@@ -113,9 +113,13 @@ export function registerActionRoutes(app: FastifyInstance, database: Database): 
     );
     if (!detail.rows[0]) return reply.code(404).send({ code: "NOT_FOUND", message: "未找到建议" });
     const actions = await database.pool.query(
-      `select id, action_track, action_code, owner_role, status, version, executed_at, execution_note,
-              result_period_start, result_period_end, result_values, result_note, result_recorded_at
-         from action_items where decision_id=$1 order by case action_track when 'business' then 0 else 1 end`,
+      `select action_items.id, action_items.action_track, action_items.action_code, action_items.owner_role,
+              action_items.status, action_items.version, action_items.executed_at, action_items.execution_note,
+              action_items.execution_result, action_items.result_period_start, action_items.result_period_end,
+              action_items.result_values, action_items.result_note, action_items.result_recorded_at,
+              result_recorder.display_name result_recorded_by_name
+         from action_items left join role_mappings result_recorder on result_recorder.identity_ref=action_items.result_recorded_by
+        where decision_id=$1 order by case action_track when 'business' then 0 else 1 end`,
       [decisionId.data],
     );
     const timeline = await database.pool.query(
