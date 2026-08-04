@@ -29,7 +29,7 @@ export function SuggestionDetailPage({ linkId }: { linkId: string }) {
     <div className="suggestion-nav"><a className="back-link" href={historyMode?historyReturn:'/actions'}>← 返回{historyMode?'历史追溯':'行动清单'}</a><div><span className="context-pill">风险分组：{label(item.suggested_business_action)}</span><span className="context-pill">SPU 详情</span></div></div>
     {historyMode?<div className="processing-banner">历史模式只读取原批次快照和当时事件，不重新计算，也不允许提交。</div>:null}
     <section className="suggestion-hero">
-      <div><div className="hero-badges"><span className="action-badge">生效动作：{label(item.effective_business_action)}</span><span className={`status status-${item.review_status}`}>{reviewLabel(item.review_status)}</span><span className="status">{relationText}</span></div><h1>{item.name}</h1><p><strong>{item.spu_id}</strong> · 商品链接粒度 · {item.store}（{item.platform}）</p></div>
+      <div><div className="hero-badges"><span className="action-badge">生效动作：{label(item.effective_business_action)}</span><span className={`status status-${item.review_status}`}>{reviewLabel(item.review_status)}</span><span className="status">{relationText}</span></div><h1>{item.name}</h1><p><strong>{item.spu_id}</strong> · 商品链接粒度 · {storePlatform(item.store,item.platform)}</p></div>
       <aside><span>规则版本</span><strong>{item.rule_version}</strong><small>生成于 {dateTime(item.linked_at)}</small></aside>
       <div className="suggestion-status-grid"><StatusCell title="建议审核" value={reviewLabel(item.review_status)} tone={item.review_status}/><StatusCell title="经营动作轨" value={stateLabel(item.business_state)}/><StatusCell title="库存动作轨" value={stateLabel(item.inventory_state)}/><StatusCell title="总览状态" value={overallState}/><StatusCell title="AI 辅助解释" value={aiStatusText(item.ai_status)}/></div>
     </section>
@@ -60,7 +60,8 @@ function reviewLabel(value:string){return ({pending:'待审核',approved:'已通
 function aiStatusText(value:string){return ({generating:'生成中',generated:'已生成',failed:'生成失败',not_adopted:'内容未采用',not_configured:'模型服务未配置'} as Record<string,string>)[value]??value}
 function stateLabel(value:string){return ({pending_review:'待审核',pending_execution:'待执行',executed:'已执行',result_recorded:'已记录结果',closed:'已闭环',terminated:'已终止',not_generated:'不生成'} as Record<string,string>)[value]??value}
 function qualityField(value:string){return ({quality_return_rate_7d:'近 7 天品退率',inventory_days:'库存可售天数',inventory_on_hand:'仓内库存',inventory_in_transit:'在途库存',sales_units_14d:'近 14 天销量'} as Record<string,string>)[value]??value}
-function qualityValue(value:string){return ({missing:'未提供',unverified:'未校验',insufficient:'数据不足',unavailable:'不可计算'} as Record<string,string>)[value]??value}
+function qualityValue(value:string){return ({missing:'未提供',unverified:'未校验',not_verified:'未校验',insufficient:'数据不足',unavailable:'不可计算'} as Record<string,string>)[value]??value}
+function storePlatform(store:string,platform:string){return store.includes(platform)?store:`${store}（${platform}）`}
 function eventTypeLabel(value:string){return ({review:'主管整体审核',task_created:'固定规则建立任务',oa_delivery:'钉钉协同通知',ai_explanation:'AI 辅助解释',business_execution:'经营动作执行',inventory_execution:'库存协同核验',clearance_completion:'清仓完成提交'} as Record<string,string>)[value]??value}
 function latestNotification(items:SuggestionDetail['notifications'],type:'clearance_reminder'){const item=[...items].reverse().find(notification=>notification.type===type);return item?`${item.local_date} · ${notificationStatus(item.status)}${item.error_code?` · ${item.error_code}`:''}`:'—'}
 function safeHistoryReturn(value:string|null){return value?.startsWith('/history?')?value:'/history'}
