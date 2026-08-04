@@ -5,11 +5,12 @@
 
 ## 当前状态
 - ✅ 已完成：阶段 0、1、5、6 既定产物；Design Master 阶段 I—II 已完成；requirements revision 9 已收敛为运营/运营主管双角色及钉钉企业内部机器人单聊；页面清单 9 个运行态 MVP 页面已全部接入真实 Go API 与 PostgreSQL；钉钉通知代码已支持 Client ID/Secret、机器人编码和公司 User ID，00005 已建立责任运营 User ID 映射；`lingfeng` 分支跟踪远程。
-- ▶️ 进行中：页面开发 9/9、正式页面双验收 2/9；当前 TDD pass 16/28、pending 12/28。钉钉机器人已发布生效；另一条真实 XLSX 任务经产品审批和单次手动协同后，官方 `readStatus` 返回发送成功、1 个真实收件人未读，FLOW-10/RULE-02 已据本轮证据通过且业务状态仍待核验。其余待补视觉、真实 OAuth 回调、连续周期数据、每日催办实际收件和密钥轮换验收。
-- ⏸️ 待办：GitHub Actions 需 workflow 进入默认分支后才能注册并首跑；按剩余 pending 台账补齐含 SPU 515 的真实验收工作簿、真实跨期工作簿、钉钉 OAuth unionId/审批角色映射、每日催办实际收件及密钥轮换权限；按 `仓库协作设置指引.md` 在 GitHub 网页启用 main 分支保护。
+- ▶️ 进行中：页面开发 9/9、正式页面双验收 2/9；当前 TDD pass 17/28、pending 11/28。钉钉机器人已发布生效；真实 XLSX 手动协同和全新候选的 Worker 每日催办均获官方 `readStatus SUCCESS`、1 个真实收件人未读，FLOW-10、FLOW-11 与 RULE-02 已据本轮证据通过，业务状态仍保持待执行。其余待补视觉、真实 OAuth 回调、连续周期数据和密钥轮换验收。
+- ⏸️ 待办：GitHub Actions 需 workflow 进入默认分支后才能注册并首跑；按剩余 pending 台账补齐含 SPU 515 的真实验收工作簿、真实跨期工作簿、钉钉 OAuth unionId/审批角色映射及密钥轮换权限；按 `仓库协作设置指引.md` 在 GitHub 网页启用 main 分支保护。
 - ❓ 待确认：回退按“未执行可退回前序节点，已执行事实不回滚、改走终止/纠正任务”的审计口径落地。
 
 ## 决策记录（实时维护）
+- [08-05-2026 03:11:14] 每日清仓催办真实验收通过｜背景：用户说明机器人刚发布可能尚未生效，FLOW-11 需在收件人唯一性修复后以真实 Worker 和真实账号验证｜结论：全新空库 Compose 从真实 XLSX 生成清仓任务，唯一真实运营 User ID 映射下由生产 Worker 发送一条当日催办；官方 `readStatus` 返回 `SUCCESS`、1 个收件人当时未读，同日再运行无重复记录/尝试，业务与库存状态不变，候选会话已撤销；FLOW-11 记为 pass｜来源：AI
 - [08-05-2026 02:19:55] 钉钉消息查询引用语义｜背景：钉钉官方 Go SDK 明确规定 `batchSend` 响应正文返回 `processQueryKey`，`readStatus` 以该值查询发送/已读；当前实现却把 HTTP `x-acs-request-id` 保存为 `provider_reference`，用真实已发送记录调用官方查询得到 HTTP 400 `invalid.processQueryKey`｜结论：修正为持久化 `processQueryKey`，请求 ID 仅作排障且不替代消息查询键；查询结果不得自动推进产品业务状态，修复过程不重复发送现有真实消息｜来源：AI
 - [08-05-2026 02:09:28] 钉钉真实单聊平台接受｜背景：机器人负向探测已由 `robotCode.notExSit` 转为 `staffId.notExisted`；候选环境注入新 client_id/secret/robotCode 后，用真实 XLSX 中“缘一”的一条待审任务执行产品审批与 OA 发送 API｜结论：审批 HTTP 200 并持久化为 `approved/pending_execution`；消息 HTTP 200，`oa_notification` 为 `sent`、attempt_count=1、provider_reference 非空、error_code 为空，且产生 1 条 `oa_delivery` 事件；候选会话已撤销。该结果仅证明钉钉平台接受，FLOW-10/RULE-02 继续 pending，直到用户确认钉钉实际收到｜来源：AI
 - [08-05-2026 02:04:46] 钉钉真实单聊验收收件人｜背景：新应用缺少 `qyapi_get_member`，无法用成员详情接口无副作用核验旧 User ID；用户提供的 `backend/pkg/ding/bot_oto_test.go` 将该 ID 明确用于真实单聊测试，且用户已确认配置测试账号｜结论：仅在本地候选环境中将该旧测试 User ID 用作一次真实消息收件人；通过产品 API 与持久化链路发送，失败不自动重试，平台接受后仍须用户确认实际收件｜来源：用户/AI
