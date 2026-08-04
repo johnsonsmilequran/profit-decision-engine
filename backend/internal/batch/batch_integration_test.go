@@ -13,10 +13,10 @@ import (
 
 func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
-	workbookPath := os.Getenv("TEST_XLSX_PATH")
-	if databaseURL == "" || workbookPath == "" {
-		t.Skip("TEST_DATABASE_URL and TEST_XLSX_PATH are required for batch integration test")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for batch integration test")
 	}
+	workbookPath := integrationWorkbookPath(t, os.Getenv("TEST_XLSX_PATH"))
 	ctx := context.Background()
 	db, err := pgxpool.New(ctx, databaseURL)
 	if err != nil {

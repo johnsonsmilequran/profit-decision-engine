@@ -349,6 +349,11 @@ func TestFirstReviewOnPendingContinuationActivatesTask(t *testing.T) {
 func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (string, string) {
 	t.Helper()
 	var actor, batchID, listID, snapshotID, decisionID, taskID, revisionID, linkID string
+	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by)
+		VALUES ('行动测试运营','缘一','operations','玩具事业部负责人','系统运维')
+		ON CONFLICT (actor_ref) DO UPDATE SET active=true,display_name=EXCLUDED.display_name,role=EXCLUDED.role`); err != nil {
+		t.Fatal(err)
+	}
 	if err := db.QueryRow(ctx, `SELECT actor_ref FROM role_mapping LIMIT 1`).Scan(&actor); err != nil {
 		t.Fatal(err)
 	}

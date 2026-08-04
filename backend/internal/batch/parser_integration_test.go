@@ -7,10 +7,7 @@ import (
 )
 
 func TestRealWorkbookParsing(t *testing.T) {
-	path := os.Getenv("TEST_XLSX_PATH")
-	if path == "" {
-		t.Skip("TEST_XLSX_PATH is required for real workbook integration test")
-	}
+	path := integrationWorkbookPath(t, os.Getenv("TEST_XLSX_PATH"))
 	cutoff, err := time.Parse("2006-01-02", "2026-06-30")
 	if err != nil {
 		t.Fatal(err)

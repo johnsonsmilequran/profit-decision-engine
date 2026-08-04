@@ -19,6 +19,7 @@ func TestActionListUsesLatestReadyBatchAndAppliesRoleProjection(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
+	insertReviewFixture(t, ctx, db)
 	service := NewService(db)
 
 	supervisor, err := service.List(ctx, Principal{ActorRef: "主管测试", Name: "主管测试", Role: "supervisor"}, Filters{Page: 1, Limit: 50})
