@@ -123,15 +123,7 @@ func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, er
 		return Workbench{}, err
 	}
 	for _, item := range list.Items {
-		if item.ReviewStatus == "pending" {
-			result.PendingReviewCount++
-		}
-		if item.BusinessState == "pending_execution" || item.InventoryState == "pending_execution" {
-			result.PendingExecutionCount++
-		}
-		if item.RelationType == "action_change_pending" {
-			result.ExceptionCount++
-		}
+		accumulateWorkbenchSummary(&result, item)
 	}
 	clearanceQuery := `SELECT count(*) FROM clearance_completion c JOIN spu_action_task t ON t.task_id=c.task_id
 		JOIN decision_task_link l ON l.task_id=t.task_id JOIN decision_record d ON d.decision_id=l.decision_id
@@ -146,6 +138,18 @@ func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, er
 		return Workbench{}, err
 	}
 	return result, nil
+}
+
+func accumulateWorkbenchSummary(result *Workbench, item Item) {
+	if item.ReviewStatus == "pending" {
+		result.PendingReviewCount++
+	}
+	if item.BusinessState == "pending_execution" {
+		result.PendingExecutionCount++
+	}
+	if item.RelationType == "action_change_pending" {
+		result.ExceptionCount++
+	}
 }
 
 const actionFrom = `FROM decision_task_link l
