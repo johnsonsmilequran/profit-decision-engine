@@ -9,7 +9,7 @@
 | F03 | 固定规则决策 | US-F03-01 | REQ-F03-01、REQ-F03-02、REQ-F03-03 | active / MVP |
 | F04 | AI 建议解释 | US-F04-01 | REQ-F04-01、REQ-F04-02、REQ-F04-03 | active / MVP |
 | F05 | 行动清单 | US-F05-01 | REQ-F05-01、REQ-F05-02、REQ-F05-03 | active / MVP |
-| F06 | 审核与执行跟踪 | US-F06-01、US-F06-02 | REQ-F06-01、REQ-F06-02、REQ-F06-03 | active / MVP |
+| F06 | 审核与执行跟踪 | US-F06-01、US-F06-02 | REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F06-04 | active / MVP |
 | F07 | 权限隔离 | US-F07-01 | REQ-F07-01、REQ-F07-02、REQ-F07-03 | active / MVP |
 | F08 | 规则与数据溯源 | US-F08-01 | REQ-F08-01、REQ-F08-02 | active / MVP |
 
@@ -34,6 +34,7 @@
 | REQ-F06-01 | AC-F06-01、AC-F06-02 |
 | REQ-F06-02 | AC-F06-03、AC-F06-04 |
 | REQ-F06-03 | AC-F06-05、AC-F06-06 |
+| REQ-F06-04 | AC-F06-07、AC-F06-08、AC-F06-09 |
 | REQ-F07-01 | AC-F07-01、AC-F07-02 |
 | REQ-F07-02 | AC-F07-03、AC-F07-04 |
 | REQ-F07-03 | AC-F07-05、AC-F07-06 |

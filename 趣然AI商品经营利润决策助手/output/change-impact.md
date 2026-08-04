@@ -1,21 +1,22 @@
 # Design Master 增量影响说明
 
 > 变更日期：2026-08-04  
-> 上游需求契约：`requirements.md` revision 3（未变化）  
-> 变更性质：设计评审环境适配，不改变业务行为、权限、数据口径或正式产品端形态。
+> 上游需求契约：`requirements.md` revision 3 → 4
+> 变更性质：新增运营主管人工改判生效动作，保护原规则、库存联动和已执行事实。
 
 | Changed Source | Old→New Revision | Affected Design IDs | Artifacts | Action | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| design-derived：运营工作台内置浏览器预览 | N/A（requirements revision 3 保持不变） | `PAGE-F05-01` | `设计决策蓝图.md` §1.1；`DESIGN.md` §5/§8；`pages/阶段1_角色工作台_运营工作台.md`；`pages/阶段1_角色工作台_运营工作台.html` | 取消高保真 HTML 的 `<1024px` 全屏设备门禁并保留缩窄 PC 布局；完成静态回归，内置浏览器 `file://` 页面由用户手动刷新复验 | implemented；manual reload pending |
+| `REQ-F06-04`、`AC-F06-07`～`AC-F06-09` | new @ revision 4 | `PAGE-F06-03`、`CMP-MANUAL-OVERRIDE`、`API-F06-03`、`DATA-F06-01`、`SEQ-F06-01` | PRD/requirements；`设计决策蓝图.md`；`页面清单.md`；`页面文档/建议详情高保真`；`技术方案.md`；`设计追溯矩阵.md` | 原规则结论保持只读；主管在未执行时选择新经营/库存动作并填写理由；清仓改加投不沿用禁补；已执行须先终止 | implemented |
+| design-derived：运营工作台内置浏览器预览 | N/A（历史变更） | `PAGE-F05-01` | 运营工作台 MD/HTML | 取消 `<1024px` 全屏设备门禁并保留缩窄 PC 布局 | preserved |
 
 ## 不变范围
 
-- `PAGE-F05-01` 的页面身份、Source IDs、信息架构、金额与利润字段、批次上下文、任务状态和跨页连接保持不变。
+- `PAGE-F05-01` 及其他 8 个不受影响页面的页面身份、信息架构和业务行为保持不变。
 - 正式产品仍定位为 PC Web；本次不新增移动端页面、移动端交互或新的 REQ/AC/NFR。
-- 其余 9 个 MVP 页面及技术方案不受影响，设计追溯矩阵继续保持 68 个 active source 全部 `covered`。
+- 商品分类、规则阈值、AI 权限、采购最小字段及冻结历史均不变；改判不是规则编辑。
 
 ## 验证面
 
-- 静态：运营工作台 HTML 不再包含可见的设备限制区，也不再在 `<1024px` 隐藏 `.desktop-app`。
-- 浏览器：Codex 内置浏览器安全策略拒绝自动重载本地 `file://` 页面；用户在现有标签页手动刷新后，复验页面标题、侧栏、批次信息和经营任务内容可见，禁止改用其他浏览器规避该策略。
-- 回归：页面 ID、设计 Token、JavaScript 语法和既有跨页链接保持有效。
+- 契约：revision 4 的 23 REQ、44 AC、5 NFR 全部必须出现于追溯矩阵且不得 stale/TBD。
+- 页面：建议详情高保真可打开改判弹窗；空理由被拒绝；有理由后显示加投+不补货、人工改判标识和新审计行；原规则表保持清仓+禁补。
+- 回归：页面 ID、JavaScript 语法、既有链接和不受影响页面保持有效。

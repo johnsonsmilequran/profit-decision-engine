@@ -4,7 +4,7 @@
 
 - work_type: feature
 - workflow_mode: standard
-- revision: 3
+- revision: 4
 - source_prd: PRD详细版.md
 - status: active
 - derived_decision: 新品年龄使用批次业务截止日以保证历史重放确定性；这是阶段 5 派生产品决策，不冒充用户原始事实
@@ -502,6 +502,14 @@ THE SYSTEM SHALL 该 SPU 默认不应出现在行动清单；数据完整得出�
 - Status: active
 - Behavior: 运营和采购计划分别记录各自动作结果；状态更新使用版本保护，重复或过期提交不得覆盖已成功结果。
 
+### REQ-F06-04 · 运营主管人工改判生效动作
+
+- Story: US-F06-01
+- Stage: MVP
+- Revision: 4
+- Status: active
+- Behavior: 运营主管可在动作尚未开始执行时，将固定规则建议人工改判为其他经营动作；改判必须填写理由、重新确认库存动作并追加审计事件，原始规则结论与冻结证据不得覆盖。已进入执行的清仓任务必须先终止原任务，不得直接改写。
+
 ### AC-F06-01 · 产品场景 AC-26
 
 - Parent: REQ-F06-01
@@ -566,6 +574,39 @@ THE SYSTEM SHALL 把结果周期、记录时间、记录人、可用结果值和
 ```text
 WHEN 两个操作基于同一旧状态并发提交，或同一状态变更因网络重试重复到达
 THE SYSTEM SHALL 只接受第一个合法变更，后续提交显示冲突或既有结果及最新状态，不覆盖成功变更、不新增重复事件。
+```
+
+### AC-F06-07 · 产品场景 AC-42
+
+- Parent: REQ-F06-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 运营主管对尚未进入执行的建议选择新经营动作、填写非空改判理由并重新确认库存动作
+THE SYSTEM SHALL 保留原固定规则动作和证据为只读，生成新的“生效动作”版本，并记录改判人、时间、修改前后经营/库存动作和理由。
+```
+
+### AC-F06-08 · 产品场景 AC-43
+
+- Parent: REQ-F06-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 运营主管将“清仓”改判为“加投”
+THE SYSTEM SHALL 不得静默沿用规则派生的“禁止补货”；必须要求主管根据冻结库存与销量依据明确选择补货、不补货或不生成采购任务，再使改判生效。
+```
+
+### AC-F06-09 · 产品场景 AC-44
+
+- Parent: REQ-F06-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 原清仓经营动作或其关联禁补动作已进入执行
+THE SYSTEM SHALL 禁止直接改判，显示已执行的责任人、时间和状态，并要求主管先终止原经营与采购任务；终止和后续改判分别追加事件，不覆盖已发生执行事实。
 ```
 
 ## Feature F07 · 权限隔离
@@ -770,7 +811,7 @@ THE SYSTEM SHALL 显示完整且按角色裁剪的建议审核记录、各动作
 
 ### NFR-005 · 审计可追溯
 
-- Applies-to: REQ-F01-01、REQ-F05-01、REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F08-01、REQ-F08-02
+- Applies-to: REQ-F01-01、REQ-F05-01、REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F06-04、REQ-F08-01、REQ-F08-02
 - Revision: 1
 - Status: active
 - Measure: 每条决策及每次状态事件均包含关联批次、业务期间、规则或对象版本、关键值或状态变化、操作者与时间；历史事件不可被状态更新覆盖。

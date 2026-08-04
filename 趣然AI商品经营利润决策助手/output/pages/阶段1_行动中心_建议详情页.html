@@ -533,6 +533,16 @@
       line-height: var(--leading-body);
     }
     .review-note:hover, .review-note:focus { border-color: var(--accent); outline: none; }
+    .override-select {
+      width: 100%;
+      height: 42px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+    }
+    .override-select:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
     .review-fact { padding: var(--space-3) 0; border-bottom: 1px solid var(--border-soft); }
     .review-fact:last-child { border-bottom: 0; }
 
@@ -695,7 +705,7 @@
               <div class="flex items-start gap-4">
                 <div class="product-mark"><i class="ph ph-cube text-xl" aria-hidden="true"></i></div>
                 <div>
-                  <div class="flex flex-wrap items-center gap-2"><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>经营动作：清仓</span><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>主管已通过</span></div>
+                  <div class="flex flex-wrap items-center gap-2"><span id="heroActionBadge" class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>生效动作：清仓</span><span class="badge badge-ready"><i class="ph ph-check-circle" aria-hidden="true"></i>主管已通过</span><span id="overrideBadge" class="badge badge-ai" hidden><i class="ph ph-user-switch" aria-hidden="true"></i>人工改判</span></div>
                   <h1 id="product-heading" class="page-title mt-3">布乐迪忙碌屋益智玩具</h1>
                   <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"><span class="mono font-semibold">SPU-515</span><span class="muted text-sm">商品链接粒度</span><span class="muted text-sm">建议 <span class="mono">DEC-20260630-515</span></span></div>
                 </div>
@@ -742,7 +752,7 @@
                 </article>
                 <article class="four-card action-card">
                   <div class="flex items-center justify-between"><div class="four-index">04</div><i class="ph ph-gavel text-lg" style="color: var(--danger);" aria-hidden="true"></i></div>
-                  <h3 class="mt-4 font-bold">推荐动作</h3>
+                  <h3 class="mt-4 font-bold">规则推荐动作</h3>
                   <p class="mt-2 text-sm">运营执行 SPU 整体清仓；采购计划同步禁止补货。主管一次审核同时作用于两条动作。</p>
                   <div class="mt-3 flex flex-wrap gap-2"><span class="badge badge-clear">清仓</span><span class="badge badge-stop">禁止补货</span></div>
                 </article>
@@ -792,7 +802,7 @@
               <div class="decision-spine">
                 <article class="track-card business">
                   <div class="flex items-center justify-between"><div class="eyebrow">经营动作轨</div><span id="businessTrackStatus" class="badge badge-muted">待执行</span></div>
-                  <div class="mt-4 flex items-center gap-3"><div class="product-mark"><i class="ph ph-trash" aria-hidden="true"></i></div><div><div class="meta">唯一经营主动作</div><div class="text-xl font-bold" style="color: var(--action-clear);">清仓</div></div></div>
+                  <div class="mt-4 flex items-center gap-3"><div class="product-mark"><i id="businessActionIcon" class="ph ph-trash" aria-hidden="true"></i></div><div><div class="meta">当前生效经营动作</div><div id="businessActionName" class="text-xl font-bold" style="color: var(--action-clear);">清仓</div></div></div>
                   <p class="muted mt-4 text-sm">停止扩大亏损，对 SPU 整体制定清仓节奏。页面仅记录业务动作，不能自动写入推广系统。</p>
                   <div class="mt-4 grid grid-cols-2 gap-3"><div><div class="meta">责任角色</div><div class="mt-1 font-semibold">运营</div></div><div><div class="meta">动作版本</div><div class="mono mt-1 font-semibold">ACT-B-01</div></div></div>
                   <div class="mt-4"><span class="badge badge-clear"><i class="ph ph-link" aria-hidden="true"></i>与禁补原子联动</span></div>
@@ -804,7 +814,7 @@
                 </div>
                 <article class="track-card inventory">
                   <div class="flex items-center justify-between"><div class="eyebrow">库存动作轨</div><span id="inventoryTrackStatus" class="badge badge-muted">待确认禁补</span></div>
-                  <div class="mt-4 flex items-center gap-3"><div class="product-mark" style="color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish);"><i class="ph ph-package" aria-hidden="true"></i></div><div><div class="meta">库存联动动作</div><div class="text-xl font-bold" style="color: var(--action-stop);">禁止补货</div></div></div>
+                  <div class="mt-4 flex items-center gap-3"><div class="product-mark" style="color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish);"><i class="ph ph-package" aria-hidden="true"></i></div><div><div class="meta">当前生效库存动作</div><div id="inventoryActionName" class="text-xl font-bold" style="color: var(--action-stop);">禁止补货</div></div></div>
                   <p class="muted mt-4 text-sm">清仓命中后同步禁止继续补货，避免运营减少投入后采购仍按旧销量扩大库存。</p>
                   <div class="mt-4 grid grid-cols-2 gap-3"><div><div class="meta">责任角色</div><div class="mt-1 font-semibold">采购计划</div></div><div><div class="meta">动作版本</div><div class="mono mt-1 font-semibold">ACT-I-01</div></div></div>
                   <div class="mt-4"><span class="badge badge-stop"><i class="ph ph-prohibit" aria-hidden="true"></i>不可改为补货</span></div>
@@ -843,7 +853,7 @@
               <div class="mt-4 overflow-x-auto">
                 <table class="rule-table">
                   <thead><tr><th>事件</th><th>前后状态</th><th>操作者</th><th>时间</th><th>备注</th></tr></thead>
-                  <tbody>
+                  <tbody id="auditRows">
                     <tr><td>规则结论固化</td><td>无 → 清仓 / 禁止补货</td><td>系统规则 RULE-V1.0</td><td class="mono">07.06 09:18</td><td>同一事务原子生成双动作</td></tr>
                     <tr><td>主管整体审核</td><td>待审核 → 已通过</td><td>王敏 · 运营主管</td><td class="mono">07.06 10:05</td><td>运营制定清仓节奏，采购停止新增补货</td></tr>
                     <tr><td>AI 解释采用</td><td>生成中 → 已采用</td><td>系统 AI 适配器</td><td class="mono">07.06 10:06</td><td>只解释冻结数据，未改变规则动作</td></tr>
@@ -866,9 +876,18 @@
 
                 <div class="mt-4">
                   <div class="review-fact flex items-center justify-between"><span class="meta">审核对象</span><span class="font-semibold">SPU-515 布乐迪忙碌屋益智玩具</span></div>
-                  <div class="review-fact flex items-center justify-between"><span class="meta">经营动作</span><span class="badge badge-clear">清仓</span></div>
-                  <div class="review-fact flex items-center justify-between"><span class="meta">库存动作</span><span class="badge badge-stop">禁止补货</span></div>
+                  <div class="review-fact flex items-center justify-between"><span class="meta">规则建议</span><span class="font-semibold">清仓 + 禁止补货</span></div>
+                  <div class="review-fact flex items-center justify-between"><span class="meta">当前生效动作</span><span id="effectiveActionSummary" class="font-semibold">清仓 + 禁止补货</span></div>
                   <div class="review-fact flex items-center justify-between"><span class="meta">审核版本</span><span class="mono font-semibold">REV-01</span></div>
+                </div>
+
+                <div id="overrideEntry" class="mt-5 rounded-md p-4" style="background: var(--accent-soft); border: 1px solid var(--accent);">
+                  <div class="flex items-start gap-3"><i class="ph ph-user-switch text-lg" style="color: var(--accent);" aria-hidden="true"></i><div><strong>对当前动作判断不同？</strong><p class="muted mt-1 text-sm">两条动作均未执行，你可以保留原规则证据，建立新的生效动作。</p></div></div>
+                  <button id="openOverride" class="btn-secondary mt-4 w-full" type="button"><i class="ph ph-pencil-simple-line" aria-hidden="true"></i>人工改判动作</button>
+                </div>
+
+                <div id="overrideRecord" class="mt-5 rounded-md p-4" style="background: var(--success-soft); border: 1px solid var(--success);" hidden>
+                  <div class="flex items-start gap-3"><i class="ph ph-check-circle text-lg" style="color: var(--success);" aria-hidden="true"></i><div><strong>人工改判已生效</strong><p class="muted mt-1 text-sm">规则建议“清仓+禁止补货”已保留；当前按“加投+不补货”执行。</p><p class="meta mt-2">王敏 · 2026.08.04 10:32 · OVR-02</p></div></div>
                 </div>
 
                 <fieldset class="mt-5">
@@ -881,7 +900,7 @@
 
                 <label class="mt-5 block" for="reviewNote"><span class="font-semibold">审核备注</span><span id="noteHint" class="meta ml-2">通过时选填</span></label>
                 <textarea id="reviewNote" class="review-note mt-2" disabled>通过后由运营在 2 个工作日内形成清仓节奏，采购计划同步停止新增补货，并在执行后回填库存变化。</textarea>
-                <p id="validationMessage" class="meta mt-2">备注不能用于修改固定规则动作。</p>
+                <p id="validationMessage" class="meta mt-2">需要调整动作时，请使用上方“人工改判动作”并留下完整记录。</p>
 
                 <button id="submitReview" class="btn-primary mt-5 w-full" type="button" disabled><i class="ph ph-lock-key" aria-hidden="true"></i>审核结果已锁定</button>
                 <p class="meta mt-3 text-center">审核人：王敏 · 2026.07.06 10:05 · 版本 REV-01</p>
@@ -895,6 +914,24 @@
           <p class="meta">冻结业务截止日 2026.06.30 · 数据粒度 SPU</p>
         </footer>
       </main>
+    </div>
+  </div>
+
+  <div id="overrideModal" class="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="overrideTitle">
+    <div class="modal-card" style="width:min(640px,100%);">
+      <div class="flex items-start justify-between gap-4">
+        <div><div class="eyebrow">MANUAL OVERRIDE</div><h2 id="overrideTitle" class="section-title mt-1">人工改判生效动作</h2><p class="muted mt-2">原规则“清仓 + 禁止补货”将继续保留，本次只创建新的生效动作版本。</p></div>
+        <button id="closeOverride" class="icon-button" type="button" aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="mt-5 grid grid-cols-2 gap-4">
+        <label><span class="font-semibold">新经营动作 <span style="color:var(--danger);">*</span></span><select id="overrideBusiness" class="override-select mt-2"><option value="invest" selected>加投</option><option value="observe">观察</option><option value="stop">止损</option><option value="maintain">维持</option></select></label>
+        <label><span class="font-semibold">新库存动作 <span style="color:var(--danger);">*</span></span><select id="overrideInventory" class="override-select mt-2"><option value="no-restock" selected>不补货</option><option value="restock">补货</option><option value="none">不生成采购任务</option></select></label>
+      </div>
+      <div class="mt-4 rounded-md p-4" style="background:var(--warn-soft);border:1px solid var(--warn);"><strong>库存动作已重新确认</strong><p class="muted mt-1 text-sm">当前库存 3,260 件、近14天日均销量 8.0 件、可售 407.5 天；改为加投后不能沿用“禁止补货”。</p></div>
+      <label class="mt-4 block" for="overrideReason"><span class="font-semibold">改判理由 <span style="color:var(--danger);">*</span></span></label>
+      <textarea id="overrideReason" class="review-note mt-2" placeholder="请说明为什么不采纳清仓，以及加投的业务依据…"></textarea>
+      <p id="overrideValidation" class="meta mt-2">理由、改判人、时间和前后动作将进入不可覆盖的审计记录。</p>
+      <div class="mt-5 flex justify-end gap-2"><button id="cancelOverride" class="btn-secondary" type="button">取消</button><button id="confirmOverride" class="btn-primary" type="button"><i class="ph ph-check" aria-hidden="true"></i>确认改判并生效</button></div>
     </div>
   </div>
 
@@ -951,6 +988,45 @@
     });
     document.getElementById('regenerateButton').addEventListener('click', () => {
       showToast('已发起重新生成', '仅使用本建议冻结数据，不改变规则、动作或审核状态');
+    });
+
+    const overrideModal = document.getElementById('overrideModal');
+    const overrideReason = document.getElementById('overrideReason');
+    const overrideValidation = document.getElementById('overrideValidation');
+    const openOverride = document.getElementById('openOverride');
+    const closeOverride = () => { overrideModal.hidden = true; };
+    openOverride.addEventListener('click', () => {
+      overrideModal.hidden = false;
+      window.setTimeout(() => overrideReason.focus(), 0);
+    });
+    document.getElementById('closeOverride').addEventListener('click', closeOverride);
+    document.getElementById('cancelOverride').addEventListener('click', closeOverride);
+    document.getElementById('confirmOverride').addEventListener('click', () => {
+      if (!overrideReason.value.trim()) {
+        overrideValidation.textContent = '请填写改判理由后再生效。';
+        overrideValidation.style.color = 'var(--danger)';
+        overrideReason.focus();
+        return;
+      }
+      closeOverride();
+      document.getElementById('heroActionBadge').className = 'badge badge-ready';
+      document.getElementById('heroActionBadge').innerHTML = '<i class="ph ph-trend-up" aria-hidden="true"></i>生效动作：加投';
+      document.getElementById('overrideBadge').hidden = false;
+      document.getElementById('effectiveActionSummary').textContent = '加投 + 不补货';
+      document.getElementById('businessActionName').textContent = '加投';
+      document.getElementById('businessActionName').style.color = 'var(--action-invest)';
+      document.getElementById('businessActionIcon').className = 'ph ph-trend-up';
+      document.getElementById('inventoryActionName').textContent = '不补货';
+      document.getElementById('inventoryActionName').style.color = 'var(--muted)';
+      document.getElementById('heroInventoryStatus').textContent = '无采购执行任务';
+      document.getElementById('inventoryTrackStatus').textContent = '不补货';
+      document.getElementById('overrideEntry').hidden = true;
+      document.getElementById('overrideRecord').hidden = false;
+      const row = document.createElement('tr');
+      row.innerHTML = '<td>主管人工改判</td><td>清仓 / 禁补 → 加投 / 不补货</td><td>王敏 · 运营主管</td><td class="mono">08.04 10:32</td><td></td>';
+      row.lastElementChild.textContent = overrideReason.value.trim();
+      document.getElementById('auditRows').appendChild(row);
+      showToast('人工改判已生效', '当前按“加投 + 不补货”执行，原规则建议已保留');
     });
 
     const choiceCards = Array.from(document.querySelectorAll('.choice-card'));

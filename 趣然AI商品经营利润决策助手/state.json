@@ -19,8 +19,8 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 3,
-  "source_ids_changed": ["REQ-F07-03"],
+  "contract_revision": 4,
+  "source_ids_changed": ["REQ-F06-04", "AC-F06-07", "AC-F06-08", "AC-F06-09"],
   "current_stage": "6.3",
   "current_substep": "stage6-regenerated-from-stage5-and-verified",
   "completed_stages": ["0", "1", "5", "6"],
