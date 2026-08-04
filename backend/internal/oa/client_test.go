@@ -60,7 +60,7 @@ func TestDingTalkClientSendsRobotOneToOneWhitelist(t *testing.T) {
 				}
 			}
 			w.Header().Set("x-acs-request-id", "ding-request-001")
-			_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
+			_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[],"processQueryKey":"ding-process-query-001"}`))
 		default:
 			http.NotFound(w, r)
 		}
@@ -74,7 +74,7 @@ func TestDingTalkClientSendsRobotOneToOneWhitelist(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.ProviderReference != "ding-request-001" || tokenCalls.Load() != 1 || messageCalls.Load() != 1 {
+	if result.ProviderReference != "ding-process-query-001" || tokenCalls.Load() != 1 || messageCalls.Load() != 1 {
 		t.Fatalf("result=%+v tokenCalls=%d messageCalls=%d", result, tokenCalls.Load(), messageCalls.Load())
 	}
 }
@@ -94,10 +94,16 @@ func TestDingTalkClientFailsClosedForRecipientListsAndDoesNotRetryMessage(t *tes
 			}
 		})
 	}
+	missingReference := dingTalkFaultServer(t, http.StatusOK, `{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`, nil)
+	defer missingReference.Close()
+	_, err := testDingTalkClient(missingReference.URL).Send(context.Background(), validMessage())
+	if ErrorCode(err) != "dingtalk_robot_invalid_response" {
+		t.Fatalf("missing process query key error=%v code=%s", err, ErrorCode(err))
+	}
 	var calls atomic.Int32
 	server := dingTalkFaultServer(t, http.StatusTooManyRequests, `{"message":"rate limited"}`, &calls)
 	defer server.Close()
-	_, err := testDingTalkClient(server.URL).Send(context.Background(), validMessage())
+	_, err = testDingTalkClient(server.URL).Send(context.Background(), validMessage())
 	if ErrorCode(err) != "dingtalk_robot_status_429" || calls.Load() != 1 {
 		t.Fatalf("error=%v code=%s calls=%d", err, ErrorCode(err), calls.Load())
 	}

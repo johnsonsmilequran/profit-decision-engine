@@ -108,6 +108,7 @@ func (c *Client) Send(ctx context.Context, message Message) (Result, error) {
 		InvalidStaffIDs        []string `json:"invalidStaffIdList"`
 		FlowControlledStaffIDs []string `json:"flowControlledStaffIdList"`
 		FilteredStaffIDs       []string `json:"filteredStaffIdList"`
+		ProcessQueryKey        string   `json:"processQueryKey"`
 	}
 	if err := json.NewDecoder(io.LimitReader(response.Body, 64<<10)).Decode(&payload); err != nil {
 		return Result{}, errors.New("dingtalk_robot_invalid_response")
@@ -122,7 +123,11 @@ func (c *Client) Send(ctx context.Context, message Message) (Result, error) {
 	if contains(payload.FilteredStaffIDs, recipient) {
 		return Result{}, errors.New("dingtalk_recipient_filtered")
 	}
-	return Result{ProviderReference: strings.TrimSpace(response.Header.Get("x-acs-request-id"))}, nil
+	processQueryKey := strings.TrimSpace(payload.ProcessQueryKey)
+	if processQueryKey == "" {
+		return Result{}, errors.New("dingtalk_robot_invalid_response")
+	}
+	return Result{ProviderReference: processQueryKey}, nil
 }
 
 func (c *Client) accessToken(ctx context.Context) (string, error) {
