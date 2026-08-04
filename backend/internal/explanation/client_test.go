@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -24,6 +25,37 @@ func TestClientAdoptsOnlyStrictRuleConsistentJSON(t *testing.T) {
 	}
 	if output.Action != "clearance+prohibit_restock" {
 		t.Fatalf("output=%+v", output)
+	}
+}
+
+func TestClientConstrainsGatewayToProductionOutputShape(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var request struct {
+			Messages []map[string]string `json:"messages"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil || len(request.Messages) != 2 {
+			t.Fatalf("invalid request: %v", err)
+		}
+		system := request.Messages[0]["content"]
+		for _, required := range []string{
+			`action 必须精确输出为 "clearance+prohibit_restock"`,
+			"problem、evidence、summary 不得包含阿拉伯数字或百分号",
+			"四个字段的值都必须是 JSON 字符串",
+		} {
+			if !strings.Contains(system, required) {
+				t.Fatalf("system prompt missing %q: %s", required, system)
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"choices": []map[string]interface{}{{"message": map[string]string{"content": `{"problem":"利润率为负","evidence":"冻结证据支持固定规则结论","action":"clearance+prohibit_restock","summary":"执行清仓并禁止补货"}`}}}})
+	}))
+	defer server.Close()
+	client := NewClient(server.URL, "LiteLLM测试密钥", "解释模型")
+	if client.httpClient.Timeout != 45*time.Second {
+		t.Fatalf("timeout=%s, want 45s", client.httpClient.Timeout)
+	}
+	if _, err := client.Explain(context.Background(), explanationFixture()); err != nil {
+		t.Fatal(err)
 	}
 }
 

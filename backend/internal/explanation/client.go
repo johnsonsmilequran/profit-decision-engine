@@ -59,7 +59,7 @@ func NewClient(baseURL, apiKey, model string) *Client {
 	if baseURL != "" {
 		endpoint = baseURL + "/chat/completions"
 	}
-	return &Client{endpoint: endpoint, apiKey: strings.TrimSpace(apiKey), model: strings.TrimSpace(model), httpClient: &http.Client{Timeout: 20 * time.Second}}
+	return &Client{endpoint: endpoint, apiKey: strings.TrimSpace(apiKey), model: strings.TrimSpace(model), httpClient: &http.Client{Timeout: 45 * time.Second}}
 }
 
 func (c *Client) Explain(ctx context.Context, input Input) (Output, error) {
@@ -70,6 +70,7 @@ func (c *Client) Explain(ctx context.Context, input Input) (Output, error) {
 	if err != nil {
 		return Output{}, err
 	}
+	expectedAction := pointerText(input.BusinessAction) + "+" + pointerText(input.InventoryAction)
 	requestBody := struct {
 		Model          string              `json:"model"`
 		Messages       []map[string]string `json:"messages"`
@@ -78,7 +79,7 @@ func (c *Client) Explain(ctx context.Context, input Input) (Output, error) {
 	}{
 		Model: c.model,
 		Messages: []map[string]string{
-			{"role": "system", "content": "你只解释固定规则结论。仅输出 problem、evidence、action、summary 四个非空 JSON 字符串；action 必须原样等于输入动作组合，不新增数字、SKU、广告明细、评价或退款归因。"},
+			{"role": "system", "content": fmt.Sprintf("你只解释固定规则结论。仅输出 problem、evidence、action、summary 四个字段，四个字段的值都必须是 JSON 字符串且非空；action 必须精确输出为 %q。problem、evidence、summary 不得包含阿拉伯数字或百分号，不新增 SKU、广告明细、评价或退款归因。", expectedAction)},
 			{"role": "user", "content": string(inputJSON)},
 		},
 		ResponseFormat: map[string]string{"type": "json_object"}, Temperature: 0,
