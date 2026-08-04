@@ -71,6 +71,117 @@ func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
 	}
 }
 
+func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	supervisor := Principal{ActorRef: "supervisor-operational-test", Name: "执行验收主管", Role: "supervisor"}
+	operator := Principal{ActorRef: "operator-operational-test", Name: "缘一", Role: "operations"}
+	otherOperator := Principal{ActorRef: "other-operational-test", Name: "灵汐", Role: "operations"}
+	external := Principal{ActorRef: "external-operational-test", Name: "外部协同人员", Role: "external"}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "执行验收审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	for name, actor := range map[string]Principal{"non_owner": otherOperator, "supervisor": supervisor, "external": external} {
+		_, err := service.Execute(ctx, actor, taskID, ExecuteInput{Track: "business", Version: 1, Note: "无权执行尝试", IdempotencyKey: "无权执行-" + name + "-" + linkID})
+		if !errors.Is(err, ErrForbidden) {
+			t.Fatalf("%s execute error=%v", name, err)
+		}
+	}
+	if _, err := service.SendOA(ctx, otherOperator, taskID, OANotificationInput{RecipientActorRef: "仓库协同-001", FeedbackRequest: "请反馈禁补处理结果"}); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("non-owner OA error=%v", err)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 99, Note: "旧页面执行", IdempotencyKey: "旧经营版本-" + linkID}); !errors.Is(err, ErrConflict) {
+		t.Fatalf("stale business execution error=%v", err)
+	}
+	businessInput := ExecuteInput{Track: "business", Version: 1, Note: "已停止推广并开始清仓", IdempotencyKey: "幂等经营执行-" + linkID}
+	afterBusiness, err := service.Execute(ctx, operator, taskID, businessInput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if afterBusiness.BusinessState != "executed" || afterBusiness.InventoryState != "pending_execution" {
+		t.Fatalf("independent tracks=%s/%s", afterBusiness.BusinessState, afterBusiness.InventoryState)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, businessInput); err != nil {
+		t.Fatalf("business idempotent retry: %v", err)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 1, Note: "第二次旧版本", IdempotencyKey: "第二次旧经营版本-" + linkID}); !errors.Is(err, ErrConflict) {
+		t.Fatalf("second stale business execution error=%v", err)
+	}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"message_id":"OA-双轨验收-001"}`))
+	}))
+	defer server.Close()
+	service.SetOASender(oa.NewClient(server.URL, "OA双轨验收令牌"))
+	afterOA, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientActorRef: "仓库协同-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if afterOA.InventoryState != "pending_execution" || len(afterOA.Notifications) != 1 || afterOA.Notifications[0].Status != "sent" {
+		t.Fatalf("OA delivery changed business state notifications=%+v inventory=%s", afterOA.Notifications, afterOA.InventoryState)
+	}
+	inventoryInput := ExecuteInput{Track: "inventory", Version: 1, Note: "已核验仓库反馈并确认禁补", IdempotencyKey: "幂等库存执行-" + linkID}
+	afterInventory, err := service.Execute(ctx, operator, taskID, inventoryInput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if afterInventory.BusinessState != "executed" || afterInventory.InventoryState != "processed" {
+		t.Fatalf("inventory execution tracks=%s/%s", afterInventory.BusinessState, afterInventory.InventoryState)
+	}
+	if _, err := service.Execute(ctx, operator, taskID, inventoryInput); err != nil {
+		t.Fatalf("inventory idempotent retry: %v", err)
+	}
+	sales, profit, inventory := 73210.5, -5800.25, 2140.0
+	resultInput := ResultInput{PeriodStart: "2026-07-01", PeriodEnd: "2026-07-31", SalesValue: &sales, ProfitValue: &profit, InventoryValue: &inventory,
+		Note: "按 7 月完整自然月财务与仓库数据复核", Version: 2, IdempotencyKey: "幂等经营结果-" + linkID}
+	result, err := service.RecordResult(ctx, operator, taskID, resultInput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.BusinessState != "result_recorded" || result.InventoryState != "processed" {
+		t.Fatalf("result tracks=%s/%s", result.BusinessState, result.InventoryState)
+	}
+	if _, err := service.RecordResult(ctx, operator, taskID, resultInput); err != nil {
+		t.Fatalf("result idempotent retry: %v", err)
+	}
+	if _, err := service.RecordResult(ctx, operator, taskID, ResultInput{PeriodStart: "2026-07-01", PeriodEnd: "2026-07-31", SalesValue: &sales,
+		ProfitValue: &profit, InventoryValue: &inventory, Note: "旧版本结果", Version: 2, IdempotencyKey: "旧经营结果-" + linkID}); !errors.Is(err, ErrConflict) {
+		t.Fatalf("stale result error=%v", err)
+	}
+	if _, err := service.RecordResult(ctx, otherOperator, taskID, resultInput); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("non-owner result error=%v", err)
+	}
+	var storedSales, storedProfit, storedInventory float64
+	var periodStart, periodEnd, recordedBy, note string
+	var resultCount, businessEvents, inventoryEvents, resultEvents int
+	if err := db.QueryRow(ctx, `SELECT count(*),min(period_start)::text,min(period_end)::text,min(sales_value)::float8,min(profit_value)::float8,
+		min(inventory_value)::float8,min(recorded_by),min(note) FROM action_result WHERE task_id=$1`, taskID).
+		Scan(&resultCount, &periodStart, &periodEnd, &storedSales, &storedProfit, &storedInventory, &recordedBy, &note); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.QueryRow(ctx, `SELECT count(*) FILTER (WHERE event_type='business_executed'),count(*) FILTER (WHERE event_type='inventory_executed'),
+		count(*) FILTER (WHERE event_type='business_result_recorded') FROM business_event WHERE task_id=$1`, taskID).
+		Scan(&businessEvents, &inventoryEvents, &resultEvents); err != nil {
+		t.Fatal(err)
+	}
+	if resultCount != 1 || periodStart != "2026-07-01" || periodEnd != "2026-07-31" || storedSales != sales || storedProfit != profit || storedInventory != inventory || recordedBy != operator.ActorRef || note != resultInput.Note {
+		t.Fatalf("stored result count=%d period=%s..%s values=%v/%v/%v actor=%s note=%s", resultCount, periodStart, periodEnd, storedSales, storedProfit, storedInventory, recordedBy, note)
+	}
+	if businessEvents != 1 || inventoryEvents != 1 || resultEvents != 1 {
+		t.Fatalf("events business=%d inventory=%d result=%d", businessEvents, inventoryEvents, resultEvents)
+	}
+}
+
 func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {

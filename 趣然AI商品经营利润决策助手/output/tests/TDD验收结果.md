@@ -16,7 +16,7 @@
 | FLOW-07 | pending | 待执行 | — |
 | FLOW-08 | pending | 待执行 | — |
 | FLOW-09 | pending | 已完成服务端人工改判字段存在性、动作变化、空理由、沿用禁补、旧版本、三种库存选择、已执行先终止和追加审计验证；等待主管建议详情浏览器弹窗闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -run 'TestSupervisorOverride' -v ./internal/action` exit 0；`TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice` 的 restock/no_restock/no_coordination 3/3 pass，非法请求事件数 0 且任务保持清仓+禁补；每个合法请求原固定规则仍为清仓+禁补、生效版本唯一、审计前后动作逐项一致；`TestSupervisorOverrideRequiresTerminationAfterExecution` pass；浏览器返回 No browser is available，故不记 pass |
-| FLOW-10 | pending | 待执行 | — |
+| FLOW-10 | pending | 已完成真实 PostgreSQL 双轨独立推进、OA 送达不代业务确认、责任运营/主管/非责任运营/外部角色授权、旧版本、幂等重试和实际经营结果值持久化；等待双轨/结果浏览器闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -run 'TestOperationalCommands|TestOAFailure' -v ./internal/action` exit 0；`TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency` 断言业务/协同/结果各 1 条事件，OA sent 后协同仍 pending_execution，结果周期 2026-07-01..31、销售 73210.5、利润 -5800.25、库存 2140、记录人/备注逐项持久化；`TestOAFailureCanRetryWithoutChangingInventoryState` pass；浏览器返回 No browser is available，故不记 pass |
 | FLOW-11 | pending | 已完成真实 PostgreSQL 跨两个 Asia/Shanghai 自然日并发催办、首次发送失败/人工补发、主管确认停催及改判/终止停催；等待运营/主管浏览器闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -v ./internal/action` exit 0；`TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfirmation` 断言 2 个自然日恰有 2 条通知、3 次发送尝试、确认后次日新增 0；`TestClearanceReminderStopsAfterOverrideOrTermination` 2/2 pass；浏览器返回 No browser is available，故不记 pass |
 | FLOW-12 | pending | 待执行 | — |
 | DESIGN-01 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
