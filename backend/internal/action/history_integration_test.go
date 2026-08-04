@@ -36,6 +36,10 @@ func TestHistoryKeepsFrozenBatchDecisionAndAppliesRoleProjection(t *testing.T) {
 		OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "保留原清仓规则快照，仅新增主管生效版本", Version: 1, IdempotencyKey: "历史改判-" + linkID, InventorySelectionExplicit: true}); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := service.Review(ctx, Principal{ActorRef: "history-supervisor", Name: "历史主管", Role: "supervisor"}, linkID,
+		ReviewInput{Decision: "approved", ReviewVersion: 2, Note: "整体复核人工改判后的双轨动作", IdempotencyKey: "历史改判复核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
 	if _, err := db.Exec(ctx, `INSERT INTO business_event(task_id,link_id,event_type,actor_ref,from_state,to_state,reason,details)
 		SELECT task_id,link_id,'version_conflict','history-supervisor','pending_execution','pending_execution','旧版本请求被拒绝','{}'
 		FROM decision_task_link WHERE link_id=$1`, linkID); err != nil {
@@ -84,7 +88,7 @@ func TestHistoryKeepsFrozenBatchDecisionAndAppliesRoleProjection(t *testing.T) {
 		t.Fatalf("history detail lost frozen values: rule=%s sales=%v profit=%v return=%v inventory=%v", detail.RuleVersion,
 			detail.NetSales, detail.ProfitRate, detail.QualityReturnRate, detail.InventoryDays)
 	}
-	if len(detail.Events) != 2 || detail.Events[0].Type != "supervisor_override" || detail.Events[1].Type != "version_conflict" || detail.AIStatus != "failed" {
+	if len(detail.Events) != 3 || detail.Events[0].Type != "supervisor_override" || detail.Events[1].Type != "suggestion_review" || detail.Events[2].Type != "version_conflict" || detail.AIStatus != "failed" {
 		t.Fatalf("history detail events=%v ai=%s", detail.Events, detail.AIStatus)
 	}
 	if _, err := db.Exec(ctx, `UPDATE decision_record SET rule_version='RULE-V2.0' WHERE decision_id=$1`, decisionID); err == nil {

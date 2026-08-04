@@ -43,12 +43,12 @@ func (s *Service) Override(ctx context.Context, actor Principal, linkID string, 
 		return Detail{}, err
 	}
 	defer tx.Rollback(ctx)
-	var taskID, oldBusiness, businessState, inventoryState string
+	var taskID, oldBusiness, reviewStatus, businessState, inventoryState string
 	var oldInventory *string
 	var version int
 	if err := tx.QueryRow(ctx, `SELECT t.task_id::text,coalesce(t.current_business_action,''),t.current_inventory_action,
-		t.business_state,t.inventory_state,t.review_version FROM decision_task_link l JOIN spu_action_task t ON t.task_id=l.task_id
-		WHERE l.link_id=$1 FOR UPDATE OF l,t`, linkID).Scan(&taskID, &oldBusiness, &oldInventory, &businessState, &inventoryState, &version); err != nil {
+		l.review_status,t.business_state,t.inventory_state,t.review_version FROM decision_task_link l JOIN spu_action_task t ON t.task_id=l.task_id
+		WHERE l.link_id=$1 FOR UPDATE OF l,t`, linkID).Scan(&taskID, &oldBusiness, &oldInventory, &reviewStatus, &businessState, &inventoryState, &version); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Detail{}, ErrNotFound
 		}
@@ -77,24 +77,37 @@ func (s *Service) Override(ctx context.Context, actor Principal, linkID string, 
 	if _, err := tx.Exec(ctx, `UPDATE action_revision SET status='superseded' WHERE task_id=$1 AND status IN ('active','pending_review')`, taskID); err != nil {
 		return Detail{}, err
 	}
+	revisionStatus := "active"
+	nextBusinessState := "pending_execution"
+	nextInventoryState := "pending_execution"
+	if reviewStatus == "pending" {
+		revisionStatus = "pending_review"
+		nextBusinessState = "pending_review"
+		nextInventoryState = "pending_review"
+	}
+	if inventory == nil {
+		nextInventoryState = "not_generated"
+	}
 	var revisionID string
 	if err := tx.QueryRow(ctx, `INSERT INTO action_revision(task_id,source, business_action,inventory_action,status,reason,created_by)
-		VALUES($1,'supervisor_override',$2,$3,'active',$4,$5) RETURNING revision_id::text`, taskID, input.BusinessAction, inventory, strings.TrimSpace(input.Reason), actor.ActorRef).Scan(&revisionID); err != nil {
+		VALUES($1,'supervisor_override',$2,$3,$4,$5,$6) RETURNING revision_id::text`, taskID, input.BusinessAction, inventory, revisionStatus, strings.TrimSpace(input.Reason), actor.ActorRef).Scan(&revisionID); err != nil {
 		return Detail{}, err
 	}
-	if _, err := tx.Exec(ctx, `UPDATE spu_action_task SET current_business_action=$2,current_inventory_action=$3,review_status='approved',
-		review_version=review_version+1,business_state='pending_execution',business_version=business_version+1,
-		inventory_state=CASE WHEN $3::text IS NULL THEN 'not_generated' ELSE 'pending_execution' END,
-		inventory_version=inventory_version+1,business_executed_at=NULL,updated_at=now() WHERE task_id=$1`, taskID, input.BusinessAction, inventory); err != nil {
+	if _, err := tx.Exec(ctx, `UPDATE spu_action_task SET current_business_action=$2,current_inventory_action=$3,review_status=$4,
+		review_version=review_version+1,business_state=$5,business_version=business_version+1,inventory_state=$6,
+		inventory_version=inventory_version+1,business_executed_at=NULL,updated_at=now() WHERE task_id=$1`, taskID, input.BusinessAction, inventory,
+		reviewStatus, nextBusinessState, nextInventoryState); err != nil {
 		return Detail{}, err
 	}
-	if _, err := tx.Exec(ctx, `UPDATE decision_task_link SET revision_id=$2,review_status='approved',review_version=review_version+1 WHERE link_id=$1`, linkID, revisionID); err != nil {
+	if _, err := tx.Exec(ctx, `UPDATE decision_task_link SET revision_id=$2,review_version=review_version+1 WHERE link_id=$1`, linkID, revisionID); err != nil {
 		return Detail{}, err
 	}
 	if _, err := tx.Exec(ctx, `INSERT INTO business_event(task_id,link_id,event_type,actor_ref,from_state,to_state,reason,details,idempotency_key)
 		VALUES($1,$2,'supervisor_override',$3,$4,$5,$6,jsonb_build_object('before_business',$4::text,'after_business',$5::text,
-		'before_inventory',$7::text,'after_inventory',$8::text,'revision_id',$9::text),$10)`, taskID, linkID, actor.ActorRef, oldBusiness,
-		input.BusinessAction, strings.TrimSpace(input.Reason), oldInventory, inventory, revisionID, input.IdempotencyKey); err != nil {
+		'before_inventory',$7::text,'after_inventory',$8::text,'revision_id',$9::text,'review_status',$10::text,
+		'business_state',$11::text,'inventory_state',$12::text),$13)`, taskID, linkID, actor.ActorRef, oldBusiness,
+		input.BusinessAction, strings.TrimSpace(input.Reason), oldInventory, inventory, revisionID, reviewStatus, nextBusinessState,
+		nextInventoryState, input.IdempotencyKey); err != nil {
 		return Detail{}, err
 	}
 	if err := tx.Commit(ctx); err != nil {

@@ -14,7 +14,7 @@ const historyBase = `WITH history_rows AS (
 		coalesce((SELECT CASE
 			WHEN e.event_type='suggestion_review' AND e.to_state='approved' THEN 'pending_execution'
 			WHEN e.event_type='suggestion_review' AND e.to_state='rejected' THEN 'closed'
-			WHEN e.event_type='supervisor_override' THEN 'pending_execution'
+			WHEN e.event_type='supervisor_override' THEN coalesce(e.details->>'business_state','pending_execution')
 			WHEN e.event_type='task_terminated' THEN 'terminated'
 			WHEN e.event_type='clearance_completion_reviewed' AND e.to_state='confirmed' THEN 'closed'
 			ELSE e.to_state END
@@ -24,7 +24,7 @@ const historyBase = `WITH history_rows AS (
 		coalesce((SELECT CASE
 			WHEN e.event_type='suggestion_review' AND e.to_state='approved' THEN CASE WHEN d.inventory_action IS NULL THEN 'not_generated' ELSE 'pending_execution' END
 			WHEN e.event_type='suggestion_review' AND e.to_state='rejected' THEN CASE WHEN d.inventory_action IS NULL THEN 'not_generated' ELSE 'closed' END
-			WHEN e.event_type='supervisor_override' THEN 'pending_execution'
+			WHEN e.event_type='supervisor_override' THEN coalesce(e.details->>'inventory_state','pending_execution')
 			WHEN e.event_type='task_terminated' THEN CASE WHEN d.inventory_action IS NULL THEN 'not_generated' ELSE 'terminated' END
 			ELSE e.to_state END
 			FROM business_event e WHERE e.link_id=l.link_id AND e.event_type IN ('inventory_executed','supervisor_override','task_terminated','suggestion_review')
@@ -160,8 +160,14 @@ func (s *Service) projectHistory(ctx context.Context, detail *Detail) error {
 				}
 			}
 		case "supervisor_override":
-			detail.BusinessState = "pending_execution"
-			if detail.EffectiveInventory == nil {
+			if state, ok := event.Details["business_state"].(string); ok {
+				detail.BusinessState = state
+			} else {
+				detail.BusinessState = "pending_execution"
+			}
+			if state, ok := event.Details["inventory_state"].(string); ok {
+				detail.InventoryState = state
+			} else if detail.EffectiveInventory == nil {
 				detail.InventoryState = "not_generated"
 			} else {
 				detail.InventoryState = "pending_execution"

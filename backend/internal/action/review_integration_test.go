@@ -563,8 +563,8 @@ func TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice(t *te
 		inventory *string
 		state     string
 	}{
-		{name: "restock", inventory: stringPointer("restock"), state: "pending_execution"},
-		{name: "no_restock", inventory: stringPointer("no_restock"), state: "pending_execution"},
+		{name: "restock", inventory: stringPointer("restock"), state: "pending_review"},
+		{name: "no_restock", inventory: stringPointer("no_restock"), state: "pending_review"},
 		{name: "no_coordination", inventory: nil, state: "not_generated"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
@@ -578,13 +578,15 @@ func TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice(t *te
 			if result.SuggestedBusiness == nil || *result.SuggestedBusiness != "clearance" || result.SuggestedInventory == nil || *result.SuggestedInventory != "prohibit_restock" {
 				t.Fatalf("fixed rule projection changed=%v/%v", result.SuggestedBusiness, result.SuggestedInventory)
 			}
-			if result.EffectiveBusiness == nil || *result.EffectiveBusiness != "invest" || !optionalStringEqual(result.EffectiveInventory, test.inventory) || result.InventoryState != test.state {
-				t.Fatalf("effective=%v/%v inventory_state=%s", result.EffectiveBusiness, result.EffectiveInventory, result.InventoryState)
+			if result.EffectiveBusiness == nil || *result.EffectiveBusiness != "invest" || !optionalStringEqual(result.EffectiveInventory, test.inventory) ||
+				result.ReviewStatus != "pending" || result.BusinessState != "pending_review" || result.InventoryState != test.state {
+				t.Fatalf("effective=%v/%v state=%s/%s/%s", result.EffectiveBusiness, result.EffectiveInventory,
+					result.ReviewStatus, result.BusinessState, result.InventoryState)
 			}
 			if _, err := service.Override(ctx, supervisor, caseLinkID, input); err != nil {
 				t.Fatalf("idempotent retry: %v", err)
 			}
-			var events, fixedRules, activeOverrides int
+			var events, fixedRules, pendingOverrides int
 			var beforeBusiness, afterBusiness, beforeInventory string
 			var afterInventory *string
 			if err := db.QueryRow(ctx, `SELECT count(*),min(details->>'before_business'),min(details->>'after_business'),
@@ -594,12 +596,12 @@ func TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice(t *te
 				t.Fatal(err)
 			}
 			if err := db.QueryRow(ctx, `SELECT count(*) FILTER (WHERE source='fixed_rule' AND business_action='clearance' AND inventory_action='prohibit_restock'),
-				count(*) FILTER (WHERE source='supervisor_override' AND status='active') FROM action_revision WHERE task_id=$1`, caseTaskID).
-				Scan(&fixedRules, &activeOverrides); err != nil {
+				count(*) FILTER (WHERE source='supervisor_override' AND status='pending_review') FROM action_revision WHERE task_id=$1`, caseTaskID).
+				Scan(&fixedRules, &pendingOverrides); err != nil {
 				t.Fatal(err)
 			}
-			if events != 1 || beforeBusiness != "clearance" || afterBusiness != "invest" || beforeInventory != "prohibit_restock" || !optionalStringEqual(afterInventory, test.inventory) || fixedRules != 1 || activeOverrides != 1 {
-				t.Fatalf("audit events=%d before=%s/%s after=%s/%v fixed=%d active=%d", events, beforeBusiness, beforeInventory, afterBusiness, afterInventory, fixedRules, activeOverrides)
+			if events != 1 || beforeBusiness != "clearance" || afterBusiness != "invest" || beforeInventory != "prohibit_restock" || !optionalStringEqual(afterInventory, test.inventory) || fixedRules != 1 || pendingOverrides != 1 {
+				t.Fatalf("audit events=%d before=%s/%s after=%s/%v fixed=%d pending=%d", events, beforeBusiness, beforeInventory, afterBusiness, afterInventory, fixedRules, pendingOverrides)
 			}
 		})
 	}
@@ -654,8 +656,8 @@ func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
 	if overridden.EffectiveBusiness == nil || *overridden.EffectiveBusiness != "invest" || overridden.EffectiveInventory == nil || *overridden.EffectiveInventory != "no_restock" {
 		t.Fatalf("effective actions=%v/%v", overridden.EffectiveBusiness, overridden.EffectiveInventory)
 	}
-	if overridden.BusinessState != "pending_execution" || overridden.InventoryState != "pending_execution" {
-		t.Fatalf("override states=%s/%s", overridden.BusinessState, overridden.InventoryState)
+	if overridden.ReviewStatus != "approved" || overridden.BusinessState != "pending_execution" || overridden.InventoryState != "pending_execution" {
+		t.Fatalf("override states=%s/%s/%s", overridden.ReviewStatus, overridden.BusinessState, overridden.InventoryState)
 	}
 	var fixedCount, activeOverrideCount int
 	if err := db.QueryRow(ctx, `SELECT count(*) FILTER (WHERE source='fixed_rule'),count(*) FILTER (WHERE source='supervisor_override' AND status='active') FROM action_revision WHERE task_id=$1`, taskID).Scan(&fixedCount, &activeOverrideCount); err != nil {
