@@ -12,6 +12,10 @@ dist/
 coverage/
 playwright-report/
 test-results/
+apps/web/src/**/*.js
+apps/web/vite.config.js
+apps/web/vite.config.d.ts
+apps/web/*.tsbuildinfo
 
 # 运行期上传文件（目录结构保留）
 **/var/uploads/*

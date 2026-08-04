@@ -12,7 +12,7 @@
 - 方案 PPT 大纲：`趣然AI商品经营利润决策助手/output/ppt.md`
 - HTML 演示：`趣然AI商品经营利润决策助手/output/ppt/p01.html` 至 `p11.html`
 - 可编辑 PPTX：`趣然AI商品经营利润决策助手/output/AI商品经营与利润决策助手-阶段5正式版.pptx`
-- 生产应用：`apps/api` 已建立 Fastify 与 PostgreSQL 基础运行链路，后续 MVP 闭环持续在 `weien` 分支实现。
+- 生产应用：`apps/api` 为 Fastify/PostgreSQL 模块化单体，`apps/web` 为 React/TanStack/Vite PC 工作台；MVP 闭环持续在 `weien` 分支实现。
 
 ## 本地开发
 
@@ -30,12 +30,15 @@ npm run dev
 
 批次 API 已实现 `POST /api/batches/import`、`GET /api/batches` 与 `GET /api/batches/:batchId`。导入会把 XLSX 写入持久化目录，并由可恢复的同进程后台任务把有效行、字段质量、指标、固定规则决策和双轨动作写入 PostgreSQL；相同指纹始终返回原批次。
 
+工作台 API `GET /api/workspace` 和 Web 路由 `/workspace` 已接入真实角色会话及数据库聚合；主管、运营、采购分别看到职责内任务，采购响应不包含经营动作与受限经营字段。Web 同时实现 `/auth/dingtalk` 与 `/forbidden`，并在 1024px 最小视口保持无横向溢出。
+
 ## 仓库结构
 
 ```text
 .
 ├── .github/                         # Issue、PR 与 CODEOWNERS 协作配置
 ├── apps/api/                        # Fastify API 与 PostgreSQL 数据层
+├── apps/web/                        # React PC Web 与角色页面
 ├── doc/                             # 跨会话项目纪要
 ├── 趣然AI商品经营利润决策助手/       # PRD、证据、评审与演示产物
 ├── CONTRIBUTING.md                  # 贡献流程

@@ -4,7 +4,7 @@
 - contract_sha256: `fa61742301d677a9165545d760d32027ce04600e6924616032a6cc57167afdb5`
 - run_started_at: `2026-08-04T16:56:26+0800`
 - evidence_policy: 仅发布候选阶段本轮真实执行所得命令、API、数据库、浏览器或截图证据可将状态改为 pass。
-- latest_development_check: `2026-08-04 17:37`，API 源码测试 27/27、类型检查、构建和生产依赖审计通过；该证据仅用于开发反馈，未进入发布候选，以下状态保持 pending。
+- latest_development_check: `2026-08-04 17:53`，API 源码测试 29/29、Web 测试 3/3、双端类型检查和生产构建通过；认证页开发期浏览器冒烟确认 1024px scrollWidth=viewportWidth、凭据输入 0、钉钉主按钮 1、未登录权限页回门禁及失败恢复态正确。该证据未进入发布候选，以下状态保持 pending。
 
 | TDD ID | 状态 | 动作 | 证据 |
 | :--- | :--- | :--- | :--- |
