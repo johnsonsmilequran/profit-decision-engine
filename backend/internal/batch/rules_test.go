@@ -1,6 +1,7 @@
 package batch
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 )
@@ -56,6 +57,44 @@ func TestMissingReturnDataCannotProveInvestment(t *testing.T) {
 	if decision.BusinessAction != nil {
 		t.Fatalf("unverified return data must not produce investment, got %q", *decision.BusinessAction)
 	}
+}
+
+func TestDecisionIsStableAcrossSerialAndConcurrentReplay(t *testing.T) {
+	cutoff := mustRuleDate(t, "2026-06-30")
+	launch := mustRuleDate(t, "2026-01-15")
+	returnRate, inventoryDays := 0.012, 18.0
+	snapshots := []Snapshot{
+		ruleSnapshot(launch, 19999.99, 0.20, &returnRate, &inventoryDays),
+		ruleSnapshot(launch, 20000, 0.0499, &returnRate, &inventoryDays),
+		ruleSnapshot(launch, 99999.99, 0.15, &returnRate, &inventoryDays),
+		ruleSnapshot(launch, 100000, 0.10, &returnRate, &inventoryDays),
+	}
+	for index, snapshot := range snapshots {
+		expected := decisionJSON(t, decide(snapshot, cutoff))
+		for replay := 0; replay < 3; replay++ {
+			if actual := decisionJSON(t, decide(snapshot, cutoff)); actual != expected {
+				t.Fatalf("serial snapshot=%d replay=%d changed\nwant=%s\ngot=%s", index, replay, expected, actual)
+			}
+		}
+		results := make(chan string, 24)
+		for replay := 0; replay < cap(results); replay++ {
+			go func() { results <- decisionJSON(t, decide(snapshot, cutoff)) }()
+		}
+		for replay := 0; replay < cap(results); replay++ {
+			if actual := <-results; actual != expected {
+				t.Fatalf("concurrent snapshot=%d replay=%d changed\nwant=%s\ngot=%s", index, replay, expected, actual)
+			}
+		}
+	}
+}
+
+func decisionJSON(t *testing.T, decision Decision) string {
+	t.Helper()
+	content, err := json.Marshal(decision)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(content)
 }
 
 func ruleSnapshot(launch time.Time, sales, profit float64, returnRate, inventoryDays *float64) Snapshot {

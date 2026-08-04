@@ -104,6 +104,34 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	if batchCount != 1 || listCount != 1 {
 		t.Fatalf("persisted batch/list count=%d/%d, want 1/1", batchCount, listCount)
 	}
+	var frozenBefore []byte
+	if err := db.QueryRow(ctx, `SELECT jsonb_agg(jsonb_build_object(
+		'spu_id',s.spu_id,'product_type',d.product_type,'business_action',d.business_action,
+		'inventory_action',d.inventory_action,'trigger_rule',d.trigger_rule,'evidence',d.structured_evidence)
+		ORDER BY s.spu_id) FROM decision_record d JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		JOIN action_list l ON l.list_id=d.list_id WHERE l.batch_id=$1`, created.ID).Scan(&frozenBefore); err != nil {
+		t.Fatalf("read frozen decisions before restart: %v", err)
+	}
+	for restart := 0; restart < 3; restart++ {
+		processedAfterRestart, err := NewProcessor(db).RunOne(ctx)
+		if err != nil {
+			t.Fatalf("worker restart %d: %v", restart, err)
+		}
+		if processedAfterRestart {
+			t.Fatalf("worker restart %d reprocessed a completed batch", restart)
+		}
+	}
+	var frozenAfter []byte
+	if err := db.QueryRow(ctx, `SELECT jsonb_agg(jsonb_build_object(
+		'spu_id',s.spu_id,'product_type',d.product_type,'business_action',d.business_action,
+		'inventory_action',d.inventory_action,'trigger_rule',d.trigger_rule,'evidence',d.structured_evidence)
+		ORDER BY s.spu_id) FROM decision_record d JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		JOIN action_list l ON l.list_id=d.list_id WHERE l.batch_id=$1`, created.ID).Scan(&frozenAfter); err != nil {
+		t.Fatalf("read frozen decisions after restart: %v", err)
+	}
+	if !bytes.Equal(frozenBefore, frozenAfter) {
+		t.Fatalf("worker restart changed frozen decisions\nbefore=%s\nafter=%s", frozenBefore, frozenAfter)
+	}
 }
 
 func mustIntegrationDate(t *testing.T, value string) time.Time {

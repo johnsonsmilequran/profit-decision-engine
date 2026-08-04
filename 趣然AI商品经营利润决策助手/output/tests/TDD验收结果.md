@@ -28,7 +28,7 @@
 | DESIGN-07 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
 | DESIGN-08 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
 | DESIGN-09 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
-| RULE-01 | pending | 待执行 | — |
+| RULE-01 | pass | 对 4 组冻结快照执行每组 3 次串行、24 次并发重放，覆盖销售/利润/新品阈值边界；真实 XLSX 批次完成后重建 Worker 3 次，验证不重领完成任务且冻结决策 JSON 逐字节一致 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 TEST_XLSX_PATH=…/商品链接.xlsx go test -race -count=1 -v ./internal/batch` exit 0；`TestDecisionRuleBoundaries` 4/4 子用例 pass；`TestDecisionIsStableAcrossSerialAndConcurrentReplay` pass；`TestBatchLifecycleAgainstPostgresAndRealWorkbook` pass（3 次 Worker restart 均 `processed=false`，10 条决策重放前后 JSON bytes 相等） |
 | RULE-02 | pending | 待执行 | — |
 | RULE-03 | pending | 待执行 | — |
 | RULE-04 | pending | 待执行 | — |
