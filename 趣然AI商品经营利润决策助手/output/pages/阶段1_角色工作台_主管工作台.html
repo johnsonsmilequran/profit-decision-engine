@@ -922,7 +922,7 @@
           <div>
             <p class="eyebrow">Supervisor Workbench</p>
             <h1>主管工作台</h1>
-            <p>先处理高风险建议，再进入详情查看完整证据并完成整条建议审核。</p>
+            <p>先处理高风险建议，再确认责任运营提交的清仓完成时间；所有外部协同由运营通过 OA 闭环。</p>
           </div>
           <div class="updated"><i class="ph ph-clock" aria-hidden="true"></i><span>最后更新：2026-08-04 10:32</span></div>
         </div>
@@ -948,15 +948,26 @@
             <p class="summary-foot">清仓与止损共 7 条，优先进入详情核对</p>
           </article>
           <article class="summary-card approved">
-            <div class="summary-top"><span class="summary-label">本批次已通过</span><span class="summary-icon"><i class="ph ph-check-circle" aria-hidden="true"></i></span></div>
-            <div class="summary-value">6</div>
-            <p class="summary-foot">已激活对应经营动作与库存动作</p>
+            <div class="summary-top"><span class="summary-label">待确认清仓完成</span><span class="summary-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></span></div>
+            <div class="summary-value">2</div>
+            <p class="summary-foot">责任运营已提交完成时间，等待主管确认或退回</p>
           </article>
           <article class="summary-card rejected">
-            <div class="summary-top"><span class="summary-label">本批次已驳回</span><span class="summary-icon"><i class="ph ph-x-circle" aria-hidden="true"></i></span></div>
-            <div class="summary-value">2</div>
-            <p class="summary-foot">原始规则、数据与审核原因均已保留</p>
+            <div class="summary-top"><span class="summary-label">OA 发送异常</span><span class="summary-icon"><i class="ph ph-warning-circle" aria-hidden="true"></i></span></div>
+            <div class="summary-value">1</div>
+            <p class="summary-foot">通知失败不改变业务状态，由责任运营人工补发</p>
           </article>
+        </section>
+
+        <section class="section" aria-labelledby="clearance-review-title">
+          <div class="section-heading">
+            <div class="section-title-wrap"><h2 id="clearance-review-title">待确认清仓完成时间</h2><p>只有主管确认后才完成闭环；确认前系统每日 OA 催办责任运营</p></div>
+            <span class="badge badge-pending"><i class="ph ph-clock" aria-hidden="true"></i>2 条待处理</span>
+          </div>
+          <div class="table-card">
+            <div class="table-note"><i class="ph ph-info" aria-hidden="true"></i><span>同一 SPU 跨周仍为清仓时沿用原稳定任务，不重复创建完成待办。退回必须填写修正原因。</span></div>
+            <div class="table-wrap"><table><thead><tr><th>SPU</th><th>责任运营</th><th>实际完成时间</th><th>提交时间</th><th>最近催办</th><th>状态</th><th></th></tr></thead><tbody><tr><td class="spu-cell"><strong>布乐迪忙碌屋益智玩具</strong><span class="mono">SPU-515 · TASK-TOY-515</span></td><td>陈雨欣</td><td class="mono">2026-08-03 18:30</td><td class="mono dim">08-04 10:20</td><td>今日 09:00 · OA 已送达</td><td><span class="badge badge-pending">待主管确认</span></td><td><button class="review-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'"><span>确认或退回</span><i class="ph ph-arrow-right"></i></button></td></tr></tbody></table></div>
+          </div>
         </section>
 
         <section class="section" aria-labelledby="risk-title">

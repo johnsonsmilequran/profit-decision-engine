@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-04T04:36:18Z",
+  "last_updated_at_utc": "2026-08-04T05:21:31Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -19,15 +19,15 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 6,
-  "source_ids_changed": ["REQ-F05-05", "AC-F05-09", "AC-F05-10"],
+  "contract_revision": 7,
+  "source_ids_changed": ["REQ-F06-02", "REQ-F06-03", "REQ-F06-05", "REQ-F07-01", "REQ-F07-02", "REQ-F07-03", "AC-F06-03", "AC-F06-04", "AC-F06-05", "AC-F06-06", "AC-F06-10", "AC-F06-11", "AC-F06-12", "AC-F07-03", "AC-F07-04", "AC-F07-06", "NFR-002"],
   "current_stage": "design-master-stage-II",
-  "current_substep": "spu-previous-todo-and-business-status-increment-completed",
+  "current_substep": "dual-role-oa-clearance-confirmation-increment-completed",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
     "type": "ready_for_tdd",
-    "description": "Design Master 阶段 II 及 SPU 跨周最近前序待办、生命周期时间和经营状态筛选增量已完成；79 个 MVP source 追溯通过，可进入 TDD Master"
+    "description": "Design Master 阶段 II 双角色、责任运营 OA 协同、清仓完成时间确认与每日催办增量已完成；83 个 MVP source 追溯通过，可进入 TDD Master"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -51,7 +51,7 @@
     },
     {
       "id": "D-4",
-      "decision": "运营和采购计划直接使用行动清单；运营主管审核；运营执行加投、广告止损和清仓并对经营结果负责，采购计划执行补货",
+      "decision": "产品直接业务角色仅为运营和运营主管；责任运营负责经营动作、库存/OA 协同与结果回填，运营主管负责审核、改判和清仓完成事实确认",
       "stage": "1",
       "rationale": "角色边界决定建议的可见范围、审核流程和跨部门动作闭环"
     },
@@ -63,7 +63,7 @@
     },
     {
       "id": "D-6",
-      "decision": "首轮采用人工轻闭环：生成建议、运营主管审核、运营或采购计划确认执行、记录结果；不自动操作外部系统",
+      "decision": "首轮采用人工轻闭环：生成建议、运营主管审核、责任运营执行经营与 OA 协同并记录结果；不自动操作外部系统",
       "stage": "1",
       "rationale": "既解决515案例的跨部门断点，又控制自动写入广告和采购系统的误操作风险"
     },
@@ -93,7 +93,7 @@
     },
     {
       "id": "D-11",
-      "decision": "新品首版不生成补货建议；采购计划仅查看补货或禁补结论及库存销量必要依据",
+      "decision": "新品首版不生成补货建议；采购、仓库等相关人员无产品访问权，仅通过 OA 接收责任运营发送的最小协同字段",
       "stage": "1",
       "rationale": "避免新品补货扩大亏损库存，并按岗位职责落实最小必要数据权限"
     },
@@ -129,13 +129,13 @@
     },
     {
       "id": "D-17",
-      "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；观察归运营负责并以记录观察或有证据的优化结果闭环",
+      "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；责任运营统一处理经营与库存/OA 协同并记录结果",
       "stage": "5",
       "rationale": "既避免止损/清仓与禁补被拆散，也允许运营和采购计划分别执行并保留独立状态"
     },
     {
       "id": "D-18",
-      "decision": "使用钉钉统一身份认证；三类业务角色变更由事业部负责人审批，运维/系统管理员按审批结果配置",
+      "decision": "使用钉钉统一身份认证；运营和运营主管两类业务角色变更由事业部负责人审批，运维/系统管理员按审批结果配置",
       "stage": "5",
       "rationale": "统一身份可追溯到个人，并将业务授权与技术配置分离，避免共享账号或技术管理员自行扩大经营数据权限"
     },
@@ -150,6 +150,12 @@
       "decision": "经营待办以事业部与 SPU/商品链接精确锚定；新批次显示最近一条前序待办、首次产生时间、本周关联时间、当前经营状态与真实执行时间，并支持按经营状态筛选",
       "stage": "design-master",
       "rationale": "让周度导入后的任务续接关系、处理进度和执行事实可见，同时避免审核、采购或更新时间被误当成经营状态或执行时间"
+    },
+    {
+      "id": "D-21",
+      "decision": "清仓动作跨周不变时沿用同一稳定任务；责任运营提交实际清仓完成时间，运营主管确认或退回；最终确认前系统每天通过 OA 最多催办责任运营一次，确认、改判或终止后停止",
+      "stage": "design-master",
+      "rationale": "避免重复建任并确保清仓不是由通知送达或运营单方声明直接闭环，同时对长期未确认的完成事实形成可监控催办"
     }
   ],
   "category": "saas",

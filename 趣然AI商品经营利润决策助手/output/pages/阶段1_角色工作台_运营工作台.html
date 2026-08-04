@@ -671,16 +671,16 @@
             <div class="meta mt-2">执行已记录，等待销售/利润/库存结果</div>
           </article>
           <article class="metric-card">
-            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-warning text-lg" aria-hidden="true"></i></div><span class="badge badge-watch">影响 4 个 SPU</span></div>
-            <div class="metric-number numeric mt-5">3</div>
-            <div class="mt-1 font-semibold">数据限制类型</div>
-            <div class="meta mt-2">品退未校验 · 库存不足 · 无近期销售</div>
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-calendar-check text-lg" aria-hidden="true"></i></div><span class="badge badge-watch">每日 OA 催办</span></div>
+            <div class="metric-number numeric mt-5">2</div>
+            <div class="mt-1 font-semibold">待确认清仓完成</div>
+            <div class="meta mt-2">待提交 1 · 主管退回待修正 1</div>
           </article>
           <article class="metric-card">
-            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-checks text-lg" aria-hidden="true"></i></div><span class="badge badge-invest">本周推进中</span></div>
-            <div class="metric-number numeric mt-5">18</div>
-            <div class="mt-1 font-semibold">当前批次经营建议</div>
-            <div class="meta mt-2">已处理 6 · 待处理 12 · 主管均已通过</div>
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-paper-plane-tilt text-lg" aria-hidden="true"></i></div><span class="badge badge-invest">今日 OA</span></div>
+            <div class="metric-number numeric mt-5">4</div>
+            <div class="mt-1 font-semibold">协同与催办通知</div>
+            <div class="meta mt-2">已送达 3 · 发送失败 1，可人工补发</div>
           </article>
         </section>
 
@@ -711,6 +711,10 @@
                     <option value="待执行">待执行</option>
                     <option value="已执行">已执行</option>
                     <option value="待记录结果">待记录结果</option>
+                    <option value="待提交清仓完成时间">待提交清仓完成时间</option>
+                    <option value="待主管确认">待主管确认</option>
+                    <option value="完成时间待修正">完成时间待修正</option>
+                    <option value="已确认完成">已确认完成</option>
                     <option value="已记录结果">已记录结果</option>
                     <option value="已关闭">已关闭</option>
                   </select>
@@ -736,12 +740,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="task-row" data-action="clear" data-business-state="待执行" data-search="spu-515 布乐迪忙碌屋益智玩具 task-toy-515">
+                  <tr class="task-row" data-action="clear" data-business-state="待提交清仓完成时间" data-search="spu-515 布乐迪忙碌屋益智玩具 task-toy-515">
                     <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515 · TASK-TOY-515</div><div class="task-relation"><i class="ph ph-link" aria-hidden="true"></i> 最近前序：BATCH-20260531-01 · 清仓 / 待执行</div></td>
                     <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
                     <td><div class="numeric font-semibold">上月净销售额 86,240 元</div><div class="evidence">经营准利润率 -12.8% · 近 7 天品退率未校验</div></td>
                     <td><div class="font-semibold">仓内 3,000 件 · 在途 260 件</div><div class="evidence">近 14 天销量 112 件 · 日均 8.0 件 · 可售 407.5 天 · 禁止补货</div></td>
-                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过 · 采购待确认禁补</div><div class="task-time mono">产生 06-29 09:12<br>本周关联 07-06 09:18<br>执行 —</div></td>
+                    <td><span class="badge badge-neutral">待提交清仓完成时间</span><div class="meta mt-1">主管已通过 · OA 禁补协同待核验</div><div class="task-time mono">产生 06-29 09:12<br>本周关联 07-06 09:18<br>执行 —<br>今日催办 09:00 · 已送达</div></td>
                     <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>已生成</span></td>
                     <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="布乐迪忙碌屋益智玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
                   </tr>

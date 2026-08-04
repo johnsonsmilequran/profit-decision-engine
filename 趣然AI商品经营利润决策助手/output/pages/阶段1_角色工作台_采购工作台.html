@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="page-id" content="PAGE-F06-02">
-  <title>采购工作台｜趣然经营决策</title>
+  <title>已退役页面｜趣然经营决策</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
@@ -502,6 +502,22 @@
   </style>
 </head>
 <body>
+  <style>
+    body > *:not(.retired-page) { display: none !important; }
+    .retired-page { min-height: 100vh; display: grid; place-items: center; padding: 32px; background: #f4f7fb; color: #122033; font-family: Inter, "PingFang SC", sans-serif; }
+    .retired-card { width: min(680px, 100%); padding: 40px; border: 1px solid #c9d5e2; border-radius: 16px; background: #fff; box-shadow: 0 16px 40px rgba(18,32,51,.08); }
+    .retired-card h1 { margin: 0 0 16px; font-size: 28px; }
+    .retired-card p { margin: 0 0 12px; line-height: 1.75; color: #53657a; }
+    .retired-card a { display: inline-flex; margin-top: 16px; padding: 10px 16px; border-radius: 8px; background: #123b66; color: #fff; text-decoration: none; font-weight: 700; }
+  </style>
+  <main class="retired-page">
+    <section class="retired-card">
+      <h1>采购工作台已退役</h1>
+      <p>产品现在只有“运营”和“运营主管”两个业务角色。采购、仓库等相关人员不登录本产品。</p>
+      <p>相关协同由管理该 SPU 的责任运营通过公司 OA 发起、核验并在产品内回填状态。</p>
+      <a href="阶段1_角色工作台_运营工作台.html">返回运营工作台</a>
+    </section>
+  </main>
   <div class="desktop-app">
     <aside class="sidebar flex flex-col" aria-label="采购角色导航">
       <div class="sidebar-brand flex items-center gap-3 px-4 h-16">
