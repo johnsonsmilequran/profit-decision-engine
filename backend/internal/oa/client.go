@@ -20,6 +20,7 @@ type Message struct {
 	Action            string `json:"action"`
 	Operator          string `json:"operator"`
 	FeedbackRequest   string `json:"feedback_request"`
+	TaskReference     string `json:"task_reference"`
 }
 
 type Result struct {

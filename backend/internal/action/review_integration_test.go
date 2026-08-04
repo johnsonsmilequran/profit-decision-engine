@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -88,8 +89,12 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 		t.Fatal(err)
 	}
 	attempts := 0
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+	var received oa.Message
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		attempts++
+		if err := json.NewDecoder(r.Body).Decode(&received); err != nil {
+			t.Fatal(err)
+		}
 		if attempts == 1 {
 			http.Error(w, "公司 OA 暂时不可用", http.StatusBadGateway)
 			return
@@ -119,6 +124,20 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 	}
 	if attemptsStored != 2 || attempts != 2 {
 		t.Fatalf("attempts stored=%d actual=%d", attemptsStored, attempts)
+	}
+	var expectedSPUID string
+	if err := db.QueryRow(ctx, `SELECT spu_id FROM spu_action_task WHERE task_id=$1`, taskID).Scan(&expectedSPUID); err != nil {
+		t.Fatal(err)
+	}
+	if received.TaskReference != taskID || received.SPUID != expectedSPUID || received.Action != "prohibit_restock" || received.Operator != "缘一" {
+		t.Fatalf("OA whitelist payload=%+v", received)
+	}
+	var persisted map[string]json.RawMessage
+	if err := db.QueryRow(ctx, `SELECT message_payload FROM oa_notification WHERE notification_id=$1`, retried.Notifications[0].ID).Scan(&persisted); err != nil {
+		t.Fatal(err)
+	}
+	if len(persisted) != 7 || persisted["task_reference"] == nil || persisted["spu_id"] == nil {
+		t.Fatalf("persisted OA whitelist keys=%v", persisted)
 	}
 }
 

@@ -44,7 +44,8 @@ func (s *Service) SendOA(ctx context.Context, actor Principal, taskID string, in
 		return Detail{}, ErrInvalidState
 	}
 	message := oa.Message{RecipientActorRef: strings.TrimSpace(input.RecipientActorRef), TemplateCode: coordinationTemplate,
-		SPUID: spuID, Action: inventoryAction, Operator: operator, FeedbackRequest: strings.TrimSpace(input.FeedbackRequest)}
+		SPUID: spuID, Action: inventoryAction, Operator: operator, FeedbackRequest: strings.TrimSpace(input.FeedbackRequest),
+		TaskReference: taskID}
 	payload, err := json.Marshal(message)
 	if err != nil {
 		return Detail{}, err
@@ -218,7 +219,8 @@ func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) 
 			recipient, status, errorCode = *item.recipient, "pending", ""
 		}
 		message := oa.Message{RecipientActorRef: recipient, TemplateCode: "clearance_daily_reminder", SPUID: item.spuID,
-			Action: "clearance", Operator: item.operator, FeedbackRequest: "请填写或跟进实际清仓完成时间并提交主管确认"}
+			Action: "clearance", Operator: item.operator, FeedbackRequest: "请填写或跟进实际清仓完成时间并提交主管确认",
+			TaskReference: item.taskID}
 		payload, err := json.Marshal(message)
 		if err != nil {
 			return created, err
