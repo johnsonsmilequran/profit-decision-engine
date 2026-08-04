@@ -3,8 +3,9 @@ import cookie from "@fastify/cookie";
 import multipart from "@fastify/multipart";
 import type { Database } from "./database/client.js";
 import { registerBatchRoutes } from "./routes/batches.js";
+import { registerAuthRoutes, type AuthRouteConfig } from "./routes/auth.js";
 
-export function buildApp(database: Database, options: { uploadDirectory?: string } = {}) {
+export function buildApp(database: Database, options: { uploadDirectory?: string; auth?: AuthRouteConfig } = {}) {
   const app = Fastify({ logger: true });
 
   app.register(cookie);
@@ -12,6 +13,7 @@ export function buildApp(database: Database, options: { uploadDirectory?: string
     limits: { files: 1, fileSize: 10 * 1024 * 1024, fields: 10 },
   });
   registerBatchRoutes(app, database, options.uploadDirectory ?? process.env.UPLOAD_DIR ?? "./var/uploads");
+  if (options.auth) registerAuthRoutes(app, database, options.auth);
 
   app.get("/health", async () => {
     const result = await database.pool.query<{ database_name: string; checked_at: Date }>(

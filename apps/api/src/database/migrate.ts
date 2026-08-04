@@ -1,9 +1,8 @@
-import { readConfig } from "../config.js";
+import { readDatabaseUrl } from "../config.js";
 import { createDatabase } from "./client.js";
 import { readdir, readFile } from "node:fs/promises";
 
-const config = readConfig();
-const database = createDatabase(config.DATABASE_URL);
+const database = createDatabase(readDatabaseUrl());
 
 await database.pool.query(`
   create table if not exists schema_migrations (

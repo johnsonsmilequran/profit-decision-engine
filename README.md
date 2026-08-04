@@ -24,7 +24,9 @@ npm run db:migrate
 npm run dev
 ```
 
-`GET http://127.0.0.1:3001/health` 会查询 PostgreSQL 并返回当前数据库和检查时间；数据库不可用时接口不会伪造成功。迁移会建立角色映射、会话、不可变批次、SPU 快照、指标、决策、双轨动作、AI 状态与追加审计事件等真实业务表。
+`GET http://127.0.0.1:3001/health` 会查询 PostgreSQL 并返回当前数据库和检查时间；数据库不可用时接口不会伪造成功。迁移会建立角色映射、OAuth 防伪状态、会话、不可变批次、SPU 快照、指标、决策、双轨动作、AI 状态与追加审计事件等真实业务表。
+
+认证 API 已实现 `GET /api/auth/dingtalk/start`、`GET /api/auth/dingtalk/callback`、`GET /api/auth/me` 与 `POST /api/auth/logout`。服务端使用真实钉钉 OAuth2 接口，以一次性 state 防回调伪造，只接受稳定 unionId 并要求 IT 预先配置有效业务角色；失败或无角色时不建立会话，也不提供本地账号或默认角色降级。
 
 批次 API 已实现 `POST /api/batches/import`、`GET /api/batches` 与 `GET /api/batches/:batchId`。导入会把 XLSX 写入持久化目录，并由可恢复的同进程后台任务把有效行、字段质量、指标、固定规则决策和双轨动作写入 PostgreSQL；相同指纹始终返回原批次。
 
