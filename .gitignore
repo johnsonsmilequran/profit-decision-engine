@@ -8,6 +8,9 @@
 node_modules/
 __pycache__/
 *.py[cod]
+.venv*/
+.coverage
+htmlcov/
 
 # 本地环境与密钥
 .env
