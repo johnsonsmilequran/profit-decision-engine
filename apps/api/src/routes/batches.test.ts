@@ -28,6 +28,8 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
   let app: ReturnType<typeof buildApp>;
   const identity = `import-test-${randomUUID()}`;
   const token = randomBytes(32).toString("hex");
+  const procurementIdentity = `procurement-test-${randomUUID()}`;
+  const procurementToken = randomBytes(32).toString("hex");
 
   beforeAll(async () => {
     database = createDatabase(databaseUrl!);
@@ -38,6 +40,14 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
     await database.pool.query(
       "insert into sessions(id_hash, identity_ref, expires_at) values ($1, $2, now() + interval '1 hour')",
       [hashSessionToken(token), identity],
+    );
+    await database.pool.query(
+      "insert into role_mappings(identity_ref, display_name, business_role) values ($1, $2, 'procurement')",
+      [procurementIdentity, "真实导入集成测试采购"],
+    );
+    await database.pool.query(
+      "insert into sessions(id_hash, identity_ref, expires_at) values ($1, $2, now() + interval '1 hour')",
+      [hashSessionToken(procurementToken), procurementIdentity],
     );
     app = buildApp(database, { uploadDirectory: "../../var/uploads" });
     await app.ready();
@@ -68,7 +78,9 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
       await database.pool.query("delete from import_batches where id=$1", [batchId]);
     }
     await database.pool.query("delete from sessions where identity_ref=$1", [identity]);
+    await database.pool.query("delete from sessions where identity_ref=$1", [procurementIdentity]);
     await database.pool.query("delete from role_mappings where identity_ref=$1", [identity]);
+    await database.pool.query("delete from role_mappings where identity_ref=$1", [procurementIdentity]);
     await app.close();
   });
 
@@ -136,6 +148,7 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
       items: Array<{ decision_id: string; spu_id: string; main_action: string; inventory_action: string }>;
     }>();
     expect(actionListBody.total).toBe(2);
+    expect(actionList.json().batch).toMatchObject({ period_start: "2026-07-01", period_end: "2026-07-31", business_date: "2026-07-31" });
     expect(actionListBody.items.map(({ spu_id, main_action, inventory_action }) => ({ spu_id, main_action, inventory_action }))).toEqual([
       { spu_id: "SPU-515", main_action: "clearance", inventory_action: "block_restock" },
       { spu_id: "SPU-加投补货", main_action: "increase_investment", inventory_action: "restock" },
@@ -162,6 +175,15 @@ describe.skipIf(!databaseUrl)("真实 XLSX 批次 API", () => {
       ],
     });
     expect(Object.keys(detail.json().decision.structured_advice).sort()).toEqual(["action", "evidence", "object", "problem"]);
+
+    const procurementList = await app.inject({ method: "GET", url: `/api/action-lists/${firstBody.batchId}`, headers: { cookie: `profit_session=${procurementToken}` } });
+    expect(procurementList.statusCode).toBe(200);
+    expect(procurementList.json()).toMatchObject({ currentRole: "procurement", total: 2 });
+    expect(procurementList.body).not.toMatch(/profit_rate|main_action|approval_status|operator_name|ai_explanation/);
+    const procurementDetail = await app.inject({ method: "GET", url: `/api/decisions/${actionListBody.items[0]!.decision_id}`, headers: { cookie: `profit_session=${procurementToken}` } });
+    expect(procurementDetail.statusCode).toBe(200);
+    expect(procurementDetail.json()).toMatchObject({ currentRole: "procurement", decision: { spu_id: "SPU-515", inventory_action: "block_restock", status: "awaiting_review" } });
+    expect(procurementDetail.body).not.toMatch(/profit_rate|main_action|approval_status|structured_advice|ai_status|review_note/);
 
     const duplicate = await app.inject({
       method: "POST",

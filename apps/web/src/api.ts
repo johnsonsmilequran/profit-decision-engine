@@ -95,6 +95,63 @@ const procurementBatchDetailSchema = z.object({
 export const batchDetailSchema = z.discriminatedUnion("currentRole", [standardBatchDetailSchema, procurementBatchDetailSchema]);
 export type BatchDetail = z.infer<typeof batchDetailSchema>;
 
+const actionListBatchSchema = z.object({
+  id: z.string().uuid(), business_unit: z.string(), period_start: z.string(), period_end: z.string(),
+  business_date: z.string(), status: z.string(), ai_status: z.string(),
+});
+const standardActionItemSchema = z.object({
+  decision_id: z.string().uuid(), spu_id: z.string(), link_name: z.string(), shop: z.string(), platform: z.string(),
+  operator_name: z.string(), net_sales: z.string().nullable(), profit_rate: z.string().nullable(), return_rate: z.string().nullable(),
+  stock_days: z.string().nullable(), product_type: z.string(), main_action: z.string(), inventory_action: z.string(),
+  approval_status: z.string(), rule_version: z.string(), business_status: z.string().nullable(), inventory_status: z.string().nullable(),
+  ai_status: z.string(),
+});
+const procurementActionItemSchema = z.object({
+  decision_id: z.string().uuid(), spu_id: z.string(), link_name: z.string(), shop: z.string(), platform: z.string(),
+  warehouse_inventory: z.string().nullable(), in_transit_inventory: z.string().nullable(), sold_count_14d: z.string().nullable(),
+  stock_days: z.string().nullable(), inventory_action: z.string(), inventory_status: z.string(), inventory_version: z.number(),
+});
+export const actionListSchema = z.discriminatedUnion("currentRole", [
+  z.object({ currentRole: z.enum(["operator", "manager"]), batch: actionListBatchSchema, page: z.number(), pageSize: z.number(), total: z.number(), items: z.array(standardActionItemSchema) }),
+  z.object({ currentRole: z.literal("procurement"), batch: actionListBatchSchema, page: z.number(), pageSize: z.number(), total: z.number(), items: z.array(procurementActionItemSchema) }),
+]);
+export type ActionList = z.infer<typeof actionListSchema>;
+
+const commonDecisionSchema = z.object({
+  decision_id: z.string().uuid(), batch_id: z.string().uuid(), spu_id: z.string(), link_name: z.string(), shop: z.string(), platform: z.string(),
+  rule_version: z.string(), inventory_action: z.string(), metric_periods: z.record(z.string(), z.string()), quality_statuses: z.record(z.string(), z.string()),
+  warehouse_inventory: z.string().nullable(), in_transit_inventory: z.string().nullable(), sold_count_14d: z.string().nullable(), stock_days: z.string().nullable(),
+});
+const actionItemSchema = z.object({
+  id: z.string().uuid(), action_track: z.string(), action_code: z.string(), owner_role: z.string(), status: z.string(), version: z.number(),
+  executed_at: z.string().nullable(), execution_note: z.string().nullable(), result_period_start: z.string().nullable(), result_period_end: z.string().nullable(),
+  result_values: z.record(z.string(), z.unknown()).nullable(), result_note: z.string().nullable(), result_recorded_at: z.string().nullable(),
+});
+const timelineSchema = z.object({
+  id: z.coerce.number(), event_type: z.string(), previous_state: z.string().nullable(), next_state: z.string().nullable(),
+  object_version: z.number().nullable(), actor_name: z.string().nullable(), note: z.string().nullable(), created_at: z.string(),
+});
+export const decisionDetailSchema = z.discriminatedUnion("currentRole", [
+  z.object({
+    currentRole: z.enum(["operator", "manager"]),
+    decision: commonDecisionSchema.extend({
+      business_unit: z.string(), period_start: z.string(), period_end: z.string(), business_date: z.string(), operator_name: z.string(), launch_date: z.string().nullable(),
+      net_sales: z.string().nullable(), profit_rate: z.string().nullable(), return_rate: z.string().nullable(), adopted_values: z.record(z.string(), z.unknown()),
+      product_type: z.string(), main_action: z.string(), trigger_rules: z.array(z.unknown()), key_values: z.record(z.string(), z.unknown()),
+      structured_advice: z.object({ object: z.string(), problem: z.string(), evidence: z.string(), action: z.string() }),
+      approval_status: z.string(), review_version: z.number(), review_note: z.string().nullable(), reviewed_at: z.string().nullable(),
+      reviewed_by_name: z.string().nullable(), generated_at: z.string(), ai_status: z.string(), ai_explanation: z.string().nullable(), ai_failure_code: z.string().nullable(),
+    }), actions: z.array(actionItemSchema), timeline: z.array(timelineSchema.extend({ details: z.record(z.string(), z.unknown()) })),
+  }),
+  z.object({
+    currentRole: z.literal("procurement"), decision: commonDecisionSchema.extend({
+      action_item_id: z.string().uuid(), status: z.string(), version: z.number(), executed_at: z.string().nullable(), execution_note: z.string().nullable(),
+      result_period_start: z.string().nullable(), result_period_end: z.string().nullable(), result_values: z.record(z.string(), z.unknown()).nullable(), result_note: z.string().nullable(),
+    }), timeline: z.array(timelineSchema),
+  }),
+]);
+export type DecisionDetail = z.infer<typeof decisionDetailSchema>;
+
 export async function loadCurrentUser(): Promise<CurrentUser | null> {
   const response = await fetch(`${API_ORIGIN}/api/auth/me`, { credentials: "include" });
   if (response.status === 401) return null;
@@ -132,6 +189,20 @@ export async function loadBatchDetail(batchId: string): Promise<BatchDetail> {
   const response = await fetch(`${API_ORIGIN}/api/batches/${encodeURIComponent(batchId)}`, { credentials: "include" });
   if (!response.ok) throw await errorFrom(response, "批次详情暂不可用");
   return batchDetailSchema.parse(await response.json());
+}
+
+export async function loadActionList(batchId: string, filters: Record<string, string | number | undefined>): Promise<ActionList> {
+  const url = new URL(`/api/action-lists/${encodeURIComponent(batchId)}`, API_ORIGIN);
+  for (const [key, value] of Object.entries(filters)) if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
+  const response = await fetch(url, { credentials: "include" });
+  if (!response.ok) throw await errorFrom(response, "行动清单暂不可用");
+  return actionListSchema.parse(await response.json());
+}
+
+export async function loadDecisionDetail(decisionId: string): Promise<DecisionDetail> {
+  const response = await fetch(`${API_ORIGIN}/api/decisions/${encodeURIComponent(decisionId)}`, { credentials: "include" });
+  if (!response.ok) throw await errorFrom(response, "建议详情暂不可用");
+  return decisionDetailSchema.parse(await response.json());
 }
 
 export function dingtalkStartUrl(returnTo: string): string {

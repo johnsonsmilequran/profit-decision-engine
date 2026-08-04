@@ -1,8 +1,8 @@
 import { ArrowRight, ArrowUpRight, GitBranch, ListMagnifyingGlass, Stack } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import type { CurrentUser, Workspace } from "../api";
-import { loadWorkspace } from "../api";
-import { AppShell } from "../components/AppShell";
+import type { CurrentUser, Workspace } from "../api.ts";
+import { loadWorkspace } from "../api.ts";
+import { AppShell } from "../components/AppShell.tsx";
 
 const actionLabel: Record<string, string> = {
   clearance: "清仓", stop_loss: "止损", observe: "观察", increase_investment: "加投",
@@ -36,18 +36,18 @@ function RiskCards({ workspace }: { workspace: Workspace }) {
   const keys = workspace.currentRole === "procurement"
     ? ["block_restock", "restock", "no_restock", "not_generated"]
     : ["clearance", "stop_loss", "observe", "increase_investment"];
-  return <section className="risk-grid">{keys.map((key) => <a className="panel risk-card" href={`/actions?action=${key}`} key={key}><span className={`pill pill--${["clearance", "stop_loss", "block_restock"].includes(key) ? "danger" : key === "observe" ? "warn" : "accent"}`}>{actionLabel[key]}</span><ArrowUpRight /><strong>{counts[key] ?? 0}</strong><small>所属最新就绪批次</small></a>)}</section>;
+  return <section className="risk-grid">{keys.map((key) => <a className="panel risk-card" href={workspace.latestBatch ? `/action-lists/${workspace.latestBatch.id}?page=1&action=${key}` : "/workspace"} key={key}><span className={`pill pill--${["clearance", "stop_loss", "block_restock"].includes(key) ? "danger" : key === "observe" ? "warn" : "accent"}`}>{actionLabel[key]}</span><ArrowUpRight /><strong>{counts[key] ?? 0}</strong><small>所属最新就绪批次</small></a>)}</section>;
 }
 
 function Tasks({ workspace }: { workspace: Workspace }) {
   const tasks = workspace.tasks ?? [];
   const title = workspace.currentRole === "manager" ? "待我审核" : workspace.currentRole === "operator" ? "我的经营待办" : "我的采购待办";
-  return <section className={`panel tasks-panel ${workspace.currentRole === "procurement" ? "tasks-panel--wide" : ""}`}><header><div><h2>{title}</h2><p>按风险与待处理状态排列</p></div><span className="pill pill--accent">{tasks.length} 条</span></header>{tasks.length === 0 ? <div className="inline-empty">当前角色暂无待办</div> : <div className="task-list">{tasks.map((task) => <a href={`/actions/${task.decision_id}`} key={task.decision_id}><span className={`pill pill--${("main_action" in task && ["clearance", "stop_loss"].includes(task.main_action)) || ("inventory_action" in task && task.inventory_action === "block_restock") ? "danger" : "warn"}`}>{actionLabel["main_action" in task ? task.main_action : task.inventory_action] ?? "待处理"}</span><div><strong>{task.link_name}</strong><small><code>{task.spu_id}</code></small></div><div className="task-status"><strong>{statusLabel["business_status" in task ? task.business_status : task.inventory_status] ?? "待处理"}</strong>{"inventory_status" in task && workspace.currentRole !== "procurement" && <small>采购：{statusLabel[task.inventory_status] ?? task.inventory_status}</small>}</div><ArrowRight /></a>)}</div>}</section>;
+  return <section className={`panel tasks-panel ${workspace.currentRole === "procurement" ? "tasks-panel--wide" : ""}`}><header><div><h2>{title}</h2><p>按风险与待处理状态排列</p></div><span className="pill pill--accent">{tasks.length} 条</span></header>{tasks.length === 0 ? <div className="inline-empty">当前角色暂无待办</div> : <div className="task-list">{tasks.map((task) => <a href={`/decisions/${task.decision_id}`} key={task.decision_id}><span className={`pill pill--${("main_action" in task && ["clearance", "stop_loss"].includes(task.main_action)) || ("inventory_action" in task && task.inventory_action === "block_restock") ? "danger" : "warn"}`}>{actionLabel["main_action" in task ? task.main_action : task.inventory_action] ?? "待处理"}</span><div><strong>{task.link_name}</strong><small><code>{task.spu_id}</code></small></div><div className="task-status"><strong>{statusLabel["business_status" in task ? task.business_status : task.inventory_status] ?? "待处理"}</strong>{"inventory_status" in task && workspace.currentRole !== "procurement" && <small>采购：{statusLabel[task.inventory_status] ?? task.inventory_status}</small>}</div><ArrowRight /></a>)}</div>}</section>;
 }
 
 function Blockers({ workspace }: { workspace: Extract<Workspace, { currentRole: "operator" | "manager" }> }) {
   const blockers = workspace.blockers ?? [];
-  return <section className="panel blockers"><header><div><h2>跨部门卡点</h2><p>经营与补货动作进度不一致</p></div><span className="pill pill--warn">{blockers.length} 条</span></header>{blockers.length === 0 ? <div className="inline-empty">当前没有跨部门卡点</div> : <div className="blocker-list">{blockers.map((item) => <a href={`/actions/${item.decision_id}`} key={item.decision_id}><div className="blocker-title"><strong>{item.link_name}</strong><ArrowUpRight /></div><div className="blocker-rail"><span><small>经营动作</small><strong>{actionLabel[item.main_action]} · {statusLabel[item.business_status]}</strong></span><GitBranch /><span><small>补货动作</small><strong>{actionLabel[item.inventory_action]} · {statusLabel[item.inventory_status]}</strong></span></div></a>)}</div>}</section>;
+  return <section className="panel blockers"><header><div><h2>跨部门卡点</h2><p>经营与补货动作进度不一致</p></div><span className="pill pill--warn">{blockers.length} 条</span></header>{blockers.length === 0 ? <div className="inline-empty">当前没有跨部门卡点</div> : <div className="blocker-list">{blockers.map((item) => <a href={`/decisions/${item.decision_id}`} key={item.decision_id}><div className="blocker-title"><strong>{item.link_name}</strong><ArrowUpRight /></div><div className="blocker-rail"><span><small>经营动作</small><strong>{actionLabel[item.main_action]} · {statusLabel[item.business_status]}</strong></span><GitBranch /><span><small>补货动作</small><strong>{actionLabel[item.inventory_action]} · {statusLabel[item.inventory_status]}</strong></span></div></a>)}</div>}</section>;
 }
 
 export function WorkspacePage({ user }: { user: CurrentUser }) {

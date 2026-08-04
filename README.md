@@ -32,6 +32,8 @@ npm run dev
 
 行动 API 已实现 `GET /api/action-lists/:batchId` 与 `GET /api/decisions/:decisionId`。列表采用固定规则优先级、服务端分页和 URL 可表达筛选；建议详情返回冻结四要素、指标口径、双轨状态及追加时间线。采购角色走独立最小字段查询，不接收利润、经营审核或完整 AI 信息。
 
+Web 已实现 `/action-lists/:batchId` 与 `/decisions/:decisionId`，并由 `/actions` 根据当前角色可见的最新批次解析到真实清单。PostgreSQL `date` 始终以 `YYYY-MM-DD` 传输，避免自然月在本地时区发生日期回退。
+
 Web 已实现 `/batches`、`/batches/new` 与 `/batches/:batchId`：筛选和页码写入 URL，运营通过 React Hook Form 校验完整自然月并提交真实 XLSX，详情按同一批次轮询处理状态并展示问题与指标；采购使用独立库存任务视图。
 
 工作台 API `GET /api/workspace` 和 Web 路由 `/workspace` 已接入真实角色会话及数据库聚合；主管、运营、采购分别看到职责内任务，采购响应不包含经营动作与受限经营字段。Web 同时实现 `/auth/dingtalk` 与 `/forbidden`，并在 1024px 最小视口保持无横向溢出。

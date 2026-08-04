@@ -2,9 +2,9 @@ import { ArrowRight, ArrowsClockwise } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import type { BatchDetail, CurrentUser } from "../api";
-import { ApiRequestError, loadBatchDetail } from "../api";
-import { AppShell } from "../components/AppShell";
+import type { BatchDetail, CurrentUser } from "../api.ts";
+import { ApiRequestError, loadBatchDetail } from "../api.ts";
+import { AppShell } from "../components/AppShell.tsx";
 
 const terminal = new Set(["list_ready", "failed"]);
 const statusLabel: Record<string, string> = {
@@ -76,7 +76,7 @@ export function BatchDetailPage({ user }: { user: CurrentUser }) {
       {query.isLoading && <section className="panel loading-panel">正在读取批次冻结快照…</section>}
       {query.isError && !forbidden && <section className="panel error-panel"><h2>批次详情加载失败</h2><p>批次 ID：<code>{batchId}</code>。请在原对象上重试，不要重复导入。</p><button className="button button--secondary" onClick={() => query.refetch()}><ArrowsClockwise />重新加载</button></section>}
       {query.data && <>
-        <header className="page-heading"><div><h1>{query.data.batch.period_start.slice(0, 7)} 经营批次</h1><p><code>{query.data.batch.id}</code> · {query.data.batch.business_unit} · 截止日 {query.data.batch.business_date.slice(0, 10)}</p></div>{query.data.batch.status === "list_ready" && <a className="button button--primary" href={`/actions?batchId=${query.data.batch.id}`}>进入行动清单<ArrowRight /></a>}</header>
+        <header className="page-heading"><div><h1>{query.data.batch.period_start.slice(0, 7)} 经营批次</h1><p><code>{query.data.batch.id}</code> · {query.data.batch.business_unit} · 截止日 {query.data.batch.business_date.slice(0, 10)}</p></div>{query.data.batch.status === "list_ready" && <a className="button button--primary" href={`/action-lists/${query.data.batch.id}?page=1`}>进入行动清单<ArrowRight /></a>}</header>
         <section className="panel batch-summary"><div><small>数据期间</small><strong><code>{query.data.batch.period_start.slice(0, 10)}—{query.data.batch.period_end.slice(0, 10)}</code></strong></div><div><small>固定规则</small><strong><span className={`pill pill--${query.data.batch.status === "list_ready" ? "success" : query.data.batch.status === "failed" ? "danger" : "warn"}`}>{statusLabel[query.data.batch.status] ?? query.data.batch.status}</span></strong></div><div><small>AI 解释</small><strong><span className="pill pill--warn">{query.data.batch.ai_status}</span></strong></div><div><small>源文件</small><strong>{query.data.batch.original_filename}</strong></div><div><small>提交时间</small><strong>{new Date(query.data.batch.created_at).toLocaleString("zh-CN", { hour12: false })}</strong></div></section>
         {query.data.batch.status === "failed" && <div className="notice notice--error">{query.data.batch.failure_message ?? "文件处理失败，未生成行动清单。"}</div>}
         <section className="stats-grid"><div className="panel"><small>原始 SPU 明细</small><strong>{query.data.batch.source_row_count}</strong></div><div className="panel stats-success"><small>有效身份行</small><strong>{query.data.batch.valid_row_count}</strong></div><div className="panel stats-danger"><small>拒绝行</small><strong>{query.data.batch.rejected_row_count}</strong></div><div className="panel stats-warn"><small>字段级降级</small><strong>{query.data.batch.degraded_field_count}</strong></div></section>

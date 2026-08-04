@@ -1,7 +1,7 @@
 import { ArrowLeft, Info, LockKey, ShieldSlash, SquaresFour } from "@phosphor-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { AppShell } from "../components/AppShell";
-import type { CurrentUser } from "../api";
+import { AppShell } from "../components/AppShell.tsx";
+import type { CurrentUser } from "../api.ts";
 
 export function ForbiddenPage({ user }: { user: CurrentUser }) {
   const navigate = useNavigate();

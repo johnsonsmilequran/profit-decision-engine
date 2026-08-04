@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { dingtalkStartUrl, loadCurrentUser } from "./api";
+import { dingtalkStartUrl, loadCurrentUser } from "./api.ts";
 
 afterEach(() => vi.restoreAllMocks());
 

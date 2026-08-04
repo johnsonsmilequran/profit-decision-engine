@@ -1,6 +1,6 @@
 import { ClockCounterClockwise, ListChecks, SquaresFour, Stack, TrendUp } from "@phosphor-icons/react";
 import type { PropsWithChildren } from "react";
-import type { CurrentUser } from "../api";
+import type { CurrentUser } from "../api.ts";
 
 const roleLabel: Record<CurrentUser["role"], string> = {
   operator: "运营",

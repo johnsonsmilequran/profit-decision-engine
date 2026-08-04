@@ -2,9 +2,9 @@ import { ArrowLeft, ArrowRight, MagnifyingGlass, UploadSimple } from "@phosphor-
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
-import type { CurrentUser } from "../api";
-import { loadBatches } from "../api";
-import { AppShell } from "../components/AppShell";
+import type { CurrentUser } from "../api.ts";
+import { loadBatches } from "../api.ts";
+import { AppShell } from "../components/AppShell.tsx";
 
 const statusLabel: Record<string, string> = {
   received: "已接收", validating: "校验中", rules_processing: "规则处理中",

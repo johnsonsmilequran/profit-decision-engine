@@ -1,7 +1,7 @@
 import { GitBranch, Headset, IdentificationCard, ShieldCheck, SignIn, TrendUp } from "@phosphor-icons/react";
 import { useSearch } from "@tanstack/react-router";
 import { useState } from "react";
-import { dingtalkStartUrl } from "../api";
+import { dingtalkStartUrl } from "../api.ts";
 
 const feedback = {
   failed: "钉钉认证未完成，请重新认证。",

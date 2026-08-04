@@ -3,9 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import type { CurrentUser } from "../api";
-import { ApiRequestError, importBatch } from "../api";
-import { AppShell } from "../components/AppShell";
+import type { CurrentUser } from "../api.ts";
+import { ApiRequestError, importBatch } from "../api.ts";
+import { AppShell } from "../components/AppShell.tsx";
 
 interface BatchForm { businessUnit: string; periodStart: string; periodEnd: string; businessDate: string; file: FileList; }
 export function isFullMonth(start: string, end: string): boolean {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isFullMonth } from "./NewBatchPage";
+import { isFullMonth } from "./NewBatchPage.tsx";
 
 describe("导入期间前置校验", () => {
   it.each([
