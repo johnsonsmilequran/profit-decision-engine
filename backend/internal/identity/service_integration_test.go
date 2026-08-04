@@ -2,6 +2,7 @@ package identity
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -52,14 +53,48 @@ func TestSessionLifecycleAgainstPostgres(t *testing.T) {
 	if authenticated.SessionID != created.SessionID || authenticated.ActorRef != actorRef {
 		t.Fatalf("session identity changed: created=%#v authenticated=%#v", created, authenticated)
 	}
+	if _, _, err := service.CreateSession(ctx, "integration-session-no-role"); !errors.Is(err, ErrUnauthenticated) {
+		t.Fatalf("actor without approved mapping created session: %v", err)
+	}
+	if _, err := db.Exec(ctx, `UPDATE user_session SET last_seen_at=now()-interval '2 hours 1 second' WHERE session_id=$1`, created.SessionID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Authenticate(ctx, token); !errors.Is(err, ErrUnauthenticated) {
+		t.Fatalf("idle session must expire, got %v", err)
+	}
+	token, created, err = service.CreateSession(ctx, actorRef)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(ctx, `UPDATE user_session SET created_at=now()-interval '13 hours',
+		last_seen_at=now()-interval '1 hour',absolute_expires_at=now()-interval '1 hour' WHERE session_id=$1`, created.SessionID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Authenticate(ctx, token); !errors.Is(err, ErrUnauthenticated) {
+		t.Fatalf("absolute expired session must be denied, got %v", err)
+	}
+	token, created, err = service.CreateSession(ctx, actorRef)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(ctx, `UPDATE role_mapping SET role='supervisor' WHERE actor_ref=$1`, actorRef); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Authenticate(ctx, token); !errors.Is(err, ErrUnauthenticated) {
+		t.Fatalf("session with changed approved role must be denied, got %v", err)
+	}
+	supervisorToken, supervisor, err := service.CreateSession(ctx, actorRef)
+	if err != nil || supervisorToken == "" || supervisor.Role != RoleSupervisor {
+		t.Fatalf("new approved supervisor session=%#v token=%t error=%v", supervisor, supervisorToken != "", err)
+	}
 
 	if _, err := db.Exec(ctx, `UPDATE role_mapping SET active = false WHERE actor_ref = $1`, actorRef); err != nil {
 		t.Fatalf("deactivate role: %v", err)
 	}
-	if _, err := service.Authenticate(ctx, token); err != ErrUnauthenticated {
+	if _, err := service.Authenticate(ctx, supervisorToken); !errors.Is(err, ErrUnauthenticated) {
 		t.Fatalf("deactivated role must be denied, got %v", err)
 	}
-	if err := service.Revoke(ctx, token); err != nil {
+	if err := service.Revoke(ctx, supervisorToken); err != nil {
 		t.Fatalf("revoke session: %v", err)
 	}
 }

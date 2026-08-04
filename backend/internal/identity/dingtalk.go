@@ -12,15 +12,26 @@ import (
 	"time"
 )
 
+const (
+	dingTalkAuthorizationEndpoint = "https://login.dingtalk.com/oauth2/auth"
+	dingTalkTokenEndpoint         = "https://api.dingtalk.com/v1.0/oauth2/userAccessToken"
+	dingTalkCurrentUserEndpoint   = "https://api.dingtalk.com/v1.0/contact/users/me"
+)
+
 type DingTalkClient struct {
-	clientID     string
-	clientSecret string
-	redirectURI  string
-	httpClient   *http.Client
+	clientID       string
+	clientSecret   string
+	redirectURI    string
+	httpClient     *http.Client
+	authorizeURL   string
+	tokenURL       string
+	currentUserURL string
 }
 
 func NewDingTalkClient(clientID, clientSecret, redirectURI string) *DingTalkClient {
-	return &DingTalkClient{clientID: clientID, clientSecret: clientSecret, redirectURI: redirectURI, httpClient: &http.Client{Timeout: 15 * time.Second}}
+	return &DingTalkClient{clientID: clientID, clientSecret: clientSecret, redirectURI: redirectURI,
+		httpClient: &http.Client{Timeout: 15 * time.Second}, authorizeURL: dingTalkAuthorizationEndpoint,
+		tokenURL: dingTalkTokenEndpoint, currentUserURL: dingTalkCurrentUserEndpoint}
 }
 
 func (c *DingTalkClient) Configured() bool { return c.clientID != "" && c.clientSecret != "" }
@@ -36,7 +47,7 @@ func (c *DingTalkClient) AuthorizationURL(state string) (string, error) {
 	values.Set("scope", "openid")
 	values.Set("state", state)
 	values.Set("prompt", "consent")
-	return "https://login.dingtalk.com/oauth2/auth?" + values.Encode(), nil
+	return c.authorizeURL + "?" + values.Encode(), nil
 }
 
 func (c *DingTalkClient) Exchange(ctx context.Context, code string) (string, error) {
@@ -44,7 +55,7 @@ func (c *DingTalkClient) Exchange(ctx context.Context, code string) (string, err
 	if err != nil {
 		return "", err
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://api.dingtalk.com/v1.0/oauth2/userAccessToken", bytes.NewReader(body))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.tokenURL, bytes.NewReader(body))
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +73,7 @@ func (c *DingTalkClient) Exchange(ctx context.Context, code string) (string, err
 }
 
 func (c *DingTalkClient) CurrentUser(ctx context.Context, token string) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.dingtalk.com/v1.0/contact/users/me", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.currentUserURL, nil)
 	if err != nil {
 		return "", err
 	}
