@@ -322,7 +322,7 @@ components:
         inventory_days: { type: [number, 'null'] }
     ActionItem:
       type: object
-      required: [link_id, task_id, decision_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, rule_version, spu_id, name, store, platform, operator_ref, suggested_business_action, suggested_inventory_action, effective_business_action, effective_inventory_action, trigger_rule, evidence, review_status, review_version, business_state, inventory_state, business_version, inventory_version, relation_type, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, previous]
+      required: [link_id, task_id, decision_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, rule_version, spu_id, name, store, platform, operator_ref, suggested_business_action, suggested_inventory_action, effective_business_action, effective_inventory_action, trigger_rule, evidence, review_status, review_version, business_state, inventory_state, business_version, inventory_version, relation_type, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, latest_ai_status, latest_notification_status, latest_notification_error_code, latest_clearance_status, previous]
       properties:
         link_id: { type: string, format: uuid }
         task_id: { type: string, format: uuid }
@@ -359,6 +359,10 @@ components:
         quality_return_rate_7d: { type: [number, 'null'] }
         inventory_days: { type: [number, 'null'] }
         quality: { type: object, additionalProperties: { type: string } }
+        latest_ai_status: { type: string, enum: [generating, generated, failed, not_adopted, not_configured] }
+        latest_notification_status: { type: [string, 'null'], enum: [pending, sent, failed, null] }
+        latest_notification_error_code: { type: [string, 'null'] }
+        latest_clearance_status: { type: [string, 'null'], enum: [pending_confirmation, returned, confirmed, null] }
         previous: { anyOf: [{ $ref: '#/components/schemas/PreviousActionItem' }, { type: 'null' }] }
     ActionListResponse:
       type: object

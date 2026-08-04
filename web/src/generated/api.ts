@@ -483,6 +483,13 @@ export interface components {
             quality: {
                 [key: string]: string;
             };
+            /** @enum {string} */
+            latest_ai_status: "generating" | "generated" | "failed" | "not_adopted" | "not_configured";
+            /** @enum {string|null} */
+            latest_notification_status: "pending" | "sent" | "failed" | null;
+            latest_notification_error_code: string | null;
+            /** @enum {string|null} */
+            latest_clearance_status: "pending_confirmation" | "returned" | "confirmed" | null;
             previous: components["schemas"]["PreviousActionItem"] | null;
         };
         ActionListResponse: {

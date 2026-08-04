@@ -178,7 +178,11 @@ const actionSelect = `SELECT l.link_id::text,t.task_id::text,d.decision_id::text
 	s.platform,s.operator_ref,d.business_action,d.inventory_action,t.current_business_action,t.current_inventory_action,
 	d.trigger_rule,d.structured_evidence,l.review_status,l.review_version,t.business_state,t.inventory_state,t.business_version,t.inventory_version,l.relation_type,
 	t.task_created_at,l.linked_at,t.business_executed_at,s.net_sales_prev_month::float8,s.operating_profit_rate::float8,
-	s.quality_return_rate_7d::float8,s.inventory_days::float8,s.quality `
+	s.quality_return_rate_7d::float8,s.inventory_days::float8,s.quality,
+	coalesce((SELECT latest_ai.status FROM ai_explanation latest_ai WHERE latest_ai.decision_id=d.decision_id ORDER BY latest_ai.version DESC LIMIT 1),d.ai_status,'not_configured'),
+	(SELECT latest_notification.status FROM oa_notification latest_notification WHERE latest_notification.task_id=t.task_id ORDER BY latest_notification.created_at DESC,latest_notification.notification_id DESC LIMIT 1),
+	(SELECT latest_notification.error_code FROM oa_notification latest_notification WHERE latest_notification.task_id=t.task_id ORDER BY latest_notification.created_at DESC,latest_notification.notification_id DESC LIMIT 1),
+	(SELECT latest_clearance.status FROM clearance_completion latest_clearance WHERE latest_clearance.task_id=t.task_id ORDER BY latest_clearance.submission_version DESC LIMIT 1) `
 
 func buildWhere(actor Principal, filters Filters, batchID string) (string, []interface{}) {
 	conditions := []string{"b.batch_id=$1"}
@@ -291,7 +295,8 @@ func scanItem(row rowScanner) (Item, error) {
 		&item.SuggestedBusiness, &item.SuggestedInventory, &item.EffectiveBusiness, &item.EffectiveInventory, &item.TriggerRule,
 		&evidence, &item.ReviewStatus, &item.ReviewVersion, &item.BusinessState, &item.InventoryState, &item.BusinessVersion, &item.InventoryVersion, &item.RelationType,
 		&item.TaskCreatedAt, &item.LinkedAt, &item.BusinessExecutedAt, &item.NetSales, &item.ProfitRate, &item.QualityReturnRate,
-		&item.InventoryDays, &quality)
+		&item.InventoryDays, &quality, &item.LatestAIStatus, &item.LatestNotificationStatus, &item.LatestNotificationErrorCode,
+		&item.LatestClearanceStatus)
 	if err != nil {
 		return Item{}, err
 	}

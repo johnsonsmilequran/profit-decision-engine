@@ -218,6 +218,9 @@ func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T)
 	if afterOA.InventoryState != "pending_execution" || len(afterOA.Notifications) != 1 || afterOA.Notifications[0].Status != "sent" {
 		t.Fatalf("OA delivery changed business state notifications=%+v inventory=%s", afterOA.Notifications, afterOA.InventoryState)
 	}
+	if afterOA.LatestNotificationStatus == nil || *afterOA.LatestNotificationStatus != "sent" || afterOA.LatestNotificationErrorCode != nil {
+		t.Fatalf("action list notification projection status=%v error=%v", afterOA.LatestNotificationStatus, afterOA.LatestNotificationErrorCode)
+	}
 	inventoryInput := ExecuteInput{Track: "inventory", Version: 1, Note: "已核验仓库反馈并确认禁补", IdempotencyKey: "幂等库存执行-" + linkID}
 	afterInventory, err := service.Execute(ctx, operator, taskID, inventoryInput)
 	if err != nil {
@@ -639,6 +642,9 @@ func TestAIRetryQueuesFrozenDecisionIdempotently(t *testing.T) {
 	if queued.AIStatus != "generating" {
 		t.Fatalf("ai status=%s", queued.AIStatus)
 	}
+	if queued.LatestAIStatus != "generating" {
+		t.Fatalf("action list AI projection=%s", queued.LatestAIStatus)
+	}
 	if _, err := service.RetryAI(ctx, actor, linkID, input); err != nil {
 		t.Fatalf("idempotent retry failed: %v", err)
 	}
@@ -854,6 +860,9 @@ func TestClearanceCompletionNeedsSupervisorConfirmation(t *testing.T) {
 	}
 	if submitted.ClearanceCompletion == nil || submitted.ClearanceCompletion.Status != "pending_confirmation" || submitted.BusinessState != "executed" {
 		t.Fatalf("submitted completion=%+v state=%s", submitted.ClearanceCompletion, submitted.BusinessState)
+	}
+	if submitted.LatestClearanceStatus == nil || *submitted.LatestClearanceStatus != "pending_confirmation" {
+		t.Fatalf("action list clearance projection=%v", submitted.LatestClearanceStatus)
 	}
 	returned, err := service.ReviewClearance(ctx, supervisor, taskID, ClearanceReviewInput{Decision: "returned", Reason: "实际完成时间需按仓库签收时间修正", Version: 1, IdempotencyKey: "清仓退回-" + linkID})
 	if err != nil {
