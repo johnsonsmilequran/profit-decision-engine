@@ -2,7 +2,7 @@
 
 本仓库用于交付趣然电商“AI 商品经营与利润决策助手”的产品规格与生产应用。生产实现采用 React/TypeScript/Vite PC Web、Go API 与 Worker、PostgreSQL，并由 Nginx 通过同源路径发布。
 
-当前 V0 聚焦玩具事业部，以 SPU/商品链接为唯一决策粒度：每周导入经营数据，由固定规则生成经营与库存动作，AI 只负责解释和排序，再由运营主管审核、责任运营执行并通过 OA 协调外部相关人员完成轻闭环。
+当前 V0 聚焦玩具事业部，以 SPU/商品链接为唯一决策粒度：每周导入经营数据，由固定规则生成经营与库存动作，AI 只负责解释和排序，再由运营主管审核、责任运营执行并通过钉钉协调相关人员完成轻闭环。
 
 ## 工程命令
 
@@ -24,7 +24,7 @@
 
 行动域将每周不可变决策与跨周稳定任务分离：`spu_action_task` 保持 SPU 任务身份，`decision_task_link` 精确关联当周决策和最近更早前序，`action_revision` 保存固定规则或主管改判版本。运营与主管工作台、行动清单和建议详情均读取这些真实投影；整体审核、人工改判、执行后终止、双轨执行、经营结果及清仓完成双人确认均通过版本号与幂等键写入 PostgreSQL 追加事件。
 
-钉钉协同由 API/Worker 使用 `DINGTALK_CLIENT_ID`、`DINGTALK_CLIENT_SECRET` 和 `DINGTALK_ROBOT_CODE` 调用企业内部机器人单聊接口，收件人是公司钉钉 User ID。消息正文使用独立最小字段 DTO；调用、失败、人工补发和每日清仓催办均持久化到 `oa_notification`。接口受理不等同于送达、已读或业务确认；未配置时默认失败并保留受控错误状态，不伪造回执。
+钉钉协同由 API/Worker 使用 `DINGTALK_CLIENT_ID`、`DINGTALK_CLIENT_SECRET` 和 `DINGTALK_ROBOT_CODE` 调用企业内部机器人单聊接口，收件人是公司钉钉 User ID。钉钉应用必须在开放平台开通 `qyapi_robot_sendmsg`；本产品不自动同步全公司通讯录，User ID 与角色映射由运维按审批结果配置。消息正文使用独立最小字段 DTO；调用、失败、人工补发和每日清仓催办均持久化到 `oa_notification`。接口受理不等同于送达、已读或业务确认；未配置或缺权限时默认失败并保留受控错误状态，不伪造回执。
 
 AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
 
