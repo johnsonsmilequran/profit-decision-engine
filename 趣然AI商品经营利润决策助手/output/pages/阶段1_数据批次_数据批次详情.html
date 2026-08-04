@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F01-03">
+  <title>数据批次详情｜趣然 AI 商品经营与利润决策助手</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      /* ─── Surface (3 levels) ─── */
+      --bg: #F4F7FB;
+      --surface: #FFFFFF;
+      --surface-warm: var(--surface);
+      --surface-raised: var(--surface);
+      --surface-overlay: var(--surface);
+
+      /* ─── Foreground (4 levels) ─── */
+      --fg: #132238;
+      --fg-2: var(--fg);
+      --muted: #465870;
+      --meta: var(--muted);
+
+      /* ─── Border (2 levels) ─── */
+      --border: #CBD5E1;
+      --border-soft: var(--border);
+
+      /* ─── Accent ─── */
+      --accent: #075EAD;
+      --accent-on: #FFFFFF;
+      --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+      --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+      /* ─── Semantic ─── */
+      --success: #197343;
+      --warn: #8A4B08;
+      --danger: #B42318;
+
+      /* ─── Typography — fonts ─── */
+      --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+      /* ─── Type scale ─── */
+      --text-xs: 12px;
+      --text-sm: 13px;
+      --text-base: 14px;
+      --text-lg: 16px;
+      --text-xl: 20px;
+      --text-2xl: 24px;
+      --text-3xl: 32px;
+      --text-4xl: 40px;
+
+      /* ─── Leading & Tracking ─── */
+      --leading-body: 1.6;
+      --leading-tight: 1.25;
+      --tracking-display: -0.015em;
+
+      /* ─── Spacing (4px base) ─── */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+
+      /* ─── Section rhythm ─── */
+      --section-y-desktop: 48px;
+      --section-y-tablet: 32px;
+      --section-y-phone: 24px;
+
+      /* ─── Radius ─── */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 9999px;
+
+      /* ─── Surface elevation ─── */
+      --elev-flat: none;
+      --elev-ring: 0 0 0 1px var(--border);
+      --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+      --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+      /* ─── Focus ─── */
+      --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+      /* ─── Motion ─── */
+      --motion-fast: 150ms;
+      --motion-base: 200ms;
+      --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+      /* ─── Layout ─── */
+      --container-max: 1440px;
+      --container-gutter-desktop: 32px;
+      --container-gutter-tablet: 24px;
+      --container-gutter-phone: 16px;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: 232px;
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-5) var(--space-4);
+      border-right: 1px solid var(--border-soft);
+      background: var(--surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-2) var(--space-6);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: var(--accent-on);
+      font-size: var(--text-xl);
+    }
+
+    .brand-name {
+      color: var(--fg);
+      font-weight: 700;
+      line-height: var(--leading-tight);
+    }
+
+    .brand-meta {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .nav-label {
+      margin: var(--space-2) var(--space-3);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: var(--space-1);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-link {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--muted);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .nav-link i { font-size: var(--text-xl); }
+
+    .nav-link:hover {
+      border-color: var(--border);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .nav-link:active {
+      border-color: var(--accent-active);
+      color: var(--accent-active);
+    }
+
+    .nav-link:focus-visible,
+    .button:focus-visible,
+    .tab:focus-visible,
+    .filter-chip:focus-visible,
+    .search-field:focus-visible,
+    .table-link:focus-visible,
+    .page-button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .nav-link[aria-current="page"] {
+      border-color: color-mix(in oklab, var(--accent), var(--surface) 76%);
+      background: color-mix(in oklab, var(--accent), var(--surface) 94%);
+      color: var(--accent);
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      padding: var(--space-4);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+
+    .sidebar-note strong {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+      color: var(--fg);
+      font-weight: 650;
+    }
+
+    .main-area {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: 0 var(--container-gutter-desktop);
+      border-bottom: 1px solid var(--border-soft);
+      background: color-mix(in oklab, var(--surface), transparent 3%);
+      backdrop-filter: blur(8px);
+    }
+
+    .top-context,
+    .identity {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .context-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      white-space: nowrap;
+    }
+
+    .context-item strong {
+      color: var(--fg);
+      font-weight: 650;
+    }
+
+    .role-badge,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 24px;
+      padding: var(--space-1) var(--space-2);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--fg);
+      font: 600 var(--text-xs) / var(--leading-tight) var(--font-body);
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+    }
+
+    .role-badge {
+      border-color: color-mix(in oklab, var(--accent), var(--surface) 70%);
+      background: color-mix(in oklab, var(--accent), var(--surface) 94%);
+      color: var(--accent);
+    }
+
+    .badge--success {
+      border-color: color-mix(in oklab, var(--success), var(--surface) 68%);
+      background: color-mix(in oklab, var(--success), var(--surface) 92%);
+      color: var(--success);
+    }
+
+    .badge--warn {
+      border-color: color-mix(in oklab, var(--warn), var(--surface) 68%);
+      background: color-mix(in oklab, var(--warn), var(--surface) 92%);
+      color: var(--warn);
+    }
+
+    .badge--danger {
+      border-color: color-mix(in oklab, var(--danger), var(--surface) 68%);
+      background: color-mix(in oklab, var(--danger), var(--surface) 92%);
+      color: var(--danger);
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 700;
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-6) var(--container-gutter-desktop) var(--space-12);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-4);
+      padding: 0;
+      color: var(--muted);
+      font-size: var(--text-xs);
+      list-style: none;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb a:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    .batch-header {
+      position: relative;
+      padding: var(--space-6);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .batch-header::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--space-1);
+      background: var(--success);
+    }
+
+    .batch-heading-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+
+    .batch-kicker {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .batch-title {
+      margin: var(--space-2) 0 0;
+      color: var(--fg);
+      font: 650 var(--text-2xl) / var(--leading-tight) var(--font-display);
+      letter-spacing: var(--tracking-display);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .batch-copy {
+      max-width: 720px;
+      margin: var(--space-2) 0 0;
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      font: 600 var(--text-sm) / var(--leading-tight) var(--font-body);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .button:hover {
+      border-color: var(--accent);
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    .button:active {
+      border-color: var(--accent-active);
+      background: color-mix(in oklab, var(--accent), var(--surface) 92%);
+      color: var(--accent-active);
+    }
+
+    .batch-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .meta-label {
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .meta-value {
+      margin-top: var(--space-1);
+      overflow: hidden;
+      color: var(--fg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .meta-value--mono { font-family: var(--font-mono); }
+
+    .immutable-note {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid color-mix(in oklab, var(--accent), var(--surface) 76%);
+      border-radius: var(--radius-md);
+      background: color-mix(in oklab, var(--accent), var(--surface) 96%);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .immutable-note i {
+      margin-top: 2px;
+      color: var(--accent);
+      font-size: var(--text-lg);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .summary-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--space-1);
+      background: var(--success);
+    }
+
+    .summary-card--danger::before { background: var(--danger); }
+    .summary-card--warn::before { background: var(--warn); }
+    .summary-card--accent::before { background: var(--accent); }
+
+    .summary-label { color: var(--muted); font-size: var(--text-xs); }
+    .summary-value {
+      margin-top: var(--space-1);
+      color: var(--fg);
+      font: 650 var(--text-3xl) / var(--leading-tight) var(--font-display);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-icon {
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      color: var(--success);
+      font-size: var(--text-2xl);
+    }
+
+    .summary-card--danger .summary-icon { color: var(--danger); }
+    .summary-card--warn .summary-icon { color: var(--warn); }
+    .summary-card--accent .summary-icon { color: var(--accent); }
+
+    .workspace {
+      margin-top: var(--space-4);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .tab-list {
+      display: flex;
+      align-items: stretch;
+      gap: var(--space-1);
+      padding: 0 var(--space-5);
+      border-bottom: 1px solid var(--border-soft);
+      overflow-x: auto;
+    }
+
+    .tab {
+      position: relative;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex: 0 0 auto;
+      padding: 0 var(--space-3);
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 600 var(--text-sm) / var(--leading-tight) var(--font-body);
+      cursor: pointer;
+      transition: color var(--motion-fast) var(--ease-standard), background-color var(--motion-fast) var(--ease-standard);
+    }
+
+    .tab::after {
+      content: "";
+      position: absolute;
+      right: var(--space-2);
+      bottom: 0;
+      left: var(--space-2);
+      height: 2px;
+      background: transparent;
+    }
+
+    .tab:hover {
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .tab:active { color: var(--accent-active); }
+
+    .tab[aria-selected="true"] {
+      color: var(--accent);
+    }
+
+    .tab[aria-selected="true"]::after { background: var(--accent); }
+
+    .tab-count {
+      min-width: 22px;
+      min-height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tab[aria-selected="true"] .tab-count {
+      background: color-mix(in oklab, var(--accent), var(--surface) 92%);
+      color: var(--accent);
+    }
+
+    .toolbar {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--muted);
+      font: 600 var(--text-xs) / var(--leading-tight) var(--font-body);
+      cursor: pointer;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-chip:active { border-color: var(--accent-active); color: var(--accent-active); }
+    .filter-chip[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: color-mix(in oklab, var(--accent), var(--surface) 94%);
+      color: var(--accent);
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(320px, 100%);
+    }
+
+    .search-wrap > i {
+      position: absolute;
+      top: 50%;
+      left: var(--space-3);
+      color: var(--muted);
+      font-size: var(--text-lg);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-field {
+      width: 100%;
+      min-height: 38px;
+      padding: var(--space-2) var(--space-8) var(--space-2) 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      font: 400 var(--text-sm) / var(--leading-body) var(--font-body);
+      transition: border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard);
+    }
+
+    .search-field:hover { border-color: var(--accent); }
+    .search-field:focus-visible { border-color: var(--accent); }
+    .search-field::placeholder { color: var(--muted); }
+
+    .clear-search {
+      position: absolute;
+      top: 50%;
+      right: var(--space-2);
+      width: 28px;
+      height: 28px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transform: translateY(-50%);
+    }
+
+    .clear-search[data-visible="true"] { display: inline-flex; }
+    .clear-search:hover { background: var(--bg); color: var(--accent); }
+    .clear-search:active { color: var(--accent-active); }
+    .clear-search:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    .panel-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-5);
+    }
+
+    .panel-title {
+      color: var(--fg);
+      font-size: var(--text-lg);
+      font-weight: 650;
+    }
+
+    .panel-copy {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      height: 40px;
+      padding: 0 var(--space-3);
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 650;
+      text-align: left;
+    }
+
+    td {
+      height: 56px;
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-soft);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      vertical-align: middle;
+    }
+
+    tbody tr { transition: background-color var(--motion-fast) var(--ease-standard); }
+    tbody tr:hover { background: color-mix(in oklab, var(--accent), var(--surface) 97%); }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cell-title {
+      overflow: hidden;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cell-meta {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+
+    .table-link {
+      color: var(--accent);
+      font-size: var(--text-sm);
+      font-weight: 650;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+    }
+
+    .table-link:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    .table-link:active { color: var(--accent-active); }
+
+    .action-danger { color: var(--danger); font-weight: 700; }
+    .action-warn { color: var(--warn); font-weight: 700; }
+    .action-accent { color: var(--accent); font-weight: 700; }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-top: 1px solid var(--border-soft);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .page-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .page-button {
+      min-width: 34px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .page-button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .page-button:active:not(:disabled) { border-color: var(--accent-active); color: var(--accent-active); }
+    .page-button:disabled { background: var(--bg); color: var(--muted); cursor: not-allowed; }
+
+    .empty-filter {
+      display: none;
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+    }
+
+    .empty-filter[data-visible="true"] { display: block; }
+    .empty-filter i { color: var(--muted); font-size: var(--text-4xl); }
+    .empty-filter h3 { margin: var(--space-3) 0 var(--space-1); font-size: var(--text-lg); }
+    .empty-filter p { margin: 0; color: var(--muted); font-size: var(--text-sm); }
+
+    [role="tabpanel"][hidden] { display: none; }
+
+    .footer-context {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .mobile-bar,
+    .device-notice {
+      display: none;
+    }
+
+    @keyframes content-enter {
+      from { opacity: 0; filter: blur(2px); }
+      to { opacity: 1; filter: blur(0); }
+    }
+
+    .page-enter { animation: content-enter var(--motion-base) var(--ease-standard) both; }
+    .page-enter--summary { animation-delay: var(--motion-fast); }
+    .page-enter--content { animation-delay: var(--motion-base); }
+
+    @media (max-width: 1279px) {
+      .topbar,
+      .content {
+        padding-left: var(--container-gutter-tablet);
+        padding-right: var(--container-gutter-tablet);
+      }
+
+      .batch-meta-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 1023px) {
+      .app-shell { display: block; }
+      .sidebar,
+      .topbar,
+      .desktop-content { display: none; }
+
+      .mobile-bar {
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--container-gutter-tablet);
+        border-bottom: 1px solid var(--border-soft);
+        background: var(--surface);
+      }
+
+      .device-notice {
+        min-height: calc(100vh - 56px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--container-gutter-tablet);
+      }
+
+      .device-card {
+        width: 100%;
+        max-width: 520px;
+        padding: var(--space-8);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-lg);
+        background: var(--surface);
+        text-align: center;
+      }
+
+      .device-icon {
+        width: 56px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        background: var(--bg);
+        color: var(--accent);
+        font-size: var(--text-3xl);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-enter,
+      .page-enter--summary,
+      .page-enter--content { animation: none; }
+
+      .nav-link,
+      .button,
+      .tab,
+      .filter-chip,
+      .search-field,
+      tbody tr,
+      .page-button { transition-duration: 0ms; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i class="ph ph-compass-tool"></i></span>
+        <div><div class="brand-name">趣然 AI 决策</div><div class="brand-meta">经营利润工作台</div></div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav>
+        <ul class="nav-list">
+          <li><a class="nav-link" href="阶段1_经营协作_角色化工作台.html"><i class="ph ph-squares-four" aria-hidden="true"></i><span>工作台</span></a></li>
+          <li><a class="nav-link" href="阶段1_行动清单_行动清单.html"><i class="ph ph-list-checks" aria-hidden="true"></i><span>行动清单</span></a></li>
+          <li><a class="nav-link" aria-current="page" href="阶段1_数据批次_数据批次列表.html"><i class="ph ph-stack" aria-hidden="true"></i><span>数据批次</span></a></li>
+          <li><a class="nav-link" href="阶段1_规则与数据溯源_追溯记录.html"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span>追溯记录</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-note"><strong><i class="ph ph-lock-key" aria-hidden="true"></i>不可变批次</strong>本页只读展示首次固化的数据快照、规则版本和事件链。新数据不会改写历史。</div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="top-context">
+          <span class="context-item"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
+          <span class="context-item">当前批次 <strong class="mono">BAT-20260706-01</strong></span>
+          <span class="badge badge--success"><i class="ph ph-check-circle" aria-hidden="true"></i>清单就绪</span>
+        </div>
+        <div class="identity">
+          <span class="role-badge"><i class="ph ph-user-focus" aria-hidden="true"></i>运营主管</span>
+          <span class="avatar" aria-hidden="true">陈</span>
+          <span class="context-item"><strong>陈思远</strong> · 钉钉身份</span>
+        </div>
+      </header>
+
+      <header class="mobile-bar">
+        <div class="flex items-center gap-3"><span class="brand-mark" aria-hidden="true"><i class="ph ph-compass-tool"></i></span><strong class="text-sm">趣然 AI 决策</strong></div>
+        <span class="role-badge">运营主管</span>
+      </header>
+
+      <section class="device-notice" aria-labelledby="device-title">
+        <div class="device-card">
+          <span class="device-icon" aria-hidden="true"><i class="ph ph-desktop"></i></span>
+          <h1 id="device-title" class="mt-5 text-xl font-semibold">请使用更宽的电脑屏幕</h1>
+          <p class="mt-3 text-sm leading-6" style="color: var(--muted);">批次详情包含密集校验、指标和规则数据。请在宽度不低于 1280px 的办公电脑上查看完整内容。</p>
+        </div>
+      </section>
+
+      <main class="content desktop-content">
+        <nav aria-label="面包屑">
+          <ol class="breadcrumb">
+            <li><a href="阶段1_数据批次_数据批次列表.html">数据批次</a></li>
+            <li aria-hidden="true"><i class="ph ph-caret-right"></i></li>
+            <li aria-current="page">BAT-20260706-01</li>
+          </ol>
+        </nav>
+
+        <section class="batch-header page-enter" aria-labelledby="batch-title">
+          <div class="batch-heading-row">
+            <div>
+              <div class="batch-kicker"><i class="ph ph-fingerprint" aria-hidden="true"></i>Immutable batch snapshot</div>
+              <h1 id="batch-title" class="batch-title">BAT-20260706-01</h1>
+              <p class="batch-copy">本批固定规则和兜底结果已固化，行动清单可用。AI 增强解释的状态不会改变批次成功状态或固定结论。</p>
+            </div>
+            <div class="header-actions">
+              <a class="button" href="阶段1_数据批次_数据批次列表.html"><i class="ph ph-arrow-left" aria-hidden="true"></i>返回列表</a>
+              <a class="button" href="阶段1_规则与数据溯源_追溯记录.html?batch=BAT-20260706-01"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>查看批次追溯</a>
+            </div>
+          </div>
+
+          <div class="batch-meta-grid" aria-label="不可变批次信息">
+            <div><div class="meta-label">事业部</div><div class="meta-value">玩具事业部</div></div>
+            <div><div class="meta-label">数据期间</div><div class="meta-value">2026-06-01 — 06-30</div></div>
+            <div><div class="meta-label">业务截止日</div><div class="meta-value">2026-07-06</div></div>
+            <div><div class="meta-label">规则版本</div><div class="meta-value meta-value--mono">RULE-V1.0</div></div>
+            <div><div class="meta-label">源文件</div><div class="meta-value">玩具事业部经营数据_202606.xlsx</div></div>
+            <div><div class="meta-label">导入人 / 时间</div><div class="meta-value">周晓宁 · 07-06 09:12</div></div>
+            <div><div class="meta-label">业务时区</div><div class="meta-value meta-value--mono">Asia/Shanghai</div></div>
+            <div><div class="meta-label">文件指纹摘要</div><div class="meta-value meta-value--mono">7d4a…92fc</div></div>
+            <div><div class="meta-label">期间口径</div><div class="meta-value">上一完整自然月</div></div>
+            <div><div class="meta-label">处理状态</div><div class="meta-value"><span class="badge badge--success">清单就绪</span></div></div>
+            <div><div class="meta-label">固定结果</div><div class="meta-value">已固化</div></div>
+            <div><div class="meta-label">批次属性</div><div class="meta-value">只读 · 不可变</div></div>
+          </div>
+
+          <div class="immutable-note"><i class="ph ph-shield-check" aria-hidden="true"></i><span>历史查看始终使用本批原始期间、业务截止日与规则版本，不按访问日期或当前规则重新计算。</span></div>
+        </section>
+
+        <section class="summary-grid page-enter page-enter--summary" aria-label="数据质量摘要">
+          <div class="summary-card"><div><div class="summary-label">有效 SPU</div><div class="summary-value">16</div></div><span class="summary-icon" aria-hidden="true"><i class="ph ph-check-circle"></i></span></div>
+          <div class="summary-card summary-card--danger"><div><div class="summary-label">拒绝行</div><div class="summary-value">2</div></div><span class="summary-icon" aria-hidden="true"><i class="ph ph-x-circle"></i></span></div>
+          <div class="summary-card summary-card--warn"><div><div class="summary-label">字段降级</div><div class="summary-value">5</div></div><span class="summary-icon" aria-hidden="true"><i class="ph ph-warning"></i></span></div>
+          <div class="summary-card summary-card--accent"><div><div class="summary-label">普通警告</div><div class="summary-value">5</div></div><span class="summary-icon" aria-hidden="true"><i class="ph ph-info"></i></span></div>
+        </section>
+
+        <section class="workspace page-enter page-enter--content" aria-label="批次只读投影">
+          <div class="tab-list" role="tablist" aria-label="批次详情主题">
+            <button class="tab" id="tab-validation" role="tab" aria-selected="true" aria-controls="panel-validation" tabindex="0" data-tab="validation"><i class="ph ph-clipboard-text" aria-hidden="true"></i>校验结果<span class="tab-count">12</span></button>
+            <button class="tab" id="tab-metrics" role="tab" aria-selected="false" aria-controls="panel-metrics" tabindex="-1" data-tab="metrics"><i class="ph ph-chart-bar" aria-hidden="true"></i>指标与数据质量<span class="tab-count">16</span></button>
+            <button class="tab" id="tab-rules" role="tab" aria-selected="false" aria-controls="panel-rules" tabindex="-1" data-tab="rules"><i class="ph ph-tree-structure" aria-hidden="true"></i>规则结果<span class="tab-count">16</span></button>
+            <button class="tab" id="tab-actions" role="tab" aria-selected="false" aria-controls="panel-actions" tabindex="-1" data-tab="actions"><i class="ph ph-list-checks" aria-hidden="true"></i>行动清单<span class="tab-count">14</span></button>
+          </div>
+
+          <div class="toolbar">
+            <div id="validationFilters" class="filter-group" aria-label="校验结果分区筛选">
+              <button class="filter-chip" type="button" aria-pressed="true" data-quality="all">全部 12</button>
+              <button class="filter-chip" type="button" aria-pressed="false" data-quality="reject">拒绝行 2</button>
+              <button class="filter-chip" type="button" aria-pressed="false" data-quality="degrade">字段降级 5</button>
+              <button class="filter-chip" type="button" aria-pressed="false" data-quality="warning">普通警告 5</button>
+            </div>
+            <div class="search-wrap">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              <label class="sr-only" for="spuSearch">搜索当前主题</label>
+              <input id="spuSearch" class="search-field" type="search" placeholder="搜索 SPU ID、名称或问题原因" autocomplete="off">
+              <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索" data-visible="false"><i class="ph ph-x" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <section id="panel-validation" role="tabpanel" aria-labelledby="tab-validation" tabindex="0">
+            <div class="panel-heading"><div><div class="panel-title">校验结果</div><div class="panel-copy">拒绝行、字段降级与普通警告分区呈现；原始数据只能回到新批次修正。</div></div><span class="badge badge--success">期间校验通过</span></div>
+            <div class="table-wrap"><table><thead><tr><th style="width: 11%;">质量级别</th><th style="width: 9%;">源行</th><th style="width: 14%;">字段</th><th style="width: 18%;">原值</th><th style="width: 31%;">原因</th><th style="width: 17%;">是否继续计算</th></tr></thead><tbody id="body-validation"></tbody></table></div>
+            <div id="empty-validation" class="empty-filter"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><h3>没有匹配的校验问题</h3><p>请调整搜索词或切换质量分区。</p></div>
+            <div class="pagination"><span id="result-validation" aria-live="polite"></span><div class="page-actions"><button class="page-button" type="button" data-page-action="prev" data-panel="validation" aria-label="校验结果上一页"><i class="ph ph-caret-left" aria-hidden="true"></i></button><span id="page-validation">1 / 1</span><button class="page-button" type="button" data-page-action="next" data-panel="validation" aria-label="校验结果下一页"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div></div>
+          </section>
+
+          <section id="panel-metrics" role="tabpanel" aria-labelledby="tab-metrics" tabindex="0" hidden>
+            <div class="panel-heading"><div><div class="panel-title">指标与数据质量</div><div class="panel-copy">指标保留统计期间、表内来源和验证状态；缺失依赖不由系统猜测。</div></div><span class="badge">批次快照 · 只读</span></div>
+            <div class="table-wrap"><table><thead><tr><th style="width: 22%;">SPU / 店铺</th><th style="width: 15%;">月净销售额</th><th style="width: 15%;">经营准利润率</th><th style="width: 18%;">近 7 日品退率</th><th style="width: 16%;">库存可售天数</th><th style="width: 14%;">质量状态</th></tr></thead><tbody id="body-metrics"></tbody></table></div>
+            <div id="empty-metrics" class="empty-filter"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><h3>没有匹配的 SPU 指标</h3><p>请检查 SPU ID 或名称后重新搜索。</p></div>
+            <div class="pagination"><span id="result-metrics" aria-live="polite"></span><div class="page-actions"><button class="page-button" type="button" data-page-action="prev" data-panel="metrics" aria-label="指标上一页"><i class="ph ph-caret-left" aria-hidden="true"></i></button><span id="page-metrics">1 / 1</span><button class="page-button" type="button" data-page-action="next" data-panel="metrics" aria-label="指标下一页"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div></div>
+          </section>
+
+          <section id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" tabindex="0" hidden>
+            <div class="panel-heading"><div><div class="panel-title">固定规则结果</div><div class="panel-copy">分类、唯一主动作与库存动作由 RULE-V1.0 确定，AI 不参与改写。</div></div><span class="badge badge--success">确定性结果已固化</span></div>
+            <div class="table-wrap"><table><thead><tr><th style="width: 22%;">SPU</th><th style="width: 12%;">分类</th><th style="width: 12%;">主动作</th><th style="width: 14%;">库存动作</th><th style="width: 25%;">命中阈值</th><th style="width: 15%;">依赖 / 版本</th></tr></thead><tbody id="body-rules"></tbody></table></div>
+            <div id="empty-rules" class="empty-filter"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><h3>没有匹配的规则结果</h3><p>请检查 SPU ID、名称或规则结论。</p></div>
+            <div class="pagination"><span id="result-rules" aria-live="polite"></span><div class="page-actions"><button class="page-button" type="button" data-page-action="prev" data-panel="rules" aria-label="规则结果上一页"><i class="ph ph-caret-left" aria-hidden="true"></i></button><span id="page-rules">1 / 1</span><button class="page-button" type="button" data-page-action="next" data-panel="rules" aria-label="规则结果下一页"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div></div>
+          </section>
+
+          <section id="panel-actions" role="tabpanel" aria-labelledby="tab-actions" tabindex="0" hidden>
+            <div class="panel-heading"><div><div class="panel-title">本批行动清单</div><div class="panel-copy">纯维持且无补货/禁补的 SPU 不收录；审核、执行和结果记录在建议详情完成。</div></div><span class="badge">14 条建议</span></div>
+            <div class="table-wrap"><table><thead><tr><th style="width: 23%;">SPU</th><th style="width: 11%;">主动作</th><th style="width: 14%;">库存动作</th><th style="width: 14%;">审核状态</th><th style="width: 14%;">经营动作</th><th style="width: 14%;">采购动作</th><th style="width: 10%;">操作</th></tr></thead><tbody id="body-actions"></tbody></table></div>
+            <div id="empty-actions" class="empty-filter"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><h3>没有匹配的行动建议</h3><p>请检查 SPU ID、名称或动作名称。</p></div>
+            <div class="pagination"><span id="result-actions" aria-live="polite"></span><div class="page-actions"><button class="page-button" type="button" data-page-action="prev" data-panel="actions" aria-label="行动清单上一页"><i class="ph ph-caret-left" aria-hidden="true"></i></button><span id="page-actions">1 / 1</span><button class="page-button" type="button" data-page-action="next" data-panel="actions" aria-label="行动清单下一页"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div></div>
+          </section>
+        </section>
+
+        <div class="footer-context page-enter page-enter--content"><span><i class="ph ph-info" aria-hidden="true"></i> 文件指纹命中时始终返回本批与原事件链，不创建重复批次。</span><span>最后固化：2026-07-06 09:14</span></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const datasets = {
+      validation: [
+        { quality: 'reject', row: '18', field: 'SPU ID', raw: '空值', reason: '必要身份字段缺失，无法建立唯一 SPU 身份', continued: '否 · 整行拒绝' },
+        { quality: 'reject', row: '21', field: 'SPU ID', raw: 'SPU-515', reason: '批次内 SPU ID 重复，保留首次出现的数据行', continued: '否 · 整行拒绝' },
+        { quality: 'degrade', row: '7', field: '近 7 日品退率期间', raw: '未提供', reason: '统计期间未证明为最近 7 日，品退率按缺失处理', continued: '是 · 不用于观察/加投' },
+        { quality: 'degrade', row: '9', field: '仓内库存', raw: '—', reason: '库存数量缺失，无法计算库存可售天数', continued: '是 · 不生成补货' },
+        { quality: 'degrade', row: '11', field: '最近 14 天销量', raw: '文本“待补”', reason: '无法解析为非负数，库存可售天数不可用', continued: '是 · 不生成补货' },
+        { quality: 'degrade', row: '14', field: '上架日期', raw: '2026/13/08', reason: '日期无法解析，新品分类及依赖动作降级', continued: '是 · 保留可确定结论' },
+        { quality: 'degrade', row: '17', field: '经营准利润率', raw: 'N/A', reason: '表内利润率不可解析，停止依赖利润的主动作判断', continued: '是 · 保留身份与库存校验' },
+        { quality: 'warning', row: '3', field: '商品名称', raw: '百变轨道赛车组合   ', reason: '已去除字段末尾空白，不改变业务含义', continued: '是' },
+        { quality: 'warning', row: '6', field: '店铺名称', raw: '趣然玩具旗舰店（主店）', reason: '店铺别名已映射到批次标准名称', continued: '是' },
+        { quality: 'warning', row: '10', field: '在途库存', raw: '0.0', reason: '数值格式已规范为整数 0', continued: '是' },
+        { quality: 'warning', row: '13', field: '商品链接', raw: '链接含跟踪参数', reason: '已移除不影响商品身份的跟踪参数', continued: '是' },
+        { quality: 'warning', row: '16', field: '责任运营', raw: '周晓宁 ', reason: '已规范姓名前后空白', continued: '是' }
+      ],
+      metrics: [
+        { id: 'SPU-515', name: '布乐迪忙碌屋早教玩具', store: '趣然玩具旗舰店', sales: '¥126,480', margin: '-6.8%', returnRate: '1.2%', verified: true, stock: '84 天', quality: '可用' },
+        { id: 'SPU-1082', name: '儿童仿真厨房组合套装', store: '趣然玩具旗舰店', sales: '¥18,640', margin: '3.1%', returnRate: '1.0%', verified: true, stock: '126 天', quality: '可用' },
+        { id: 'SPU-2047', name: '磁力片积木 128 件套', store: '趣然益智玩具店', sales: '¥68,920', margin: '7.6%', returnRate: '1.3%', verified: true, stock: '42 天', quality: '可用' },
+        { id: 'SPU-2391', name: '大颗粒动物乐园积木', store: '趣然玩具旗舰店', sales: '¥142,300', margin: '4.2%', returnRate: '0.9%', verified: true, stock: '38 天', quality: '可用' },
+        { id: 'SPU-3175', name: '儿童过家家收银台', store: '趣然角色扮演店', sales: '¥116,720', margin: '12.1%', returnRate: '2.1%', verified: true, stock: '33 天', quality: '可用' },
+        { id: 'SPU-3608', name: '音乐启蒙拍拍鼓', store: '趣然婴童玩具店', sales: '¥12,360', margin: '-24.3%', returnRate: '未验证', verified: false, stock: '不可用', quality: '依赖降级' },
+        { id: 'SPU-4210', name: '百变轨道赛车组合', store: '趣然益智玩具店', sales: '¥188,540', margin: '13.8%', returnRate: '0.8%', verified: true, stock: '22 天', quality: '可用' },
+        { id: 'SPU-4763', name: '儿童科学实验探索箱', store: '趣然成长实验室', sales: '¥76,210', margin: '18.6%', returnRate: '1.1%', verified: true, stock: '46 天', quality: '可用' },
+        { id: 'SPU-5036', name: '木制城市交通拼图', store: '趣然木玩专营店', sales: '¥15,980', margin: '-12.4%', returnRate: '未验证', verified: false, stock: '不可用', quality: '依赖降级' },
+        { id: 'SPU-5884', name: '遥控越野攀爬车', store: '趣然遥控玩具店', sales: '¥212,650', margin: '16.2%', returnRate: '1.2%', verified: true, stock: '18 天', quality: '可用' },
+        { id: 'SPU-6012', name: '恐龙考古挖掘实验盒', store: '趣然成长实验室', sales: '¥54,870', margin: '16.8%', returnRate: '0.7%', verified: true, stock: '26 天', quality: '可用' },
+        { id: 'SPU-6290', name: '儿童工具台维修套装', store: '趣然角色扮演店', sales: '¥92,130', margin: '8.4%', returnRate: '1.0%', verified: true, stock: '41 天', quality: '可用' },
+        { id: 'SPU-6943', name: '电动泡泡机户外套装', store: '趣然玩具旗舰店', sales: '¥31,260', margin: '6.2%', returnRate: '1.7%', verified: true, stock: '17 天', quality: '可用' },
+        { id: 'SPU-7351', name: '儿童平衡叠叠乐', store: '趣然木玩专营店', sales: '¥24,860', margin: '17.2%', returnRate: '0.6%', verified: true, stock: '21 天', quality: '可用' },
+        { id: 'SPU-8314', name: '字母认知配对卡', store: '趣然婴童玩具店', sales: '¥45,320', margin: '13.6%', returnRate: '0.9%', verified: true, stock: '55 天', quality: '可用' },
+        { id: 'SPU-9002', name: '木制串珠绕珠架', store: '趣然木玩专营店', sales: '¥104,580', margin: '9.6%', returnRate: '1.1%', verified: true, stock: '48 天', quality: '可用' }
+      ],
+      rules: [
+        { id: 'SPU-515', name: '布乐迪忙碌屋早教玩具', category: '大爆款', main: '清仓', stock: '禁止补货', threshold: '经营准利润率 -6.8% < 0%', degrade: '无' },
+        { id: 'SPU-1082', name: '儿童仿真厨房组合套装', category: '淘汰商品', main: '清仓', stock: '禁止补货', threshold: '非新品且月净销售额 < 2 万', degrade: '无' },
+        { id: 'SPU-2047', name: '磁力片积木 128 件套', category: '小爆款', main: '止损', stock: '禁止补货', threshold: '经营准利润率 7.6% < 10%', degrade: '无' },
+        { id: 'SPU-2391', name: '大颗粒动物乐园积木', category: '大爆款', main: '止损', stock: '禁止补货', threshold: '经营准利润率 4.2% < 5%', degrade: '无' },
+        { id: 'SPU-3175', name: '儿童过家家收银台', category: '大爆款', main: '观察', stock: '不补货', threshold: '近 7 日品退率 2.1% > 1.5%', degrade: '无' },
+        { id: 'SPU-3608', name: '音乐启蒙拍拍鼓', category: '新品', main: '观察', stock: '不生成结论', threshold: '利润率 < -20%，亏损未满 2 个月', degrade: '品退与库存降级' },
+        { id: 'SPU-4210', name: '百变轨道赛车组合', category: '大爆款', main: '加投', stock: '补货', threshold: '利润率 > 10%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
+        { id: 'SPU-4763', name: '儿童科学实验探索箱', category: '小爆款', main: '加投', stock: '不补货', threshold: '利润率 > 15%，品退率 < 1.5%', degrade: '无' },
+        { id: 'SPU-5036', name: '木制城市交通拼图', category: '新品', main: '加投', stock: '不生成结论', threshold: '新品经营准利润率 > -20%', degrade: '品退与库存降级' },
+        { id: 'SPU-5884', name: '遥控越野攀爬车', category: '大爆款', main: '加投', stock: '补货', threshold: '利润率 > 10%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
+        { id: 'SPU-6012', name: '恐龙考古挖掘实验盒', category: '小爆款', main: '加投', stock: '补货', threshold: '利润率 > 15%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
+        { id: 'SPU-6290', name: '儿童工具台维修套装', category: '小爆款', main: '止损', stock: '禁止补货', threshold: '经营准利润率 8.4% < 10%', degrade: '无' },
+        { id: 'SPU-6943', name: '电动泡泡机户外套装', category: '小爆款', main: '清仓', stock: '禁止补货', threshold: '经营准利润率 6.2%，命中清仓阈值', degrade: '无' },
+        { id: 'SPU-7351', name: '儿童平衡叠叠乐', category: '小爆款', main: '加投', stock: '补货', threshold: '利润率 > 15%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
+        { id: 'SPU-8314', name: '字母认知配对卡', category: '小爆款', main: '维持', stock: '不补货', threshold: '未命中加投、观察、止损或清仓阈值', degrade: '无' },
+        { id: 'SPU-9002', name: '木制串珠绕珠架', category: '大爆款', main: '维持', stock: '不补货', threshold: '未命中加投、观察、止损或清仓阈值', degrade: '无' }
+      ],
+      actions: [
+        { id: 'SPU-515', name: '布乐迪忙碌屋早教玩具', main: '清仓', stock: '禁止补货', review: '待审核', business: '待激活', procurement: '待激活' },
+        { id: 'SPU-1082', name: '儿童仿真厨房组合套装', main: '清仓', stock: '禁止补货', review: '已通过', business: '待执行', procurement: '待确认禁补' },
+        { id: 'SPU-2047', name: '磁力片积木 128 件套', main: '止损', stock: '禁止补货', review: '已通过', business: '已执行', procurement: '待确认禁补' },
+        { id: 'SPU-2391', name: '大颗粒动物乐园积木', main: '止损', stock: '禁止补货', review: '待审核', business: '待激活', procurement: '待激活' },
+        { id: 'SPU-3175', name: '儿童过家家收银台', main: '观察', stock: '不补货', review: '已通过', business: '待执行', procurement: '无任务' },
+        { id: 'SPU-3608', name: '音乐启蒙拍拍鼓', main: '观察', stock: '不生成结论', review: '已通过', business: '已记录结果', procurement: '无任务' },
+        { id: 'SPU-4210', name: '百变轨道赛车组合', main: '加投', stock: '补货', review: '已通过', business: '已执行', procurement: '待执行' },
+        { id: 'SPU-4763', name: '儿童科学实验探索箱', main: '加投', stock: '不补货', review: '待审核', business: '待激活', procurement: '无任务' },
+        { id: 'SPU-5036', name: '木制城市交通拼图', main: '加投', stock: '不生成结论', review: '已驳回', business: '已关闭', procurement: '无任务' },
+        { id: 'SPU-5884', name: '遥控越野攀爬车', main: '加投', stock: '补货', review: '已通过', business: '已记录结果', procurement: '已记录结果' },
+        { id: 'SPU-6012', name: '恐龙考古挖掘实验盒', main: '加投', stock: '补货', review: '待审核', business: '待激活', procurement: '待激活' },
+        { id: 'SPU-6290', name: '儿童工具台维修套装', main: '止损', stock: '禁止补货', review: '已通过', business: '待执行', procurement: '待确认禁补' },
+        { id: 'SPU-6943', name: '电动泡泡机户外套装', main: '清仓', stock: '禁止补货', review: '已驳回', business: '已关闭', procurement: '已关闭' },
+        { id: 'SPU-7351', name: '儿童平衡叠叠乐', main: '加投', stock: '补货', review: '已通过', business: '待记录结果', procurement: '已执行' }
+      ]
+    };
+
+    const qualityLabels = {
+      reject: ['拒绝行', 'badge badge--danger'],
+      degrade: ['字段降级', 'badge badge--warn'],
+      warning: ['普通警告', 'badge']
+    };
+
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+    const panels = Object.keys(datasets);
+    const searchInput = document.getElementById('spuSearch');
+    const clearSearch = document.getElementById('clearSearch');
+    const validationFilters = document.getElementById('validationFilters');
+    const pageSize = 5;
+    const state = {
+      active: 'validation',
+      query: '',
+      quality: 'all',
+      page: { validation: 1, metrics: 1, rules: 1, actions: 1 }
+    };
+
+    function actionClass(action) {
+      if (action === '清仓' || action === '止损') return 'action-danger';
+      if (action === '观察') return 'action-warn';
+      return 'action-accent';
+    }
+
+    function statusBadge(value) {
+      if (value.includes('已通过') || value.includes('已执行') || value.includes('已记录')) return 'badge badge--success';
+      if (value.includes('待') || value.includes('降级')) return 'badge badge--warn';
+      if (value.includes('驳回') || value.includes('关闭')) return 'badge badge--danger';
+      return 'badge';
+    }
+
+    function searchableText(row) {
+      return Object.values(row).join(' ').toLowerCase();
+    }
+
+    function getFiltered(panel) {
+      let rows = datasets[panel];
+      if (panel === 'validation' && state.quality !== 'all') {
+        rows = rows.filter((row) => row.quality === state.quality);
+      }
+      const query = state.query.trim().toLowerCase();
+      if (query) rows = rows.filter((row) => searchableText(row).includes(query));
+      return rows;
+    }
+
+    function rowValidation(row) {
+      const [label, badgeClass] = qualityLabels[row.quality];
+      return `<tr><td><span class="${badgeClass}">${label}</span></td><td class="mono">第 ${row.row} 行</td><td>${row.field}</td><td><div class="cell-title">${row.raw}</div></td><td><div class="cell-meta">${row.reason}</div></td><td><span class="${row.continued.startsWith('否') ? 'badge badge--danger' : 'badge badge--success'}">${row.continued}</span></td></tr>`;
+    }
+
+    function rowMetrics(row) {
+      return `<tr><td><div class="cell-title">${row.name}</div><div class="cell-meta mono">${row.id} · ${row.store}</div></td><td><div class="cell-title mono">${row.sales}</div><div class="cell-meta">2026-06-01 — 06-30</div></td><td><div class="cell-title mono">${row.margin}</div><div class="cell-meta">来源：表内经营准利润率</div></td><td><div class="cell-title mono">${row.returnRate}</div><div class="cell-meta"><span class="${row.verified ? 'badge badge--success' : 'badge badge--warn'}">${row.verified ? '期间已验证' : '期间未验证'}</span></div></td><td><div class="cell-title mono">${row.stock}</div><div class="cell-meta">(仓内 + 在途) / 14 日平均日销</div></td><td><span class="${statusBadge(row.quality)}">${row.quality}</span></td></tr>`;
+    }
+
+    function rowRules(row) {
+      return `<tr><td><div class="cell-title">${row.name}</div><div class="cell-meta mono">${row.id}</div></td><td><span class="badge">${row.category}</span></td><td><span class="${actionClass(row.main)}">${row.main}</span></td><td><span class="${row.stock === '禁止补货' ? 'badge badge--danger' : row.stock === '补货' ? 'badge badge--warn' : 'badge'}">${row.stock}</span></td><td><div class="cell-meta">${row.threshold}</div></td><td><div class="cell-title">${row.degrade}</div><div class="cell-meta mono">RULE-V1.0</div></td></tr>`;
+    }
+
+    function rowActions(row) {
+      return `<tr><td><div class="cell-title">${row.name}</div><div class="cell-meta mono">${row.id}</div></td><td><span class="${actionClass(row.main)}">${row.main}</span></td><td><span class="${row.stock === '禁止补货' ? 'badge badge--danger' : row.stock === '补货' ? 'badge badge--warn' : 'badge'}">${row.stock}</span></td><td><span class="${statusBadge(row.review)}">${row.review}</span></td><td><span class="${statusBadge(row.business)}">${row.business}</span></td><td><span class="${statusBadge(row.procurement)}">${row.procurement}</span></td><td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=${row.id}&batch=BAT-20260706-01">查看建议</a></td></tr>`;
+    }
+
+    const rowRenderers = { validation: rowValidation, metrics: rowMetrics, rules: rowRules, actions: rowActions };
+
+    function render(panel) {
+      const rows = getFiltered(panel);
+      const pages = Math.max(1, Math.ceil(rows.length / pageSize));
+      state.page[panel] = Math.min(state.page[panel], pages);
+      const start = (state.page[panel] - 1) * pageSize;
+      const pageRows = rows.slice(start, start + pageSize);
+      const body = document.getElementById(`body-${panel}`);
+      const empty = document.getElementById(`empty-${panel}`);
+      body.innerHTML = pageRows.map(rowRenderers[panel]).join('');
+      empty.dataset.visible = rows.length === 0 ? 'true' : 'false';
+      body.closest('.table-wrap').style.display = rows.length === 0 ? 'none' : 'block';
+      document.getElementById(`result-${panel}`).textContent = rows.length ? `显示 ${start + 1}—${Math.min(start + pageSize, rows.length)} 条，共 ${rows.length} 条` : '当前条件下 0 条结果';
+      document.getElementById(`page-${panel}`).textContent = `${state.page[panel]} / ${pages}`;
+      const prev = document.querySelector(`[data-page-action="prev"][data-panel="${panel}"]`);
+      const next = document.querySelector(`[data-page-action="next"][data-panel="${panel}"]`);
+      prev.disabled = state.page[panel] === 1;
+      next.disabled = state.page[panel] === pages || rows.length === 0;
+    }
+
+    function activateTab(name, moveFocus = false) {
+      state.active = name;
+      state.query = '';
+      searchInput.value = '';
+      clearSearch.dataset.visible = 'false';
+      validationFilters.hidden = name !== 'validation';
+      searchInput.placeholder = name === 'validation' ? '搜索源行、字段、原值或问题原因' : '搜索 SPU ID、名称或当前主题内容';
+
+      tabs.forEach((tab) => {
+        const selected = tab.dataset.tab === name;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        if (selected && moveFocus) tab.focus();
+      });
+
+      panels.forEach((panel) => {
+        document.getElementById(`panel-${panel}`).hidden = panel !== name;
+      });
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', name);
+      window.history.replaceState({}, '', url);
+      state.page[name] = 1;
+      render(name);
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateTab(tab.dataset.tab));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabs.length - 1;
+        activateTab(tabs[nextIndex].dataset.tab, true);
+      });
+    });
+
+    document.querySelectorAll('.filter-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        state.quality = chip.dataset.quality;
+        state.page.validation = 1;
+        document.querySelectorAll('.filter-chip').forEach((item) => item.setAttribute('aria-pressed', String(item === chip)));
+        render('validation');
+      });
+    });
+
+    searchInput.addEventListener('input', () => {
+      state.query = searchInput.value;
+      state.page[state.active] = 1;
+      clearSearch.dataset.visible = state.query ? 'true' : 'false';
+      render(state.active);
+    });
+
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      state.query = '';
+      state.page[state.active] = 1;
+      clearSearch.dataset.visible = 'false';
+      searchInput.focus();
+      render(state.active);
+    });
+
+    document.querySelectorAll('[data-page-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const panel = button.dataset.panel;
+        state.page[panel] += button.dataset.pageAction === 'next' ? 1 : -1;
+        render(panel);
+        document.getElementById(`panel-${panel}`).focus({ preventScroll: true });
+      });
+    });
+
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    panels.forEach(render);
+    activateTab(panels.includes(requestedTab) ? requestedTab : 'validation');
+  </script>
+</body>
+</html>
