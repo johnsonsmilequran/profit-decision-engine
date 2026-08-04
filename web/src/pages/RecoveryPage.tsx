@@ -17,11 +17,35 @@ export function RecoveryPage() {
   }
   return (
     <main className="recovery-shell" data-page-id="PAGE-F07-02">
-      <header className="auth-topbar"><div className="brand"><span className="brand-mark">趣</span><span><strong>趣然 AI 商品经营与利润决策助手</strong><small>受控身份恢复</small></span></div><span className="internal-chip">受保护页面</span></header>
+      <header className="auth-topbar"><div className="brand"><span className="brand-mark">趣</span><span><strong>趣然 AI 商品经营与利润决策助手</strong><small>内部经营工作台</small></span></div><span className="internal-chip">安全认证</span></header>
       <section className="recovery-panel">
-        <article><span className="warning-icon">!</span><p className="overline">身份恢复</p><h1>{state.title}</h1><p className="muted lead">{state.body}</p><button className="primary" onClick={act}>{state.action}</button></article>
-        <aside><h2>你的经营数据仍受保护</h2><p>完成身份和权限复核前，本页不会加载商品、建议、利润、库存或历史数据。</p><div className="security-note"><strong>需要帮助？</strong><span>请联系运维或系统管理员，并说明你当前使用的钉钉展示身份。</span></div></aside>
+        <article className="recovery-summary">
+          <span className="recovery-status">需要重新认证</span>
+          <h1>{state.title}</h1>
+          <p className="muted lead">{key === 'session_expired' ? '为保护受控信息，长时间未操作后当前会话已安全结束。完成钉钉认证后，系统会重新校验访问权限，并尝试返回您原先有权访问的位置。' : state.body}</p>
+          <div className="return-notice"><span aria-hidden="true"><ReturnIcon /></span><div><strong>您的工作位置会被安全恢复</strong><p>只有原位置仍然可访问时才会返回；否则将进入当前身份可用的安全入口。</p></div></div>
+          <ol className="recovery-steps"><Step number="01" title="完成钉钉身份认证" body="使用公司的统一身份入口重新确认当前身份。" /><Step number="02" title="重新校验访问权限" body="系统以认证完成时的最新权限结果进行检查。" /><Step number="03" title="返回安全位置" body="仅在原访问位置仍然安全且有权时恢复工作上下文。" /></ol>
+        </article>
+        <aside className="recovery-action">
+          <span className="recovery-lock" aria-hidden="true"><UnlockIcon /></span>
+          <p className="overline">SESSION RECOVERY</p>
+          <h2>重新确认当前身份</h2>
+          <p className="muted">点击后将通过钉钉发起一次新的身份认证。本页不会要求输入账号密码。</p>
+          <button className="primary" onClick={act}>{state.action}</button>
+          <p className="action-help">认证完成后仍会再次核验当前权限，不会直接进入受保护页面。</p>
+          <div className="protected-note"><strong>受控信息已隐藏</strong><span>完成身份和权限复核前，本页不会加载商品、建议、利润、库存或历史数据。</span></div>
+          <p className="contact-note">无法完成认证？请联系<strong>运维/系统管理员</strong>协助检查统一身份服务。</p>
+        </aside>
       </section>
+      <footer className="recovery-footer"><span><LockIcon />连接与身份信息受到保护</span><span>仅限公司内部授权访问</span></footer>
     </main>
   )
 }
+
+function Step({ number, title, body }: { number: string; title: string; body: string }) { return <li><span>{number}</span><div><strong>{title}</strong><p>{body}</p></div></li> }
+
+function ReturnIcon() { return <svg viewBox="0 0 24 24" role="img" aria-label="返回"><path d="M9 7H5v-4M5.4 7.2A8 8 0 1 1 4 16" /></svg> }
+
+function UnlockIcon() { return <svg viewBox="0 0 24 24" role="img" aria-label="安全恢复"><path d="M7 10V7a5 5 0 0 1 9.2-2.7M5 10h14v11H5zM12 14v3" /></svg> }
+
+function LockIcon() { return <svg viewBox="0 0 24 24" role="img" aria-label="安全"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5zM12 14v3" /></svg> }
