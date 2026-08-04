@@ -117,5 +117,5 @@ export interface TraceEvent {
   actor_ref: string;
   note?: string | null;
   occurred_at: string;
-  rule_version: string;
+  rule_version?: string;
 }

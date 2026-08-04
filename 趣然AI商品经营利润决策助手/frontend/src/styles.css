@@ -236,6 +236,30 @@ a {
 .element-content {
   line-height: 1.65;
 }
+.evidence-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.evidence-metrics.procurement {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.evidence-metric {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+.evidence-metric.wide {
+  grid-column: span 2;
+}
+.evidence-value {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.55;
+}
 .action-lane {
   border-left: 3px solid var(--accent);
   padding-left: 14px;

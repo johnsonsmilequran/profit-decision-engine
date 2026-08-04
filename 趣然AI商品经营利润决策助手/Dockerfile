@@ -12,10 +12,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 RUN groupadd --system quran && useradd --system --gid quran --home-dir /app quran
 COPY backend/pyproject.toml ./
+RUN python -m pip install \
+    alembic==1.16.5 \
+    fastapi==0.128.8 \
+    httpx==0.28.1 \
+    openpyxl==3.1.5 \
+    'psycopg[binary]==3.2.13' \
+    pydantic==2.13.4 \
+    pydantic-settings==2.12.0 \
+    python-multipart==0.0.22 \
+    sqlalchemy==2.0.51 \
+    'uvicorn[standard]==0.39.0'
 COPY backend/app ./app
 COPY backend/alembic ./alembic
 COPY backend/alembic.ini ./alembic.ini
-RUN python -m pip install --upgrade pip && python -m pip install .
 COPY --from=frontend-build /build/frontend/dist ./app/static
 RUN mkdir -p /var/lib/quran/uploads && chown -R quran:quran /app /var/lib/quran
 USER quran

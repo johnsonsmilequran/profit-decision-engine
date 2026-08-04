@@ -4,7 +4,6 @@ import {
   Alert,
   Button,
   Card,
-  Descriptions,
   Form,
   Input,
   Modal,
@@ -36,6 +35,70 @@ interface ActionValues {
 function display(value: unknown): string {
   if (value === null || value === undefined || value === "") return "—";
   return typeof value === "object" ? JSON.stringify(value, null, 2) : String(value);
+}
+
+function numberValue(value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatNumber(value: unknown, maximumFractionDigits = 1): string {
+  const parsed = numberValue(value);
+  return parsed === null
+    ? display(value)
+    : new Intl.NumberFormat("zh-CN", { maximumFractionDigits }).format(parsed);
+}
+
+function formatCurrency(value: unknown): string {
+  const parsed = numberValue(value);
+  return parsed === null
+    ? display(value)
+    : new Intl.NumberFormat("zh-CN", {
+        style: "currency",
+        currency: "CNY",
+        maximumFractionDigits: 2,
+      }).format(parsed);
+}
+
+function formatPercent(value: unknown): string {
+  const parsed = numberValue(value);
+  return parsed === null
+    ? display(value)
+    : new Intl.NumberFormat("zh-CN", {
+        style: "percent",
+        maximumFractionDigits: 2,
+      }).format(parsed);
+}
+
+const evidenceLabels: Record<string, string> = {
+  spu_id: "SPU",
+  spu_name: "商品",
+  net_sales: "净销售额",
+  profit_rate: "经营准利润率",
+  return_rate_7d: "最近 7 天品退率",
+  inventory_days: "库存可售天数",
+  quality_flags: "数据质量提示",
+};
+
+function evidenceValue(key: string, value: unknown): string {
+  if (key === "net_sales") return formatCurrency(value);
+  if (key === "profit_rate" || key === "return_rate_7d") return formatPercent(value);
+  if (key === "inventory_days") return `${formatNumber(value)} 天`;
+  if (Array.isArray(value)) return value.length ? value.map(display).join("、") : "无";
+  return display(value);
+}
+
+function humanDisplay(value: unknown): string {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const entries = Object.entries(value as Record<string, unknown>);
+    const first = entries[0];
+    if (entries.length === 1 && first?.[0] === "summary") return display(first[1]);
+    return entries
+      .map(([key, item]) => `${evidenceLabels[key] ?? key}：${evidenceValue(key, item)}`)
+      .join("；");
+  }
+  return display(value);
 }
 
 export function DecisionDetailPage() {
@@ -106,6 +169,21 @@ export function DecisionDetailPage() {
   const decision = query.data;
   const procurement = status?.role === "procurement";
   const evidence = decision.four_elements ?? {};
+  const metricItems = procurement
+    ? [
+        ["warehouse", "仓内库存", formatNumber(decision.warehouse_qty)],
+        ["transit", "在途库存", formatNumber(decision.in_transit_qty)],
+        ["sales14", "最近 14 天销量", formatNumber(decision.sales_units_14d)],
+        ["days", "库存可售天数", `${formatNumber(decision.inventory_days)} 天`],
+      ]
+    : [
+        ["sales", "上一完整自然月净销售额", formatCurrency(decision.net_sales)],
+        ["profit", "经营准利润率", formatPercent(decision.profit_rate)],
+        ["promotion", "推广费用", formatCurrency(decision.promotion_expense)],
+        ["return", "最近 7 天品退率", formatPercent(decision.return_rate_7d)],
+        ["rule", "规则版本", decision.rule_version ?? "—"],
+        ["rules", "触发规则", decision.triggered_rules?.join("、") || "—"],
+      ];
 
   return (
     <>
@@ -115,7 +193,13 @@ export function DecisionDetailPage() {
         description={`SPU ${decision.spu_id} · 批次 ${decision.batch_id}`}
         actions={
           <Space>
-            {decision.review_state ? <StatusTag value={decision.review_state} /> : null}
+            {decision.review_state ? (
+              <StatusTag
+                value={
+                  decision.review_state === "pending" ? "awaiting_review" : decision.review_state
+                }
+              />
+            ) : null}
             <Button
               icon={<HistoryOutlined />}
               onClick={() => navigate(`/trace?decision_id=${decision.decision_id}`)}
@@ -169,7 +253,7 @@ export function DecisionDetailPage() {
                   <div className="element-block" key={label as string}>
                     <div className="element-label">{label as string}</div>
                     <div className="element-content" style={{ whiteSpace: "pre-wrap" }}>
-                      {display(value)}
+                      {humanDisplay(value)}
                     </div>
                   </div>
                 ))}
@@ -177,62 +261,14 @@ export function DecisionDetailPage() {
             </Card>
           ) : null}
           <Card className="section-card" title="关键指标与数据质量">
-            <Descriptions
-              column={procurement ? 4 : 3}
-              items={
-                procurement
-                  ? [
-                      {
-                        key: "warehouse",
-                        label: "仓内库存",
-                        children: display(decision.warehouse_qty),
-                      },
-                      {
-                        key: "transit",
-                        label: "在途库存",
-                        children: display(decision.in_transit_qty),
-                      },
-                      {
-                        key: "sales14",
-                        label: "最近 14 天销量",
-                        children: display(decision.sales_units_14d),
-                      },
-                      {
-                        key: "days",
-                        label: "库存可售天数",
-                        children: display(decision.inventory_days),
-                      },
-                    ]
-                  : [
-                      {
-                        key: "sales",
-                        label: "上一完整自然月净销售额",
-                        children: display(decision.net_sales),
-                      },
-                      {
-                        key: "profit",
-                        label: "经营准利润率",
-                        children: display(decision.profit_rate),
-                      },
-                      {
-                        key: "promotion",
-                        label: "推广费用",
-                        children: display(decision.promotion_expense),
-                      },
-                      {
-                        key: "return",
-                        label: "最近 7 天品退率",
-                        children: display(decision.return_rate_7d),
-                      },
-                      { key: "rule", label: "规则版本", children: decision.rule_version },
-                      {
-                        key: "rules",
-                        label: "触发规则",
-                        children: decision.triggered_rules?.join("、"),
-                      },
-                    ]
-              }
-            />
+            <div className={`evidence-metrics ${procurement ? "procurement" : ""}`}>
+              {metricItems.map(([key, label, value]) => (
+                <div className={`evidence-metric ${key === "rules" ? "wide" : ""}`} key={key}>
+                  <div className="element-label">{label}</div>
+                  <div className="evidence-value">{value}</div>
+                </div>
+              ))}
+            </div>
           </Card>
           {!procurement ? (
             <Card className="section-card" title="AI 解释状态">
@@ -272,7 +308,7 @@ export function DecisionDetailPage() {
                   <div style={{ marginTop: 6 }}>备注：{lane.execution_note}</div>
                 ) : null}
                 {lane.result ? (
-                  <div style={{ marginTop: 6 }}>结果：{display(lane.result)}</div>
+                  <div style={{ marginTop: 6 }}>结果：{humanDisplay(lane.result)}</div>
                 ) : null}
                 {lane.owner_role === status?.role &&
                 ["pending", "executed"].includes(lane.execution_state) ? (
@@ -292,7 +328,13 @@ export function DecisionDetailPage() {
         <div className="detail-stack">
           <Card className="section-card" title="审核结果">
             <Space>
-              {decision.review_state ? <StatusTag value={decision.review_state} /> : null}
+              {decision.review_state ? (
+                <StatusTag
+                  value={
+                    decision.review_state === "pending" ? "awaiting_review" : decision.review_state
+                  }
+                />
+              ) : null}
               {decision.reviewed_by ? (
                 <span className="muted">
                   {decision.reviewed_by} ·{" "}

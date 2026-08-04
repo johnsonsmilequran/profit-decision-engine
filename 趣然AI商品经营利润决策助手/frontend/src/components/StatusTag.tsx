@@ -22,6 +22,13 @@ const labels: Record<string, string> = {
   forbid: "禁止补货",
   no_replenishment: "不补货",
   not_generated: "不生成",
+  undetermined: "无法判定",
+  large_hit: "大爆品",
+  small_hit: "小爆品",
+  normal: "普通品",
+  new: "新品",
+  eliminated: "淘汰品",
+  data_error: "数据异常",
 };
 
 const colors: Record<string, string> = {
@@ -42,6 +49,11 @@ const colors: Record<string, string> = {
   replenish: "cyan",
   invest: "blue",
   maintain: "default",
+  large_hit: "blue",
+  small_hit: "geekblue",
+  new: "cyan",
+  eliminated: "volcano",
+  data_error: "error",
 };
 
 export function StatusTag({ value }: { value: string }) {

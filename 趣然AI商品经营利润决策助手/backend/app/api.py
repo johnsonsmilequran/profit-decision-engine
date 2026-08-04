@@ -710,12 +710,14 @@ def complete_action(
         raise HTTPException(
             status_code=403, detail={"code": "ACCESS_DENIED", "message": "当前账号无权访问此内容。"}
         )
-    target_state = "result_recorded" if request.result is not None else "executed"
+    recording_result = request.result is not None
+    source_state = "executed" if recording_result else "pending"
+    target_state = "result_recorded" if recording_result else "executed"
     updated_id = db.scalar(
         update(ActionItem)
         .where(
             ActionItem.action_id == action_id,
-            ActionItem.execution_state.in_(("pending", "executed")),
+            ActionItem.execution_state == source_state,
             ActionItem.execution_version == request.version,
         )
         .values(
@@ -744,9 +746,9 @@ def complete_action(
         ActionEvent(
             action_id=action_id,
             decision_id=action.decision_id,
-            event_type="result_recorded" if request.result is not None else "action_executed",
+            event_type="result_recorded" if recording_result else "action_executed",
             actor_ref=actor.actor_ref,
-            from_state=action.execution_state,
+            from_state=source_state,
             to_state=target_state,
             from_version=request.version,
             to_version=request.version + 1,
@@ -801,22 +803,22 @@ def trace_events(
             }
         )
     for event, decision, action in db.execute(action_query).all():
-        events.append(
-            {
-                "event_id": f"action-{event.id}",
-                "event_type": event.event_type,
-                "decision_id": decision.decision_id,
-                "batch_id": decision.batch_id,
-                "spu_id": decision.spu_id,
-                "action": action.action_value,
-                "from_state": event.from_state,
-                "to_state": event.to_state,
-                "actor_ref": event.actor_ref,
-                "note": event.note,
-                "occurred_at": event.occurred_at,
-                "rule_version": decision.rule_version,
-            }
-        )
+        item: dict[str, object] = {
+            "event_id": f"action-{event.id}",
+            "event_type": event.event_type,
+            "decision_id": decision.decision_id,
+            "batch_id": decision.batch_id,
+            "spu_id": decision.spu_id,
+            "action": action.action_value,
+            "from_state": event.from_state,
+            "to_state": event.to_state,
+            "actor_ref": event.actor_ref,
+            "note": event.note,
+            "occurred_at": event.occurred_at,
+        }
+        if actor.role != "procurement":
+            item["rule_version"] = decision.rule_version
+        events.append(item)
     events.sort(
         key=lambda item: (
             item["occurred_at"]

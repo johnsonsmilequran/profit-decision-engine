@@ -127,7 +127,11 @@ export function BatchDetailPage() {
                         </Button>
                       ),
                     },
-                    { title: "类型", dataIndex: "category" },
+                    {
+                      title: "类型",
+                      dataIndex: "category",
+                      render: (value: string) => <StatusTag value={value} />,
+                    },
                     {
                       title: "经营动作",
                       dataIndex: "main_action",
@@ -141,7 +145,9 @@ export function BatchDetailPage() {
                     {
                       title: "审核",
                       dataIndex: "review_state",
-                      render: (value: string) => <StatusTag value={value} />,
+                      render: (value: string) => (
+                        <StatusTag value={value === "pending" ? "awaiting_review" : value} />
+                      ),
                     },
                   ]}
                 />

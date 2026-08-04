@@ -155,7 +155,9 @@ export function ActionListPage() {
                     {
                       title: "审核",
                       dataIndex: "review_state",
-                      render: (value: string) => <StatusTag value={value} />,
+                      render: (value: string) => (
+                        <StatusTag value={value === "pending" ? "awaiting_review" : value} />
+                      ),
                     },
                   ]),
               {

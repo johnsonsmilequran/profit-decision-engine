@@ -42,7 +42,11 @@ export function TracePage() {
       <PageHeader
         kicker="PAGE-F08-01 · 规则与数据溯源"
         title="追溯记录"
-        description="从每次成功审核、分轨执行与结果反向定位原批次、SPU、规则版本和操作人；新批次不覆盖历史快照。"
+        description={
+          query.data?.role === "procurement"
+            ? "追踪本人采购动作与结果，定位原批次和 SPU；仅显示完成采购任务所需信息。"
+            : "从每次成功审核、分轨执行与结果反向定位原批次、SPU、规则版本和操作人；新批次不覆盖历史快照。"
+        }
       />
       <Card className="section-card">
         <div className="filter-bar">
@@ -102,7 +106,9 @@ export function TracePage() {
                 ),
               },
               { title: "操作人", dataIndex: "actor_ref" },
-              { title: "规则版本", dataIndex: "rule_version" },
+              ...(query.data?.role === "procurement"
+                ? []
+                : [{ title: "规则版本", dataIndex: "rule_version" }]),
               {
                 title: "备注",
                 dataIndex: "note",
