@@ -42,11 +42,16 @@ function ExistingBatch({ batchId }: { batchId: string }) {
   if (query.isError || !query.data) return <section data-page-id="PAGE-F01-02"><div className="empty-state"><strong>批次无法打开</strong><p>记录不存在或服务暂时不可用。</p><a className="button" href="/batches">返回列表</a></div></section>
   const batch = query.data
   return <section data-page-id="PAGE-F01-02">
-    <a className="back-link" href="/batches">← 返回数据批次</a>
-    <div className="page-heading"><div><p className="overline">批次详情</p><h1>{batch.code}</h1><p className="muted">{batch.period_start} 至 {batch.period_end} · 截止 {batch.business_cutoff_date} · {batch.source_file_name}</p></div><span className={`status status-${batch.status}`}>{batchStatus(batch.status)}</span></div>
+    <div className="page-heading"><div><p className="overline">Batch Detail</p><h1>导入与批次详情</h1><p className="muted">核对导入声明、校验结果与冻结指标，并进入该批次唯一行动清单。</p></div><div className="heading-actions"><a className="button" href="/batches">返回批次列表</a><a className="button" href="/batches/new">新建导入</a></div></div>
+    <section className="batch-detail-hero">
+      <div><div className="immutable-title"><span aria-hidden="true">✓</span><div><small>不可变批次</small><h2>{batch.code}</h2></div></div><span className={`status status-${batch.status}`}>{batchStatus(batch.status)}</span><p>该批次的导入声明、校验结果、冻结快照与固定规则结论不会被后续文件覆盖。</p><div className="batch-detail-meta"><div><span>事业部</span><strong>{batch.business_unit}</strong></div><div><span>数据期间</span><strong>{batch.period_start} 至 {batch.period_end}</strong></div><div><span>业务截止日</span><strong>{batch.business_cutoff_date}</strong></div><div><span>源文件</span><strong>{batch.source_file_name}</strong></div><div><span>提交人 / 时间</span><strong>{batch.created_by} · {formatDate(batch.created_at)}</strong></div><div><span>规则版本</span><strong>{batch.rule_version ?? '待生成'}</strong></div></div></div>
+      <aside><p className="overline">Next Step</p><h2>{batch.status === 'ready' ? '行动清单已生成' : '等待规则处理完成'}</h2><p>{batch.status === 'ready' ? '后续审核与执行会引用这里冻结的事实，原批次保持只读。' : '页面会自动刷新当前处理阶段。'}</p>{batch.status === 'ready' ? <a className="button primary-button full-button" href={`/actions?batch_id=${batch.id}`}>进入行动清单</a> : <button className="button full-button" disabled>清单尚未就绪</button>}</aside>
+    </section>
     {(batch.status === 'received' || batch.status === 'processing') ? <div className="processing-banner"><span className="spinner" />后台正在解析并固化经营事实，本页会自动刷新。</div> : null}
     {batch.status === 'failed' ? <div className="alert">处理失败：{batch.failure_code ?? 'unknown_failure'}。原始文件已保留，可据错误修正后重新导入。</div> : null}
-    <div className="stat-row"><Stat label="有效 SPU" value={batch.valid_count} /><Stat label="拒绝" value={batch.rejected_count} /><Stat label="降级" value={batch.degraded_count} /><Stat label="警告" value={batch.warning_count} /><Stat label="规则版本" value={batch.rule_version} /></div>
+    <section className="panel process-panel"><div className="section-title"><div><h2>处理阶段</h2><p>AI 解读异步生成，不阻塞固定规则清单就绪。</p></div><span className={`status status-${batch.status}`}>{batchStatus(batch.status)}</span></div><div className="process-track">{processSteps(batch.status).map(step => <div key={step.label} className={step.done ? 'done' : ''}><span>{step.done ? '✓' : step.index}</span><strong>{step.label}</strong><small>{step.note}</small></div>)}</div></section>
+    <div className="batch-summary detail-summary"><Stat label="识别明细" value={batch.snapshots.length + (batch.rejected_count ?? 0)} /><Stat label="身份有效 SPU" value={batch.valid_count} /><Stat label="拒绝行" value={batch.rejected_count} /><Stat label="字段级降级" value={batch.degraded_count} /><Stat label="批次警告" value={batch.warning_count} /></div>
+    <div className="notice">{(batch.valid_count ?? 0) >= 10 && (batch.valid_count ?? 0) <= 20 ? '当前有效 SPU 数量符合 10—20 个首轮验收规模。' : 'SPU 数量不属于首轮验收规模，但不会仅因数量阻断合法批次。'} 缺失值均保持未知，不以 0 代填。</div>
     <div className="panel section-panel"><div className="section-title"><div><h2>冻结快照与规则结果</h2><p>点击任一 SPU 查看来源证据，缺失字段保持未知。</p></div></div>{batch.snapshots.length === 0 ? <p className="muted">处理完成后显示快照。</p> : <div className="table-scroll"><table><thead><tr><th>SPU</th><th>归属</th><th>销售额</th><th>利润率</th><th>质退率 / 库存天数</th><th>规则结论</th></tr></thead><tbody>{batch.snapshots.map(snapshot => <tr className="clickable" key={snapshot.id} onClick={() => setSelected(snapshot)}><td><strong>{snapshot.name}</strong><small>{snapshot.spu_id}</small></td><td>{snapshot.store}<small>{snapshot.platform} · {snapshot.operator_ref}</small></td><td>{numberOrUnknown(snapshot.net_sales_prev_month)}</td><td>{percentOrUnknown(snapshot.operating_profit_rate)}</td><td>{percentOrUnknown(snapshot.quality_return_rate_7d)} / {numberOrUnknown(snapshot.inventory_days)}</td><td>{snapshot.decision?.business_action ? actionText[snapshot.decision.business_action] ?? snapshot.decision.business_action : '依据不足'}<small>{snapshot.decision?.trigger_rule ?? '—'}</small></td></tr>)}</tbody></table></div>}</div>
     <div className="panel section-panel"><div className="section-title"><div><h2>导入质量问题</h2><p>每条问题均保留来源、影响与处理方式。</p></div><select value={severity} onChange={event => setSeverity(event.target.value)}><option value="all">全部级别</option><option value="rejected">拒绝</option><option value="degraded">降级</option><option value="warning">警告</option></select></div>{issues.length === 0 ? <p className="muted">当前筛选下没有问题。</p> : <IssueTable issues={issues} />}</div>
     {selected ? <EvidenceDrawer snapshot={selected} onClose={() => setSelected(null)} /> : null}
@@ -60,3 +65,16 @@ function batchStatus(value: string) { return ({ received: '已接收', processin
 function numberOrUnknown(value: number | null) { return value === null ? '未知' : value.toLocaleString('zh-CN', { maximumFractionDigits: 2 }) }
 function percentOrUnknown(value: number | null) { return value === null ? '未知' : `${(value * 100).toFixed(2)}%` }
 function errorText(code?: string) { return ({ invalid_complete_natural_month: '期间必须是完整自然月，且业务截止日不得早于期间结束日。', xlsx_file_required: '请选择有效的 .xlsx 文件。', forbidden: '当前角色只能查看批次，不能上传。' } as Record<string, string>)[code ?? ''] ?? '批次创建失败，请核对内容后重试。' }
+function formatDate(value: string) { return new Date(value).toLocaleString('zh-CN') }
+function processSteps(status: string) {
+  const ready = status === 'ready'
+  const processing = status === 'processing'
+  return [
+    { index: '01', label: '文件接收', note: '原始 XLSX 已内容寻址保存', done: true },
+    { index: '02', label: '字段校验', note: '身份与经营字段逐项定位', done: ready || processing },
+    { index: '03', label: '指标读取', note: '采用值与缺失状态被明确记录', done: ready || processing },
+    { index: '04', label: '快照冻结', note: '期间、口径和来源不可覆盖', done: ready },
+    { index: '05', label: '固定规则', note: '规则结论独立于 AI 生成', done: ready },
+    { index: '06', label: '清单就绪', note: '进入唯一行动清单继续闭环', done: ready },
+  ]
+}
