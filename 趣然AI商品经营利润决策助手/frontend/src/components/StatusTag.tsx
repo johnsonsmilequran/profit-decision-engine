@@ -1,0 +1,49 @@
+import { Tag } from "antd";
+
+const labels: Record<string, string> = {
+  received: "已接收",
+  validating: "校验中",
+  rules_processing: "规则处理中",
+  ready: "已完成",
+  failed: "处理失败",
+  pending: "待处理",
+  awaiting_review: "待审核",
+  approved: "已通过",
+  rejected: "已驳回",
+  executed: "已执行",
+  result_recorded: "已记录结果",
+  closed: "已关闭",
+  clearance: "清仓",
+  stop_loss: "止损",
+  observe: "观察",
+  invest: "加投",
+  maintain: "维持",
+  replenish: "补货",
+  forbid: "禁止补货",
+  no_replenishment: "不补货",
+  not_generated: "不生成",
+};
+
+const colors: Record<string, string> = {
+  ready: "success",
+  approved: "success",
+  executed: "success",
+  result_recorded: "success",
+  failed: "error",
+  rejected: "error",
+  clearance: "error",
+  stop_loss: "volcano",
+  forbid: "error",
+  pending: "processing",
+  awaiting_review: "processing",
+  validating: "processing",
+  rules_processing: "processing",
+  observe: "warning",
+  replenish: "cyan",
+  invest: "blue",
+  maintain: "default",
+};
+
+export function StatusTag({ value }: { value: string }) {
+  return <Tag color={colors[value] ?? "default"}>{labels[value] ?? value}</Tag>;
+}

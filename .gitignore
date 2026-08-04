@@ -6,6 +6,9 @@
 
 # 依赖与缓存
 node_modules/
+.npm-cache/
+dist/
+*.egg-info/
 __pycache__/
 *.py[cod]
 .venv*/
