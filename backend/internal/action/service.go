@@ -81,18 +81,23 @@ func (s *Service) List(ctx context.Context, actor Principal, filters Filters) (L
 }
 
 func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, error) {
-	list, err := s.List(ctx, actor, Filters{Page: 1, Limit: 20})
+	if actor.Role != "operations" && actor.Role != "supervisor" {
+		return Workbench{}, ErrForbidden
+	}
+	result := Workbench{Role: actor.Role, Items: []Item{}}
+	if err := s.db.QueryRow(ctx, `SELECT batch_id::text,batch_code,completed_at FROM import_batch WHERE status='ready'
+		ORDER BY business_cutoff_date DESC,completed_at DESC,batch_id DESC LIMIT 1`).
+		Scan(&result.LatestBatchID, &result.LatestBatchCode, &result.BatchCompletedAt); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return result, nil
+		}
+		return Workbench{}, err
+	}
+	list, err := s.List(ctx, actor, Filters{BatchID: result.LatestBatchID, Page: 1, Limit: 20})
 	if err != nil {
 		return Workbench{}, err
 	}
-	result := Workbench{Role: actor.Role, Items: list.Items}
-	if len(list.Items) == 0 {
-		return result, nil
-	}
-	result.LatestBatchID, result.LatestBatchCode = list.Items[0].BatchID, list.Items[0].BatchCode
-	if err := s.db.QueryRow(ctx, `SELECT completed_at FROM import_batch WHERE batch_id=$1`, result.LatestBatchID).Scan(&result.BatchCompletedAt); err != nil {
-		return Workbench{}, err
-	}
+	result.Items = list.Items
 	for _, item := range list.Items {
 		if item.ReviewStatus == "pending" {
 			result.PendingReviewCount++

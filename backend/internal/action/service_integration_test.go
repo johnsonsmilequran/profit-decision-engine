@@ -9,6 +9,45 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+func TestWorkbenchKeepsLatestReadyBatchWhenOperationsHasNoMineItems(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	actorRef := "工作台空待办测试运营"
+	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by)
+		VALUES($1,'工作台空待办运营','operations','玩具事业部负责人','验收运维') ON CONFLICT(actor_ref) DO UPDATE SET active=true`, actorRef); err != nil {
+		t.Fatal(err)
+	}
+	var batchID, batchCode string
+	if err := db.QueryRow(ctx, `INSERT INTO import_batch(batch_code,fingerprint,business_unit,period_start,period_end,business_cutoff_date,
+		source_file_name,source_file_path,source_file_sha256,status,created_by,completed_at)
+		VALUES('WORKBENCH-EMPTY-'||gen_random_uuid()::text,gen_random_bytes(32),'玩具事业部','2099-01-01','2099-01-31','2099-02-01',
+		'工作台空待办测试.xlsx','/tmp/工作台空待办测试.xlsx',gen_random_bytes(32),'ready',$1,now()) RETURNING batch_id::text,batch_code`, actorRef).
+		Scan(&batchID, &batchCode); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		_, _ = db.Exec(ctx, `DELETE FROM import_batch WHERE batch_id=$1`, batchID)
+		_, _ = db.Exec(ctx, `DELETE FROM role_mapping WHERE actor_ref=$1`, actorRef)
+	}()
+
+	result, err := NewService(db).Workbench(ctx, Principal{ActorRef: actorRef, Name: "工作台空待办运营", Role: "operations"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.LatestBatchID != batchID || result.LatestBatchCode != batchCode || result.BatchCompletedAt.IsZero() || len(result.Items) != 0 {
+		t.Fatalf("workbench latest batch=%s/%s completed=%v items=%d", result.LatestBatchID, result.LatestBatchCode,
+			result.BatchCompletedAt, len(result.Items))
+	}
+}
+
 func TestActionListUsesLatestReadyBatchAndAppliesRoleProjection(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {
