@@ -137,7 +137,6 @@
     .border-t { border-top-width: 1px; border-top-style: solid; }
     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .desktop-app { min-height: 100vh; }
-    .device-notice { display: none; min-height: 100vh; padding: var(--space-5); }
 
     .sidebar {
       position: fixed;
@@ -527,10 +526,6 @@
       .page-shell { padding: var(--container-gutter-tablet); }
       .context-secondary { display: none; }
     }
-    @media (max-width: 1023px) {
-      .desktop-app { display: none; }
-      .device-notice { display: grid; place-items: center; }
-    }
     @media (prefers-reduced-motion: reduce) {
       .page-enter { animation: none; }
       .nav-link, .btn-primary, .btn-secondary, .icon-button, .link-button, .filter-button, .metric-card, .task-row, .toast { transition: none; }
@@ -538,15 +533,6 @@
   </style>
 </head>
 <body>
-  <section class="device-notice" aria-label="设备访问提示">
-    <div class="surface surface-raised w-full max-w-md p-6 text-center">
-      <div class="brand-mark mx-auto mb-4"><i class="ph ph-desktop text-xl" aria-hidden="true"></i></div>
-      <h1 class="page-title mb-3">请使用电脑访问</h1>
-      <p class="muted mb-5">运营工作台包含完整金额、利润率、动作状态与批次信息。为避免关键经营信息被截断，请在宽度不低于 1024px 的电脑浏览器中使用。</p>
-      <div class="context-chip"><i class="ph ph-monitor" aria-hidden="true"></i>建议分辨率 1280 × 800 及以上</div>
-    </div>
-  </section>
-
   <div class="desktop-app">
     <aside class="sidebar flex flex-col" aria-label="任务导航">
       <div class="flex h-16 items-center gap-3 px-4">
