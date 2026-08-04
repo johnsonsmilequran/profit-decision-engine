@@ -23,7 +23,7 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	if err != nil {
 		t.Fatalf("connect PostgreSQL: %v", err)
 	}
-	defer db.Close()
+	t.Cleanup(db.Close)
 
 	actorRef := "integration-batch-operator"
 	_, err = db.Exec(ctx, `INSERT INTO role_mapping(actor_ref, display_name, role, approved_by, configured_by)
@@ -87,6 +87,11 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	if createdCount != 1 {
 		t.Fatalf("concurrent non-idempotent results=%d, want 1", createdCount)
 	}
+	t.Cleanup(func() {
+		if _, cleanupErr := db.Exec(context.Background(), `UPDATE import_batch SET status='failed',failure_code='integration_test_complete' WHERE batch_id=$1`, created.ID); cleanupErr != nil {
+			t.Errorf("retire integration batch: %v", cleanupErr)
+		}
+	})
 	duplicate, err := service.Create(ctx, principal, input)
 	if err != nil {
 		t.Fatalf("repeat batch: %v", err)
