@@ -106,7 +106,7 @@ func (s *Server) retryAIExplanation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := s.actions.RetryAI(r.Context(), principal, chi.URLParam(r, "linkID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "retry ai explanation")
+	s.writeActionCommandResult(w, r, principal, "link", chi.URLParam(r, "linkID"), result, err, "retry ai explanation")
 }
 
 func (s *Server) sendOANotification(w http.ResponseWriter, r *http.Request) {
@@ -120,7 +120,7 @@ func (s *Server) sendOANotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := s.actions.SendOA(r.Context(), principal, chi.URLParam(r, "taskID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "send oa notification")
+	s.writeActionCommandResult(w, r, principal, "task", chi.URLParam(r, "taskID"), result, err, "send oa notification")
 }
 
 func (s *Server) retryOANotification(w http.ResponseWriter, r *http.Request) {
@@ -134,7 +134,7 @@ func (s *Server) retryOANotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := s.actions.RetryOA(r.Context(), principal, chi.URLParam(r, "taskID"), chi.URLParam(r, "notificationID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "retry oa notification")
+	s.writeActionCommandResult(w, r, principal, "task", chi.URLParam(r, "taskID"), result, err, "retry oa notification")
 }
 
 func (s *Server) overrideSuggestion(w http.ResponseWriter, r *http.Request) {
@@ -148,7 +148,7 @@ func (s *Server) overrideSuggestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := s.actions.Override(r.Context(), principal, chi.URLParam(r, "linkID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "override suggestion")
+	s.writeActionCommandResult(w, r, principal, "link", chi.URLParam(r, "linkID"), result, err, "override suggestion")
 }
 
 func (s *Server) terminateSuggestion(w http.ResponseWriter, r *http.Request) {
@@ -162,7 +162,7 @@ func (s *Server) terminateSuggestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := s.actions.Terminate(r.Context(), principal, chi.URLParam(r, "linkID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "terminate suggestion")
+	s.writeActionCommandResult(w, r, principal, "link", chi.URLParam(r, "linkID"), result, err, "terminate suggestion")
 }
 
 func (s *Server) submitClearanceCompletion(w http.ResponseWriter, r *http.Request) {
@@ -176,7 +176,7 @@ func (s *Server) submitClearanceCompletion(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	result, err := s.actions.SubmitClearance(r.Context(), principal, chi.URLParam(r, "taskID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "submit clearance completion")
+	s.writeActionCommandResult(w, r, principal, "task", chi.URLParam(r, "taskID"), result, err, "submit clearance completion")
 }
 
 func (s *Server) confirmClearanceCompletion(w http.ResponseWriter, r *http.Request) {
@@ -199,7 +199,7 @@ func (s *Server) reviewClearanceCompletion(w http.ResponseWriter, r *http.Reques
 	}
 	input.Decision = decision
 	result, err := s.actions.ReviewClearance(r.Context(), principal, chi.URLParam(r, "taskID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "review clearance completion")
+	s.writeActionCommandResult(w, r, principal, "task", chi.URLParam(r, "taskID"), result, err, "review clearance completion")
 }
 
 func (s *Server) commandPrincipal(w http.ResponseWriter, r *http.Request) (action.Principal, bool) {
@@ -222,8 +222,9 @@ func (s *Server) executeAction(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_json")
 		return
 	}
-	result, err := s.actions.Execute(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "taskID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "execute action")
+	actionPrincipal := action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}
+	result, err := s.actions.Execute(r.Context(), actionPrincipal, chi.URLParam(r, "taskID"), input)
+	s.writeActionCommandResult(w, r, actionPrincipal, "task", chi.URLParam(r, "taskID"), result, err, "execute action")
 }
 
 func (s *Server) recordActionResult(w http.ResponseWriter, r *http.Request) {
@@ -237,8 +238,9 @@ func (s *Server) recordActionResult(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_json")
 		return
 	}
-	result, err := s.actions.RecordResult(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "taskID"), input)
-	writeActionCommandResult(w, result, err, s.logger, "record action result")
+	actionPrincipal := action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}
+	result, err := s.actions.RecordResult(r.Context(), actionPrincipal, chi.URLParam(r, "taskID"), input)
+	s.writeActionCommandResult(w, r, actionPrincipal, "task", chi.URLParam(r, "taskID"), result, err, "record action result")
 }
 
 func decodeJSON(r *http.Request, target interface{}) error {
@@ -247,7 +249,16 @@ func decodeJSON(r *http.Request, target interface{}) error {
 	return decoder.Decode(target)
 }
 
-func writeActionCommandResult(w http.ResponseWriter, result action.Detail, err error, logger *slog.Logger, operation string) {
+func (s *Server) writeActionCommandResult(w http.ResponseWriter, r *http.Request, actor action.Principal, resourceKind, resourceID string, result action.Detail, err error, operation string) {
+	if errors.Is(err, action.ErrForbidden) || errors.Is(err, action.ErrConflict) {
+		eventType := "authorization_denied"
+		if errors.Is(err, action.ErrConflict) {
+			eventType = "version_conflict"
+		}
+		if auditErr := s.actions.RecordCommandAudit(r.Context(), actor, resourceKind, resourceID, eventType, operation); auditErr != nil {
+			s.logger.Error("record command audit", "operation", operation, "error", auditErr)
+		}
+	}
 	if errors.Is(err, action.ErrForbidden) {
 		writeError(w, http.StatusForbidden, "forbidden")
 		return
@@ -265,7 +276,7 @@ func writeActionCommandResult(w http.ResponseWriter, result action.Detail, err e
 		return
 	}
 	if err != nil {
-		logger.Error(operation, "error", err)
+		s.logger.Error(operation, "error", err)
 		writeError(w, http.StatusInternalServerError, "command_failed")
 		return
 	}
@@ -312,7 +323,17 @@ func (s *Server) reviewSuggestion(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_json")
 		return
 	}
-	result, err := s.actions.Review(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, chi.URLParam(r, "linkID"), input)
+	actionPrincipal := action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}
+	result, err := s.actions.Review(r.Context(), actionPrincipal, chi.URLParam(r, "linkID"), input)
+	if errors.Is(err, action.ErrForbidden) || errors.Is(err, action.ErrConflict) {
+		eventType := "authorization_denied"
+		if errors.Is(err, action.ErrConflict) {
+			eventType = "version_conflict"
+		}
+		if auditErr := s.actions.RecordCommandAudit(r.Context(), actionPrincipal, "link", chi.URLParam(r, "linkID"), eventType, "review suggestion"); auditErr != nil {
+			s.logger.Error("record command audit", "operation", "review suggestion", "error", auditErr)
+		}
+	}
 	if errors.Is(err, action.ErrForbidden) {
 		writeError(w, http.StatusForbidden, "forbidden")
 		return

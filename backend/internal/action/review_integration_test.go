@@ -346,6 +346,39 @@ func TestFirstReviewOnPendingContinuationActivatesTask(t *testing.T) {
 	}
 }
 
+func TestCommandAuditPersistsDeniedAndConflictWithoutChangingTask(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	if err := service.RecordCommandAudit(ctx, Principal{ActorRef: "越权运营", Name: "其他运营", Role: "operations"}, "task", taskID, "authorization_denied", "execute action"); err != nil {
+		t.Fatal(err)
+	}
+	if err := service.RecordCommandAudit(ctx, Principal{ActorRef: "并发主管", Name: "并发主管", Role: "supervisor"}, "link", linkID, "version_conflict", "review suggestion"); err != nil {
+		t.Fatal(err)
+	}
+	var auditCount int
+	var reviewStatus, businessState string
+	if err := db.QueryRow(ctx, `SELECT count(*) FROM business_event WHERE task_id=$1
+		AND event_type IN ('authorization_denied','version_conflict')`, taskID).Scan(&auditCount); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.QueryRow(ctx, `SELECT review_status,business_state FROM spu_action_task WHERE task_id=$1`, taskID).Scan(&reviewStatus, &businessState); err != nil {
+		t.Fatal(err)
+	}
+	if auditCount != 2 || reviewStatus != "pending" || businessState != "pending_review" {
+		t.Fatalf("audit count=%d state=%s/%s", auditCount, reviewStatus, businessState)
+	}
+}
+
 func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (string, string) {
 	t.Helper()
 	var actor, batchID, listID, snapshotID, decisionID, taskID, revisionID, linkID string
