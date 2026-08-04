@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -147,7 +148,7 @@ func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T)
 			t.Fatalf("%s execute error=%v", name, err)
 		}
 	}
-	if _, err := service.SendOA(ctx, otherOperator, taskID, OANotificationInput{RecipientActorRef: "仓库协同-001", FeedbackRequest: "请反馈禁补处理结果"}); !errors.Is(err, ErrForbidden) {
+	if _, err := service.SendOA(ctx, otherOperator, taskID, OANotificationInput{RecipientUserID: "ding-warehouse-001", FeedbackRequest: "请反馈禁补处理结果"}); !errors.Is(err, ErrForbidden) {
 		t.Fatalf("non-owner OA error=%v", err)
 	}
 	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 99, Note: "旧页面执行", IdempotencyKey: "旧经营版本-" + linkID}); !errors.Is(err, ErrConflict) {
@@ -167,13 +168,18 @@ func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T)
 	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 1, Note: "第二次旧版本", IdempotencyKey: "第二次旧经营版本-" + linkID}); !errors.Is(err, ErrConflict) {
 		t.Fatalf("second stale business execution error=%v", err)
 	}
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message_id":"OA-双轨验收-001"}`))
+		if r.URL.Path == "/accessToken" {
+			_, _ = w.Write([]byte(`{"accessToken":"钉钉双轨验收令牌","expireIn":7200}`))
+			return
+		}
+		w.Header().Set("x-acs-request-id", "钉钉双轨验收-001")
+		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
-	service.SetOASender(oa.NewClient(server.URL, "OA双轨验收令牌"))
-	afterOA, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientActorRef: "仓库协同-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
+	service.SetOASender(oa.NewDingTalkClient("钉钉双轨应用", "钉钉双轨密钥", "钉钉双轨机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
+	afterOA, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientUserID: "ding-warehouse-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -251,22 +257,31 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 		t.Fatal(err)
 	}
 	attempts := 0
-	var received oa.Message
+	var receivedText string
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/accessToken" {
+			_, _ = w.Write([]byte(`{"accessToken":"钉钉集成测试令牌","expireIn":7200}`))
+			return
+		}
 		attempts++
-		if err := json.NewDecoder(r.Body).Decode(&received); err != nil {
+		var outbound struct {
+			MsgParam string `json:"msgParam"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&outbound); err != nil {
 			t.Fatal(err)
 		}
+		receivedText = outbound.MsgParam
 		if attempts == 1 {
-			http.Error(w, "公司 OA 暂时不可用", http.StatusBadGateway)
+			http.Error(w, "钉钉机器人暂时不可用", http.StatusBadGateway)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message_id":"OA-补发成功-001"}`))
+		w.Header().Set("x-acs-request-id", "钉钉补发成功-001")
+		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
-	service.SetOASender(oa.NewClient(server.URL, "OA集成测试令牌"))
-	failed, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientActorRef: "采购责任人-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
+	service.SetOASender(oa.NewDingTalkClient("钉钉集成应用", "钉钉集成密钥", "钉钉集成机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
+	failed, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientUserID: "ding-purchase-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -291,8 +306,10 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 	if err := db.QueryRow(ctx, `SELECT spu_id FROM spu_action_task WHERE task_id=$1`, taskID).Scan(&expectedSPUID); err != nil {
 		t.Fatal(err)
 	}
-	if received.TaskReference != taskID || received.SPUID != expectedSPUID || received.Action != "prohibit_restock" || received.Operator != "缘一" {
-		t.Fatalf("OA whitelist payload=%+v", received)
+	for _, expected := range []string{taskID, expectedSPUID, "prohibit_restock", "缘一"} {
+		if !strings.Contains(receivedText, expected) {
+			t.Fatalf("DingTalk whitelist payload missing %q: %s", expected, receivedText)
+		}
 	}
 	var persisted map[string]json.RawMessage
 	if err := db.QueryRow(ctx, `SELECT message_payload FROM oa_notification WHERE notification_id=$1`, retried.Notifications[0].ID).Scan(&persisted); err != nil {
@@ -321,8 +338,8 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 		t.Fatal(err)
 	}
 	actorRef := "oa-reminder-" + linkID
-	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by)
-		VALUES($1,'缘一','operations','催办集成测试批准','催办集成测试配置')`, actorRef); err != nil {
+	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by,dingtalk_user_id)
+		VALUES($1,'缘一','operations','催办集成测试批准','催办集成测试配置','ding-operator-reminder')`, actorRef); err != nil {
 		t.Fatal(err)
 	}
 	location, err := time.LoadLocation("Asia/Shanghai")
@@ -332,17 +349,22 @@ func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfi
 	current := time.Date(2026, 8, 4, 23, 30, 0, 0, location)
 	service.now = func() time.Time { return current }
 	var attempts atomic.Int32
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/accessToken" {
+			_, _ = w.Write([]byte(`{"accessToken":"钉钉催办测试令牌","expireIn":7200}`))
+			return
+		}
 		attempt := attempts.Add(1)
 		if attempt == 1 {
-			http.Error(w, "公司 OA 暂时不可用", http.StatusBadGateway)
+			http.Error(w, "钉钉机器人暂时不可用", http.StatusBadGateway)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message_id":"OA-每日催办-跨日"}`))
+		w.Header().Set("x-acs-request-id", "钉钉每日催办-跨日")
+		_, _ = w.Write([]byte(`{"invalidStaffIdList":[],"flowControlledStaffIdList":[],"filteredStaffIdList":[]}`))
 	}))
 	defer server.Close()
-	service.SetOASender(oa.NewClient(server.URL, "OA催办测试令牌"))
+	service.SetOASender(oa.NewDingTalkClient("钉钉催办应用", "钉钉催办密钥", "钉钉催办机器人", server.URL+"/accessToken", server.URL+"/batchSend"))
 	runConcurrent := func() int {
 		t.Helper()
 		type outcome struct {

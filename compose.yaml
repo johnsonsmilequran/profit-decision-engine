@@ -40,8 +40,7 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       DINGTALK_CLIENT_ID: ${DINGTALK_CLIENT_ID:-}
       DINGTALK_CLIENT_SECRET: ${DINGTALK_CLIENT_SECRET:-}
-      OA_MESSAGE_URL: ${OA_MESSAGE_URL:-}
-      OA_TOKEN: ${OA_TOKEN:-}
+      DINGTALK_ROBOT_CODE: ${DINGTALK_ROBOT_CODE:-}
       IMPORT_FILE_DIR: /data/imports
     volumes:
       - import-files:/data/imports
@@ -57,8 +56,9 @@ services:
       DATABASE_URL: postgres://profit_decision:${POSTGRES_PASSWORD}@db:5432/profit_decision?sslmode=disable
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?PUBLIC_BASE_URL must be set}
       IMPORT_FILE_DIR: /data/imports
-      OA_MESSAGE_URL: ${OA_MESSAGE_URL:-}
-      OA_TOKEN: ${OA_TOKEN:-}
+      DINGTALK_CLIENT_ID: ${DINGTALK_CLIENT_ID:-}
+      DINGTALK_CLIENT_SECRET: ${DINGTALK_CLIENT_SECRET:-}
+      DINGTALK_ROBOT_CODE: ${DINGTALK_ROBOT_CODE:-}
       LITELLM_BASE_URL: ${LITELLM_BASE_URL:-}
       LITELLM_API_KEY: ${LITELLM_API_KEY:-}
       LITELLM_MODEL: ${LITELLM_MODEL:-}

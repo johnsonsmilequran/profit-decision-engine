@@ -24,7 +24,7 @@
 
 行动域将每周不可变决策与跨周稳定任务分离：`spu_action_task` 保持 SPU 任务身份，`decision_task_link` 精确关联当周决策和最近更早前序，`action_revision` 保存固定规则或主管改判版本。运营与主管工作台、行动清单和建议详情均读取这些真实投影；整体审核、人工改判、执行后终止、双轨执行、经营结果及清仓完成双人确认均通过版本号与幂等键写入 PostgreSQL 追加事件。
 
-OA 协同由 API/Worker 通过 `OA_MESSAGE_URL` 和 `OA_TOKEN` 调用公司适配入口。消息使用独立最小字段 DTO；发送、失败、人工补发和每日清仓催办均持久化到 `oa_notification`，送达不等同于业务确认。未配置 OA 时默认失败并保留受控错误状态，不伪造回执。
+钉钉协同由 API/Worker 使用 `DINGTALK_CLIENT_ID`、`DINGTALK_CLIENT_SECRET` 和 `DINGTALK_ROBOT_CODE` 调用企业内部机器人单聊接口，收件人是公司钉钉 User ID。消息正文使用独立最小字段 DTO；调用、失败、人工补发和每日清仓催办均持久化到 `oa_notification`。接口受理不等同于送达、已读或业务确认；未配置时默认失败并保留受控错误状态，不伪造回执。
 
 AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
 

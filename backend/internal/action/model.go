@@ -135,7 +135,7 @@ type Detail struct {
 type Notification struct {
 	ID                string     `json:"id"`
 	LocalDate         string     `json:"local_date"`
-	RecipientActorRef string     `json:"recipient_actor_ref"`
+	RecipientUserID   string     `json:"recipient_user_id"`
 	TemplateCode      string     `json:"template_code"`
 	Type              string     `json:"type"`
 	Status            string     `json:"status"`
@@ -234,8 +234,8 @@ type ClearanceReviewInput struct {
 }
 
 type OANotificationInput struct {
-	RecipientActorRef string `json:"recipient_actor_ref"`
-	FeedbackRequest   string `json:"feedback_request"`
+	RecipientUserID string `json:"recipient_user_id"`
+	FeedbackRequest string `json:"feedback_request"`
 }
 
 type OARetryInput struct {

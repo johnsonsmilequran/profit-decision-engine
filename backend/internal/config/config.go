@@ -12,10 +12,9 @@ type Config struct {
 	PublicBaseURL        string
 	DingTalkClientID     string
 	DingTalkClientSecret string
+	DingTalkRobotCode    string
 	CookieSecure         bool
 	ImportFileDir        string
-	OAMessageURL         string
-	OAToken              string
 	LiteLLMBaseURL       string
 	LiteLLMAPIKey        string
 	LiteLLMModel         string
@@ -28,10 +27,9 @@ func Load() (Config, error) {
 		PublicBaseURL:        strings.TrimRight(strings.TrimSpace(os.Getenv("PUBLIC_BASE_URL")), "/"),
 		DingTalkClientID:     strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_ID")),
 		DingTalkClientSecret: strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_SECRET")),
+		DingTalkRobotCode:    strings.TrimSpace(os.Getenv("DINGTALK_ROBOT_CODE")),
 		CookieSecure:         value("COOKIE_SECURE", "true") == "true",
 		ImportFileDir:        value("IMPORT_FILE_DIR", "./var/imports"),
-		OAMessageURL:         strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
-		OAToken:              strings.TrimSpace(os.Getenv("OA_TOKEN")),
 		LiteLLMBaseURL:       strings.TrimSpace(os.Getenv("LITELLM_BASE_URL")),
 		LiteLLMAPIKey:        strings.TrimSpace(os.Getenv("LITELLM_API_KEY")),
 		LiteLLMModel:         strings.TrimSpace(os.Getenv("LITELLM_MODEL")),
@@ -47,13 +45,14 @@ func Load() (Config, error) {
 
 func LoadWorker() (Config, error) {
 	cfg := Config{
-		DatabaseURL:    strings.TrimSpace(os.Getenv("DATABASE_URL")),
-		ImportFileDir:  value("IMPORT_FILE_DIR", "./var/imports"),
-		OAMessageURL:   strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
-		OAToken:        strings.TrimSpace(os.Getenv("OA_TOKEN")),
-		LiteLLMBaseURL: strings.TrimSpace(os.Getenv("LITELLM_BASE_URL")),
-		LiteLLMAPIKey:  strings.TrimSpace(os.Getenv("LITELLM_API_KEY")),
-		LiteLLMModel:   strings.TrimSpace(os.Getenv("LITELLM_MODEL")),
+		DatabaseURL:          strings.TrimSpace(os.Getenv("DATABASE_URL")),
+		ImportFileDir:        value("IMPORT_FILE_DIR", "./var/imports"),
+		DingTalkClientID:     strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_ID")),
+		DingTalkClientSecret: strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_SECRET")),
+		DingTalkRobotCode:    strings.TrimSpace(os.Getenv("DINGTALK_ROBOT_CODE")),
+		LiteLLMBaseURL:       strings.TrimSpace(os.Getenv("LITELLM_BASE_URL")),
+		LiteLLMAPIKey:        strings.TrimSpace(os.Getenv("LITELLM_API_KEY")),
+		LiteLLMModel:         strings.TrimSpace(os.Getenv("LITELLM_MODEL")),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")

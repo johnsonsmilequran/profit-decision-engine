@@ -17,7 +17,7 @@ func (s *Service) SendOA(ctx context.Context, actor Principal, taskID string, in
 	if actor.Role != "operations" {
 		return Detail{}, ErrForbidden
 	}
-	if strings.TrimSpace(input.RecipientActorRef) == "" || strings.TrimSpace(input.FeedbackRequest) == "" {
+	if strings.TrimSpace(input.RecipientUserID) == "" || strings.TrimSpace(input.FeedbackRequest) == "" {
 		return Detail{}, ErrInvalidState
 	}
 	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
@@ -43,7 +43,7 @@ func (s *Service) SendOA(ctx context.Context, actor Principal, taskID string, in
 	if reviewStatus != "approved" || inventoryAction == "" || inventoryState != "pending_execution" {
 		return Detail{}, ErrInvalidState
 	}
-	message := oa.Message{RecipientActorRef: strings.TrimSpace(input.RecipientActorRef), TemplateCode: coordinationTemplate,
+	message := oa.Message{RecipientUserID: strings.TrimSpace(input.RecipientUserID), TemplateCode: coordinationTemplate,
 		SPUID: spuID, Action: inventoryAction, Operator: operator, FeedbackRequest: strings.TrimSpace(input.FeedbackRequest),
 		TaskReference: taskID}
 	payload, err := json.Marshal(message)
@@ -55,7 +55,7 @@ func (s *Service) SendOA(ctx context.Context, actor Principal, taskID string, in
 	err = tx.QueryRow(ctx, `INSERT INTO oa_notification(task_id,local_date,recipient_actor_ref,template_code,notification_type,status,requested_by,message_payload)
 		VALUES($1,$2,$3,$4,'coordination','pending',$5,$6)
 		ON CONFLICT(task_id,local_date,recipient_actor_ref,template_code) DO UPDATE SET task_id=excluded.task_id
-		RETURNING notification_id::text,status`, taskID, localDate, message.RecipientActorRef, coordinationTemplate, actor.ActorRef, payload).
+		RETURNING notification_id::text,status`, taskID, localDate, message.RecipientUserID, coordinationTemplate, actor.ActorRef, payload).
 		Scan(&notificationID, &status)
 	if err != nil {
 		return Detail{}, err
@@ -151,9 +151,9 @@ func (s *Service) deliverOA(ctx context.Context, notificationID, eventKey string
 		return err
 	}
 	if _, err := tx.Exec(ctx, `INSERT INTO business_event(task_id,link_id,event_type,actor_ref,to_state,details,idempotency_key)
-		VALUES($1,$2,'oa_delivery','system:oa',$3,jsonb_build_object('notification_id',$4::text,'recipient_actor_ref',$5::text,
+		VALUES($1,$2,'oa_delivery','system:dingtalk',$3,jsonb_build_object('notification_id',$4::text,'recipient_user_id',$5::text,
 		'template_code',$6::text,'error_code',$7::text),$8) ON CONFLICT(idempotency_key) DO NOTHING`, taskID, linkID, status,
-		notificationID, message.RecipientActorRef, message.TemplateCode, nullableNote(code), eventKey); err != nil {
+		notificationID, message.RecipientUserID, message.TemplateCode, nullableNote(code), eventKey); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
@@ -173,7 +173,7 @@ func (s *Service) RunClearanceReminders(ctx context.Context) (int, error) {
 
 func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) (int, error) {
 	query := `SELECT t.task_id::text,t.operator_ref,s.spu_id,l.link_id::text,
-		(SELECT rm.actor_ref FROM role_mapping rm WHERE rm.active AND rm.role='operations' AND rm.display_name=t.operator_ref
+		(SELECT rm.dingtalk_user_id FROM role_mapping rm WHERE rm.active AND rm.role='operations' AND rm.display_name=t.operator_ref
 		 ORDER BY rm.configured_at DESC LIMIT 1) FROM spu_action_task t
 		JOIN decision_task_link l ON l.task_id=t.task_id JOIN decision_record d ON d.decision_id=l.decision_id
 		JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id JOIN action_list al ON al.list_id=d.list_id
@@ -214,11 +214,11 @@ func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) 
 	for _, item := range candidates {
 		recipient := "unresolved:" + item.operator
 		status := "failed"
-		errorCode := "oa_recipient_unresolved"
+		errorCode := "dingtalk_recipient_unresolved"
 		if item.recipient != nil {
 			recipient, status, errorCode = *item.recipient, "pending", ""
 		}
-		message := oa.Message{RecipientActorRef: recipient, TemplateCode: "clearance_daily_reminder", SPUID: item.spuID,
+		message := oa.Message{RecipientUserID: recipient, TemplateCode: "clearance_daily_reminder", SPUID: item.spuID,
 			Action: "clearance", Operator: item.operator, FeedbackRequest: "请填写或跟进实际清仓完成时间并提交主管确认",
 			TaskReference: item.taskID}
 		payload, err := json.Marshal(message)

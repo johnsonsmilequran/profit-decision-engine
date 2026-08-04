@@ -592,7 +592,8 @@ export interface components {
             id: string;
             /** Format: date */
             local_date: string;
-            recipient_actor_ref: string;
+            /** @description 公司钉钉 User ID，不是 Union ID 或手机号 */
+            recipient_user_id: string;
             template_code: string;
             /** @enum {string} */
             type: "coordination" | "clearance_reminder";
@@ -662,7 +663,8 @@ export interface components {
             idempotency_key: string;
         };
         OANotificationInput: {
-            recipient_actor_ref: string;
+            /** @description 公司钉钉 User ID，不是 Union ID 或手机号 */
+            recipient_user_id: string;
             feedback_request: string;
         };
         OARetryInput: {

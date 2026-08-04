@@ -36,7 +36,7 @@ export function LoginPage() {
           <div>
             <span className="eyebrow">INTERNAL DECISION WORKSPACE</span>
             <h1>让经营判断有统一依据，让每个动作找到负责人。</h1>
-            <p>汇总玩具事业部的 SPU 经营数据，由固定规则形成行动建议，再由运营与运营主管完成审核、执行、OA 协同和结果确认。</p>
+            <p>汇总玩具事业部的 SPU 经营数据，由固定规则形成行动建议，再由运营与运营主管完成审核、执行、钉钉协同和结果确认。</p>
             <div className="decision-rails" aria-label="经营决策工作流程"><Rail icon="▣" label="数据批次" /><Rail icon="⌘" label="固定规则" /><Rail icon="☷" label="行动清单" /><Rail icon="↻" label="轻闭环" /></div>
           </div>
           <p className="story-note"><span aria-hidden="true">✓</span>固定规则决定商品类型与动作，AI 只负责解释；每周数据批次与后续状态均可追溯。</p>

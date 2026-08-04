@@ -22,7 +22,7 @@ type Service struct {
 }
 
 func NewService(db *pgxpool.Pool) *Service {
-	return &Service{db: db, oaSender: oa.NewClient("", ""), now: time.Now}
+	return &Service{db: db, oaSender: oa.NewDingTalkClient("", "", "", "", ""), now: time.Now}
 }
 
 func (s *Service) SetOASender(sender oa.Sender) {

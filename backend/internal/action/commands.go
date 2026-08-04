@@ -125,7 +125,7 @@ func (s *Service) get(ctx context.Context, actor Principal, linkID string, histo
 	defer notificationRows.Close()
 	for notificationRows.Next() {
 		var notification Notification
-		if err := notificationRows.Scan(&notification.ID, &notification.LocalDate, &notification.RecipientActorRef,
+		if err := notificationRows.Scan(&notification.ID, &notification.LocalDate, &notification.RecipientUserID,
 			&notification.TemplateCode, &notification.Type, &notification.Status, &notification.ProviderReference,
 			&notification.ErrorCode, &notification.RequestedBy, &notification.CreatedAt, &notification.SentAt); err != nil {
 			return Detail{}, err

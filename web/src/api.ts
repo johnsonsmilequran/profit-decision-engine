@@ -173,8 +173,8 @@ export async function reviewClearanceCompletion(taskId:string,decision:'confirme
   return businessResponse<SuggestionDetail>(response)
 }
 
-export async function sendOANotification(taskId:string,recipientActorRef:string,feedbackRequest:string):Promise<SuggestionDetail>{
-  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/oa-notifications`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({recipient_actor_ref:recipientActorRef,feedback_request:feedbackRequest})})
+export async function sendOANotification(taskId:string,recipientUserId:string,feedbackRequest:string):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/oa-notifications`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({recipient_user_id:recipientUserId,feedback_request:feedbackRequest})})
   return businessResponse<SuggestionDetail>(response)
 }
 

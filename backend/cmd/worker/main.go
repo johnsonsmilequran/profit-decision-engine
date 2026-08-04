@@ -37,7 +37,7 @@ func main() {
 	}
 	processor := batch.NewProcessor(db)
 	actions := action.NewService(db)
-	actions.SetOASender(oa.NewClient(cfg.OAMessageURL, cfg.OAToken))
+	actions.SetOASender(oa.NewDingTalkClient(cfg.DingTalkClientID, cfg.DingTalkClientSecret, cfg.DingTalkRobotCode, "", ""))
 	explanations := explanation.NewProcessor(db, explanation.NewClient(cfg.LiteLLMBaseURL, cfg.LiteLLMAPIKey, cfg.LiteLLMModel))
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()

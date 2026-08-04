@@ -463,11 +463,11 @@ components:
         return_reason: { type: [string, 'null'] }
     OANotification:
       type: object
-      required: [id, local_date, recipient_actor_ref, template_code, type, status, provider_reference, error_code, requested_by, created_at, sent_at]
+      required: [id, local_date, recipient_user_id, template_code, type, status, provider_reference, error_code, requested_by, created_at, sent_at]
       properties:
         id: { type: string, format: uuid }
         local_date: { type: string, format: date }
-        recipient_actor_ref: { type: string }
+        recipient_user_id: { type: string, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
         template_code: { type: string }
         type: { type: string, enum: [coordination, clearance_reminder] }
         status: { type: string, enum: [pending, sent, failed] }
@@ -540,9 +540,9 @@ components:
         idempotency_key: { type: string, minLength: 1 }
     OANotificationInput:
       type: object
-      required: [recipient_actor_ref, feedback_request]
+      required: [recipient_user_id, feedback_request]
       properties:
-        recipient_actor_ref: { type: string, minLength: 1 }
+        recipient_user_id: { type: string, minLength: 1, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
         feedback_request: { type: string, minLength: 1 }
     OARetryInput:
       type: object
