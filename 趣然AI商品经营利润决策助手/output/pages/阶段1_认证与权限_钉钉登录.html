@@ -649,7 +649,6 @@
   <script>
     const loginButton = document.getElementById('dingLogin');
     const loginStatus = document.getElementById('loginStatus');
-    const initialButton = loginButton.innerHTML;
 
     loginButton.addEventListener('click', () => {
       if (loginButton.disabled) return;
@@ -660,10 +659,7 @@
       loginStatus.innerHTML = '<i class="ph ph-shield-check" aria-hidden="true"></i><span>正在建立安全认证连接，请勿重复操作</span>';
 
       window.setTimeout(() => {
-        loginButton.disabled = false;
-        loginButton.removeAttribute('aria-busy');
-        loginButton.innerHTML = initialButton;
-        loginStatus.innerHTML = '<i class="ph ph-check-circle" aria-hidden="true"></i><span>认证请求已发起；演示模式下可再次点击体验</span>';
+        window.location.href = '阶段1_经营协作_角色化工作台.html';
       }, 1600);
     });
   </script>
