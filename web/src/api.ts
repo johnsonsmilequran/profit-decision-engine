@@ -16,6 +16,14 @@ export type WorkbenchResponse = components['schemas']['Workbench']
 export type SuggestionDetail = components['schemas']['SuggestionDetail']
 export type HistoryItem = components['schemas']['HistoryItem']
 export type HistoryResponse = components['schemas']['HistoryResponse']
+export type ConflictLatest = components['schemas']['ConflictLatest']
+
+export class BusinessError extends Error {
+  constructor(code: string, readonly latest?: ConflictLatest | null) {
+    super(code)
+    this.name = 'BusinessError'
+  }
+}
 
 export async function getSession(signal?: AbortSignal): Promise<SessionResponse> {
   const response = await fetch('/api/session', { credentials: 'include', signal })
@@ -30,8 +38,8 @@ async function businessResponse<T>(response: Response): Promise<T> {
     throw new Error('unauthenticated')
   }
   if (!response.ok) {
-    const body = await response.json().catch(() => ({ error: 'service_unavailable' })) as { error?: string }
-    throw new Error(body.error ?? 'service_unavailable')
+    const body = await response.json().catch(() => ({ error: 'service_unavailable' })) as { error?: string; latest?: ConflictLatest | null }
+    throw new BusinessError(body.error ?? 'service_unavailable', body.latest)
   }
   return response.json() as Promise<T>
 }

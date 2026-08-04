@@ -71,6 +71,56 @@ func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
 	}
 }
 
+func TestSupervisorRejectionRequiresReasonAndPreservesRule(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	operator := Principal{ActorRef: "operator-rejection-test", Name: "缘一", Role: "operations"}
+	supervisor := Principal{ActorRef: "supervisor-rejection-test", Name: "驳回主管", Role: "supervisor"}
+	if _, err := service.Review(ctx, operator, linkID, ReviewInput{Decision: "rejected", Note: "运营无审核权", ReviewVersion: 1, IdempotencyKey: "运营驳回-" + linkID}); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("operator review error=%v", err)
+	}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "rejected", Note: "   ", ReviewVersion: 1, IdempotencyKey: "空理由驳回-" + linkID}); !errors.Is(err, ErrInvalidState) {
+		t.Fatalf("blank rejection error=%v", err)
+	}
+	input := ReviewInput{Decision: "rejected", Note: "利润与库存证据需数据支持部门复核后重新导入", ReviewVersion: 1, IdempotencyKey: "正式驳回-" + linkID}
+	result, err := service.Review(ctx, supervisor, linkID, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.ReviewStatus != "rejected" || result.BusinessState != "closed" || result.InventoryState != "closed" || result.SuggestedBusiness == nil || *result.SuggestedBusiness != "clearance" || result.SuggestedInventory == nil || *result.SuggestedInventory != "prohibit_restock" {
+		t.Fatalf("rejected detail status=%s/%s/%s fixed=%v/%v", result.ReviewStatus, result.BusinessState, result.InventoryState, result.SuggestedBusiness, result.SuggestedInventory)
+	}
+	if _, err := service.Review(ctx, supervisor, linkID, input); err != nil {
+		t.Fatalf("rejection idempotent retry: %v", err)
+	}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "旧版本通过-" + linkID}); !errors.Is(err, ErrConflict) {
+		t.Fatalf("stale review error=%v", err)
+	}
+	var eventCount int
+	var reason, actorRef, revisionStatus, fixedBusiness, fixedInventory string
+	if err := db.QueryRow(ctx, `SELECT count(*),min(reason),min(actor_ref) FROM business_event WHERE task_id=$1 AND event_type='suggestion_review'`, taskID).
+		Scan(&eventCount, &reason, &actorRef); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.QueryRow(ctx, `SELECT status,business_action,inventory_action FROM action_revision WHERE task_id=$1 AND source='fixed_rule'`, taskID).
+		Scan(&revisionStatus, &fixedBusiness, &fixedInventory); err != nil {
+		t.Fatal(err)
+	}
+	if eventCount != 1 || reason != input.Note || actorRef != supervisor.ActorRef || revisionStatus != "rejected" || fixedBusiness != "clearance" || fixedInventory != "prohibit_restock" {
+		t.Fatalf("event=%d reason=%s actor=%s revision=%s fixed=%s/%s", eventCount, reason, actorRef, revisionStatus, fixedBusiness, fixedInventory)
+	}
+}
+
 func TestOperationalCommandsEnforceOwnershipVersionsAndIdempotency(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {

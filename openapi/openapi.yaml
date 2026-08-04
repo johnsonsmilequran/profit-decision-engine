@@ -201,7 +201,21 @@ components:
     ErrorResponse:
       type: object
       required: [error]
-      properties: { error: { type: string } }
+      properties:
+        error: { type: string }
+        latest: { anyOf: [{ $ref: '#/components/schemas/ConflictLatest' }, { type: 'null' }] }
+    ConflictLatest:
+      type: object
+      required: [review_status, review_version, business_state, business_version, inventory_state, inventory_version]
+      properties:
+        review_status: { type: string }
+        review_version: { type: integer }
+        business_state: { type: string }
+        business_version: { type: integer }
+        inventory_state: { type: string }
+        inventory_version: { type: integer }
+        actor_ref: { type: string }
+        updated_at: { type: string, format: date-time }
     BatchStatus: { type: string, enum: [received, processing, ready, failed] }
     BatchSummary:
       type: object

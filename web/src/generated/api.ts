@@ -309,6 +309,18 @@ export interface components {
         };
         ErrorResponse: {
             error: string;
+            latest?: components["schemas"]["ConflictLatest"] | null;
+        };
+        ConflictLatest: {
+            review_status: string;
+            review_version: number;
+            business_state: string;
+            business_version: number;
+            inventory_state: string;
+            inventory_version: number;
+            actor_ref?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         /** @enum {string} */
         BatchStatus: "received" | "processing" | "ready" | "failed";

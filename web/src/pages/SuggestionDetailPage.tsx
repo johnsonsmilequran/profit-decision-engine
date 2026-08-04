@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { executeAction, getSession, getSuggestion, overrideSuggestion, recordActionResult, retryAIExplanation, retryOANotification, reviewClearanceCompletion, reviewSuggestion, sendOANotification, submitClearanceCompletion, terminateSuggestion, type SuggestionDetail } from '../api'
+import { BusinessError, executeAction, getSession, getSuggestion, overrideSuggestion, recordActionResult, retryAIExplanation, retryOANotification, reviewClearanceCompletion, reviewSuggestion, sendOANotification, submitClearanceCompletion, terminateSuggestion, type SuggestionDetail } from '../api'
 import { AppShell } from '../components/AppShell'
 
 const actionText: Record<string,string> = { clearance:'清仓',stop_loss:'止损',observe:'观察',invest:'加投',maintain:'维持',restock:'补货',no_restock:'不补货',prohibit_restock:'禁止补货' }
@@ -15,7 +15,7 @@ export function SuggestionDetailPage({ linkId }: { linkId: string }) {
   const [reviewChoice,setReviewChoice]=useState<'approved'|'rejected'>('approved')
   const [note,setNote]=useState('')
   const [message,setMessage]=useState('')
-  const review=useMutation({mutationFn:()=>reviewSuggestion(linkId,reviewChoice,note,detail.data!.review_version),onSuccess:data=>{queryClient.setQueryData(['suggestion',linkId,historyMode],data);setMessage('审核已保存，两条动作轨已按结果更新。')},onError:error=>setMessage(error.message==='version_conflict'?'状态已被其他人更新，请刷新后重新判断。':'审核提交失败，输入已保留。')})
+  const review=useMutation({mutationFn:()=>reviewSuggestion(linkId,reviewChoice,note,detail.data!.review_version),onSuccess:data=>{queryClient.setQueryData(['suggestion',linkId,historyMode],data);setMessage('审核已保存，两条动作轨已按结果更新。')},onError:error=>setMessage(conflictFeedback(error,'审核提交失败，输入已保留。'))})
   const aiRetry=useMutation({mutationFn:()=>retryAIExplanation(linkId),onSuccess:data=>{queryClient.setQueryData(['suggestion',linkId,historyMode],data);setMessage('已基于同一冻结数据进入异步生成，业务操作不受影响。')},onError:()=>setMessage('重新生成请求失败，请稍后重试。')})
   const submit=(event:FormEvent)=>{event.preventDefault();if(reviewChoice==='rejected'&&!note.trim()){setMessage('驳回时必须填写原因。');return}const action=reviewChoice==='approved'?'通过':'驳回';if(!window.confirm(`确认${action}「${detail.data?.name ?? ''}」的完整建议？`))return;setMessage('');review.mutate()}
   if(detail.isPending)return <AppShell><State title="正在加载建议" body="正在读取冻结证据与状态事件。" /></AppShell>
@@ -49,6 +49,14 @@ function money(value:number|null){return value===null?'数据不足':`¥${value.
 function percent(value:number|null){return value===null?'未校验':`${(value*100).toFixed(2)}%`}
 function number(value:number|null){return value===null?'数据不足':value.toFixed(2)}
 function dateTime(value:string){return new Date(value).toLocaleString('zh-CN',{hour12:false})}
+function conflictFeedback(error:Error,fallback:string){
+  if(!(error instanceof BusinessError)||error.message!=='version_conflict')return fallback
+  if(!error.latest)return '状态已更新，请刷新后重新判断；输入已保留。'
+  const latest=error.latest
+  const actor=latest.actor_ref??'其他操作者'
+  const updated=latest.updated_at?dateTime(latest.updated_at):'刚刚'
+  return `状态已由 ${actor} 于 ${updated} 更新；最新审核 ${latest.review_status}（v${latest.review_version}），经营 ${latest.business_state}（v${latest.business_version}），协同 ${latest.inventory_state}（v${latest.inventory_version}）。输入已保留，请刷新后重新判断。`
+}
 
 function OperationsPanel({item,onUpdated}:{item:SuggestionDetail;onUpdated:(data:SuggestionDetail)=>void}){
   const [businessNote,setBusinessNote]=useState('')
@@ -62,9 +70,9 @@ function OperationsPanel({item,onUpdated}:{item:SuggestionDetail;onUpdated:(data
   const [clearanceNote,setClearanceNote]=useState('')
   const [oaRecipient,setOARecipient]=useState('')
   const [oaRequest,setOARequest]=useState('')
-  const command=useMutation({mutationFn:({track,note}:{track:'business'|'inventory';note:string})=>executeAction(item.task_id,track,track==='business'?item.business_version:item.inventory_version,note),onSuccess:data=>{onUpdated(data);setFeedback('动作状态已保存。')},onError:error=>setFeedback(error.message==='version_conflict'?'状态已更新，请刷新后重试。':'提交失败，输入已保留。')})
-  const result=useMutation({mutationFn:()=>recordActionResult(item.task_id,{periodStart,periodEnd,salesValue:sales===''?null:Number(sales),profitValue:profit===''?null:Number(profit),inventoryValue:inventory===''?null:Number(inventory),salesUnavailable:sales==='',profitUnavailable:profit==='',inventoryUnavailable:inventory==='',note:resultNote,version:item.business_version}),onSuccess:data=>{onUpdated(data);setFeedback('经营结果已追加到时间线。')},onError:error=>setFeedback(error.message==='version_conflict'?'状态已更新，请刷新后重新判断。':'结果保存失败，输入已保留。')})
-  const clearance=useMutation({mutationFn:()=>submitClearanceCompletion(item.task_id,completedAt,clearanceNote,item.business_version),onSuccess:data=>{onUpdated(data);setFeedback('实际清仓完成时间已提交主管确认。')},onError:error=>setFeedback(error.message==='version_conflict'?'状态已更新，请刷新后重试。':'清仓完成时间提交失败，输入已保留。')})
+  const command=useMutation({mutationFn:({track,note}:{track:'business'|'inventory';note:string})=>executeAction(item.task_id,track,track==='business'?item.business_version:item.inventory_version,note),onSuccess:data=>{onUpdated(data);setFeedback('动作状态已保存。')},onError:error=>setFeedback(conflictFeedback(error,'提交失败，输入已保留。'))})
+  const result=useMutation({mutationFn:()=>recordActionResult(item.task_id,{periodStart,periodEnd,salesValue:sales===''?null:Number(sales),profitValue:profit===''?null:Number(profit),inventoryValue:inventory===''?null:Number(inventory),salesUnavailable:sales==='',profitUnavailable:profit==='',inventoryUnavailable:inventory==='',note:resultNote,version:item.business_version}),onSuccess:data=>{onUpdated(data);setFeedback('经营结果已追加到时间线。')},onError:error=>setFeedback(conflictFeedback(error,'结果保存失败，输入已保留。'))})
+  const clearance=useMutation({mutationFn:()=>submitClearanceCompletion(item.task_id,completedAt,clearanceNote,item.business_version),onSuccess:data=>{onUpdated(data);setFeedback('实际清仓完成时间已提交主管确认。')},onError:error=>setFeedback(conflictFeedback(error,'清仓完成时间提交失败，输入已保留。'))})
   const oaSend=useMutation({mutationFn:()=>sendOANotification(item.task_id,oaRecipient,oaRequest),onSuccess:data=>{onUpdated(data);setFeedback(data.notifications[0]?.status==='sent'?'OA 消息已送达；库存业务状态仍待责任运营核验。':'OA 发送失败，已保留失败记录，可人工补发。')},onError:()=>setFeedback('OA 发送请求失败，输入已保留。')})
   const oaRetry=useMutation({mutationFn:(notificationId:string)=>retryOANotification(item.task_id,notificationId),onSuccess:data=>{onUpdated(data);setFeedback(data.notifications[0]?.status==='sent'?'OA 补发成功；请继续核验业务反馈。':'OA 补发仍失败，失败记录已保留。')},onError:()=>setFeedback('OA 补发请求失败。')})
   const execute=(track:'business'|'inventory',note:string)=>{if(track==='inventory'&&!note.trim()){setFeedback('库存协同必须填写经责任运营核验的处理说明。');return}if(item.effective_business_action==='observe'&&track==='business'&&!note.trim()){setFeedback('观察动作必须填写实际观察或优化说明。');return}if(!window.confirm(`确认记录${track==='business'?'经营':'库存协同'}动作已执行？`))return;setFeedback('');command.mutate({track,note})}
@@ -79,9 +87,9 @@ function SupervisorLifecyclePanel({item,onUpdated}:{item:SuggestionDetail;onUpda
   const [reason,setReason]=useState('')
   const [returnReason,setReturnReason]=useState('')
   const [feedback,setFeedback]=useState('')
-  const override=useMutation({mutationFn:()=>overrideSuggestion(item.link_id,businessAction,inventoryAction||null,reason,item.review_version),onSuccess:data=>{onUpdated(data);setFeedback('人工改判已生成新的生效动作版本。')},onError:error=>setFeedback(error.message==='version_conflict'?'状态已更新，请刷新后重新判断。':'改判失败；若动作已执行，请先终止旧轨。')})
-  const terminate=useMutation({mutationFn:()=>terminateSuggestion(item.link_id,reason,item.review_version),onSuccess:data=>{onUpdated(data);setFeedback('原经营与库存协同轨已终止，执行事实仍保留。')},onError:error=>setFeedback(error.message==='version_conflict'?'状态已更新，请刷新后重试。':'终止失败，输入已保留。')})
-  const clearance=useMutation({mutationFn:(decision:'confirmed'|'returned')=>reviewClearanceCompletion(item.task_id,decision,returnReason,item.clearance_completion!.submission_version),onSuccess:data=>{onUpdated(data);setFeedback('清仓完成复核已保存。')},onError:error=>setFeedback(error.message==='version_conflict'?'提交版本已变化，请刷新后重试。':'清仓完成复核失败。')})
+  const override=useMutation({mutationFn:()=>overrideSuggestion(item.link_id,businessAction,inventoryAction||null,reason,item.review_version),onSuccess:data=>{onUpdated(data);setFeedback('人工改判已生成新的生效动作版本。')},onError:error=>setFeedback(conflictFeedback(error,'改判失败；若动作已执行，请先终止旧轨。'))})
+  const terminate=useMutation({mutationFn:()=>terminateSuggestion(item.link_id,reason,item.review_version),onSuccess:data=>{onUpdated(data);setFeedback('原经营与库存协同轨已终止，执行事实仍保留。')},onError:error=>setFeedback(conflictFeedback(error,'终止失败，输入已保留。'))})
+  const clearance=useMutation({mutationFn:(decision:'confirmed'|'returned')=>reviewClearanceCompletion(item.task_id,decision,returnReason,item.clearance_completion!.submission_version),onSuccess:data=>{onUpdated(data);setFeedback('清仓完成复核已保存。')},onError:error=>setFeedback(conflictFeedback(error,'清仓完成复核失败。'))})
   const completion=item.clearance_completion
   const canOverride=['pending_review','pending_execution','terminated'].includes(item.business_state)&&['pending_review','pending_execution','not_generated','terminated'].includes(item.inventory_state)
   return <><div><strong>人工改判</strong><div className="mini-grid"><select value={businessAction} onChange={event=>setBusinessAction(event.target.value)}><option value="clearance">清仓</option><option value="stop_loss">止损</option><option value="observe">观察</option><option value="invest">加投</option><option value="maintain">维持</option></select><select value={inventoryAction} onChange={event=>setInventoryAction(event.target.value)}><option value="">不生成库存协同</option><option value="restock">补货</option><option value="no_restock">不补货</option><option value="prohibit_restock">禁止补货</option></select></div><textarea value={reason} onChange={event=>setReason(event.target.value)} placeholder="改判或终止理由，必填" /><div className="choice-row"><button className="button" disabled={!canOverride||!reason.trim()||override.isPending} onClick={()=>{if(window.confirm('确认生成新的生效动作版本？'))override.mutate()}}>确认改判</button><button className="button danger-button" disabled={item.business_state==='closed'||item.business_state==='terminated'||!reason.trim()||terminate.isPending} onClick={()=>{if(window.confirm('确认终止当前经营与库存协同轨？'))terminate.mutate()}}>终止旧轨</button></div></div>{completion?.status==='pending_confirmation'?<div><strong>清仓完成复核</strong><p className="muted">运营提交：{dateTime(completion.actual_completed_at)} · {completion.note}</p><textarea value={returnReason} onChange={event=>setReturnReason(event.target.value)} placeholder="退回时必须填写原因" /><div className="choice-row"><button className="button" disabled={clearance.isPending} onClick={()=>clearance.mutate('confirmed')}>确认完成</button><button className="button" disabled={!returnReason.trim()||clearance.isPending} onClick={()=>clearance.mutate('returned')}>填写原因并退回</button></div></div>:null}{feedback?<div className={override.isError||terminate.isError||clearance.isError?'alert':'success-note'}>{feedback}</div>:null}</>

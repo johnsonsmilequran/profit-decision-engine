@@ -268,7 +268,18 @@ func (s *Server) writeActionCommandResult(w http.ResponseWriter, r *http.Request
 		return
 	}
 	if errors.Is(err, action.ErrConflict) {
-		writeError(w, http.StatusConflict, "version_conflict")
+		var latest action.Detail
+		var latestErr error
+		if resourceKind == "link" {
+			latest, latestErr = s.actions.Get(r.Context(), actor, resourceID)
+		} else {
+			latest, latestErr = s.actions.GetLatestByTask(r.Context(), actor, resourceID)
+		}
+		if latestErr == nil {
+			writeVersionConflict(w, latest)
+		} else {
+			writeError(w, http.StatusConflict, "version_conflict")
+		}
 		return
 	}
 	if errors.Is(err, action.ErrInvalidState) {
@@ -343,7 +354,12 @@ func (s *Server) reviewSuggestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if errors.Is(err, action.ErrConflict) {
-		writeError(w, http.StatusConflict, "version_conflict")
+		latest, latestErr := s.actions.Get(r.Context(), actionPrincipal, chi.URLParam(r, "linkID"))
+		if latestErr == nil {
+			writeVersionConflict(w, latest)
+		} else {
+			writeError(w, http.StatusConflict, "version_conflict")
+		}
 		return
 	}
 	if errors.Is(err, action.ErrInvalidState) {
@@ -648,7 +664,24 @@ func randomToken(size int) (string, error) {
 	return base64.RawURLEncoding.EncodeToString(raw), nil
 }
 func writeError(w http.ResponseWriter, status int, code string) {
-	writeJSONStatus(w, status, map[string]interface{}{"error": map[string]string{"code": code, "message": "请求无法完成，请按页面指引重试"}})
+	writeJSONStatus(w, status, map[string]string{"error": code})
+}
+
+func writeVersionConflict(w http.ResponseWriter, detail action.Detail) {
+	latest := map[string]interface{}{
+		"review_status":     detail.ReviewStatus,
+		"review_version":    detail.ReviewVersion,
+		"business_state":    detail.BusinessState,
+		"business_version":  detail.BusinessVersion,
+		"inventory_state":   detail.InventoryState,
+		"inventory_version": detail.InventoryVersion,
+	}
+	if len(detail.Events) > 0 {
+		event := detail.Events[len(detail.Events)-1]
+		latest["actor_ref"] = event.ActorRef
+		latest["updated_at"] = event.CreatedAt
+	}
+	writeJSONStatus(w, http.StatusConflict, map[string]interface{}{"error": "version_conflict", "latest": latest})
 }
 func writeJSON(w http.ResponseWriter, status int, value interface{}) {
 	writeJSONStatus(w, status, value)

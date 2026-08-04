@@ -24,6 +24,32 @@ func (s *Service) GetHistory(ctx context.Context, actor Principal, linkID string
 	return s.get(ctx, actor, linkID, true)
 }
 
+func (s *Service) GetLatestByTask(ctx context.Context, actor Principal, taskID string) (Detail, error) {
+	if actor.Role != "operations" && actor.Role != "supervisor" {
+		return Detail{}, ErrForbidden
+	}
+	query := `SELECT l.link_id::text FROM decision_task_link l
+		JOIN decision_record d ON d.decision_id=l.decision_id
+		JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		JOIN action_list al ON al.list_id=d.list_id
+		JOIN import_batch b ON b.batch_id=al.batch_id
+		WHERE l.task_id=$1`
+	args := []interface{}{taskID}
+	if actor.Role == "operations" {
+		query += ` AND s.operator_ref=$2`
+		args = append(args, actor.Name)
+	}
+	query += ` ORDER BY b.business_cutoff_date DESC,l.linked_at DESC,l.link_id DESC LIMIT 1`
+	var linkID string
+	if err := s.db.QueryRow(ctx, query, args...).Scan(&linkID); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return Detail{}, ErrNotFound
+		}
+		return Detail{}, err
+	}
+	return s.Get(ctx, actor, linkID)
+}
+
 func (s *Service) get(ctx context.Context, actor Principal, linkID string, history bool) (Detail, error) {
 	if actor.Role != "operations" && actor.Role != "supervisor" {
 		return Detail{}, ErrForbidden
