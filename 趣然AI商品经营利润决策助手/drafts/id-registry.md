@@ -1,4 +1,4 @@
-# 需求 ID 注册表 v5
+# 需求 ID 注册表 v6
 
 > 本注册表是阶段 5 三位主笔共用的唯一 ID 来源。发布后不得重排或复用。
 
@@ -8,7 +8,7 @@
 | F02 | SPU 经营指标计算 | US-F02-01 | REQ-F02-01、REQ-F02-02、REQ-F02-03 | active / MVP |
 | F03 | 固定规则决策 | US-F03-01 | REQ-F03-01、REQ-F03-02、REQ-F03-03 | active / MVP |
 | F04 | AI 建议解释 | US-F04-01 | REQ-F04-01、REQ-F04-02、REQ-F04-03 | active / MVP |
-| F05 | 行动清单 | US-F05-01 | REQ-F05-01、REQ-F05-02、REQ-F05-03、REQ-F05-04 | active / MVP |
+| F05 | 行动清单 | US-F05-01 | REQ-F05-01、REQ-F05-02、REQ-F05-03、REQ-F05-04、REQ-F05-05 | active / MVP |
 | F06 | 审核与执行跟踪 | US-F06-01、US-F06-02 | REQ-F06-01、REQ-F06-02、REQ-F06-03、REQ-F06-04 | active / MVP |
 | F07 | 权限隔离 | US-F07-01 | REQ-F07-01、REQ-F07-02、REQ-F07-03 | active / MVP |
 | F08 | 规则与数据溯源 | US-F08-01 | REQ-F08-01、REQ-F08-02 | active / MVP |
@@ -32,6 +32,7 @@
 | REQ-F05-02 | AC-F05-03、AC-F05-04 |
 | REQ-F05-03 | AC-F05-05 |
 | REQ-F05-04 | AC-F05-06、AC-F05-07、AC-F05-08 |
+| REQ-F05-05 | AC-F05-09、AC-F05-10 |
 | REQ-F06-01 | AC-F06-01、AC-F06-02 |
 | REQ-F06-02 | AC-F06-03、AC-F06-04 |
 | REQ-F06-03 | AC-F06-05、AC-F06-06 |
