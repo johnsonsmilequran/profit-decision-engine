@@ -57,7 +57,37 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Post("/api/actions/{taskID}/clearance-completion", s.submitClearanceCompletion)
 	r.Post("/api/actions/{taskID}/confirm", s.confirmClearanceCompletion)
 	r.Post("/api/actions/{taskID}/return", s.returnClearanceCompletion)
+	r.Post("/api/actions/{taskID}/oa-notifications", s.sendOANotification)
+	r.Post("/api/actions/{taskID}/oa-notifications/{notificationID}/retry", s.retryOANotification)
 	return r
+}
+
+func (s *Server) sendOANotification(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.OANotificationInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.SendOA(r.Context(), principal, chi.URLParam(r, "taskID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "send oa notification")
+}
+
+func (s *Server) retryOANotification(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.OARetryInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.RetryOA(r.Context(), principal, chi.URLParam(r, "taskID"), chi.URLParam(r, "notificationID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "retry oa notification")
 }
 
 func (s *Server) overrideSuggestion(w http.ResponseWriter, r *http.Request) {

@@ -14,6 +14,8 @@ type Config struct {
 	DingTalkClientSecret string
 	CookieSecure         bool
 	ImportFileDir        string
+	OAMessageURL         string
+	OAToken              string
 }
 
 func Load() (Config, error) {
@@ -25,6 +27,8 @@ func Load() (Config, error) {
 		DingTalkClientSecret: strings.TrimSpace(os.Getenv("DINGTALK_CLIENT_SECRET")),
 		CookieSecure:         value("COOKIE_SECURE", "true") == "true",
 		ImportFileDir:        value("IMPORT_FILE_DIR", "./var/imports"),
+		OAMessageURL:         strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
+		OAToken:              strings.TrimSpace(os.Getenv("OA_TOKEN")),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")
@@ -39,6 +43,8 @@ func LoadWorker() (Config, error) {
 	cfg := Config{
 		DatabaseURL:   strings.TrimSpace(os.Getenv("DATABASE_URL")),
 		ImportFileDir: value("IMPORT_FILE_DIR", "./var/imports"),
+		OAMessageURL:  strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
+		OAToken:       strings.TrimSpace(os.Getenv("OA_TOKEN")),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")

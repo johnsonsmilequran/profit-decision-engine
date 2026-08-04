@@ -3,11 +3,14 @@ package action
 import (
 	"context"
 	"errors"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/oa"
 )
 
 func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
@@ -63,6 +66,109 @@ func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
 	_, err = service.Review(ctx, actor, linkID, ReviewInput{Decision: "rejected", Note: "旧页面驳回", ReviewVersion: 1, IdempotencyKey: "旧版本-" + linkID})
 	if !errors.Is(err, ErrConflict) {
 		t.Fatalf("stale review error=%v, want conflict", err)
+	}
+}
+
+func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	supervisor := Principal{ActorRef: "supervisor-oa-test", Name: "协同主管", Role: "supervisor"}
+	operator := Principal{ActorRef: "operator-oa-test", Name: "缘一", Role: "operations"}
+	if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "OA审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		attempts++
+		if attempts == 1 {
+			http.Error(w, "公司 OA 暂时不可用", http.StatusBadGateway)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"message_id":"OA-补发成功-001"}`))
+	}))
+	defer server.Close()
+	service.SetOASender(oa.NewClient(server.URL, "OA集成测试令牌"))
+	failed, err := service.SendOA(ctx, operator, taskID, OANotificationInput{RecipientActorRef: "采购责任人-001", FeedbackRequest: "请确认停止补货并反馈责任运营"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(failed.Notifications) != 1 || failed.Notifications[0].Status != "failed" || failed.InventoryState != "pending_execution" {
+		t.Fatalf("failed delivery notifications=%+v inventory=%s", failed.Notifications, failed.InventoryState)
+	}
+	retried, err := service.RetryOA(ctx, operator, taskID, failed.Notifications[0].ID, OARetryInput{IdempotencyKey: "OA补发-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if retried.Notifications[0].Status != "sent" || retried.InventoryState != "pending_execution" {
+		t.Fatalf("retried delivery=%+v inventory=%s", retried.Notifications[0], retried.InventoryState)
+	}
+	var attemptsStored int
+	if err := db.QueryRow(ctx, `SELECT attempt_count FROM oa_notification WHERE notification_id=$1`, retried.Notifications[0].ID).Scan(&attemptsStored); err != nil {
+		t.Fatal(err)
+	}
+	if attemptsStored != 2 || attempts != 2 {
+		t.Fatalf("attempts stored=%d actual=%d", attemptsStored, attempts)
+	}
+}
+
+func TestClearanceReminderIsCreatedAtMostOncePerShanghaiDay(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	if _, err := service.Review(ctx, Principal{ActorRef: "supervisor-reminder-test", Name: "催办主管", Role: "supervisor"}, linkID,
+		ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "催办审核-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	actorRef := "oa-reminder-" + linkID
+	if _, err := db.Exec(ctx, `INSERT INTO role_mapping(actor_ref,display_name,role,approved_by,configured_by)
+		VALUES($1,'缘一','operations','催办集成测试批准','催办集成测试配置')`, actorRef); err != nil {
+		t.Fatal(err)
+	}
+	sent := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		sent++
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"message_id":"OA-每日催办-001"}`))
+	}))
+	defer server.Close()
+	service.SetOASender(oa.NewClient(server.URL, "OA催办测试令牌"))
+	created, err := service.runClearanceReminders(ctx, taskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	repeated, err := service.runClearanceReminders(ctx, taskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if created != 1 || repeated != 0 || sent != 1 {
+		t.Fatalf("created=%d repeated=%d sent=%d", created, repeated, sent)
+	}
+	var status string
+	if err := db.QueryRow(ctx, `SELECT status FROM oa_notification WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&status); err != nil {
+		t.Fatal(err)
+	}
+	if status != "sent" {
+		t.Fatalf("reminder status=%s", status)
 	}
 }
 

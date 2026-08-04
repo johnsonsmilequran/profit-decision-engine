@@ -139,3 +139,13 @@ export async function reviewClearanceCompletion(taskId:string,decision:'confirme
   const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/${path}`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason,version,idempotency_key:crypto.randomUUID()})})
   return businessResponse<SuggestionDetail>(response)
 }
+
+export async function sendOANotification(taskId:string,recipientActorRef:string,feedbackRequest:string):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/oa-notifications`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({recipient_actor_ref:recipientActorRef,feedback_request:feedbackRequest})})
+  return businessResponse<SuggestionDetail>(response)
+}
+
+export async function retryOANotification(taskId:string,notificationId:string):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/oa-notifications/${encodeURIComponent(notificationId)}/retry`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}

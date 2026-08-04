@@ -37,7 +37,7 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 	if err != nil {
 		return Detail{}, err
 	}
-	result := Detail{Item: item, Events: []Event{}, AIStatus: "not_configured", AIContent: map[string]interface{}{}}
+	result := Detail{Item: item, Events: []Event{}, Notifications: []Notification{}, AIStatus: "not_configured", AIContent: map[string]interface{}{}}
 	rows, err := s.db.Query(ctx, `SELECT event_id::text,event_type,actor_ref,from_state,to_state,reason,details,created_at
 		FROM business_event WHERE task_id=$1 ORDER BY created_at,event_id`, item.TaskID)
 	if err != nil {
@@ -72,6 +72,25 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 	if err == nil {
 		result.ClearanceCompletion = &completion
 	} else if !errors.Is(err, pgx.ErrNoRows) {
+		return Detail{}, err
+	}
+	notificationRows, err := s.db.Query(ctx, `SELECT notification_id::text,local_date::text,recipient_actor_ref,template_code,
+		notification_type,status,provider_reference,error_code,requested_by,created_at,sent_at FROM oa_notification
+		WHERE task_id=$1 ORDER BY created_at DESC,notification_id DESC`, item.TaskID)
+	if err != nil {
+		return Detail{}, err
+	}
+	defer notificationRows.Close()
+	for notificationRows.Next() {
+		var notification Notification
+		if err := notificationRows.Scan(&notification.ID, &notification.LocalDate, &notification.RecipientActorRef,
+			&notification.TemplateCode, &notification.Type, &notification.Status, &notification.ProviderReference,
+			&notification.ErrorCode, &notification.RequestedBy, &notification.CreatedAt, &notification.SentAt); err != nil {
+			return Detail{}, err
+		}
+		result.Notifications = append(result.Notifications, notification)
+	}
+	if err := notificationRows.Err(); err != nil {
 		return Detail{}, err
 	}
 	return result, rows.Err()

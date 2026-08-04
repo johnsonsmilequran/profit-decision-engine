@@ -228,6 +228,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/actions/{taskId}/oa-notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["sendOANotification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/{taskId}/oa-notifications/{notificationId}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["retryOANotification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -448,6 +480,7 @@ export interface components {
                 [key: string]: unknown;
             };
             clearance_completion: components["schemas"]["ClearanceCompletion"] | null;
+            notifications: components["schemas"]["OANotification"][];
         };
         ClearanceCompletion: {
             /** Format: uuid */
@@ -465,6 +498,25 @@ export interface components {
             /** Format: date-time */
             reviewed_at: string | null;
             return_reason: string | null;
+        };
+        OANotification: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            local_date: string;
+            recipient_actor_ref: string;
+            template_code: string;
+            /** @enum {string} */
+            type: "coordination" | "clearance_reminder";
+            /** @enum {string} */
+            status: "pending" | "sent" | "failed";
+            provider_reference: string | null;
+            error_code: string | null;
+            requested_by: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            sent_at: string | null;
         };
         ReviewInput: {
             /** @enum {string} */
@@ -519,6 +571,13 @@ export interface components {
         ClearanceDecisionInput: {
             reason: string;
             version: number;
+            idempotency_key: string;
+        };
+        OANotificationInput: {
+            recipient_actor_ref: string;
+            feedback_request: string;
+        };
+        OARetryInput: {
             idempotency_key: string;
         };
     };
@@ -932,6 +991,61 @@ export interface operations {
         };
         responses: {
             /** @description 已退回的清仓完成详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    sendOANotification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OANotificationInput"];
+            };
+        };
+        responses: {
+            /** @description OA 发送结果及建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    retryOANotification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+                notificationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OARetryInput"];
+            };
+        };
+        responses: {
+            /** @description OA 补发结果及建议详情 */
             200: {
                 headers: {
                     [name: string]: unknown;

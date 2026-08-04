@@ -114,6 +114,21 @@ type Detail struct {
 	AIStatus            string                 `json:"ai_status"`
 	AIContent           map[string]interface{} `json:"ai_content"`
 	ClearanceCompletion *ClearanceCompletion   `json:"clearance_completion"`
+	Notifications       []Notification         `json:"notifications"`
+}
+
+type Notification struct {
+	ID                string     `json:"id"`
+	LocalDate         string     `json:"local_date"`
+	RecipientActorRef string     `json:"recipient_actor_ref"`
+	TemplateCode      string     `json:"template_code"`
+	Type              string     `json:"type"`
+	Status            string     `json:"status"`
+	ProviderReference *string    `json:"provider_reference"`
+	ErrorCode         *string    `json:"error_code"`
+	RequestedBy       string     `json:"requested_by"`
+	CreatedAt         time.Time  `json:"created_at"`
+	SentAt            *time.Time `json:"sent_at"`
 }
 
 type ClearanceCompletion struct {
@@ -182,5 +197,14 @@ type ClearanceReviewInput struct {
 	Decision       string `json:"decision"`
 	Reason         string `json:"reason"`
 	Version        int    `json:"version"`
+	IdempotencyKey string `json:"idempotency_key"`
+}
+
+type OANotificationInput struct {
+	RecipientActorRef string `json:"recipient_actor_ref"`
+	FeedbackRequest   string `json:"feedback_request"`
+}
+
+type OARetryInput struct {
 	IdempotencyKey string `json:"idempotency_key"`
 }

@@ -9,13 +9,23 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/oa"
 )
 
 var ErrForbidden = errors.New("forbidden")
 
-type Service struct{ db *pgxpool.Pool }
+type Service struct {
+	db       *pgxpool.Pool
+	oaSender oa.Sender
+}
 
-func NewService(db *pgxpool.Pool) *Service { return &Service{db: db} }
+func NewService(db *pgxpool.Pool) *Service { return &Service{db: db, oaSender: oa.NewClient("", "")} }
+
+func (s *Service) SetOASender(sender oa.Sender) {
+	if sender != nil {
+		s.oaSender = sender
+	}
+}
 
 func (s *Service) List(ctx context.Context, actor Principal, filters Filters) (ListResponse, error) {
 	if actor.Role != "operations" && actor.Role != "supervisor" {
