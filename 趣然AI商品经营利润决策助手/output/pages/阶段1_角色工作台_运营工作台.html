@@ -444,8 +444,13 @@
     .previous-todo summary:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
     .previous-todo .previous-caret { margin-left: auto; transition: transform var(--motion-fast) var(--ease-standard); }
     .previous-todo[open] .previous-caret { transform: rotate(180deg); }
-    .previous-detail { padding: 8px; border-top: 1px solid var(--accent-border); color: var(--fg); line-height: 1.6; }
-    .previous-detail .meta { display: inline-block; min-width: 54px; }
+    .previous-detail { padding: 8px; border-top: 1px solid var(--accent-border); color: var(--fg); line-height: 1.55; }
+    .previous-context { padding-bottom: 7px; border-bottom: 1px dashed var(--accent-border); }
+    .previous-context .meta { display: inline-block; min-width: 58px; }
+    .snapshot-block { padding-top: 7px; }
+    .snapshot-block + .snapshot-block { margin-top: 7px; border-top: 1px dashed var(--accent-border); }
+    .snapshot-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .snapshot-copy { color: var(--fg); font-size: 11px; }
     .task-time { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
     .badge {
       display: inline-flex;
@@ -765,7 +770,7 @@
                 </thead>
                 <tbody>
                   <tr class="task-row" data-action="clear" data-business-state="待提交清仓完成时间" data-search="spu-515 布乐迪忙碌屋益智玩具 task-toy-515">
-                    <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515 · TASK-TOY-515</div><details class="previous-todo"><summary><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span>最近前序待办</span><i class="ph ph-caret-down previous-caret" aria-hidden="true"></i></summary><div class="previous-detail"><div><span class="meta">来源批次</span><span class="mono">BATCH-20260531-01</span></div><div><span class="meta">动作 / 状态</span>清仓 / 待执行</div><div><span class="meta">产生时间</span><span class="mono">06-29 09:12</span></div><div><span class="meta">执行时间</span><span class="mono">—</span></div></div></details></td>
+                    <td><div class="product-name">布乐迪忙碌屋益智玩具</div><div class="meta mono">SPU-515 · TASK-TOY-515</div><details class="previous-todo"><summary><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span>最近前序待办</span><i class="ph ph-caret-down previous-caret" aria-hidden="true"></i></summary><div class="previous-detail"><div class="previous-context"><div><span class="meta">来源批次</span><span class="mono">BATCH-20260531-01</span></div><div><span class="meta">产生时间</span><span class="mono">06-29 09:12</span></div><div><span class="meta">执行时间</span><span class="mono">—</span></div></div><div class="snapshot-block"><span class="snapshot-label">前序主动作</span><div class="snapshot-copy"><strong>清仓</strong> · 同步禁止补货</div></div><div class="snapshot-block"><span class="snapshot-label">前序关键依据</span><div class="snapshot-copy">净销售额 78,960 元；经营准利润率 <strong>-10.6% &lt; 5%</strong>；品退率未校验</div></div><div class="snapshot-block"><span class="snapshot-label">前序库存语境</span><div class="snapshot-copy">仓内 2,850 · 在途 400；近 14 天销量 98；可售 464.3 天</div></div><div class="snapshot-block"><span class="snapshot-label">前序经营状态</span><div class="snapshot-copy"><strong>待执行</strong> · 前序冻结值，不随本周更新</div></div></div></details></td>
                     <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
                     <td><div class="numeric font-semibold">上月净销售额 86,240 元</div><div class="evidence">经营准利润率 -12.8% · 近 7 天品退率未校验</div></td>
                     <td><div class="font-semibold">仓内 3,000 件 · 在途 260 件</div><div class="evidence">近 14 天销量 112 件 · 日均 8.0 件 · 可售 407.5 天 · 禁止补货</div></td>
