@@ -12,7 +12,7 @@
 | FLOW-03 | pending | 待执行 | — |
 | FLOW-04 | pending | 待执行 | — |
 | FLOW-05 | pending | 待执行 | — |
-| FLOW-06 | pending | 待执行 | — |
+| FLOW-06 | pending | API/数据库页签、组合筛选、角色默认范围、清仓确认与完成态已执行；等待浏览器双角色 E2E 后才能判定 | `TestActionTabsAndFiltersFollowRoleProgress` 在真实 PostgreSQL 中推进待审核→待执行→执行→结果→清仓待确认→完成并通过；`make lint typecheck test build` exit 0；Compose 真实批次主管页签 `mine=6/all=7/processing=6/completed=1`，动作+运营+审核+经营+清仓+进度组合筛选 total=1；浏览器工具两次返回 `No browser is available`，故不记 pass |
 | FLOW-07 | pending | 待执行 | — |
 | FLOW-08 | pending | 待执行 | — |
 | FLOW-09 | pending | 待执行 | — |

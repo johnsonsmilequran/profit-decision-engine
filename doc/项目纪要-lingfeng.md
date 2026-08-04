@@ -109,6 +109,7 @@
 - 公司 OA 生产回执仍需部署环境提供 `OA_MESSAGE_URL` / `OA_TOKEN` 并按已记录白名单 DTO 契约联调；当前已用真实 HTTP 传输测试覆盖送达、502 失败、补发和同日催办幂等，但不伪造公司 OA 正式回执。
 - LiteLLM 生产解释仍需部署环境提供 `LITELLM_BASE_URL` / `LITELLM_API_KEY` / `LITELLM_MODEL`；当前已用真实 HTTP 协议测试覆盖合规 JSON、未知字段、冲突动作和虚构数字，并用真实 PostgreSQL 验证异步持久化及业务状态不变，不伪造生产模型回执。
 - 正式 `商品链接.xlsx` 不含 TDD/高保真指定的 SPU 515；真实导入闭环使用该文件，涉及 515 的 SMOKE/DESIGN 证据不得伪造，解决路径仅为补充含 515 的真实验收文件或回到上游正式修订契约。
+- 内置浏览器控制通道在候选验收中两次返回 `No browser is available`；FLOW/DESIGN 的 API、数据库和构建证据可继续执行，但浏览器 E2E、actual 截图与独立视觉复核必须保持 pending，不能以 curl 或 UI 代码审查代签。
 
 ## 工作文件集
 
