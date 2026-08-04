@@ -12,9 +12,13 @@
     "db:migrate": "tsx src/database/migrate.ts"
   },
   "dependencies": {
+    "@fastify/cookie": "11.1.2",
+    "@fastify/multipart": "10.1.0",
+    "decimal.js": "10.6.0",
     "drizzle-orm": "0.45.2",
     "fastify": "5.11.2",
     "pg": "8.22.0",
+    "read-excel-file": "9.3.5",
     "zod": "4.4.3"
   },
   "devDependencies": {
@@ -22,6 +26,7 @@
     "@types/pg": "8.16.0",
     "tsx": "4.23.5",
     "typescript": "7.0.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "write-excel-file": "4.1.1"
   }
 }

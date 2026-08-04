@@ -26,6 +26,8 @@ npm run dev
 
 `GET http://127.0.0.1:3001/health` 会查询 PostgreSQL 并返回当前数据库和检查时间；数据库不可用时接口不会伪造成功。迁移会建立角色映射、会话、不可变批次、SPU 快照、指标、决策、双轨动作、AI 状态与追加审计事件等真实业务表。
 
+批次 API 已实现 `POST /api/batches/import`、`GET /api/batches` 与 `GET /api/batches/:batchId`。导入会把 XLSX 写入持久化目录，并由可恢复的同进程后台任务把有效行、字段质量、指标、固定规则决策和双轨动作写入 PostgreSQL；相同指纹始终返回原批次。
+
 ## 仓库结构
 
 ```text

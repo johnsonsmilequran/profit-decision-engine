@@ -4,6 +4,6 @@ import { createDatabase } from "./database/client.js";
 
 const config = readConfig();
 const database = createDatabase(config.DATABASE_URL);
-const app = buildApp(database);
+const app = buildApp(database, { uploadDirectory: config.UPLOAD_DIR });
 
 await app.listen({ host: config.API_HOST, port: config.API_PORT });
