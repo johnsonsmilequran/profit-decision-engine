@@ -1,6 +1,6 @@
 # AI 商品经营与利润决策助手
 
-本仓库用于管理趣然电商“AI 商品经营与利润决策助手”的产品需求、稳定需求契约、演示页面和方案 PPT。
+本仓库用于建设趣然电商“AI 商品经营与利润决策助手”的生产应用，并管理产品需求、稳定需求契约、设计和验收证据。
 
 当前 V0 聚焦玩具事业部，以 SPU/商品链接为唯一决策粒度：每周导入经营数据，由固定规则生成经营与库存动作，AI 只负责解释和排序，再由运营主管、运营和采购计划完成轻闭环。
 
@@ -12,12 +12,26 @@
 - 方案 PPT 大纲：`趣然AI商品经营利润决策助手/output/ppt.md`
 - HTML 演示：`趣然AI商品经营利润决策助手/output/ppt/p01.html` 至 `p11.html`
 - 可编辑 PPTX：`趣然AI商品经营利润决策助手/output/AI商品经营与利润决策助手-阶段5正式版.pptx`
+- 生产应用：`apps/api` 已建立 Fastify 与 PostgreSQL 基础运行链路，后续 MVP 闭环持续在 `weien` 分支实现。
+
+## 本地开发
+
+要求 Node.js 24+ 与 PostgreSQL 17+。复制 `.env.example` 为 `.env`，创建数据库后执行：
+
+```bash
+npm install
+npm run db:migrate
+npm run dev
+```
+
+`GET http://127.0.0.1:3001/health` 会查询 PostgreSQL 并返回当前数据库和检查时间；数据库不可用时接口不会伪造成功。
 
 ## 仓库结构
 
 ```text
 .
 ├── .github/                         # Issue、PR 与 CODEOWNERS 协作配置
+├── apps/api/                        # Fastify API 与 PostgreSQL 数据层
 ├── doc/                             # 跨会话项目纪要
 ├── 趣然AI商品经营利润决策助手/       # PRD、证据、评审与演示产物
 ├── CONTRIBUTING.md                  # 贡献流程

@@ -8,6 +8,14 @@
 node_modules/
 __pycache__/
 *.py[cod]
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# 运行期上传文件（目录结构保留）
+var/uploads/*
+!var/uploads/.gitkeep
 
 # 本地环境与密钥
 .env
