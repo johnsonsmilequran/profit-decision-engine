@@ -2,8 +2,10 @@ package httpapi
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -27,6 +29,20 @@ func TestSafeReturn(t *testing.T) {
 				t.Fatalf("safeReturn(%q)=%q, want %q", test.raw, got, test.want)
 			}
 		})
+	}
+}
+
+func TestAnonymousSuggestionDirectAccessDoesNotRevealObject(t *testing.T) {
+	handler := New(nil, nil, nil, nil, nil, "http://localhost", false, slog.Default())
+	request := httptest.NewRequest(http.MethodGet, "/api/suggestions/private-task-reference", nil)
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, request)
+
+	if recorder.Code != http.StatusUnauthorized {
+		t.Fatalf("anonymous direct access status=%d, want %d", recorder.Code, http.StatusUnauthorized)
+	}
+	if strings.Contains(recorder.Body.String(), "private-task-reference") || recorder.Body.String() != "{\"error\":\"authentication_required\"}\n" {
+		t.Fatalf("anonymous direct access leaked object identity: %s", recorder.Body.String())
 	}
 }
 

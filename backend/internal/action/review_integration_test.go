@@ -72,6 +72,38 @@ func TestSupervisorReviewIsVersionedAndIdempotent(t *testing.T) {
 	}
 }
 
+func TestSuggestionDirectAccessHidesObjectFromUnauthorizedActors(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, _ := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+
+	owner := Principal{ActorRef: "direct-link-owner", Name: "缘一", Role: "operations"}
+	if _, err := service.Get(ctx, owner, linkID); err != nil {
+		t.Fatalf("responsible operator direct access: %v", err)
+	}
+	supervisor := Principal{ActorRef: "direct-link-supervisor", Name: "直接链接验收主管", Role: "supervisor"}
+	if _, err := service.Get(ctx, supervisor, linkID); err != nil {
+		t.Fatalf("supervisor direct access: %v", err)
+	}
+	nonOwner := Principal{ActorRef: "direct-link-non-owner", Name: "灵汐", Role: "operations"}
+	if _, err := service.Get(ctx, nonOwner, linkID); !errors.Is(err, ErrNotFound) {
+		t.Fatalf("non-owner direct access error=%v, want object-hiding not found", err)
+	}
+	external := Principal{ActorRef: "direct-link-external", Name: "外部协同人员", Role: "external"}
+	if _, err := service.Get(ctx, external, linkID); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("external direct access error=%v, want forbidden", err)
+	}
+}
+
 func TestSupervisorRejectionRequiresReasonAndPreservesRule(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {
