@@ -78,6 +78,17 @@ func TestActionListUsesLatestReadyBatchAndAppliesRoleProjection(t *testing.T) {
 			t.Fatalf("pure maintain decision entered action list: %s", item.SPUID)
 		}
 	}
+	workbench, err := service.Workbench(ctx, Principal{ActorRef: "主管测试", Name: "主管测试", Role: "supervisor"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	limitationCounts := map[string]int{}
+	for _, limitation := range workbench.DataLimitations {
+		limitationCounts[limitation.Field+":"+limitation.Status] = limitation.Count
+	}
+	if limitationCounts["quality_return_rate_7d:not_verified"] < 1 || limitationCounts["inventory_days:insufficient"] < 1 {
+		t.Fatalf("workbench data limitations=%v", workbench.DataLimitations)
+	}
 
 	operator, err := service.List(ctx, Principal{ActorRef: "运营测试", Name: "缘一", Role: "operations"}, Filters{Tab: "all", Page: 1, Limit: 20})
 	if err != nil {

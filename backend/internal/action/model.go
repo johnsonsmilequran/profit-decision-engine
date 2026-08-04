@@ -94,15 +94,22 @@ type ListResponse struct {
 }
 
 type Workbench struct {
-	Role                  string    `json:"role"`
-	LatestBatchID         string    `json:"latest_batch_id"`
-	LatestBatchCode       string    `json:"latest_batch_code"`
-	BatchCompletedAt      time.Time `json:"batch_completed_at"`
-	PendingReviewCount    int       `json:"pending_review_count"`
-	PendingExecutionCount int       `json:"pending_execution_count"`
-	ClearanceConfirmCount int       `json:"clearance_confirm_count"`
-	ExceptionCount        int       `json:"exception_count"`
-	Items                 []Item    `json:"items"`
+	Role                  string           `json:"role"`
+	LatestBatchID         string           `json:"latest_batch_id"`
+	LatestBatchCode       string           `json:"latest_batch_code"`
+	BatchCompletedAt      time.Time        `json:"batch_completed_at"`
+	PendingReviewCount    int              `json:"pending_review_count"`
+	PendingExecutionCount int              `json:"pending_execution_count"`
+	ClearanceConfirmCount int              `json:"clearance_confirm_count"`
+	ExceptionCount        int              `json:"exception_count"`
+	DataLimitations       []DataLimitation `json:"data_limitations"`
+	Items                 []Item           `json:"items"`
+}
+
+type DataLimitation struct {
+	Field  string `json:"field"`
+	Status string `json:"status"`
+	Count  int    `json:"count"`
 }
 
 type Event struct {

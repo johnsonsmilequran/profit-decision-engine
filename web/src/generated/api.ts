@@ -539,7 +539,13 @@ export interface components {
             pending_execution_count: number;
             clearance_confirm_count: number;
             exception_count: number;
+            data_limitations: components["schemas"]["DataLimitation"][];
             items: components["schemas"]["ActionItem"][];
+        };
+        DataLimitation: {
+            field: string;
+            status: string;
+            count: number;
         };
         BusinessEvent: {
             /** Format: uuid */

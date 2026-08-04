@@ -84,8 +84,8 @@ func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, er
 	if actor.Role != "operations" && actor.Role != "supervisor" {
 		return Workbench{}, ErrForbidden
 	}
-	result := Workbench{Role: actor.Role, Items: []Item{}}
-	if err := s.db.QueryRow(ctx, `SELECT batch_id::text,batch_code,completed_at FROM import_batch WHERE status='ready'
+	result := Workbench{Role: actor.Role, Items: []Item{}, DataLimitations: []DataLimitation{}}
+	if err := s.db.QueryRow(ctx, `SELECT batch_id::text,batch_code,coalesce(completed_at,created_at) FROM import_batch WHERE status='ready'
 		ORDER BY business_cutoff_date DESC,completed_at DESC,batch_id DESC LIMIT 1`).
 		Scan(&result.LatestBatchID, &result.LatestBatchCode, &result.BatchCompletedAt); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -98,6 +98,30 @@ func (s *Service) Workbench(ctx context.Context, actor Principal) (Workbench, er
 		return Workbench{}, err
 	}
 	result.Items = list.Items
+	limitationQuery := `SELECT quality_entry.key,quality_entry.value,count(*)
+		FROM spu_snapshot s CROSS JOIN LATERAL jsonb_each_text(s.quality) quality_entry
+		WHERE s.batch_id=$1 AND quality_entry.value<>'valid'`
+	limitationArgs := []interface{}{result.LatestBatchID}
+	if actor.Role == "operations" {
+		limitationQuery += ` AND s.operator_ref=$2`
+		limitationArgs = append(limitationArgs, actor.Name)
+	}
+	limitationQuery += ` GROUP BY quality_entry.key,quality_entry.value ORDER BY quality_entry.key,quality_entry.value`
+	rows, err := s.db.Query(ctx, limitationQuery, limitationArgs...)
+	if err != nil {
+		return Workbench{}, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var limitation DataLimitation
+		if err := rows.Scan(&limitation.Field, &limitation.Status, &limitation.Count); err != nil {
+			return Workbench{}, err
+		}
+		result.DataLimitations = append(result.DataLimitations, limitation)
+	}
+	if err := rows.Err(); err != nil {
+		return Workbench{}, err
+	}
 	for _, item := range list.Items {
 		if item.ReviewStatus == "pending" {
 			result.PendingReviewCount++

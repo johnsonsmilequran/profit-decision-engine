@@ -801,7 +801,8 @@ func insertReviewFixture(t *testing.T, ctx context.Context, db *pgxpool.Pool) (s
 	if err := db.QueryRow(ctx, `INSERT INTO spu_snapshot(batch_id,spu_id,spu_name,store,platform,operator_ref,source_sheet,source_row,
 		net_sales_prev_month,operating_profit_rate,quality_return_rate_7d,warehouse_qty,in_transit_qty,sales_units_14d,inventory_days,raw_values,quality)
 		VALUES($1,'审核集成测试SPU-'||gen_random_uuid()::text,'审核状态机真实商品','趣然旗舰店','天猫','缘一','测试表',3,
-		86420,-0.128,0.018,3000,260,112,407.5,'{}','{}') RETURNING snapshot_id::text`, batchID).Scan(&snapshotID); err != nil {
+		86420,-0.128,0.018,3000,260,112,407.5,'{}',
+		'{"launch_date":"valid","net_sales_prev_month":"valid","operating_profit_rate":"valid","quality_return_rate_7d":"not_verified","inventory_days":"insufficient"}') RETURNING snapshot_id::text`, batchID).Scan(&snapshotID); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.QueryRow(ctx, `INSERT INTO decision_record(list_id,snapshot_id,rule_version,business_action,inventory_action,trigger_rule,structured_evidence)
