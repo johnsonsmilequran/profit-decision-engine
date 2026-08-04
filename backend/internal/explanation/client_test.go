@@ -3,9 +3,11 @@ package explanation
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func TestClientAdoptsOnlyStrictRuleConsistentJSON(t *testing.T) {
@@ -36,6 +38,58 @@ func TestClientRejectsConflictingActionAndInventedNumber(t *testing.T) {
 		if err != ErrNotAdopted {
 			t.Fatalf("content=%s error=%v", content, err)
 		}
+	}
+}
+
+func TestClientFailsClosedForGatewayAndContentFaults(t *testing.T) {
+	tests := []struct {
+		name     string
+		handler  http.Handler
+		wantCode string
+		wantErr  error
+	}{
+		{name: "gateway 502", handler: http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			http.Error(w, "upstream unavailable", http.StatusBadGateway)
+		}), wantCode: "litellm_status_502"},
+		{name: "invalid response json", handler: http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte("not-json")) }), wantCode: "litellm_invalid_response"},
+		{name: "missing choice", handler: http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{"choices": []interface{}{}})
+		}), wantCode: "litellm_invalid_response"},
+		{name: "invalid content json", handler: completionHandler(t, `{"problem":`), wantErr: ErrNotAdopted},
+		{name: "missing required field", handler: completionHandler(t, `{"problem":"利润不足","evidence":"冻结证据","action":"clearance+prohibit_restock"}`), wantErr: ErrNotAdopted},
+		{name: "conflicting action", handler: completionHandler(t, `{"problem":"利润不足","evidence":"冻结证据","action":"invest+restock","summary":"改为加投"}`), wantErr: ErrNotAdopted},
+		{name: "invented number", handler: completionHandler(t, `{"problem":"利润不足","evidence":"预计增长 999%","action":"clearance+prohibit_restock","summary":"执行规则动作"}`), wantErr: ErrNotAdopted},
+		{name: "forbidden refund attribution", handler: completionHandler(t, `{"problem":"利润不足","evidence":"退款原因来自质量问题","action":"clearance+prohibit_restock","summary":"执行规则动作"}`), wantErr: ErrNotAdopted},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			server := httptest.NewServer(test.handler)
+			defer server.Close()
+			_, err := NewClient(server.URL, "LiteLLM测试密钥", "解释模型").Explain(context.Background(), explanationFixture())
+			if test.wantErr != nil && !errors.Is(err, test.wantErr) {
+				t.Fatalf("error=%v, want %v", err, test.wantErr)
+			}
+			if test.wantCode != "" && ErrorCode(err) != test.wantCode {
+				t.Fatalf("error=%v code=%s, want %s", err, ErrorCode(err), test.wantCode)
+			}
+		})
+	}
+}
+
+func TestClientFailsClosedForConnectionRefusalAndTimeout(t *testing.T) {
+	refused := NewClient("http://127.0.0.1:1", "LiteLLM测试密钥", "解释模型")
+	if _, err := refused.Explain(context.Background(), explanationFixture()); ErrorCode(err) != "litellm_transport_failed" {
+		t.Fatalf("connection refusal error=%v code=%s", err, ErrorCode(err))
+	}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		time.Sleep(50 * time.Millisecond)
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"choices": []interface{}{}})
+	}))
+	defer server.Close()
+	timed := NewClient(server.URL, "LiteLLM测试密钥", "解释模型")
+	timed.httpClient.Timeout = 5 * time.Millisecond
+	if _, err := timed.Explain(context.Background(), explanationFixture()); ErrorCode(err) != "litellm_transport_failed" {
+		t.Fatalf("timeout error=%v code=%s", err, ErrorCode(err))
 	}
 }
 
