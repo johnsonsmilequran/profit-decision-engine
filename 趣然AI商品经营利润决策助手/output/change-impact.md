@@ -2,10 +2,11 @@
 
 > 变更日期：2026-08-04  
 > 上游需求契约：`requirements.md` revision 7 → 8
-> 变更性质：纠正最近前序待办的数据语义——从关系元数据摘要升级为原批次不可变的独立建议快照，并下推到三个页面。
+> 变更性质：包含 revision 8 最近前序待办语义纠正，以及 2026-08-04 用户确认的 Go 后端 + React 前端技术栈增量；后者不改变 Source revision 或页面行为。
 
 | Changed Source | Old→New Revision | Affected Design IDs | Artifacts | Action | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
+| design-derived：前后端技术栈 | N/A（用户实现约束） | `API-F01-01/02`、`API-F04-01`、`API-F05-01`、`API-F06-01/02/03/04/05`、`API-F07-01`、`API-F08-01`、全部 `DATA-*` 与 `SEQ-*` | PRD 技术边界；设计蓝图；技术方案；TDD 验收契约；项目状态与纪要 | 后端从 Next.js/Node/TypeScript Worker 改为同一 Go Module 的 Go API + Go Worker；前端从 Next.js 改为 React + TypeScript + Vite 静态应用；用同源 Nginx 与版本化 OpenAPI 契约保持跨端一致，业务行为、页面和稳定设计 ID 不变 | implemented |
 | design-derived：最近前序待办同构整行 | N/A（revision 8 设计纠正） | `PAGE-F05-01`、`PAGE-F05-02`、`CMP-PREVIOUS-TODO-LINK` | 设计系统、蓝图、页面清单；运营工作台/行动清单 MD+HTML；追溯矩阵；TDD 下游验证面 | 前序与当前属于同一种待办记录；保留默认折叠，但展开后复用当前表头、字段顺序、列宽和视觉语义显示一整行，只增加前序批次与只读标识；移除对象单元格内摘要卡 | implemented |
 | `REQ-F05-05`、`AC-F05-09` | 6→8 | `PAGE-F05-01`、`PAGE-F05-02`、`PAGE-F06-03`、`CMP-PREVIOUS-TODO-LINK`、`API-F05-01`、`DATA-F05-01` | PRD/requirements；设计系统、蓝图、页面清单；运营工作台/行动清单/建议详情 MD+HTML；技术方案；追溯矩阵 | 最近前序不再只显示来源批次与时间；展开后必须显示原批次自己的主动作、关键依据、库存语境、经营状态与时间，禁止当前批次回填 | implemented |
 | `REQ-F06-05`、`AC-F06-10`～`AC-F06-12` | new @ revision 7 | `PAGE-F05-01`、`PAGE-F06-01`、`PAGE-F05-02`、`PAGE-F06-03`、`CMP-CLEARANCE-COMPLETION`、`API-F06-04/05`、`DATA-F06-01`、`SEQ-F06-02` | PRD/requirements；蓝图、页面清单与设计系统；双工作台/行动清单/建议详情 MD+HTML；技术方案；追溯矩阵 | 同清仓跨周不重复建任；运营提交实际完成时间，主管确认/退回；最终确认前每日 OA 催办责任运营，确认/改判/终止后停止 | implemented |
@@ -23,12 +24,14 @@
 - 正式产品仍定位为 PC Web；本次不新增移动端页面、移动端交互或新的 REQ/AC/NFR。
 - 商品分类、规则阈值、AI 边界及冻结历史均不变；改判不是规则编辑。
 - 商品分类、阈值、跨周任务续接、审核/执行状态机和权限边界不变；本次只改变最近前序待办的读取投影与展示完整度，当前任务数据不受影响。
+- Go/React 技术栈调整不改变 9 个运行态 MVP 页面、视觉 tokens、高保真 HTML、业务规则、数据口径、角色权限、接口语义或审计不变量；`PAGE-F06-02` 继续保持 retired。
 
 ## 验证面
 
 - 契约：revision 8 的 26 REQ、52 AC、5 NFR（共 83 个 source）全部必须出现于追溯矩阵且不得 stale/TBD；`REQ-F05-05` 与 `AC-F05-09` 必须按 revision 8 验证。
 - 页面：双角色工作台、行动清单与建议详情显示责任运营、OA 协同、清仓完成确认与最近催办；行动清单与运营工作台可按经营状态筛选。
 - 回归：页面 ID、JavaScript 语法、既有链接和不受影响页面保持有效。
+- 技术栈：React 构建、类型检查和前端测试通过；Go API/Worker 执行格式、静态检查、单元/集成测试和构建；OpenAPI 与 Go/TypeScript DTO 契约一致；生产容器中不需要 Node Runtime。
 
 ## TDD 下游同步
 
