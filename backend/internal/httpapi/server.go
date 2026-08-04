@@ -502,7 +502,7 @@ func (s *Server) listBatches(w http.ResponseWriter, r *http.Request) {
 	if page < 1 {
 		page = 1
 	}
-	items, total, err := s.batches.List(r.Context(), batch.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, limit, (page-1)*limit)
+	items, total, err := s.batches.List(r.Context(), batch.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, r.URL.Query().Get("search"), limit, (page-1)*limit)
 	if errors.Is(err, batch.ErrForbidden) {
 		writeError(w, http.StatusForbidden, "forbidden")
 		return

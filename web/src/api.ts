@@ -44,8 +44,10 @@ async function businessResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>
 }
 
-export async function listBatches(page: number, limit: number, signal?: AbortSignal): Promise<BatchListResponse> {
-  const response = await fetch(`/api/batches?page=${page}&limit=${limit}`, { credentials: 'include', signal })
+export async function listBatches(page: number, limit: number, search: string, signal?: AbortSignal): Promise<BatchListResponse> {
+  const query = new URLSearchParams({ page: String(page), limit: String(limit) })
+  if (search) query.set('search', search)
+  const response = await fetch(`/api/batches?${query}`, { credentials: 'include', signal })
   return businessResponse<BatchListResponse>(response)
 }
 

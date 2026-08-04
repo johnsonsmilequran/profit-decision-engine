@@ -11,6 +11,7 @@ paths:
     get:
       operationId: listBatches
       parameters:
+        - { name: search, in: query, description: 按批次编号或源文件名检索, schema: { type: string } }
         - { name: page, in: query, schema: { type: integer, minimum: 1 } }
         - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
       responses:

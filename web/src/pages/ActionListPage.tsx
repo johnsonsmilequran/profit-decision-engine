@@ -26,7 +26,7 @@ const tabs = [
 export function ActionListPage() {
   const [filters, setFilters] = useState<ActionFilters>(initialFilters)
   const query = useQuery({ queryKey: ['actions', filters], queryFn: ({ signal }) => listActions(filters, signal) })
-  const batchQuery = useQuery({ queryKey: ['batches', 'action-list'], queryFn: ({ signal }) => listBatches(1, 100, signal) })
+  const batchQuery = useQuery({ queryKey: ['batches', 'action-list'], queryFn: ({ signal }) => listBatches(1, 100, '', signal) })
   const countQueries = useQueries({ queries: tabs.map(tab => ({
     queryKey: ['action-count', tab.value, filters.batchId, filters.search, filters.action, filters.store, filters.operator, filters.reviewStatus, filters.businessState, filters.inventoryState, filters.clearanceStatus, filters.progress],
     queryFn: ({ signal }: { signal: AbortSignal }) => listActions({ ...filters, tab: tab.value, page: 1, limit: 20 }, signal),

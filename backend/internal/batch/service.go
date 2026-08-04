@@ -136,15 +136,17 @@ func (s *Service) Create(ctx context.Context, actor Principal, input CreateInput
 	return result, nil
 }
 
-func (s *Service) List(ctx context.Context, actor Principal, limit, offset int) ([]Summary, int, error) {
+func (s *Service) List(ctx context.Context, actor Principal, search string, limit, offset int) ([]Summary, int, error) {
 	if actor.Role != "operations" && actor.Role != "supervisor" {
 		return nil, 0, ErrForbidden
 	}
+	search = strings.TrimSpace(search)
 	var total int
-	if err := s.db.QueryRow(ctx, `SELECT count(*) FROM import_batch`).Scan(&total); err != nil {
+	const searchWhere = ` WHERE ($1 = '' OR batch_code ILIKE '%' || $1 || '%' OR source_file_name ILIKE '%' || $1 || '%')`
+	if err := s.db.QueryRow(ctx, `SELECT count(*) FROM import_batch`+searchWhere, search).Scan(&total); err != nil {
 		return nil, 0, err
 	}
-	rows, err := s.db.Query(ctx, summarySelect+` ORDER BY created_at DESC, batch_id DESC LIMIT $1 OFFSET $2`, limit, offset)
+	rows, err := s.db.Query(ctx, summarySelect+searchWhere+` ORDER BY created_at DESC, batch_id DESC LIMIT $2 OFFSET $3`, search, limit, offset)
 	if err != nil {
 		return nil, 0, err
 	}

@@ -7,11 +7,14 @@ import { AppShell } from '../components/AppShell'
 const statusText = { received: '已接收', processing: '处理中', ready: '已完成', failed: '失败' }
 
 export function BatchListPage() {
+  const initialSearch = new URLSearchParams(window.location.search).get('search') ?? ''
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(50)
+  const [draftSearch, setDraftSearch] = useState(initialSearch)
+  const [search, setSearch] = useState(initialSearch)
   const query = useQuery({
-    queryKey: ['batches', page, limit],
-    queryFn: ({ signal }) => listBatches(page, limit, signal),
+    queryKey: ['batches', page, limit, search],
+    queryFn: ({ signal }) => listBatches(page, limit, search, signal),
     refetchInterval: ({ state }) => state.data?.items.some(item => item.status === 'received' || item.status === 'processing') ? 3000 : false,
   })
   const pages = Math.max(1, Math.ceil((query.data?.total ?? 0) / limit))
@@ -25,6 +28,7 @@ export function BatchListPage() {
       <div className="batch-guidance" aria-label="批次规则说明"><article><strong>每周一导入</strong><span>数据支持部门提供经营表格，运营创建新批次。</span></article><article><strong>相同输入不重复</strong><span>相同文件与批次声明只返回首次创建记录。</span></article><article><strong>历史不可覆盖</strong><span>期间、校验结果与规则版本按创建时冻结保留。</span></article></div>
       <div className="panel table-panel batch-history">
         <div className="history-result-heading"><h2>历史批次</h2><p className="muted">当前批次单独固定展示，其余记录按创建时间追溯。</p></div>
+        <form className="batch-search" onSubmit={event => { event.preventDefault(); const value = draftSearch.trim(); setSearch(value); setPage(1); const url = new URL(window.location.href); if (value) url.searchParams.set('search', value); else url.searchParams.delete('search'); window.history.replaceState(null, '', url) }}><label>批次 / 文件名搜索<input value={draftSearch} onChange={event => setDraftSearch(event.target.value)} placeholder="输入批次编号或 XLSX 文件名" /></label><label>每页数量<select value={limit} onChange={event => { setLimit(Number(event.target.value)); setPage(1) }}><option>20</option><option>50</option><option>100</option></select></label><button className="button" type="submit">查询历史</button>{search ? <button className="button" type="button" onClick={() => { setDraftSearch(''); setSearch(''); setPage(1); const url = new URL(window.location.href); url.searchParams.delete('search'); window.history.replaceState(null, '', url) }}>清除</button> : null}</form>
         {history.length === 0 ? <State title="暂无历史批次" body={`当前仅有真实批次 ${current?.code ?? '—'}；后续新批次不会覆盖这里的事实。`} /> : <BatchTable items={history} />}
         <footer className="pagination"><span>共 {query.data.total} 个批次</span><label>每页 <select value={limit} onChange={event => { setLimit(Number(event.target.value)); setPage(1) }}><option>20</option><option>50</option><option>100</option></select></label><span>第 {page} / {pages} 页</span><button disabled={page === 1} onClick={() => setPage(value => value - 1)}>上一页</button><button disabled={page === pages} onClick={() => setPage(value => value + 1)}>下一页</button></footer>
       </div>

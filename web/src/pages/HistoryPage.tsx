@@ -19,7 +19,7 @@ export function HistoryPage(){
   const [filters,setFilters]=useState<HistoryFilters>(initialFilters)
   const [validation,setValidation]=useState('')
   const history=useQuery({queryKey:['history',filters],queryFn:({signal})=>listHistory(filters,signal)})
-  const batches=useQuery({queryKey:['history-batches'],queryFn:({signal})=>listBatches(1,100,signal)})
+  const batches=useQuery({queryKey:['history-batches'],queryFn:({signal})=>listBatches(1,100,'',signal)})
   const apply=(next:HistoryFilters)=>{setFilters(next);setDraft(next);const query=toQuery(next);window.history.replaceState(null,'',`/history${query.toString()?`?${query}`:''}`)}
   const submit=(event:FormEvent)=>{event.preventDefault();if(draft.periodStart&&draft.periodEnd&&draft.periodStart>draft.periodEnd){setValidation('起始业务期间不得晚于结束期间。');return}setValidation('');apply({...draft,page:1})}
   const reset=()=>{setValidation('');apply({batchId:'',search:'',action:'',reviewStatus:'',executionState:'',periodStart:'',periodEnd:'',page:1,limit:50})}

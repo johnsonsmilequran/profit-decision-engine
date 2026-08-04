@@ -716,6 +716,8 @@ export interface operations {
     listBatches: {
         parameters: {
             query?: {
+                /** @description 按批次编号或源文件名检索 */
+                search?: string;
                 page?: number;
                 limit?: 20 | 50 | 100;
             };
