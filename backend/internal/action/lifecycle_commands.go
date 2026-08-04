@@ -28,7 +28,7 @@ func (s *Service) Override(ctx context.Context, actor Principal, linkID string, 
 		return Detail{}, ErrForbidden
 	}
 	inventory, inventoryValid := normalizeInventory(input.InventoryAction)
-	if !validBusinessActions[input.BusinessAction] || !inventoryValid || strings.TrimSpace(input.Reason) == "" || strings.TrimSpace(input.IdempotencyKey) == "" {
+	if !validBusinessActions[input.BusinessAction] || !inventoryValid || !input.InventorySelectionExplicit || strings.TrimSpace(input.Reason) == "" || strings.TrimSpace(input.IdempotencyKey) == "" {
 		return Detail{}, ErrInvalidState
 	}
 	if input.BusinessAction == "clearance" || input.BusinessAction == "stop_loss" {
@@ -64,6 +64,9 @@ func (s *Service) Override(ctx context.Context, actor Principal, linkID string, 
 	}
 	if input.Version != version {
 		return Detail{}, ErrConflict
+	}
+	if input.BusinessAction == oldBusiness {
+		return Detail{}, ErrInvalidState
 	}
 	directlyChangeable := (businessState == "pending_review" || businessState == "pending_execution") &&
 		(inventoryState == "pending_review" || inventoryState == "pending_execution" || inventoryState == "not_generated")

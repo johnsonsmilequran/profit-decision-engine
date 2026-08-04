@@ -1,6 +1,10 @@
 package action
 
-import "time"
+import (
+	"bytes"
+	"encoding/json"
+	"time"
+)
 
 type Principal struct {
 	ActorRef string
@@ -177,11 +181,29 @@ type ResultInput struct {
 }
 
 type OverrideInput struct {
-	BusinessAction  string  `json:"business_action"`
-	InventoryAction *string `json:"inventory_action"`
-	Reason          string  `json:"reason"`
-	Version         int     `json:"version"`
-	IdempotencyKey  string  `json:"idempotency_key"`
+	BusinessAction             string  `json:"business_action"`
+	InventoryAction            *string `json:"inventory_action"`
+	Reason                     string  `json:"reason"`
+	Version                    int     `json:"version"`
+	IdempotencyKey             string  `json:"idempotency_key"`
+	InventorySelectionExplicit bool    `json:"-"`
+}
+
+func (input *OverrideInput) UnmarshalJSON(data []byte) error {
+	type wire OverrideInput
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	*input = OverrideInput(value)
+	_, input.InventorySelectionExplicit = fields["inventory_action"]
+	return nil
 }
 
 type TerminateInput struct {

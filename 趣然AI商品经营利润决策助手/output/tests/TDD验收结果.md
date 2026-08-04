@@ -15,7 +15,7 @@
 | FLOW-06 | pending | API/数据库页签、组合筛选、角色默认范围、清仓确认与完成态已执行；等待浏览器双角色 E2E 后才能判定 | `TestActionTabsAndFiltersFollowRoleProgress` 在真实 PostgreSQL 中推进待审核→待执行→执行→结果→清仓待确认→完成并通过；`make lint typecheck test build` exit 0；Compose 真实批次主管页签 `mine=6/all=7/processing=6/completed=1`，动作+运营+审核+经营+清仓+进度组合筛选 total=1；浏览器工具两次返回 `No browser is available`，故不记 pass |
 | FLOW-07 | pending | 待执行 | — |
 | FLOW-08 | pending | 待执行 | — |
-| FLOW-09 | pending | 待执行 | — |
+| FLOW-09 | pending | 已完成服务端人工改判字段存在性、动作变化、空理由、沿用禁补、旧版本、三种库存选择、已执行先终止和追加审计验证；等待主管建议详情浏览器弹窗闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -run 'TestSupervisorOverride' -v ./internal/action` exit 0；`TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice` 的 restock/no_restock/no_coordination 3/3 pass，非法请求事件数 0 且任务保持清仓+禁补；每个合法请求原固定规则仍为清仓+禁补、生效版本唯一、审计前后动作逐项一致；`TestSupervisorOverrideRequiresTerminationAfterExecution` pass；浏览器返回 No browser is available，故不记 pass |
 | FLOW-10 | pending | 待执行 | — |
 | FLOW-11 | pending | 已完成真实 PostgreSQL 跨两个 Asia/Shanghai 自然日并发催办、首次发送失败/人工补发、主管确认停催及改判/终止停催；等待运营/主管浏览器闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -v ./internal/action` exit 0；`TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfirmation` 断言 2 个自然日恰有 2 条通知、3 次发送尝试、确认后次日新增 0；`TestClearanceReminderStopsAfterOverrideOrTermination` 2/2 pass；浏览器返回 No browser is available，故不记 pass |
 | FLOW-12 | pending | 待执行 | — |

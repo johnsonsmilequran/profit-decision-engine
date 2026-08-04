@@ -269,7 +269,7 @@ func TestClearanceReminderStopsAfterOverrideOrTermination(t *testing.T) {
 	}{
 		{name: "override", mutate: func(service *Service, supervisor Principal, linkID string) error {
 			noRestock := "no_restock"
-			_, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "改为加投并暂停补货", Version: 2, IdempotencyKey: "停催改判-" + linkID})
+			_, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "改为加投并暂停补货", Version: 2, IdempotencyKey: "停催改判-" + linkID, InventorySelectionExplicit: true})
 			return err
 		}},
 		{name: "termination", mutate: func(service *Service, supervisor Principal, linkID string) error {
@@ -339,6 +339,120 @@ func TestAIRetryQueuesFrozenDecisionIdempotently(t *testing.T) {
 	}
 }
 
+func TestSupervisorOverrideRequiresChangedActionAndExplicitInventoryChoice(t *testing.T) {
+	var explicitNone, omitted OverrideInput
+	if err := json.Unmarshal([]byte(`{"business_action":"invest","inventory_action":null,"reason":"明确不生成协同","version":1,"idempotency_key":"解析显式空值"}`), &explicitNone); err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal([]byte(`{"business_action":"invest","reason":"漏传库存选择","version":1,"idempotency_key":"解析漏字段"}`), &omitted); err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal([]byte(`{"business_action":"invest","inventory_action":null,"reason":"含未知字段","version":1,"idempotency_key":"未知字段","unexpected":true}`), &OverrideInput{}); err == nil {
+		t.Fatal("override JSON with unknown field must be rejected")
+	}
+	if !explicitNone.InventorySelectionExplicit || explicitNone.InventoryAction != nil || omitted.InventorySelectionExplicit {
+		t.Fatalf("inventory selection presence explicit=%t/%v omitted=%t", explicitNone.InventorySelectionExplicit, explicitNone.InventoryAction, omitted.InventorySelectionExplicit)
+	}
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	supervisor := Principal{ActorRef: "supervisor-explicit-override", Name: "改判边界主管", Role: "supervisor"}
+	linkID, taskID := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	noRestock := "no_restock"
+	invalid := []OverrideInput{
+		{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "已看过库存依据", Version: 1, IdempotencyKey: "漏选库存-" + linkID},
+		{BusinessAction: "clearance", InventoryAction: stringPointer("prohibit_restock"), Reason: "经营动作没有变化", Version: 1, IdempotencyKey: "同动作-" + linkID, InventorySelectionExplicit: true},
+		{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "   ", Version: 1, IdempotencyKey: "空理由-" + linkID, InventorySelectionExplicit: true},
+		{BusinessAction: "invest", InventoryAction: stringPointer("prohibit_restock"), Reason: "不能沿用原禁补", Version: 1, IdempotencyKey: "沿用禁补-" + linkID, InventorySelectionExplicit: true},
+		{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "旧页面提交", Version: 99, IdempotencyKey: "旧版本改判-" + linkID, InventorySelectionExplicit: true},
+	}
+	for index, input := range invalid {
+		_, err := service.Override(ctx, supervisor, linkID, input)
+		if index == len(invalid)-1 {
+			if !errors.Is(err, ErrConflict) {
+				t.Fatalf("invalid[%d] error=%v, want conflict", index, err)
+			}
+		} else if !errors.Is(err, ErrInvalidState) {
+			t.Fatalf("invalid[%d] error=%v, want invalid state", index, err)
+		}
+	}
+	var invalidEvents int
+	var unchangedBusiness, unchangedInventory, unchangedState string
+	if err := db.QueryRow(ctx, `SELECT count(*) FROM business_event WHERE task_id=$1 AND event_type='supervisor_override'`, taskID).Scan(&invalidEvents); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.QueryRow(ctx, `SELECT current_business_action,current_inventory_action,business_state FROM spu_action_task WHERE task_id=$1`, taskID).
+		Scan(&unchangedBusiness, &unchangedInventory, &unchangedState); err != nil {
+		t.Fatal(err)
+	}
+	if invalidEvents != 0 || unchangedBusiness != "clearance" || unchangedInventory != "prohibit_restock" || unchangedState != "pending_review" {
+		t.Fatalf("invalid override changed task events=%d action=%s/%s state=%s", invalidEvents, unchangedBusiness, unchangedInventory, unchangedState)
+	}
+
+	for _, test := range []struct {
+		name      string
+		inventory *string
+		state     string
+	}{
+		{name: "restock", inventory: stringPointer("restock"), state: "pending_execution"},
+		{name: "no_restock", inventory: stringPointer("no_restock"), state: "pending_execution"},
+		{name: "no_coordination", inventory: nil, state: "not_generated"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			caseLinkID, caseTaskID := insertReviewFixture(t, ctx, db)
+			input := OverrideInput{BusinessAction: "invest", InventoryAction: test.inventory, Reason: "基于冻结库存与销量重新确认加投方案", Version: 1,
+				IdempotencyKey: "三选一改判-" + test.name + "-" + caseLinkID, InventorySelectionExplicit: true}
+			result, err := service.Override(ctx, supervisor, caseLinkID, input)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.SuggestedBusiness == nil || *result.SuggestedBusiness != "clearance" || result.SuggestedInventory == nil || *result.SuggestedInventory != "prohibit_restock" {
+				t.Fatalf("fixed rule projection changed=%v/%v", result.SuggestedBusiness, result.SuggestedInventory)
+			}
+			if result.EffectiveBusiness == nil || *result.EffectiveBusiness != "invest" || !optionalStringEqual(result.EffectiveInventory, test.inventory) || result.InventoryState != test.state {
+				t.Fatalf("effective=%v/%v inventory_state=%s", result.EffectiveBusiness, result.EffectiveInventory, result.InventoryState)
+			}
+			if _, err := service.Override(ctx, supervisor, caseLinkID, input); err != nil {
+				t.Fatalf("idempotent retry: %v", err)
+			}
+			var events, fixedRules, activeOverrides int
+			var beforeBusiness, afterBusiness, beforeInventory string
+			var afterInventory *string
+			if err := db.QueryRow(ctx, `SELECT count(*),min(details->>'before_business'),min(details->>'after_business'),
+				min(details->>'before_inventory'),min(details->>'after_inventory') FROM business_event
+				WHERE task_id=$1 AND event_type='supervisor_override'`, caseTaskID).
+				Scan(&events, &beforeBusiness, &afterBusiness, &beforeInventory, &afterInventory); err != nil {
+				t.Fatal(err)
+			}
+			if err := db.QueryRow(ctx, `SELECT count(*) FILTER (WHERE source='fixed_rule' AND business_action='clearance' AND inventory_action='prohibit_restock'),
+				count(*) FILTER (WHERE source='supervisor_override' AND status='active') FROM action_revision WHERE task_id=$1`, caseTaskID).
+				Scan(&fixedRules, &activeOverrides); err != nil {
+				t.Fatal(err)
+			}
+			if events != 1 || beforeBusiness != "clearance" || afterBusiness != "invest" || beforeInventory != "prohibit_restock" || !optionalStringEqual(afterInventory, test.inventory) || fixedRules != 1 || activeOverrides != 1 {
+				t.Fatalf("audit events=%d before=%s/%s after=%s/%v fixed=%d active=%d", events, beforeBusiness, beforeInventory, afterBusiness, afterInventory, fixedRules, activeOverrides)
+			}
+		})
+	}
+}
+
+func stringPointer(value string) *string { return &value }
+
+func optionalStringEqual(left, right *string) bool {
+	if left == nil || right == nil {
+		return left == nil && right == nil
+	}
+	return *left == *right
+}
+
 func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {
@@ -361,7 +475,7 @@ func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
 		t.Fatal(err)
 	}
 	noRestock := "no_restock"
-	_, err = service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 2, IdempotencyKey: "直接改判-" + linkID})
+	_, err = service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 2, IdempotencyKey: "直接改判-" + linkID, InventorySelectionExplicit: true})
 	if !errors.Is(err, ErrInvalidState) {
 		t.Fatalf("override after execution error=%v, want invalid state", err)
 	}
@@ -372,7 +486,7 @@ func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
 	if terminated.BusinessState != "terminated" || terminated.InventoryState != "terminated" {
 		t.Fatalf("terminated states=%s/%s", terminated.BusinessState, terminated.InventoryState)
 	}
-	overridden, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 3, IdempotencyKey: "终止后改判-" + linkID})
+	overridden, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "冻结库存足够且利润改善，转为加投但暂不补货", Version: 3, IdempotencyKey: "终止后改判-" + linkID, InventorySelectionExplicit: true})
 	if err != nil {
 		t.Fatal(err)
 	}

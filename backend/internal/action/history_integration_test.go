@@ -30,7 +30,7 @@ func TestHistoryKeepsFrozenBatchDecisionAndAppliesRoleProjection(t *testing.T) {
 	service := NewService(db)
 	noRestock := "no_restock"
 	if _, err := service.Override(ctx, Principal{ActorRef: "history-supervisor", Name: "历史主管", Role: "supervisor"}, linkID,
-		OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "保留原清仓规则快照，仅新增主管生效版本", Version: 1, IdempotencyKey: "历史改判-" + linkID}); err != nil {
+		OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "保留原清仓规则快照，仅新增主管生效版本", Version: 1, IdempotencyKey: "历史改判-" + linkID, InventorySelectionExplicit: true}); err != nil {
 		t.Fatal(err)
 	}
 	history, err := service.History(ctx, Principal{ActorRef: "history-supervisor", Name: "历史主管", Role: "supervisor"},
