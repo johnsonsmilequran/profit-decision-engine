@@ -136,6 +136,12 @@ func TestActionLifecycleContinuesStableTaskAndStagesChangedAction(t *testing.T) 
 		t.Fatalf("previous projection was not frozen from week two: trigger=%s state=%s metrics=%v/%v/%v/%v",
 			previousTrigger, previousState, previousSales, previousProfit, previousReturn, previousInventory)
 	}
+	if os.Getenv("PRESERVE_LIFECYCLE_FIXTURE") == "1" {
+		if err := tx.Commit(ctx); err != nil {
+			t.Fatalf("preserve lifecycle fixture: %v", err)
+		}
+		t.Logf("preserved FLOW-07 fixture spu=%s task=%s latest_decision=%s", spuID, taskID, thirdDecision)
+	}
 }
 
 type lifecycleDecisionFixture struct {
