@@ -24,6 +24,8 @@
 
 OA 协同由 API/Worker 通过 `OA_MESSAGE_URL` 和 `OA_TOKEN` 调用公司适配入口。消息使用独立最小字段 DTO；发送、失败、人工补发和每日清仓催办均持久化到 `oa_notification`，送达不等同于业务确认。未配置 OA 时默认失败并保留受控错误状态，不伪造回执。
 
+AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
+
 ## 当前成果
 
 - 正式 PRD：`趣然AI商品经营利润决策助手/output/PRD详细版.md`

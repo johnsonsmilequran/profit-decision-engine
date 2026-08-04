@@ -56,7 +56,9 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 		result.Events = append(result.Events, event)
 	}
 	var content []byte
-	err = s.db.QueryRow(ctx, `SELECT status,coalesce(content,'{}'::jsonb) FROM ai_explanation WHERE decision_id=$1 ORDER BY version DESC LIMIT 1`, item.DecisionID).Scan(&result.AIStatus, &content)
+	err = s.db.QueryRow(ctx, `SELECT latest.status,coalesce(latest.content,previous.content,'{}'::jsonb) FROM
+		(SELECT status,content FROM ai_explanation WHERE decision_id=$1 ORDER BY version DESC LIMIT 1) latest
+		LEFT JOIN LATERAL (SELECT content FROM ai_explanation WHERE decision_id=$1 AND status='generated' ORDER BY version DESC LIMIT 1) previous ON true`, item.DecisionID).Scan(&result.AIStatus, &content)
 	if err == nil {
 		if err := json.Unmarshal(content, &result.AIContent); err != nil {
 			return Detail{}, err
@@ -94,6 +96,68 @@ func (s *Service) Get(ctx context.Context, actor Principal, linkID string) (Deta
 		return Detail{}, err
 	}
 	return result, rows.Err()
+}
+
+func (s *Service) RetryAI(ctx context.Context, actor Principal, linkID string, input AIRetryInput) (Detail, error) {
+	if actor.Role != "operations" && actor.Role != "supervisor" {
+		return Detail{}, ErrForbidden
+	}
+	if strings.TrimSpace(input.IdempotencyKey) == "" {
+		return Detail{}, ErrInvalidState
+	}
+	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return Detail{}, err
+	}
+	defer tx.Rollback(ctx)
+	query := `SELECT l.task_id::text,l.decision_id::text,s.operator_ref FROM decision_task_link l
+		JOIN decision_record d ON d.decision_id=l.decision_id JOIN spu_snapshot s ON s.snapshot_id=d.snapshot_id
+		WHERE l.link_id=$1 FOR UPDATE OF l`
+	var taskID, decisionID, operator string
+	if err := tx.QueryRow(ctx, query, linkID).Scan(&taskID, &decisionID, &operator); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return Detail{}, ErrNotFound
+		}
+		return Detail{}, err
+	}
+	if actor.Role == "operations" && operator != actor.Name {
+		return Detail{}, ErrForbidden
+	}
+	if found, err := eventExists(ctx, tx, input.IdempotencyKey); err != nil {
+		return Detail{}, err
+	} else if found {
+		if err := tx.Commit(ctx); err != nil {
+			return Detail{}, err
+		}
+		return s.Get(ctx, actor, linkID)
+	}
+	var latestStatus *string
+	var next int
+	if err := tx.QueryRow(ctx, `SELECT max(status),coalesce(max(version),0)+1 FROM ai_explanation WHERE decision_id=$1`, decisionID).Scan(&latestStatus, &next); err != nil {
+		return Detail{}, err
+	}
+	if latestStatus != nil {
+		var actualLatest string
+		if err := tx.QueryRow(ctx, `SELECT status FROM ai_explanation WHERE decision_id=$1 ORDER BY version DESC LIMIT 1`, decisionID).Scan(&actualLatest); err != nil {
+			return Detail{}, err
+		}
+		if actualLatest == "generating" {
+			return Detail{}, ErrInvalidState
+		}
+	}
+	var explanationID string
+	if err := tx.QueryRow(ctx, `INSERT INTO ai_explanation(decision_id,version,status) VALUES($1,$2,'generating') RETURNING explanation_id::text`, decisionID, next).Scan(&explanationID); err != nil {
+		return Detail{}, err
+	}
+	if _, err := tx.Exec(ctx, `INSERT INTO business_event(task_id,link_id,event_type,actor_ref,to_state,details,idempotency_key)
+		VALUES($1,$2,'ai_retry_requested',$3,'generating',jsonb_build_object('explanation_id',$4::text,'version',$5::int),$6)`, taskID,
+		linkID, actor.ActorRef, explanationID, next, input.IdempotencyKey); err != nil {
+		return Detail{}, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return Detail{}, err
+	}
+	return s.Get(ctx, actor, linkID)
 }
 
 func (s *Service) Review(ctx context.Context, actor Principal, linkID string, input ReviewInput) (Detail, error) {

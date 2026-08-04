@@ -97,6 +97,14 @@ paths:
       responses:
         '200': { description: 终止后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
         '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/ai-retry:
+    post:
+      operationId: retryAIExplanation
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AIRetryInput' } } } }
+      responses:
+        '200': { description: 已进入异步生成的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
   /api/actions/{taskId}/execute:
     post:
       operationId: executeAction
@@ -457,6 +465,11 @@ components:
         recipient_actor_ref: { type: string, minLength: 1 }
         feedback_request: { type: string, minLength: 1 }
     OARetryInput:
+      type: object
+      required: [idempotency_key]
+      properties:
+        idempotency_key: { type: string, minLength: 1 }
+    AIRetryInput:
       type: object
       required: [idempotency_key]
       properties:

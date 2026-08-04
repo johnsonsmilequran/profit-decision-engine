@@ -208,3 +208,7 @@ type OANotificationInput struct {
 type OARetryInput struct {
 	IdempotencyKey string `json:"idempotency_key"`
 }
+
+type AIRetryInput struct {
+	IdempotencyKey string `json:"idempotency_key"`
+}

@@ -1,0 +1,67 @@
+package explanation
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
+
+func TestClientAdoptsOnlyStrictRuleConsistentJSON(t *testing.T) {
+	server := completionServer(t, `{"problem":"利润率 -0.128 触发清仓条件","evidence":"SPU 515 的冻结证据支持该结论","action":"clearance+prohibit_restock","summary":"执行清仓并禁止补货","extra":"越界"}`)
+	defer server.Close()
+	_, err := NewClient(server.URL, "LiteLLM测试密钥", "解释模型").Explain(context.Background(), explanationFixture())
+	if err != ErrNotAdopted {
+		t.Fatalf("unknown field error=%v", err)
+	}
+	server.Config.Handler = completionHandler(t, `{"problem":"利润率 -0.128 触发清仓条件","evidence":"SPU 515 的冻结证据支持该结论","action":"clearance+prohibit_restock","summary":"执行清仓并禁止补货"}`)
+	output, err := NewClient(server.URL, "LiteLLM测试密钥", "解释模型").Explain(context.Background(), explanationFixture())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output.Action != "clearance+prohibit_restock" {
+		t.Fatalf("output=%+v", output)
+	}
+}
+
+func TestClientRejectsConflictingActionAndInventedNumber(t *testing.T) {
+	for _, content := range []string{
+		`{"problem":"利润不足","evidence":"冻结证据","action":"invest+restock","summary":"改为加投"}`,
+		`{"problem":"利润不足","evidence":"预计增长 999%","action":"clearance+prohibit_restock","summary":"执行规则动作"}`,
+	} {
+		server := completionServer(t, content)
+		_, err := NewClient(server.URL, "LiteLLM测试密钥", "解释模型").Explain(context.Background(), explanationFixture())
+		server.Close()
+		if err != ErrNotAdopted {
+			t.Fatalf("content=%s error=%v", content, err)
+		}
+	}
+}
+
+func completionServer(t *testing.T, content string) *httptest.Server {
+	t.Helper()
+	return httptest.NewServer(completionHandler(t, content))
+}
+
+func completionHandler(t *testing.T, content string) http.Handler {
+	t.Helper()
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var request struct {
+			Messages []map[string]string `json:"messages"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil || len(request.Messages) != 2 {
+			t.Fatalf("invalid request: %v", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"choices": []map[string]interface{}{{"message": map[string]string{"content": content}}}})
+	})
+}
+
+func explanationFixture() Input {
+	business, inventory := "clearance", "prohibit_restock"
+	profit := -0.128
+	return Input{SPUID: "515", Name: "忙碌屋玩具", PeriodStart: "2026-06-01", PeriodEnd: "2026-06-30", CutoffDate: "2026-06-30",
+		BusinessAction: &business, InventoryAction: &inventory, TriggerRule: "利润率低于清仓阈值", ProfitRate: &profit,
+		Evidence: map[string]interface{}{"operating_profit_rate": -0.128}, Quality: map[string]string{"profit": "valid"}}
+}

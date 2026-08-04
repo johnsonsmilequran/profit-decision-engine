@@ -59,6 +59,9 @@ services:
       IMPORT_FILE_DIR: /data/imports
       OA_MESSAGE_URL: ${OA_MESSAGE_URL:-}
       OA_TOKEN: ${OA_TOKEN:-}
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-}
+      LITELLM_API_KEY: ${LITELLM_API_KEY:-}
+      LITELLM_MODEL: ${LITELLM_MODEL:-}
     volumes:
       - import-files:/data/imports
     depends_on:

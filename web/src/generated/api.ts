@@ -148,6 +148,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/suggestions/{linkId}/ai-retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["retryAIExplanation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/actions/{taskId}/execute": {
         parameters: {
             query?: never;
@@ -580,6 +596,9 @@ export interface components {
         OARetryInput: {
             idempotency_key: string;
         };
+        AIRetryInput: {
+            idempotency_key: string;
+        };
     };
     responses: {
         /** @description 业务错误 */
@@ -856,6 +875,33 @@ export interface operations {
         };
         responses: {
             /** @description 终止后的建议详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDetail"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    retryAIExplanation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIRetryInput"];
+            };
+        };
+        responses: {
+            /** @description 已进入异步生成的建议详情 */
             200: {
                 headers: {
                     [name: string]: unknown;

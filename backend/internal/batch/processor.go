@@ -139,6 +139,9 @@ func (p *Processor) process(ctx context.Context, jobID, batchID string) error {
 			decision.BusinessAction, decision.InventoryAction, decision.TriggerRule, evidenceJSON).Scan(&decisionID); err != nil {
 			return err
 		}
+		if _, err := tx.Exec(ctx, `INSERT INTO ai_explanation(decision_id,version,status) VALUES($1,1,'generating')`, decisionID); err != nil {
+			return err
+		}
 		if shouldCreateTask(decision) {
 			if err := linkDecisionToTask(ctx, tx, batchID, decisionID, snapshot, decision); err != nil {
 				return err

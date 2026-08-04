@@ -16,6 +16,9 @@ type Config struct {
 	ImportFileDir        string
 	OAMessageURL         string
 	OAToken              string
+	LiteLLMBaseURL       string
+	LiteLLMAPIKey        string
+	LiteLLMModel         string
 }
 
 func Load() (Config, error) {
@@ -29,6 +32,9 @@ func Load() (Config, error) {
 		ImportFileDir:        value("IMPORT_FILE_DIR", "./var/imports"),
 		OAMessageURL:         strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
 		OAToken:              strings.TrimSpace(os.Getenv("OA_TOKEN")),
+		LiteLLMBaseURL:       strings.TrimSpace(os.Getenv("LITELLM_BASE_URL")),
+		LiteLLMAPIKey:        strings.TrimSpace(os.Getenv("LITELLM_API_KEY")),
+		LiteLLMModel:         strings.TrimSpace(os.Getenv("LITELLM_MODEL")),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")
@@ -41,10 +47,13 @@ func Load() (Config, error) {
 
 func LoadWorker() (Config, error) {
 	cfg := Config{
-		DatabaseURL:   strings.TrimSpace(os.Getenv("DATABASE_URL")),
-		ImportFileDir: value("IMPORT_FILE_DIR", "./var/imports"),
-		OAMessageURL:  strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
-		OAToken:       strings.TrimSpace(os.Getenv("OA_TOKEN")),
+		DatabaseURL:    strings.TrimSpace(os.Getenv("DATABASE_URL")),
+		ImportFileDir:  value("IMPORT_FILE_DIR", "./var/imports"),
+		OAMessageURL:   strings.TrimSpace(os.Getenv("OA_MESSAGE_URL")),
+		OAToken:        strings.TrimSpace(os.Getenv("OA_TOKEN")),
+		LiteLLMBaseURL: strings.TrimSpace(os.Getenv("LITELLM_BASE_URL")),
+		LiteLLMAPIKey:  strings.TrimSpace(os.Getenv("LITELLM_API_KEY")),
+		LiteLLMModel:   strings.TrimSpace(os.Getenv("LITELLM_MODEL")),
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")

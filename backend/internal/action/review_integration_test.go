@@ -172,6 +172,47 @@ func TestClearanceReminderIsCreatedAtMostOncePerShanghaiDay(t *testing.T) {
 	}
 }
 
+func TestAIRetryQueuesFrozenDecisionIdempotently(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	linkID, _ := insertReviewFixture(t, ctx, db)
+	service := NewService(db)
+	actor := Principal{ActorRef: "supervisor-ai-test", Name: "解释主管", Role: "supervisor"}
+	input := AIRetryInput{IdempotencyKey: "AI重试-" + linkID}
+	queued, err := service.RetryAI(ctx, actor, linkID, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if queued.AIStatus != "generating" {
+		t.Fatalf("ai status=%s", queued.AIStatus)
+	}
+	if _, err := service.RetryAI(ctx, actor, linkID, input); err != nil {
+		t.Fatalf("idempotent retry failed: %v", err)
+	}
+	_, err = service.RetryAI(ctx, actor, linkID, AIRetryInput{IdempotencyKey: "AI并发重试-" + linkID})
+	if !errors.Is(err, ErrInvalidState) {
+		t.Fatalf("concurrent retry error=%v", err)
+	}
+	var explanationCount, eventCount int
+	if err := db.QueryRow(ctx, `SELECT count(*) FROM ai_explanation e JOIN decision_task_link l ON l.decision_id=e.decision_id WHERE l.link_id=$1`, linkID).Scan(&explanationCount); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.QueryRow(ctx, `SELECT count(*) FROM business_event WHERE link_id=$1 AND event_type='ai_retry_requested'`, linkID).Scan(&eventCount); err != nil {
+		t.Fatal(err)
+	}
+	if explanationCount != 1 || eventCount != 1 {
+		t.Fatalf("explanations=%d events=%d", explanationCount, eventCount)
+	}
+}
+
 func TestSupervisorOverrideRequiresTerminationAfterExecution(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {

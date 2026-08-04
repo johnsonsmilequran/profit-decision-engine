@@ -149,3 +149,8 @@ export async function retryOANotification(taskId:string,notificationId:string):P
   const response=await fetch(`/api/actions/${encodeURIComponent(taskId)}/oa-notifications/${encodeURIComponent(notificationId)}/retry`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({idempotency_key:crypto.randomUUID()})})
   return businessResponse<SuggestionDetail>(response)
 }
+
+export async function retryAIExplanation(linkId:string):Promise<SuggestionDetail>{
+  const response=await fetch(`/api/suggestions/${encodeURIComponent(linkId)}/ai-retry`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({idempotency_key:crypto.randomUUID()})})
+  return businessResponse<SuggestionDetail>(response)
+}

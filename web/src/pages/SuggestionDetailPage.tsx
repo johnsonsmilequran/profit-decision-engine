@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { executeAction, getSession, getSuggestion, overrideSuggestion, recordActionResult, retryOANotification, reviewClearanceCompletion, reviewSuggestion, sendOANotification, submitClearanceCompletion, terminateSuggestion, type SuggestionDetail } from '../api'
+import { executeAction, getSession, getSuggestion, overrideSuggestion, recordActionResult, retryAIExplanation, retryOANotification, reviewClearanceCompletion, reviewSuggestion, sendOANotification, submitClearanceCompletion, terminateSuggestion, type SuggestionDetail } from '../api'
 import { AppShell } from '../components/AppShell'
 
 const actionText: Record<string,string> = { clearance:'清仓',stop_loss:'止损',observe:'观察',invest:'加投',maintain:'维持',restock:'补货',no_restock:'不补货',prohibit_restock:'禁止补货' }
@@ -15,6 +15,7 @@ export function SuggestionDetailPage({ linkId }: { linkId: string }) {
   const [note,setNote]=useState('')
   const [message,setMessage]=useState('')
   const review=useMutation({mutationFn:()=>reviewSuggestion(linkId,reviewChoice,note,detail.data!.review_version),onSuccess:data=>{queryClient.setQueryData(['suggestion',linkId],data);setMessage('审核已保存，两条动作轨已按结果更新。')},onError:error=>setMessage(error.message==='version_conflict'?'状态已被其他人更新，请刷新后重新判断。':'审核提交失败，输入已保留。')})
+  const aiRetry=useMutation({mutationFn:()=>retryAIExplanation(linkId),onSuccess:data=>{queryClient.setQueryData(['suggestion',linkId],data);setMessage('已基于同一冻结数据进入异步生成，业务操作不受影响。')},onError:()=>setMessage('重新生成请求失败，请稍后重试。')})
   const submit=(event:FormEvent)=>{event.preventDefault();if(reviewChoice==='rejected'&&!note.trim()){setMessage('驳回时必须填写原因。');return}const action=reviewChoice==='approved'?'通过':'驳回';if(!window.confirm(`确认${action}「${detail.data?.name ?? ''}」的完整建议？`))return;setMessage('');review.mutate()}
   if(detail.isPending)return <AppShell><State title="正在加载建议" body="正在读取冻结证据与状态事件。" /></AppShell>
   if(detail.isError||!detail.data)return <AppShell><State title="建议无法打开" body="记录不存在、无权访问或服务暂时不可用。" /></AppShell>
@@ -27,7 +28,7 @@ export function SuggestionDetailPage({ linkId }: { linkId: string }) {
     <div className="suggestion-grid"><div>
       <section className="panel section-panel"><h2>冻结指标与规则证据</h2><dl className="evidence-list"><Row label="统计期间" value={`${item.period_start} 至 ${item.period_end}，截止 ${item.business_cutoff_date}`} /><Row label="上月净销售额" value={money(item.net_sales_prev_month)} /><Row label="经营准利润率" value={percent(item.operating_profit_rate)} /><Row label="近 7 天品退率" value={percent(item.quality_return_rate_7d)} /><Row label="库存可售天数" value={number(item.inventory_days)} /><Row label="触发规则" value={item.trigger_rule} /></dl><details><summary>查看完整结构化证据</summary><pre>{JSON.stringify(item.evidence,null,2)}</pre></details></section>
       <section className="panel section-panel"><h2>双轨动作</h2><div className="track"><div><span>经营动作 · 责任运营</span><strong>{label(item.effective_business_action)}</strong><small>{item.operator_ref} · {item.business_state}</small></div><div><span>库存协同 · 责任运营通过 OA 推进</span><strong>{label(item.effective_inventory_action)}</strong><small>{item.operator_ref} · {item.inventory_state}</small></div></div></section>
-      <section className="panel section-panel"><h2>AI 辅助解读</h2>{item.ai_status==='generated'?<pre>{JSON.stringify(item.ai_content,null,2)}</pre>:<p className="muted">当前状态：{item.ai_status==='not_configured'?'未配置模型服务。结构化四要素与业务闭环不受影响。':item.ai_status}</p>}</section>
+      <section className="panel section-panel"><h2>AI 辅助解读</h2>{Object.keys(item.ai_content).length>0?<pre>{JSON.stringify(item.ai_content,null,2)}</pre>:null}<p className="muted">当前状态：{aiStatusText(item.ai_status)}。固定规则四要素与业务闭环不受影响。</p>{!historyMode&&item.ai_status!=='generating'?<button className="button" disabled={aiRetry.isPending} onClick={()=>aiRetry.mutate()}>{aiRetry.isPending?'正在提交…':'基于冻结数据重新生成'}</button>:null}</section>
     </div><aside>
       <section className="panel section-panel"><h2>审核与执行</h2>{historyMode?<p className="muted">历史只读，不提供审核或执行入口。</p>:session.data?.user.role==='supervisor'?<div className="operation-stack">{item.review_status==='pending'?<form onSubmit={submit}><div className="choice-row"><label><input type="radio" checked={reviewChoice==='approved'} onChange={()=>setReviewChoice('approved')} /> 整体通过</label><label><input type="radio" checked={reviewChoice==='rejected'} onChange={()=>setReviewChoice('rejected')} /> 整体驳回</label></div><label className="stacked">审核备注<textarea value={note} onChange={event=>setNote(event.target.value)} placeholder={reviewChoice==='rejected'?'必填驳回原因':'通过时可选'} /></label>{message?<div className={review.isError?'alert':'success-note'}>{message}</div>:null}<button className="button primary-button full-button" disabled={review.isPending}>{review.isPending?'正在提交…':'确认审核'}</button></form>:null}<SupervisorLifecyclePanel item={item} onUpdated={data=>queryClient.setQueryData(['suggestion',linkId],data)} /></div>:session.data?.user.role==='operations'?<OperationsPanel item={item} onUpdated={data=>queryClient.setQueryData(['suggestion',linkId],data)} />:<p className="muted">当前角色无可用操作。</p>}</section>
       <section className="panel section-panel"><h2>跨周任务</h2><dl className="evidence-list"><Row label="稳定任务 ID" value={item.task_id} /><Row label="任务产生" value={dateTime(item.task_created_at)} /><Row label="本周关联" value={dateTime(item.linked_at)} /><Row label="经营执行" value={item.business_executed_at?dateTime(item.business_executed_at):'—'} /></dl>{item.previous?<details><summary>最近前序建议</summary><p>{item.previous.batch_code} · {label(item.previous.business_action)} · {item.previous.trigger_rule}</p></details>:<p className="muted">首次命中，无前序待办。</p>}</section>
@@ -41,6 +42,7 @@ function Card({title,body}:{title:string;body:string}){return <div className="fa
 function Row({label:rowLabel,value}:{label:string;value:string}){return <div><dt>{rowLabel}</dt><dd>{value}</dd></div>}
 function label(value:string|null){return value?actionText[value]??value:'不生成'}
 function reviewLabel(value:string){return ({pending:'待审核',approved:'已通过',rejected:'已驳回'} as Record<string,string>)[value]??value}
+function aiStatusText(value:string){return ({generating:'生成中',generated:'已生成',failed:'生成失败',not_adopted:'内容未采用',not_configured:'模型服务未配置'} as Record<string,string>)[value]??value}
 function money(value:number|null){return value===null?'数据不足':`¥${value.toLocaleString('zh-CN',{maximumFractionDigits:2})}`}
 function percent(value:number|null){return value===null?'未校验':`${(value*100).toFixed(2)}%`}
 function number(value:number|null){return value===null?'数据不足':value.toFixed(2)}

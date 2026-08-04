@@ -52,6 +52,7 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Post("/api/suggestions/{linkID}/review", s.reviewSuggestion)
 	r.Post("/api/suggestions/{linkID}/override", s.overrideSuggestion)
 	r.Post("/api/suggestions/{linkID}/terminate", s.terminateSuggestion)
+	r.Post("/api/suggestions/{linkID}/ai-retry", s.retryAIExplanation)
 	r.Post("/api/actions/{taskID}/execute", s.executeAction)
 	r.Post("/api/actions/{taskID}/result", s.recordActionResult)
 	r.Post("/api/actions/{taskID}/clearance-completion", s.submitClearanceCompletion)
@@ -60,6 +61,20 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Post("/api/actions/{taskID}/oa-notifications", s.sendOANotification)
 	r.Post("/api/actions/{taskID}/oa-notifications/{notificationID}/retry", s.retryOANotification)
 	return r
+}
+
+func (s *Server) retryAIExplanation(w http.ResponseWriter, r *http.Request) {
+	principal, ok := s.commandPrincipal(w, r)
+	if !ok {
+		return
+	}
+	var input action.AIRetryInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.actions.RetryAI(r.Context(), principal, chi.URLParam(r, "linkID"), input)
+	writeActionCommandResult(w, result, err, s.logger, "retry ai explanation")
 }
 
 func (s *Server) sendOANotification(w http.ResponseWriter, r *http.Request) {
