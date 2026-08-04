@@ -483,19 +483,30 @@
     .spu-name { font-weight: 700; line-height: 1.42; }
     .spu-meta { margin-top: var(--space-1); color: var(--muted); font-size: var(--text-xs); }
     .category-label { margin-top: var(--space-2); color: var(--meta); font-size: var(--text-xs); }
-    .previous-todo { margin-top: var(--space-2); overflow: hidden; border: 1px solid var(--accent-border); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-strong); font-size: 11px; }
-    .previous-todo summary { display: flex; align-items: center; gap: var(--space-1); min-height: 30px; padding: 6px 8px; cursor: pointer; list-style: none; font-weight: 700; }
-    .previous-todo summary::-webkit-details-marker { display: none; }
-    .previous-todo summary:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
-    .previous-todo .previous-caret { margin-left: auto; transition: transform var(--motion-fast) var(--ease-standard); }
-    .previous-todo[open] .previous-caret { transform: rotate(180deg); }
-    .previous-detail { padding: 8px; border-top: 1px solid var(--accent-border); color: var(--fg); line-height: 1.55; }
-    .previous-context { padding-bottom: 7px; border-bottom: 1px dashed var(--accent-border); }
-    .previous-detail .meta-label { display: inline-block; min-width: 58px; color: var(--muted); }
-    .snapshot-block { padding-top: 7px; }
-    .snapshot-block + .snapshot-block { margin-top: 7px; border-top: 1px dashed var(--accent-border); }
-    .snapshot-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .snapshot-copy { color: var(--fg); font-size: 11px; }
+    .previous-toggle-row[hidden], .previous-task-row[hidden] { display: none; }
+    .previous-toggle-row td { padding: 0 var(--space-4) var(--space-3); background: var(--surface); }
+    .previous-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      width: 100%;
+      min-height: 36px;
+      padding: 7px 10px;
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .previous-toggle .previous-hint { color: var(--muted); font-weight: 500; }
+    .previous-toggle .previous-caret { margin-left: auto; transition: transform var(--motion-fast) var(--ease-standard); }
+    .previous-toggle[aria-expanded="true"] .previous-caret { transform: rotate(180deg); }
+    .previous-toggle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+    .previous-task-row td { background: var(--accent-soft); border-bottom-color: var(--accent-border); }
+    .previous-task-row td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
     .lifecycle { margin-top: var(--space-2); color: var(--muted); font-size: 11px; line-height: 1.55; white-space: nowrap; }
     .problem-cell { width: 260px; min-width: 260px; }
     .problem-title { font-weight: 680; line-height: 1.45; }
@@ -865,13 +876,24 @@
                 </tr>
               </thead>
               <tbody id="action-list">
-                <tr data-list-state="pending" data-action="清仓 禁止补货" data-store="趣然天猫旗舰店" data-owner="陈雨欣" data-review="已通过" data-business-state="待提交清仓完成时间" data-execution="待执行" data-search="SPU 515 布乐迪忙碌屋益智玩具 TASK-TOY-515">
-                  <td class="spu-cell sticky-column"><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="spu-meta"><span class="mono">SPU 515</span> · 趣然天猫旗舰店 / 天猫</div><div class="category-label">小爆款 · 责任运营 陈雨欣</div><div class="mt-2"><span class="badge badge-ai"><i class="ph-bold ph-link" aria-hidden="true"></i>延续上周 · 未重建</span></div><div class="spu-meta mono">TASK-TOY-515</div><details class="previous-todo"><summary><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i><span>最近前序待办</span><i class="ph-bold ph-caret-down previous-caret" aria-hidden="true"></i></summary><div class="previous-detail"><div class="previous-context"><div><span class="meta-label">来源批次</span><span class="mono">BATCH-20260531-01</span></div><div><span class="meta-label">产生时间</span><span class="mono">06-29 09:12</span></div><div><span class="meta-label">执行时间</span><span class="mono">—</span></div></div><div class="snapshot-block"><span class="snapshot-label">前序主动作</span><div class="snapshot-copy"><strong>清仓</strong> · 同步禁止补货</div></div><div class="snapshot-block"><span class="snapshot-label">前序关键依据</span><div class="snapshot-copy">净销售额 78,960 元；经营准利润率 <strong>-10.6% &lt; 5%</strong>；品退率未校验</div></div><div class="snapshot-block"><span class="snapshot-label">前序库存语境</span><div class="snapshot-copy">仓内 2,850 · 在途 400；近 14 天销量 98；可售 464.3 天</div></div><div class="snapshot-block"><span class="snapshot-label">前序经营状态</span><div class="snapshot-copy"><strong>待执行</strong> · 前序冻结值，不随本周更新</div></div></div></details></td>
+                <tr data-task-key="spu-515" data-list-state="pending" data-action="清仓 禁止补货" data-store="趣然天猫旗舰店" data-owner="陈雨欣" data-review="已通过" data-business-state="待提交清仓完成时间" data-execution="待执行" data-search="SPU 515 布乐迪忙碌屋益智玩具 TASK-TOY-515">
+                  <td class="spu-cell sticky-column"><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="spu-meta"><span class="mono">SPU 515</span> · 趣然天猫旗舰店 / 天猫</div><div class="category-label">小爆款 · 责任运营 陈雨欣</div><div class="mt-2"><span class="badge badge-ai"><i class="ph-bold ph-link" aria-hidden="true"></i>延续上周 · 未重建</span></div><div class="spu-meta mono">TASK-TOY-515</div></td>
                   <td class="problem-cell"><div class="problem-title">经营亏损明显，需要淘汰清仓</div><ul class="evidence-list"><li><span>经营准利润率</span><strong>-12.8% &lt; 5%</strong></li><li><span>上月净销售额</span><strong>86,240 元</strong></li><li><span>库存可售</span><strong>407.5 天</strong></li></ul></td>
                   <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">责任运营 · 待确认完成</div></div></div><div class="track"><span class="track-label">库存/OA 协同</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">责任运营 · OA 已送达，待核验</div></div></div></td>
                   <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">任务</span><span class="badge badge-neutral">清仓状态已沿用</span></div><div class="status-line"><span class="status-label">完成确认</span><span class="badge badge-pending">待运营提交时间</span></div><div class="status-line"><span class="status-label">最近催办</span><span class="badge badge-ai">今日 09:00 · OA 已送达</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>主管确认前每日提醒陈雨欣；同日不重复</span></div></td>
                   <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="lifecycle mono">产生 06-29 09:12<br>本周关联 07-06 09:18<br>执行 —</div></td>
                   <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-spu="SPU 515"><span>查看建议</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr class="previous-toggle-row" data-parent-task="spu-515">
+                  <td colspan="6"><button class="previous-toggle" type="button" aria-expanded="false" aria-controls="previous-action-spu-515"><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i><span>最近前序待办</span><span class="previous-hint">展开上次完整记录 · BATCH-20260531-01</span><i class="ph-bold ph-caret-down previous-caret" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr id="previous-action-spu-515" class="previous-task-row" data-parent-task="spu-515" hidden>
+                  <td class="spu-cell sticky-column"><div class="spu-name">布乐迪忙碌屋益智玩具</div><div class="spu-meta"><span class="mono">SPU 515</span> · 趣然天猫旗舰店 / 天猫</div><div class="category-label">小爆款 · 责任运营 陈雨欣</div><div class="mt-2"><span class="badge badge-ai"><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i>前序批次 · 只读</span></div><div class="spu-meta mono">BATCH-20260531-01 · TASK-TOY-515</div></td>
+                  <td class="problem-cell"><div class="problem-title">前序批次已识别经营亏损，需要淘汰清仓</div><ul class="evidence-list"><li><span>经营准利润率</span><strong>-10.6% &lt; 5%</strong></li><li><span>上月净销售额</span><strong>78,960 元</strong></li><li><span>库存可售</span><strong>464.3 天</strong></li></ul></td>
+                  <td class="action-cell"><div class="track"><span class="track-label">经营动作</span><div><span class="badge badge-clear">清仓</span><div class="track-owner">责任运营 · 待执行</div></div></div><div class="track"><span class="track-label">库存/OA 协同</span><div><span class="badge badge-clear">禁止补货</span><div class="track-owner">责任运营 · 待核验</div></div></div></td>
+                  <td class="status-cell"><div class="status-line"><span class="status-label">审核</span><span class="badge badge-pass">已通过</span></div><div class="status-line"><span class="status-label">经营</span><span class="badge badge-neutral">待执行</span></div><div class="status-line"><span class="status-label">AI</span><span class="badge badge-ai">已生成</span></div><div class="limitation"><i class="ph-bold ph-warning-circle" aria-hidden="true"></i><span>品退率未校验 · 前序冻结值</span></div></td>
+                  <td class="owner-cell"><div class="owner-name">陈雨欣</div><div class="lifecycle mono">产生 06-29 09:12<br>执行 —</div></td>
+                  <td><button class="link-button previous-record" type="button" data-spu="SPU 515 前序记录"><span>查看记录</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
                 </tr>
 
                 <tr data-list-state="pending" data-action="清仓 禁止补货" data-store="趣然拼多多旗舰店" data-owner="刘思琪" data-review="已通过" data-business-state="待执行" data-execution="待执行" data-search="SPU 811 恐龙轨道车大冒险">
@@ -1029,7 +1051,8 @@
   </div>
 
   <script>
-    const rows = Array.from(document.querySelectorAll('#action-list tr'));
+    const rows = Array.from(document.querySelectorAll('#action-list > tr[data-list-state]'));
+    const previousToggles = Array.from(document.querySelectorAll('.previous-toggle'));
     const tabs = Array.from(document.querySelectorAll('[data-tab]'));
     const filterControls = [
       document.getElementById('action-filter'),
@@ -1048,6 +1071,16 @@
     let activeTab = 'pending';
     let toastTimer;
 
+    function setPreviousExpanded(button, expanded) {
+      const row = document.getElementById(button.getAttribute('aria-controls'));
+      button.setAttribute('aria-expanded', String(expanded));
+      if (row) row.hidden = !expanded;
+    }
+
+    previousToggles.forEach((button) => {
+      button.addEventListener('click', () => setPreviousExpanded(button, button.getAttribute('aria-expanded') !== 'true'));
+    });
+
     function showToast(message) {
       toastCopy.textContent = message;
       toast.classList.add('visible');
@@ -1056,6 +1089,7 @@
     }
 
     function applyView() {
+      previousToggles.forEach((button) => setPreviousExpanded(button, false));
       const query = searchInput.value.trim().toLowerCase();
       const action = filterControls[0].value;
       const store = filterControls[1].value;
@@ -1076,6 +1110,8 @@
         const matchesBusinessState = !businessState || row.dataset.businessState === businessState;
         const shouldShow = matchesTab && matchesQuery && matchesAction && matchesStore && matchesOwner && matchesReview && matchesExecution && matchesBusinessState;
         row.hidden = !shouldShow;
+        const toggleRow = document.querySelector(`.previous-toggle-row[data-parent-task="${row.dataset.taskKey}"]`);
+        if (toggleRow) toggleRow.hidden = !shouldShow;
         if (shouldShow) visible += 1;
       });
 
@@ -1120,7 +1156,7 @@
     });
 
     document.querySelectorAll('[data-spu]').forEach((control) => {
-      control.addEventListener('click', () => showToast(`正在打开 ${control.dataset.spu} 的单条建议详情`));
+      control.addEventListener('click', () => showToast(control.classList.contains('previous-record') ? `${control.dataset.spu}将在历史只读模式打开` : `正在打开 ${control.dataset.spu} 的单条建议详情`));
     });
 
     document.querySelectorAll('[data-nav]').forEach((control) => {
