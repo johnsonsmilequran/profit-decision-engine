@@ -9,15 +9,19 @@ type Principal struct {
 }
 
 type Filters struct {
-	BatchID       string
-	Search        string
-	Action        string
-	Store         string
-	Operator      string
-	ReviewStatus  string
-	BusinessState string
-	Page          int
-	Limit         int
+	BatchID         string
+	Tab             string
+	Search          string
+	Action          string
+	Store           string
+	Operator        string
+	ReviewStatus    string
+	BusinessState   string
+	InventoryState  string
+	ClearanceStatus string
+	Progress        string
+	Page            int
+	Limit           int
 }
 
 type Item struct {

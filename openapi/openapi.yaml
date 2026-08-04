@@ -47,12 +47,16 @@ paths:
       operationId: listActions
       parameters:
         - { name: batch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: tab, in: query, schema: { type: string, enum: [mine, all, processing, completed], default: mine } }
         - { name: search, in: query, schema: { type: string } }
         - { name: action, in: query, schema: { type: string } }
         - { name: store, in: query, schema: { type: string } }
         - { name: operator, in: query, schema: { type: string } }
         - { name: review_status, in: query, schema: { type: string } }
         - { name: business_state, in: query, schema: { type: string } }
+        - { name: inventory_state, in: query, schema: { type: string } }
+        - { name: clearance_status, in: query, schema: { type: string, enum: [not_submitted, pending_confirmation, returned, confirmed] } }
+        - { name: progress, in: query, schema: { type: string, enum: [pending_review, pending_execution, executing, executed, result_recorded, rejected] } }
         - { name: page, in: query, schema: { type: integer, minimum: 1 } }
         - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
       responses:

@@ -788,12 +788,16 @@ export interface operations {
         parameters: {
             query?: {
                 batch_id?: string;
+                tab?: "mine" | "all" | "processing" | "completed";
                 search?: string;
                 action?: string;
                 store?: string;
                 operator?: string;
                 review_status?: string;
                 business_state?: string;
+                inventory_state?: string;
+                clearance_status?: "not_submitted" | "pending_confirmation" | "returned" | "confirmed";
+                progress?: "pending_review" | "pending_execution" | "executing" | "executed" | "result_recorded" | "rejected";
                 page?: number;
                 limit?: 20 | 50 | 100;
             };

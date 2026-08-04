@@ -31,6 +31,7 @@ func (s *Service) List(ctx context.Context, actor Principal, filters Filters) (L
 	if actor.Role != "operations" && actor.Role != "supervisor" {
 		return ListResponse{}, ErrForbidden
 	}
+	normalizeFilters(&filters)
 	if filters.Page < 1 {
 		filters.Page = 1
 	}
@@ -140,17 +141,93 @@ func buildWhere(actor Principal, filters Filters, batchID string) (string, []int
 	if actor.Role == "operations" {
 		add("s.operator_ref=$%d", actor.Name)
 	}
+	completed := `(l.review_status='rejected' OR (t.business_state IN ('result_recorded','closed','terminated')
+		AND t.inventory_state IN ('processed','closed','not_generated','terminated')
+		AND (coalesce(t.current_business_action,'')<>'clearance' OR EXISTS(
+			SELECT 1 FROM clearance_completion completed_clearance
+			WHERE completed_clearance.task_id=t.task_id AND completed_clearance.status='confirmed'))))`
+	switch filters.Tab {
+	case "mine":
+		if actor.Role == "supervisor" {
+			conditions = append(conditions, `(l.review_status='pending' OR EXISTS(
+				SELECT 1 FROM clearance_completion mine_clearance WHERE mine_clearance.task_id=t.task_id
+				AND mine_clearance.status='pending_confirmation'))`)
+		} else {
+			conditions = append(conditions, `(l.review_status='approved' AND (
+				t.business_state IN ('pending_execution','executed') OR t.inventory_state='pending_execution'
+				OR (t.current_business_action='clearance' AND t.business_state='result_recorded' AND NOT EXISTS(
+					SELECT 1 FROM clearance_completion mine_completed WHERE mine_completed.task_id=t.task_id AND mine_completed.status='confirmed'))))`)
+		}
+	case "processing":
+		conditions = append(conditions, "NOT "+completed)
+	case "completed":
+		conditions = append(conditions, completed)
+	}
 	if strings.TrimSpace(filters.Search) != "" {
 		args = append(args, filters.Search)
 		position := len(args)
 		conditions = append(conditions, fmt.Sprintf("(s.spu_id ILIKE '%%'||$%d||'%%' OR s.spu_name ILIKE '%%'||$%d||'%%')", position, position))
 	}
-	add("d.business_action=$%d", filters.Action)
+	if filters.Action != "" {
+		args = append(args, filters.Action)
+		position := len(args)
+		conditions = append(conditions, fmt.Sprintf("(coalesce(t.current_business_action,d.business_action)=$%d OR coalesce(t.current_inventory_action,d.inventory_action)=$%d)", position, position))
+	}
 	add("s.store=$%d", filters.Store)
 	add("s.operator_ref=$%d", filters.Operator)
 	add("l.review_status=$%d", filters.ReviewStatus)
-	add("t.business_state=$%d", filters.BusinessState)
+	if filters.BusinessState == "action_change_pending" {
+		conditions = append(conditions, "l.relation_type='action_change_pending'")
+	} else if filters.BusinessState == "awaiting_result" {
+		conditions = append(conditions, "t.business_state='executed'")
+	} else {
+		add("t.business_state=$%d", filters.BusinessState)
+	}
+	add("t.inventory_state=$%d", filters.InventoryState)
+	if filters.ClearanceStatus != "" {
+		if filters.ClearanceStatus == "not_submitted" {
+			conditions = append(conditions, `t.current_business_action='clearance' AND NOT EXISTS(
+				SELECT 1 FROM clearance_completion clearance_filter WHERE clearance_filter.task_id=t.task_id)`)
+		} else {
+			args = append(args, filters.ClearanceStatus)
+			conditions = append(conditions, fmt.Sprintf(`(SELECT clearance_filter.status FROM clearance_completion clearance_filter
+				WHERE clearance_filter.task_id=t.task_id ORDER BY clearance_filter.submission_version DESC LIMIT 1)=$%d`, len(args)))
+		}
+	}
+	switch filters.Progress {
+	case "pending_review":
+		conditions = append(conditions, "l.review_status='pending'")
+	case "pending_execution":
+		conditions = append(conditions, "l.review_status='approved' AND (t.business_state='pending_execution' OR t.inventory_state='pending_execution')")
+	case "executing":
+		conditions = append(conditions, `l.review_status='approved' AND ((t.business_state IN ('executed','result_recorded') AND t.inventory_state='pending_execution')
+			OR (t.business_state='pending_execution' AND t.inventory_state IN ('processed','not_generated')))`)
+	case "executed":
+		conditions = append(conditions, "t.business_state='executed' AND t.inventory_state IN ('processed','not_generated')")
+	case "result_recorded":
+		conditions = append(conditions, "t.business_state IN ('result_recorded','closed')")
+	case "rejected":
+		conditions = append(conditions, "l.review_status='rejected'")
+	}
 	return "WHERE " + strings.Join(conditions, " AND "), args
+}
+
+func normalizeFilters(filters *Filters) {
+	filters.Tab = allowedFilter(filters.Tab, map[string]bool{"mine": true, "all": true, "processing": true, "completed": true}, "mine")
+	filters.Action = allowedFilter(filters.Action, map[string]bool{"clearance": true, "stop_loss": true, "observe": true, "invest": true, "maintain": true, "restock": true, "no_restock": true, "prohibit_restock": true}, "")
+	filters.ReviewStatus = allowedFilter(filters.ReviewStatus, map[string]bool{"pending": true, "approved": true, "rejected": true}, "")
+	filters.BusinessState = allowedFilter(filters.BusinessState, map[string]bool{"pending_review": true, "action_change_pending": true, "pending_execution": true, "executed": true, "awaiting_result": true, "result_recorded": true, "closed": true, "terminated": true}, "")
+	filters.InventoryState = allowedFilter(filters.InventoryState, map[string]bool{"pending_review": true, "pending_execution": true, "processed": true, "closed": true, "not_generated": true, "terminated": true}, "")
+	filters.ClearanceStatus = allowedFilter(filters.ClearanceStatus, map[string]bool{"not_submitted": true, "pending_confirmation": true, "returned": true, "confirmed": true}, "")
+	filters.Progress = allowedFilter(filters.Progress, map[string]bool{"pending_review": true, "pending_execution": true, "executing": true, "executed": true, "result_recorded": true, "rejected": true}, "")
+}
+
+func allowedFilter(value string, allowed map[string]bool, fallback string) string {
+	value = strings.TrimSpace(value)
+	if !allowed[value] {
+		return fallback
+	}
+	return value
 }
 
 type rowScanner interface{ Scan(...interface{}) error }

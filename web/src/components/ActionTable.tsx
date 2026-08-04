@@ -4,7 +4,7 @@ import type { ActionItem, PreviousActionItem } from '../api'
 const actions: Record<string, string> = { clearance: '清仓', stop_loss: '止损', observe: '观察', invest: '加投', maintain: '维持', restock: '补货', prohibit_restock: '禁补' }
 const states: Record<string, string> = { pending_review: '待审核', pending_execution: '待执行', executed: '已执行', result_recorded: '已记录结果', closed: '已关闭', terminated: '已终止' }
 
-export function ActionTable({ items, showReview = true }: { items: ActionItem[]; showReview?: boolean }) {
+export function ActionTable({ items, showReview = true, historyMode = false }: { items: ActionItem[]; showReview?: boolean; historyMode?: boolean }) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   if (items.length === 0) return <div className="empty-state compact"><strong>当前没有匹配的行动</strong><p>可调整筛选条件或等待新批次完成规则处理。</p></div>
   return <div className="table-scroll"><table className="action-table"><thead><tr><th>经营对象</th><th>主动作 / 库存</th><th>关键依据</th><th>责任运营</th>{showReview ? <th>审核</th> : null}<th>经营状态</th><th>生命周期</th><th /></tr></thead><tbody>{items.flatMap(item => {
@@ -14,7 +14,7 @@ export function ActionTable({ items, showReview = true }: { items: ActionItem[];
       <td>{item.trigger_rule}<small>销售 {money(item.net_sales_prev_month)} · 利润 {percent(item.operating_profit_rate)}</small></td>
       <td>{item.operator_ref}</td>{showReview ? <td>{reviewText(item.review_status)}</td> : null}<td>{states[item.business_state] ?? item.business_state}</td>
       <td><small>产生 {dateTime(item.task_created_at)}</small><small>本周关联 {dateTime(item.linked_at)}</small><small>执行 {item.business_executed_at ? dateTime(item.business_executed_at) : '—'}</small></td>
-      <td><a className="table-link" href={`/suggestions/${item.link_id}`}>查看详情</a></td>
+      <td><a className="table-link" href={`/suggestions/${item.link_id}${historyMode ? `?mode=history&return_to=${encodeURIComponent(window.location.pathname + window.location.search)}` : ''}`}>{historyMode ? '只读追溯' : '查看详情'}</a></td>
     </tr>]
     if (item.previous && expanded[item.link_id]) rows.push(<PreviousRow key={`${item.link_id}-previous`} item={item.previous} showReview={showReview} />)
     return rows

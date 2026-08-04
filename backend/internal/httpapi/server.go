@@ -369,9 +369,11 @@ func (s *Server) listActions(w http.ResponseWriter, r *http.Request) {
 		limit = 50
 	}
 	result, err := s.actions.List(r.Context(), action.Principal{ActorRef: principal.ActorRef, Name: principal.Name, Role: principal.Role}, action.Filters{
-		BatchID: r.URL.Query().Get("batch_id"), Search: r.URL.Query().Get("search"), Action: r.URL.Query().Get("action"),
+		BatchID: r.URL.Query().Get("batch_id"), Tab: r.URL.Query().Get("tab"), Search: r.URL.Query().Get("search"), Action: r.URL.Query().Get("action"),
 		Store: r.URL.Query().Get("store"), Operator: r.URL.Query().Get("operator"), ReviewStatus: r.URL.Query().Get("review_status"),
-		BusinessState: r.URL.Query().Get("business_state"), Page: queryInt(r, "page", 1), Limit: limit,
+		BusinessState: r.URL.Query().Get("business_state"), InventoryState: r.URL.Query().Get("inventory_state"),
+		ClearanceStatus: r.URL.Query().Get("clearance_status"), Progress: r.URL.Query().Get("progress"),
+		Page: queryInt(r, "page", 1), Limit: limit,
 	})
 	if errors.Is(err, action.ErrForbidden) {
 		writeError(w, http.StatusForbidden, "forbidden")

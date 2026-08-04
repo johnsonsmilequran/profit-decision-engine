@@ -67,12 +67,16 @@ export async function createBatch(input: CreateBatchInput): Promise<BatchSummary
 
 export interface ActionFilters {
   batchId?: string
+  tab: 'mine' | 'all' | 'processing' | 'completed'
   search?: string
   action?: string
   store?: string
   operator?: string
   reviewStatus?: string
   businessState?: string
+  inventoryState?: string
+  clearanceStatus?: string
+  progress?: string
   page: number
   limit: number
 }
@@ -80,12 +84,16 @@ export interface ActionFilters {
 export async function listActions(filters: ActionFilters, signal?: AbortSignal): Promise<ActionListResponse> {
   const query = new URLSearchParams()
   if (filters.batchId) query.set('batch_id', filters.batchId)
+  query.set('tab', filters.tab)
   if (filters.search) query.set('search', filters.search)
   if (filters.action) query.set('action', filters.action)
   if (filters.store) query.set('store', filters.store)
   if (filters.operator) query.set('operator', filters.operator)
   if (filters.reviewStatus) query.set('review_status', filters.reviewStatus)
   if (filters.businessState) query.set('business_state', filters.businessState)
+  if (filters.inventoryState) query.set('inventory_state', filters.inventoryState)
+  if (filters.clearanceStatus) query.set('clearance_status', filters.clearanceStatus)
+  if (filters.progress) query.set('progress', filters.progress)
   query.set('page', String(filters.page))
   query.set('limit', String(filters.limit))
   const response = await fetch(`/api/actions?${query}`, { credentials: 'include', signal })
