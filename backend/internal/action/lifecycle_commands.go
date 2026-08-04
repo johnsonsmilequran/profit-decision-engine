@@ -156,7 +156,7 @@ func (s *Service) SubmitClearance(ctx context.Context, actor Principal, taskID s
 		return Detail{}, ErrForbidden
 	}
 	actual, err := time.Parse(time.RFC3339, input.ActualCompletedAt)
-	if err != nil || actual.After(time.Now().Add(time.Minute)) || strings.TrimSpace(input.Note) == "" || strings.TrimSpace(input.IdempotencyKey) == "" {
+	if err != nil || actual.After(s.now().Add(time.Minute)) || strings.TrimSpace(input.Note) == "" || strings.TrimSpace(input.IdempotencyKey) == "" {
 		return Detail{}, ErrInvalidState
 	}
 	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})

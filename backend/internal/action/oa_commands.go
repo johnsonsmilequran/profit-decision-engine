@@ -50,7 +50,7 @@ func (s *Service) SendOA(ctx context.Context, actor Principal, taskID string, in
 	if err != nil {
 		return Detail{}, err
 	}
-	localDate := chinaDate(time.Now())
+	localDate := chinaDate(s.now())
 	var notificationID, status string
 	err = tx.QueryRow(ctx, `INSERT INTO oa_notification(task_id,local_date,recipient_actor_ref,template_code,notification_type,status,requested_by,message_payload)
 		VALUES($1,$2,$3,$4,'coordination','pending',$5,$6)
@@ -135,7 +135,7 @@ func (s *Service) deliverOA(ctx context.Context, notificationID, eventKey string
 	result, sendErr := s.oaSender.Send(ctx, message)
 	status, code := "sent", ""
 	var sentAt *time.Time
-	now := time.Now()
+	now := s.now()
 	if sendErr != nil {
 		status, code = "failed", oa.ErrorCode(sendErr)
 	} else {
@@ -229,7 +229,7 @@ func (s *Service) runClearanceReminders(ctx context.Context, onlyTaskID string) 
 		err = s.db.QueryRow(ctx, `INSERT INTO oa_notification(task_id,local_date,recipient_actor_ref,template_code,notification_type,
 			status,error_code,requested_by,message_payload) VALUES($1,$2,$3,'clearance_daily_reminder','clearance_reminder',$4,$5,'system:worker',$6)
 			ON CONFLICT(task_id,local_date,recipient_actor_ref,template_code) DO NOTHING RETURNING notification_id::text`, item.taskID,
-			chinaDate(time.Now()), recipient, status, nullableNote(errorCode), payload).Scan(&notificationID)
+			chinaDate(s.now()), recipient, status, nullableNote(errorCode), payload).Scan(&notificationID)
 		if errors.Is(err, pgx.ErrNoRows) {
 			continue
 		}

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -17,9 +18,12 @@ var ErrForbidden = errors.New("forbidden")
 type Service struct {
 	db       *pgxpool.Pool
 	oaSender oa.Sender
+	now      func() time.Time
 }
 
-func NewService(db *pgxpool.Pool) *Service { return &Service{db: db, oaSender: oa.NewClient("", "")} }
+func NewService(db *pgxpool.Pool) *Service {
+	return &Service{db: db, oaSender: oa.NewClient("", ""), now: time.Now}
+}
 
 func (s *Service) SetOASender(sender oa.Sender) {
 	if sender != nil {

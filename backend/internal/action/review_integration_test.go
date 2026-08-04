@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -141,7 +142,7 @@ func TestOAFailureCanRetryWithoutChangingInventoryState(t *testing.T) {
 	}
 }
 
-func TestClearanceReminderIsCreatedAtMostOncePerShanghaiDay(t *testing.T) {
+func TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfirmation(t *testing.T) {
 	databaseURL := os.Getenv("TEST_DATABASE_URL")
 	if databaseURL == "" {
 		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
@@ -163,31 +164,137 @@ func TestClearanceReminderIsCreatedAtMostOncePerShanghaiDay(t *testing.T) {
 		VALUES($1,'缘一','operations','催办集成测试批准','催办集成测试配置')`, actorRef); err != nil {
 		t.Fatal(err)
 	}
-	sent := 0
+	location, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		t.Fatal(err)
+	}
+	current := time.Date(2026, 8, 4, 23, 30, 0, 0, location)
+	service.now = func() time.Time { return current }
+	var attempts atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		sent++
+		attempt := attempts.Add(1)
+		if attempt == 1 {
+			http.Error(w, "公司 OA 暂时不可用", http.StatusBadGateway)
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message_id":"OA-每日催办-001"}`))
+		_, _ = w.Write([]byte(`{"message_id":"OA-每日催办-跨日"}`))
 	}))
 	defer server.Close()
 	service.SetOASender(oa.NewClient(server.URL, "OA催办测试令牌"))
+	runConcurrent := func() int {
+		t.Helper()
+		type outcome struct {
+			created int
+			err     error
+		}
+		outcomes := make(chan outcome, 2)
+		for range 2 {
+			go func() {
+				created, runErr := service.runClearanceReminders(ctx, taskID)
+				outcomes <- outcome{created: created, err: runErr}
+			}()
+		}
+		total := 0
+		for range 2 {
+			result := <-outcomes
+			if result.err != nil {
+				t.Fatal(result.err)
+			}
+			total += result.created
+		}
+		return total
+	}
+	if created := runConcurrent(); created != 1 {
+		t.Fatalf("first day concurrent created=%d", created)
+	}
+	var firstID, firstStatus string
+	if err := db.QueryRow(ctx, `SELECT notification_id::text,status FROM oa_notification WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&firstID, &firstStatus); err != nil {
+		t.Fatal(err)
+	}
+	if firstStatus != "failed" {
+		t.Fatalf("first reminder status=%s", firstStatus)
+	}
+	operator := Principal{ActorRef: actorRef, Name: "缘一", Role: "operations"}
+	if _, err := service.RetryOA(ctx, operator, taskID, firstID, OARetryInput{IdempotencyKey: "跨日催办补发-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	current = current.Add(24 * time.Hour)
+	if created := runConcurrent(); created != 1 {
+		t.Fatalf("second day concurrent created=%d", created)
+	}
+	var notificationCount, distinctDays, totalAttempts int
+	if err := db.QueryRow(ctx, `SELECT count(*),count(DISTINCT local_date),sum(attempt_count) FROM oa_notification
+		WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&notificationCount, &distinctDays, &totalAttempts); err != nil {
+		t.Fatal(err)
+	}
+	if notificationCount != 2 || distinctDays != 2 || totalAttempts != 3 || attempts.Load() != 3 {
+		t.Fatalf("notifications=%d days=%d stored_attempts=%d HTTP_attempts=%d", notificationCount, distinctDays, totalAttempts, attempts.Load())
+	}
+	if _, err := service.Execute(ctx, operator, taskID, ExecuteInput{Track: "business", Version: 1, Note: "已完成清仓执行", IdempotencyKey: "跨日清仓执行-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	submitted, err := service.SubmitClearance(ctx, operator, taskID, ClearanceSubmitInput{ActualCompletedAt: current.Add(-time.Hour).Format(time.RFC3339), Note: "按仓库签收记录提交完成时间", Version: 2, IdempotencyKey: "跨日清仓提交-" + linkID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.ReviewClearance(ctx, Principal{ActorRef: "supervisor-reminder-test", Name: "催办主管", Role: "supervisor"}, taskID,
+		ClearanceReviewInput{Decision: "confirmed", Version: submitted.ClearanceCompletion.SubmissionVersion, IdempotencyKey: "跨日清仓确认-" + linkID}); err != nil {
+		t.Fatal(err)
+	}
+	current = current.Add(24 * time.Hour)
 	created, err := service.runClearanceReminders(ctx, taskID)
 	if err != nil {
 		t.Fatal(err)
 	}
-	repeated, err := service.runClearanceReminders(ctx, taskID)
+	if created != 0 || attempts.Load() != 3 {
+		t.Fatalf("confirmed task created=%d HTTP_attempts=%d", created, attempts.Load())
+	}
+}
+
+func TestClearanceReminderStopsAfterOverrideOrTermination(t *testing.T) {
+	databaseURL := os.Getenv("TEST_DATABASE_URL")
+	if databaseURL == "" {
+		t.Skip("TEST_DATABASE_URL is required for PostgreSQL integration")
+	}
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, databaseURL)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if created != 1 || repeated != 0 || sent != 1 {
-		t.Fatalf("created=%d repeated=%d sent=%d", created, repeated, sent)
-	}
-	var status string
-	if err := db.QueryRow(ctx, `SELECT status FROM oa_notification WHERE task_id=$1 AND template_code='clearance_daily_reminder'`, taskID).Scan(&status); err != nil {
-		t.Fatal(err)
-	}
-	if status != "sent" {
-		t.Fatalf("reminder status=%s", status)
+	defer db.Close()
+	for _, test := range []struct {
+		name   string
+		mutate func(*Service, Principal, string) error
+	}{
+		{name: "override", mutate: func(service *Service, supervisor Principal, linkID string) error {
+			noRestock := "no_restock"
+			_, err := service.Override(ctx, supervisor, linkID, OverrideInput{BusinessAction: "invest", InventoryAction: &noRestock, Reason: "改为加投并暂停补货", Version: 2, IdempotencyKey: "停催改判-" + linkID})
+			return err
+		}},
+		{name: "termination", mutate: func(service *Service, supervisor Principal, linkID string) error {
+			_, err := service.Terminate(ctx, supervisor, linkID, TerminateInput{Reason: "终止当前清仓任务", Version: 2, IdempotencyKey: "停催终止-" + linkID})
+			return err
+		}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			linkID, taskID := insertReviewFixture(t, ctx, db)
+			service := NewService(db)
+			supervisor := Principal{ActorRef: "supervisor-stop-reminder", Name: "停催主管", Role: "supervisor"}
+			if _, err := service.Review(ctx, supervisor, linkID, ReviewInput{Decision: "approved", ReviewVersion: 1, IdempotencyKey: "停催审核-" + linkID}); err != nil {
+				t.Fatal(err)
+			}
+			if err := test.mutate(service, supervisor, linkID); err != nil {
+				t.Fatal(err)
+			}
+			created, err := service.runClearanceReminders(ctx, taskID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if created != 0 {
+				t.Fatalf("stopped task created reminders=%d", created)
+			}
+		})
 	}
 }
 

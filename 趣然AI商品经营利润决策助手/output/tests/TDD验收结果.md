@@ -17,7 +17,7 @@
 | FLOW-08 | pending | 待执行 | — |
 | FLOW-09 | pending | 待执行 | — |
 | FLOW-10 | pending | 待执行 | — |
-| FLOW-11 | pending | 待执行 | — |
+| FLOW-11 | pending | 已完成真实 PostgreSQL 跨两个 Asia/Shanghai 自然日并发催办、首次发送失败/人工补发、主管确认停催及改判/终止停催；等待运营/主管浏览器闭环 | `TEST_DATABASE_URL=postgres://…/candidate_tests_1936 go test -race -count=1 -v ./internal/action` exit 0；`TestClearanceReminderIsUniqueAcrossConcurrentShanghaiDaysAndStopsAfterConfirmation` 断言 2 个自然日恰有 2 条通知、3 次发送尝试、确认后次日新增 0；`TestClearanceReminderStopsAfterOverrideOrTermination` 2/2 pass；浏览器返回 No browser is available，故不记 pass |
 | FLOW-12 | pending | 待执行 | — |
 | DESIGN-01 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
 | DESIGN-02 | pending | 待生成同状态截图并由独立视觉验收官看图 | — |
