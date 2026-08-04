@@ -1160,7 +1160,7 @@
         { id: 'SPU-5884', name: '遥控越野攀爬车', category: '大爆款', main: '加投', stock: '补货', threshold: '利润率 > 10%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
         { id: 'SPU-6012', name: '恐龙考古挖掘实验盒', category: '小爆款', main: '加投', stock: '补货', threshold: '利润率 > 15%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
         { id: 'SPU-6290', name: '儿童工具台维修套装', category: '小爆款', main: '止损', stock: '禁止补货', threshold: '经营准利润率 8.4% < 10%', degrade: '无' },
-        { id: 'SPU-6943', name: '电动泡泡机户外套装', category: '小爆款', main: '清仓', stock: '禁止补货', threshold: '经营准利润率 6.2%，命中清仓阈值', degrade: '无' },
+        { id: 'SPU-6943', name: '电动泡泡机户外套装', category: '小爆款', main: '止损', stock: '禁止补货', threshold: '经营准利润率 6.2% < 10%', degrade: '无' },
         { id: 'SPU-7351', name: '儿童平衡叠叠乐', category: '小爆款', main: '加投', stock: '补货', threshold: '利润率 > 15%，品退率 < 1.5%，库存 < 30 天', degrade: '无' },
         { id: 'SPU-8314', name: '字母认知配对卡', category: '小爆款', main: '维持', stock: '不补货', threshold: '未命中加投、观察、止损或清仓阈值', degrade: '无' },
         { id: 'SPU-9002', name: '木制串珠绕珠架', category: '大爆款', main: '维持', stock: '不补货', threshold: '未命中加投、观察、止损或清仓阈值', degrade: '无' }
@@ -1178,7 +1178,7 @@
         { id: 'SPU-5884', name: '遥控越野攀爬车', main: '加投', stock: '补货', review: '已通过', business: '已记录结果', procurement: '已记录结果' },
         { id: 'SPU-6012', name: '恐龙考古挖掘实验盒', main: '加投', stock: '补货', review: '待审核', business: '待激活', procurement: '待激活' },
         { id: 'SPU-6290', name: '儿童工具台维修套装', main: '止损', stock: '禁止补货', review: '已通过', business: '待执行', procurement: '待确认禁补' },
-        { id: 'SPU-6943', name: '电动泡泡机户外套装', main: '清仓', stock: '禁止补货', review: '已驳回', business: '已关闭', procurement: '已关闭' },
+        { id: 'SPU-6943', name: '电动泡泡机户外套装', main: '止损', stock: '禁止补货', review: '已驳回', business: '已关闭', procurement: '已关闭' },
         { id: 'SPU-7351', name: '儿童平衡叠叠乐', main: '加投', stock: '补货', review: '已通过', business: '待记录结果', procurement: '已执行' }
       ]
     };
@@ -1205,7 +1205,8 @@
     function actionClass(action) {
       if (action === '清仓' || action === '止损') return 'action-danger';
       if (action === '观察') return 'action-warn';
-      return 'action-accent';
+      if (action === '加投') return 'action-accent';
+      return '';
     }
 
     function statusBadge(value) {
