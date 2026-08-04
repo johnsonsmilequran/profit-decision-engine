@@ -76,7 +76,6 @@ export function registerBatchRoutes(app: FastifyInstance, database: Database, up
       filters.push(`status = $${values.length}`);
     }
     if (user.role === "procurement") {
-      values.push(user.identityRef);
       filters.push(`exists (
         select 1 from decisions d join action_items ai on ai.decision_id=d.id
         where d.batch_id=import_batches.id and ai.owner_role='procurement'
@@ -86,11 +85,12 @@ export function registerBatchRoutes(app: FastifyInstance, database: Database, up
     const count = await database.pool.query<{ count: string }>(`select count(*)::text as count from import_batches ${where}`, values);
     values.push(pageSize, (page - 1) * pageSize);
     const data = await database.pool.query(
-      `select id, business_unit, period_start, period_end, business_date, original_filename,
+      `select import_batches.id, business_unit, period_start, period_end, business_date, original_filename,
               status, ai_status, source_row_count, valid_row_count, rejected_row_count,
-              degraded_field_count, warning_count, created_by, created_at
-         from import_batches ${where}
-        order by created_at desc, id desc limit $${values.length - 1} offset $${values.length}`,
+              degraded_field_count, warning_count, created_by, rm.display_name as created_by_name,
+              import_batches.created_at
+         from import_batches join role_mappings rm on rm.identity_ref=import_batches.created_by ${where}
+        order by import_batches.created_at desc, import_batches.id desc limit $${values.length - 1} offset $${values.length}`,
       values,
     );
     return { page, pageSize, total: Number(count.rows[0]!.count), items: data.rows, currentRole: user.role };

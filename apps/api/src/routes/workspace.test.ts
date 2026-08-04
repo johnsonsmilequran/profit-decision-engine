@@ -46,4 +46,12 @@ describe.skipIf(!databaseUrl)("工作台 API 权限边界", () => {
     expect(response.json()).toMatchObject({ currentRole: "procurement" });
     expect(response.body).not.toMatch(/riskCounts|main_action|profit|promotion|return_rate|after_sales/i);
   });
+
+  it("采购可分页读取有库存任务的批次且查询参数绑定有效", async () => {
+    const response = await app.inject({
+      method: "GET", url: "/api/batches?page=1&pageSize=10", headers: { cookie: `profit_session=${token}` },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ currentRole: "procurement", page: 1, pageSize: 10 });
+  });
 });

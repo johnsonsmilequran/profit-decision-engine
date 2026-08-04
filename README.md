@@ -30,6 +30,8 @@ npm run dev
 
 批次 API 已实现 `POST /api/batches/import`、`GET /api/batches` 与 `GET /api/batches/:batchId`。导入会把 XLSX 写入持久化目录，并由可恢复的同进程后台任务把有效行、字段质量、指标、固定规则决策和双轨动作写入 PostgreSQL；相同指纹始终返回原批次。
 
+Web 已实现 `/batches`、`/batches/new` 与 `/batches/:batchId`：筛选和页码写入 URL，运营通过 React Hook Form 校验完整自然月并提交真实 XLSX，详情按同一批次轮询处理状态并展示问题与指标；采购使用独立库存任务视图。
+
 工作台 API `GET /api/workspace` 和 Web 路由 `/workspace` 已接入真实角色会话及数据库聚合；主管、运营、采购分别看到职责内任务，采购响应不包含经营动作与受限经营字段。Web 同时实现 `/auth/dingtalk` 与 `/forbidden`，并在 1024px 最小视口保持无横向溢出。
 
 ## 仓库结构
