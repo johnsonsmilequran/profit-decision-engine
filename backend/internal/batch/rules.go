@@ -44,7 +44,7 @@ func decide(snapshot Snapshot, cutoff time.Time) Decision {
 			action = stringPointer("invest")
 			trigger = "新品经营准利润率 >= -20%"
 		} else {
-			action = stringPointer("watch")
+			action = stringPointer("observe")
 			trigger = "新品经营准利润率 < -20%"
 		}
 	case "large_hit":
@@ -82,7 +82,7 @@ func matureAction(snapshot Snapshot, clearanceBelow, stopBelow, investAt float64
 		return stringPointer("stop_loss"), fmt.Sprintf("%s经营准利润率位于 %.0f%% 至 %.0f%% 之间", label, clearanceBelow*100, stopBelow*100)
 	}
 	if snapshot.QualityReturnRate != nil && *snapshot.QualityReturnRate > 0.015 {
-		return stringPointer("watch"), label + "最近 7 天品退率 > 1.5%"
+		return stringPointer("observe"), label + "最近 7 天品退率 > 1.5%"
 	}
 	if profit >= investAt && snapshot.QualityReturnRate != nil && *snapshot.QualityReturnRate <= 0.015 {
 		return stringPointer("invest"), fmt.Sprintf("%s利润率 >= %.0f%% 且最近 7 天品退率 <= 1.5%%", label, investAt*100)

@@ -138,6 +138,17 @@ func TestBatchLifecycleAgainstPostgresAndRealWorkbook(t *testing.T) {
 	if decisionCount != 10 || clearanceCount == 0 {
 		t.Fatalf("decisions=%d clearance=%d, want 10 decisions and at least one clearance", decisionCount, clearanceCount)
 	}
+	var contradictoryDecisions, legacyWatchActions int
+	if err := db.QueryRow(ctx, `SELECT
+		count(*) FILTER (WHERE d.business_action IN ('clearance','stop_loss') AND d.inventory_action IS DISTINCT FROM 'prohibit_restock'),
+		count(*) FILTER (WHERE d.business_action='watch')
+		FROM decision_record d JOIN action_list l ON l.list_id=d.list_id WHERE l.batch_id=$1`, created.ID).
+		Scan(&contradictoryDecisions, &legacyWatchActions); err != nil {
+		t.Fatal(err)
+	}
+	if contradictoryDecisions != 0 || legacyWatchActions != 0 {
+		t.Fatalf("contradictory decisions=%d legacy watch actions=%d", contradictoryDecisions, legacyWatchActions)
+	}
 	var batchCount, listCount int
 	if err := db.QueryRow(ctx, `SELECT count(*), count(l.list_id) FROM import_batch b
 		LEFT JOIN action_list l ON l.batch_id = b.batch_id WHERE b.batch_id = $1`, created.ID).Scan(&batchCount, &listCount); err != nil {
