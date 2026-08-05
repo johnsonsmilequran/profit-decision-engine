@@ -22,17 +22,16 @@
 
 ### 配置钉钉测试身份
 
-测试身份使用企业内真实钉钉账号，不在本系统创建用户名或密码。系统以钉钉 OAuth 返回的 `unionId` 作为 `role_mapping.actor_ref`；用于机器人发消息的企业 `User ID` 则写入 `role_mapping.dingtalk_user_id`，两者不能混用。
+测试身份使用企业内真实钉钉账号，不在本系统创建用户名或密码。系统以钉钉 OAuth 返回的 `unionId` 作为 `role_mapping.actor_ref`；业务动作不要求企业 `User ID`。
 
 建议分别准备一个运营账号和一个主管账号，并为每个账号确认：
 
 - `unionId`：登录身份唯一标识；
-- 企业 `User ID`：机器人收件人标识，仅验证登录时可以暂不配置；
 - 角色：只能是 `operations` 或 `supervisor`；
 - 审批人：写入 `approved_by`，用于记录角色授权来源；
 - 显示名：运营账号必须与导入商品数据中的责任运营名称完全一致，否则看不到名下商品；主管账号使用真实姓名即可。
 
-企业 `User ID` 可由管理员在钉钉管理后台的通讯录成员详情中查看。如果只知道 `User ID` 而不知道 `unionId`，应为当前应用开通 `qyapi_get_member`，再通过钉钉“查询用户详情”接口只查询该名已审批员工并取得 `unionId`；本产品不需要、也不应为此同步全公司部门和人员。也可以由管理员直接提供已核验的 `unionId`，此时无需该单用户查询权限。
+管理员只需提供已核验的 `unionId` 并完成角色映射；产品不需要机器人收件人字段，也不应为此同步全公司部门和人员。
 
 取得上述信息后，在数据库中执行以下授权。一个 `unionId` 只能对应一个当前角色：
 
@@ -44,16 +43,14 @@ INSERT INTO role_mapping (
   role,
   active,
   approved_by,
-  configured_by,
-  dingtalk_user_id
+  configured_by
 ) VALUES (
   '<UNION_ID>',
   '<运营账号填商品数据中的责任运营名称；主管填真实姓名>',
   '<operations 或 supervisor>',
   true,
   '<角色审批人>',
-  'lingfeng',
-  '<企业钉钉 USER_ID；仅测登录时可改为 NULL>'
+  'lingfeng'
 )
 ON CONFLICT (actor_ref) DO UPDATE SET
   display_name = EXCLUDED.display_name,
@@ -61,8 +58,7 @@ ON CONFLICT (actor_ref) DO UPDATE SET
   active = true,
   approved_by = EXCLUDED.approved_by,
   configured_by = EXCLUDED.configured_by,
-  configured_at = now(),
-  dingtalk_user_id = EXCLUDED.dingtalk_user_id;
+  configured_at = now();
 COMMIT;
 ```
 
@@ -72,7 +68,7 @@ COMMIT;
 
 行动域将每周不可变决策与跨周稳定任务分离：`spu_action_task` 保持 SPU 任务身份，`decision_task_link` 精确关联当周决策和最近更早前序，`action_revision` 保存固定规则或主管改判版本。运营与主管工作台、行动清单和建议详情均读取这些真实投影；整体审核、人工改判、执行后终止、双轨执行、经营结果及清仓完成双人确认均通过版本号与幂等键写入 PostgreSQL 追加事件。
 
-钉钉协同由 API/Worker 使用 `DINGTALK_CLIENT_ID`、`DINGTALK_CLIENT_SECRET` 和 `DINGTALK_ROBOT_CODE` 调用企业内部机器人单聊接口，收件人是公司钉钉 User ID。钉钉应用必须在开放平台开通 `qyapi_robot_sendmsg`；本产品不自动同步全公司通讯录，User ID 与角色映射由运维按审批结果配置。消息正文使用独立最小字段 DTO；调用、失败、人工补发和每日清仓催办均持久化到 `oa_notification`。接口受理不等同于送达、已读或业务确认；未配置或缺权限时默认失败并保留受控错误状态，不伪造回执。
+库存动作只在产品内部流转：责任运营填写实际处理说明后，通过带版本号和幂等键的执行命令确认；清仓完成由运营提交实际时间与说明，再由主管确认或退回。API/Worker 不发送机器人业务通知，不生成每日催办，也不提供人工补发。既有 `oa_notification` 数据仅作为历史审计记录保留；钉钉 OAuth 身份认证继续使用 `DINGTALK_CLIENT_ID` 与 `DINGTALK_CLIENT_SECRET`。
 
 AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_MODEL` 异步调用 LiteLLM；API 服务不持有模型密钥。模型只接收单条决策的冻结白名单数据，输出经严格四字段、动作一致性、数字来源和禁用主题校验后才进入 `ai_explanation`。失败或未采用不会改变固定规则、审核或执行状态，重新生成只追加版本并保留上一版合规内容。
 

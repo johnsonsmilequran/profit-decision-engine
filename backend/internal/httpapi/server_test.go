@@ -46,6 +46,24 @@ func TestAnonymousSuggestionDirectAccessDoesNotRevealObject(t *testing.T) {
 	}
 }
 
+func TestOABusinessNotificationRoutesAreNotExposed(t *testing.T) {
+	handler := New(nil, nil, nil, nil, nil, "http://localhost", false, slog.Default())
+	paths := []string{
+		"/api/actions/00000000-0000-0000-0000-000000000001/oa-notifications",
+		"/api/actions/00000000-0000-0000-0000-000000000001/oa-notifications/00000000-0000-0000-0000-000000000002/retry",
+	}
+	for _, path := range paths {
+		t.Run(path, func(t *testing.T) {
+			request := httptest.NewRequest(http.MethodPost, path, strings.NewReader(`{}`))
+			recorder := httptest.NewRecorder()
+			handler.ServeHTTP(recorder, request)
+			if recorder.Code != http.StatusNotFound {
+				t.Fatalf("retired OA route status=%d, want %d", recorder.Code, http.StatusNotFound)
+			}
+		})
+	}
+}
+
 func TestErrorResponsesMatchOpenAPIAndExposeAuthorizedConflictState(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	writeError(recorder, http.StatusForbidden, "forbidden")

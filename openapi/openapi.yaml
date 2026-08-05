@@ -168,24 +168,6 @@ paths:
       responses:
         '200': { description: 已退回的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
         '409': { $ref: '#/components/responses/Error' }
-  /api/actions/{taskId}/oa-notifications:
-    post:
-      operationId: sendOANotification
-      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OANotificationInput' } } } }
-      responses:
-        '200': { description: OA 发送结果及建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
-        '409': { $ref: '#/components/responses/Error' }
-  /api/actions/{taskId}/oa-notifications/{notificationId}/retry:
-    post:
-      operationId: retryOANotification
-      parameters:
-        - { name: taskId, in: path, required: true, schema: { type: string, format: uuid } }
-        - { name: notificationId, in: path, required: true, schema: { type: string, format: uuid } }
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OARetryInput' } } } }
-      responses:
-        '200': { description: OA 补发结果及建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
-        '409': { $ref: '#/components/responses/Error' }
 components:
   responses:
     Error: { description: 业务错误, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
@@ -408,7 +390,7 @@ components:
         total: { type: integer }
     Workbench:
       type: object
-      required: [role, latest_batch_id, latest_batch_code, batch_completed_at, pending_review_count, pending_execution_count, pending_result_count, clearance_confirm_count, notification_failure_count, exception_count, data_limitations, items]
+      required: [role, latest_batch_id, latest_batch_code, batch_completed_at, pending_review_count, pending_execution_count, pending_result_count, clearance_confirm_count, exception_count, data_limitations, items]
       properties:
         role: { $ref: '#/components/schemas/BusinessRole' }
         latest_batch_id: { type: string }
@@ -418,7 +400,6 @@ components:
         pending_execution_count: { type: integer }
         pending_result_count: { type: integer }
         clearance_confirm_count: { type: integer }
-        notification_failure_count: { type: integer }
         exception_count: { type: integer }
         data_limitations:
           type: array
@@ -447,13 +428,12 @@ components:
       allOf:
         - { $ref: '#/components/schemas/ActionItem' }
         - type: object
-          required: [events, ai_status, ai_content, clearance_completion, notifications]
+          required: [events, ai_status, ai_content, clearance_completion]
           properties:
             events: { type: array, items: { $ref: '#/components/schemas/BusinessEvent' } }
             ai_status: { type: string }
             ai_content: { type: object, additionalProperties: true }
             clearance_completion: { anyOf: [{ $ref: '#/components/schemas/ClearanceCompletion' }, { type: 'null' }] }
-            notifications: { type: array, items: { $ref: '#/components/schemas/OANotification' } }
     ClearanceCompletion:
       type: object
       required: [id, submission_version, actual_completed_at, note, status, submitted_by, submitted_at, reviewed_by, reviewed_at, return_reason]
@@ -468,21 +448,6 @@ components:
         reviewed_by: { type: [string, 'null'] }
         reviewed_at: { type: [string, 'null'], format: date-time }
         return_reason: { type: [string, 'null'] }
-    OANotification:
-      type: object
-      required: [id, local_date, recipient_user_id, template_code, type, status, provider_reference, error_code, requested_by, created_at, sent_at]
-      properties:
-        id: { type: string, format: uuid }
-        local_date: { type: string, format: date }
-        recipient_user_id: { type: string, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
-        template_code: { type: string }
-        type: { type: string, enum: [coordination, clearance_reminder] }
-        status: { type: string, enum: [pending, sent, failed] }
-        provider_reference: { type: [string, 'null'] }
-        error_code: { type: [string, 'null'] }
-        requested_by: { type: string }
-        created_at: { type: string, format: date-time }
-        sent_at: { type: [string, 'null'], format: date-time }
     ReviewInput:
       type: object
       required: [decision, note, review_version, idempotency_key]
@@ -544,17 +509,6 @@ components:
       properties:
         reason: { type: string }
         version: { type: integer, minimum: 1 }
-        idempotency_key: { type: string, minLength: 1 }
-    OANotificationInput:
-      type: object
-      required: [recipient_user_id, feedback_request]
-      properties:
-        recipient_user_id: { type: string, minLength: 1, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
-        feedback_request: { type: string, minLength: 1 }
-    OARetryInput:
-      type: object
-      required: [idempotency_key]
-      properties:
         idempotency_key: { type: string, minLength: 1 }
     AIRetryInput:
       type: object

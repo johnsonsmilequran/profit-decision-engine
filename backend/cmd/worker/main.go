@@ -9,11 +9,9 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/action"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/batch"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/config"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/explanation"
-	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/oa"
 )
 
 func main() {
@@ -36,8 +34,6 @@ func main() {
 		os.Exit(1)
 	}
 	processor := batch.NewProcessor(db)
-	actions := action.NewService(db)
-	actions.SetOASender(oa.NewDingTalkClient(cfg.DingTalkClientID, cfg.DingTalkClientSecret, cfg.DingTalkRobotCode, "", ""))
 	explanations := explanation.NewProcessor(db, explanation.NewClient(cfg.LiteLLMBaseURL, cfg.LiteLLMAPIKey, cfg.LiteLLMModel))
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
@@ -49,9 +45,6 @@ func main() {
 		}
 		if processed {
 			continue
-		}
-		if _, err := actions.RunClearanceReminders(ctx); err != nil {
-			logger.Error("clearance reminder failed", "error", err)
 		}
 		if _, err := explanations.RunOne(ctx); err != nil {
 			logger.Error("ai explanation failed", "error", err)

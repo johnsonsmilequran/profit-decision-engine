@@ -1,5 +1,18 @@
 # TDD 验收结果 · 趣然 AI 商品经营与利润决策助手
 
+## Issue #5 增量验收（2026-08-05）
+
+- contract_sha256: `sha256:d38dfc66aac6059ca9eb31bec26ea56d49379b50472dbf1095caf7a70aa4ff49`
+- 结论：自动化门禁通过；需要有效钉钉 OAuth 测试身份的浏览器业务验收待公司环境执行。下方旧版 OA 投递证据仅为历史记录，不代表当前功能仍开放。
+
+| TDD ID | 状态 | 本轮证据 |
+| :--- | :--- | :--- |
+| SMOKE-01 | pass | 前端 `generate:api`、typecheck、lint、4/4 单测、生产 build 全部 exit 0；Go 1.26 容器执行 `gofmt`、`go test ./...`、`go vet ./...` 全部 exit 0。 |
+| FLOW-10 | pass | 生产路由、OpenAPI 与 React API 均已移除发送/补发接口；详情页库存动作复用带 version、幂等键和必填 note 的内部执行命令。 |
+| FLOW-11 | pass | Worker 不再运行清仓每日催办；清仓提交、主管确认/退回接口保持，工作台改为展示站内库存和清仓待办。 |
+| RULE-02 | pass | UI 和 OpenAPI 不再接收钉钉 User ID、通知正文或补发参数；钉钉 OAuth 登录入口及身份客户端保持不变。 |
+| DESIGN-03/04/07/08 | pending | React 与 HTML 施工图已同步站内流转文案和控件；真实登录态浏览器截图与人工看图待公司测试会话执行。 |
+
 - contract_sha256: sha256:0a10a4d3088aa3ac95c243cd5232ad7610f0b42bf0ae6b7be3d4b808c6d29244
 - run_started_at: 2026-08-05T16:21:37+08:00
 - evidence_policy: 用户确认本次仅去除扫码登录；未受影响的既有真实验收证据继续有效，直接受影响行已增量重验

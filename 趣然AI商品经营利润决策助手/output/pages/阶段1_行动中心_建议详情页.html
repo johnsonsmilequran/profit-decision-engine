@@ -834,11 +834,11 @@
                   <div class="spine-node">规则<br>V1.0</div>
                 </div>
                 <article class="track-card inventory">
-                  <div class="flex items-center justify-between"><div class="eyebrow">库存 / 钉钉协同轨</div><span id="inventoryTrackStatus" class="badge badge-muted">待执行</span></div>
+                  <div class="flex items-center justify-between"><div class="eyebrow">库存动作轨</div><span id="inventoryTrackStatus" class="badge badge-muted">待处理</span></div>
                   <div class="mt-4 flex items-center gap-3"><div class="product-mark" style="color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish);"><i class="ph ph-package" aria-hidden="true"></i></div><div><div class="meta">当前生效库存动作</div><div id="inventoryActionName" class="text-xl font-bold" style="color: var(--action-stop);">禁止补货</div></div></div>
-                  <p class="muted mt-4 text-sm">责任运营通过钉钉企业内部机器人单聊通知采购、仓库等相关人员停止补货，核验反馈后回填；接口受理不等于送达、已读或业务完成。</p>
+                  <p class="muted mt-4 text-sm">责任运营在产品内填写实际库存处理说明并确认；系统记录操作者、时间与版本，不发送外部通知。</p>
                   <div class="mt-4 grid grid-cols-2 gap-3"><div><div class="meta">产品内责任人</div><div class="mt-1 font-semibold">缘一 · 责任运营</div></div><div><div class="meta">动作版本</div><div class="mono mt-1 font-semibold">ACT-I-01</div></div></div>
-                  <div class="mt-4 flex flex-wrap gap-2"><span class="badge badge-stop"><i class="ph ph-prohibit" aria-hidden="true"></i>不可改为补货</span><span class="badge badge-pending"><i class="ph ph-warning-circle" aria-hidden="true"></i>钉钉未配置 · 发送失败</span></div>
+                  <div class="mt-4 flex flex-wrap gap-2"><span class="badge badge-stop"><i class="ph ph-prohibit" aria-hidden="true"></i>不可改为补货</span><span class="badge badge-pending"><i class="ph ph-pencil-simple" aria-hidden="true"></i>处理说明必填</span></div>
                 </article>
               </div>
             </section>
@@ -850,7 +850,7 @@
               </div>
               <div class="mt-4 grid grid-cols-3 gap-3">
                 <div class="metric-tile"><div class="meta">责任运营</div><div class="mt-2 font-bold">缘一</div><div class="meta mt-2">管理 932592549424</div></div>
-                <div class="metric-tile"><div class="meta">最近催办</div><div class="mono mt-2 font-bold">08-05 03:47</div><div class="meta mt-2">钉钉未配置 · 发送失败</div></div>
+                <div class="metric-tile"><div class="meta">站内待办</div><div class="mono mt-2 font-bold">待提交</div><div class="meta mt-2">主管确认前持续显示</div></div>
                 <div class="metric-tile"><div class="meta">最终确认</div><div id="clearanceConfirmedAt" class="mt-2 font-bold">—</div><div class="meta mt-2">尚无运营提交</div></div>
               </div>
               <div class="mt-4 grid grid-cols-2 gap-4">
@@ -867,8 +867,8 @@
                   <div class="mt-3 grid grid-cols-2 gap-2"><button id="returnClearance" class="btn-secondary" type="button" disabled>退回修正</button><button id="confirmClearance" class="btn-primary" type="button" disabled>确认完成</button></div>
                 </div>
               </div>
-              <!-- 行为态（本 HTML 未呈现为视觉基线）：责任运营提交后主管可确认或退回；同名 User ID 歧义时失败关闭且不发送。 -->
-              <div id="clearanceReminder" class="mt-4 rounded-md p-4" style="background:var(--warn-soft);border:1px solid var(--warn);"><strong>每日催办发送失败</strong><p class="muted mt-1 text-sm">当前候选未配置钉钉通道，记录错误码 oa_not_configured；经营与库存状态保持待执行，不把失败伪装成已送达。</p></div>
+              <!-- 责任运营提交后主管可确认或退回；未确认时仅保留站内待办。 -->
+              <div id="clearanceReminder" class="mt-4 rounded-md p-4" style="background:var(--warn-soft);border:1px solid var(--warn);"><strong>等待站内提交</strong><p class="muted mt-1 text-sm">清仓执行后由责任运营填写实际完成时间和说明；主管确认前持续显示为站内待办。</p></div>
             </section>
 
             <section class="surface" aria-labelledby="ai-heading">
@@ -890,7 +890,7 @@
               <div class="timeline mt-5">
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">固定规则建立新任务</div><p class="muted mt-1 text-sm">冻结六月批次的 SPU、销售与利润事实，生成“清仓 + 禁止补货”；规则版本 RULE-V1.0。</p></div><time class="meta mono">08.04 21:13</time></div></article>
                 <article class="timeline-item"><div class="timeline-node"><i class="ph ph-check text-sm" aria-hidden="true"></i></div><div class="flex items-start justify-between gap-4"><div><div class="font-semibold">运营主管整体通过</div><p class="muted mt-1 text-sm">一次审核同时激活经营与库存两轨，审核理由和版本已持久化。</p></div><time class="meta mono">08.05 03:47</time></div></article>
-                <article class="timeline-item"><div class="timeline-node current"><i class="ph ph-hourglass-medium text-sm" aria-hidden="true"></i></div><div class="font-semibold">等待运营执行与钉钉协同</div><p class="meta mt-1">两轨仍为待执行；催办因钉钉未配置失败，不改变业务状态。</p></article>
+                <article class="timeline-item"><div class="timeline-node current"><i class="ph ph-hourglass-medium text-sm" aria-hidden="true"></i></div><div class="font-semibold">等待运营处理两条动作轨</div><p class="meta mt-1">经营与库存动作均在产品内独立确认。</p></article>
                 <article class="timeline-item"><div class="timeline-node future"><i class="ph ph-circle text-sm" aria-hidden="true"></i></div><div class="font-semibold muted">经营结果与清仓完成确认</div><p class="meta mt-1">只有真实执行、结果记录及主管确认后才追加后续里程碑。</p></article>
               </div>
             </section>
@@ -904,7 +904,7 @@
                     <tr><td>固定规则首次建任</td><td>无 → 待审核</td><td>system:worker</td><td class="mono">08.04 21:13</td><td>任务 d83d0e81；清仓 + 禁止补货</td></tr>
                     <tr><td>AI 解释尝试</td><td>生成中 → 未配置</td><td>system:worker</td><td class="mono">08.04 21:14</td><td>litellm_not_configured；固定规则不受影响</td></tr>
                     <tr><td>主管整体审核</td><td>待审核 → 已通过</td><td>验收主管</td><td class="mono">08.05 03:47</td><td>确认固定规则结论与数据证据一致</td></tr>
-                    <tr><td>每日催办</td><td>待发送 → 失败</td><td>system:oa</td><td class="mono">08.05 03:47</td><td>oa_not_configured；未改变经营或库存状态</td></tr>
+                    <tr><td>库存动作</td><td>待处理</td><td>责任运营</td><td class="mono">—</td><td>处理说明尚未提交</td></tr>
                   </tbody>
                 </table>
               </div>

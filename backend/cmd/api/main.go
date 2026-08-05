@@ -15,7 +15,6 @@ import (
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/config"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/httpapi"
 	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/identity"
-	"github.com/johnsonsmilequran/profit-decision-engine/backend/internal/oa"
 )
 
 func main() {
@@ -37,7 +36,6 @@ func main() {
 	dingTalk := identity.NewDingTalkClient(cfg.DingTalkClientID, cfg.DingTalkClientSecret, cfg.PublicBaseURL+"/auth/dingtalk/callback")
 	batches := batch.NewService(db, cfg.ImportFileDir)
 	actions := action.NewService(db)
-	actions.SetOASender(oa.NewDingTalkClient(cfg.DingTalkClientID, cfg.DingTalkClientSecret, cfg.DingTalkRobotCode, "", ""))
 	server := &http.Server{Addr: cfg.Address, Handler: httpapi.New(db, identities, dingTalk, batches, actions, cfg.PublicBaseURL, cfg.CookieSecure, logger), ReadHeaderTimeout: 5 * time.Second}
 	go func() {
 		<-ctx.Done()
