@@ -584,11 +584,13 @@ func (s *Server) startDingTalk(w http.ResponseWriter, r *http.Request) {
 func (s *Server) finishDingTalk(w http.ResponseWriter, r *http.Request) {
 	stateCookie, err := r.Cookie("quran_oauth_state")
 	if err != nil {
+		s.logger.Warn("dingtalk oauth callback rejected", "stage", "state_cookie")
 		http.Redirect(w, r, "/auth/recovery?reason=auth_failed", http.StatusFound)
 		return
 	}
 	parts := strings.SplitN(stateCookie.Value, ".", 2)
 	if len(parts) != 2 || parts[0] == "" || parts[0] != r.URL.Query().Get("state") {
+		s.logger.Warn("dingtalk oauth callback rejected", "stage", "state_validation")
 		http.Redirect(w, r, "/auth/recovery?reason=auth_failed", http.StatusFound)
 		return
 	}
@@ -598,16 +600,19 @@ func (s *Server) finishDingTalk(w http.ResponseWriter, r *http.Request) {
 	}
 	accessToken, err := s.dingTalk.Exchange(r.Context(), r.URL.Query().Get("code"))
 	if err != nil {
+		s.logger.Warn("dingtalk oauth callback rejected", "stage", "token_exchange", "error", err)
 		http.Redirect(w, r, "/auth/recovery?reason=auth_failed", http.StatusFound)
 		return
 	}
 	actorRef, err := s.dingTalk.CurrentUser(r.Context(), accessToken)
 	if err != nil {
+		s.logger.Warn("dingtalk oauth callback rejected", "stage", "current_user", "error", err)
 		http.Redirect(w, r, "/auth/recovery?reason=auth_failed", http.StatusFound)
 		return
 	}
 	token, principal, err := s.identity.CreateSession(r.Context(), actorRef)
 	if err != nil {
+		s.logger.Warn("dingtalk oauth callback rejected", "stage", "role_mapping")
 		http.Redirect(w, r, "/auth/recovery?reason=no_role", http.StatusFound)
 		return
 	}
