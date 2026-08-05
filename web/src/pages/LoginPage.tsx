@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import QRCode from 'qrcode'
 import { getSession } from '../api'
 
 export function LoginPage() {
   const [starting, setStarting] = useState(false)
-  const [qrCode, setQrCode] = useState('')
   const session = useQuery({ queryKey: ['session'], queryFn: ({ signal }) => getSession(signal) })
   const requested = new URLSearchParams(window.location.search).get('return_to') ?? '/'
   const authPath = `/auth/dingtalk/start?return_to=${encodeURIComponent(requested)}`
@@ -17,11 +15,6 @@ export function LoginPage() {
       window.location.replace(target)
     }
   }, [requested, session.data])
-
-  useEffect(() => {
-    const authURL = new URL(authPath, window.location.origin).toString()
-    void QRCode.toDataURL(authURL, { width: 176, margin: 1, color: { dark: '#122033', light: '#ffffff' } }).then(setQrCode)
-  }, [authPath])
 
   const start = () => {
     setStarting(true)
@@ -48,10 +41,10 @@ export function LoginPage() {
           <div className="auth-status"><span aria-hidden="true" />普通浏览器 · 安全连接已就绪</div>
           {session.error && session.error.message !== 'unauthenticated' ? <div className="alert">暂时无法检查登录状态，请稍后重试。</div> : null}
           <div className="auth-content">
-            <div className="qr-shell">{qrCode ? <img src={qrCode} alt="钉钉登录二维码" /> : <span className="qr-loading">正在生成安全登录入口</span>}</div>
-            <p className="scan-copy">请使用本人钉钉扫码并完成确认</p>
-            <p className="scan-meta">认证成功后将直接进入你有权访问的工作台</p>
-            <div className="auth-divider" aria-hidden="true">或</div>
+            <div className="click-login-note">
+              <span className="click-login-icon" aria-hidden="true">✓</span>
+              <span><strong>使用本人钉钉身份</strong><small>点击后前往钉钉授权页，完成确认后进入你有权访问的工作台。</small></span>
+            </div>
             <button className="primary" type="button" onClick={start} disabled={starting || session.isPending}>{starting ? '正在前往钉钉…' : '使用钉钉登录'}</button>
             <p className="auth-feedback" aria-live="polite">无需填写其他信息</p>
           </div>
