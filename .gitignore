@@ -8,8 +8,14 @@
 node_modules/
 web/dist/
 *.tsbuildinfo
+.npm-cache/
+dist/
+*.egg-info/
 __pycache__/
 *.py[cod]
+.venv*/
+.coverage
+htmlcov/
 
 # 本地环境与密钥
 .env

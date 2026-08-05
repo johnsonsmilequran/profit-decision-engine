@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F05-01">
+  <title>角色化工作台｜趣然 AI 商品经营与利润决策助手</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      /* ─── Surface (3 levels) ─── */
+      --bg: #F4F7FB;
+      --surface: #FFFFFF;
+      --surface-warm: var(--surface);
+      --surface-raised: var(--surface);
+      --surface-overlay: var(--surface);
+
+      /* ─── Foreground (4 levels) ─── */
+      --fg: #132238;
+      --fg-2: var(--fg);
+      --muted: #465870;
+      --meta: var(--muted);
+
+      /* ─── Border (2 levels) ─── */
+      --border: #CBD5E1;
+      --border-soft: var(--border);
+
+      /* ─── Accent ─── */
+      --accent: #075EAD;
+      --accent-on: #FFFFFF;
+      --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+      --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+      /* ─── Semantic ─── */
+      --success: #197343;
+      --warn: #8A4B08;
+      --danger: #B42318;
+
+      /* ─── Typography — fonts ─── */
+      --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+      /* ─── Type scale ─── */
+      --text-xs: 12px;
+      --text-sm: 13px;
+      --text-base: 14px;
+      --text-lg: 16px;
+      --text-xl: 20px;
+      --text-2xl: 24px;
+      --text-3xl: 32px;
+      --text-4xl: 40px;
+
+      /* ─── Leading & Tracking ─── */
+      --leading-body: 1.6;
+      --leading-tight: 1.25;
+      --tracking-display: -0.015em;
+
+      /* ─── Spacing (4px base) ─── */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+
+      /* ─── Section rhythm ─── */
+      --section-y-desktop: 48px;
+      --section-y-tablet: 32px;
+      --section-y-phone: 24px;
+
+      /* ─── Radius ─── */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 9999px;
+
+      /* ─── Surface elevation ─── */
+      --elev-flat: none;
+      --elev-ring: 0 0 0 1px var(--border);
+      --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+      --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+      /* ─── Focus ─── */
+      --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+      /* ─── Motion ─── */
+      --motion-fast: 150ms;
+      --motion-base: 200ms;
+      --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+      /* ─── Layout ─── */
+      --container-max: 1440px;
+      --container-gutter-desktop: 32px;
+      --container-gutter-tablet: 24px;
+      --container-gutter-phone: 16px;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: 232px;
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-5) var(--space-4);
+      border-right: 1px solid var(--border-soft);
+      background: var(--surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-2) var(--space-6);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: var(--accent-on);
+      font-size: var(--text-xl);
+    }
+
+    .brand-name {
+      color: var(--fg);
+      font-weight: 700;
+      line-height: var(--leading-tight);
+    }
+
+    .brand-meta {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .nav-label {
+      margin: var(--space-2) var(--space-3);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: var(--space-1);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-link {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--muted);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .nav-link i {
+      font-size: var(--text-xl);
+    }
+
+    .nav-link:hover {
+      border-color: var(--border);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .nav-link:active {
+      border-color: var(--accent-active);
+      color: var(--accent-active);
+    }
+
+    .nav-link:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .nav-link[aria-current="page"] {
+      border-color: color-mix(in oklab, var(--accent), var(--surface) 76%);
+      background: color-mix(in oklab, var(--accent), var(--surface) 94%);
+      color: var(--accent);
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      padding: var(--space-4);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+    }
+
+    .sidebar-note__title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 650;
+    }
+
+    .sidebar-note__copy {
+      margin-top: var(--space-2);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+
+    .main-area {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: 0 var(--container-gutter-desktop);
+      border-bottom: 1px solid var(--border-soft);
+      background: color-mix(in oklab, var(--surface), transparent 3%);
+      backdrop-filter: blur(8px);
+    }
+
+    .context-line,
+    .identity-line {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-width: 0;
+    }
+
+    .context-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      white-space: nowrap;
+    }
+
+    .context-item strong {
+      color: var(--fg);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .separator {
+      width: 1px;
+      height: 20px;
+      background: var(--border-soft);
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 26px;
+      padding: var(--space-1) var(--space-2);
+      border: 1px solid color-mix(in oklab, var(--accent), var(--surface) 70%);
+      border-radius: var(--radius-pill);
+      background: color-mix(in oklab, var(--accent), var(--surface) 94%);
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 650;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 700;
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-8) var(--container-gutter-desktop) var(--space-12);
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .page-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      margin: var(--space-2) 0 0;
+      font: 650 var(--text-2xl) / var(--leading-tight) var(--font-display);
+      letter-spacing: var(--tracking-display);
+    }
+
+    .page-subtitle {
+      margin: var(--space-2) 0 0;
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      font: 600 var(--text-sm) / var(--leading-tight) var(--font-body);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .button:hover {
+      border-color: var(--accent);
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    .button:active {
+      border-color: var(--accent-active);
+      background: color-mix(in oklab, var(--accent), var(--surface) 92%);
+      color: var(--accent-active);
+    }
+
+    .button:focus-visible,
+    .text-link:focus-visible,
+    .table-link:focus-visible,
+    .metric-card:focus-visible,
+    .batch-card:focus-visible,
+    .activity-link:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      color: var(--muted);
+      border-color: var(--border);
+      background: var(--bg);
+    }
+
+    .button--primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-on);
+    }
+
+    .button--primary:hover {
+      border-color: var(--accent-hover);
+      background: var(--accent-hover);
+      color: var(--accent-on);
+    }
+
+    .button--primary:active {
+      border-color: var(--accent-active);
+      background: var(--accent-active);
+      color: var(--accent-on);
+    }
+
+    .batch-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) repeat(4, minmax(120px, 0.55fr)) auto;
+      gap: var(--space-5);
+      align-items: center;
+      padding: var(--space-5) var(--space-6);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      color: var(--fg);
+      text-decoration: none;
+      overflow: hidden;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+    }
+
+    .batch-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--space-1);
+      background: var(--success);
+    }
+
+    .batch-card:hover {
+      border-color: var(--accent);
+      background: color-mix(in oklab, var(--accent), var(--surface) 97%);
+    }
+
+    .batch-card:active {
+      border-color: var(--accent-active);
+      background: color-mix(in oklab, var(--accent), var(--surface) 93%);
+    }
+
+    .batch-label,
+    .metric-label {
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .batch-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-1);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: var(--text-base);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .batch-value {
+      margin-top: var(--space-1);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 24px;
+      padding: var(--space-1) var(--space-2);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--fg);
+      font: 600 var(--text-xs) / var(--leading-tight) var(--font-body);
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+    }
+
+    .badge--success {
+      border-color: color-mix(in oklab, var(--success), var(--surface) 68%);
+      background: color-mix(in oklab, var(--success), var(--surface) 92%);
+      color: var(--success);
+    }
+
+    .badge--warn {
+      border-color: color-mix(in oklab, var(--warn), var(--surface) 68%);
+      background: color-mix(in oklab, var(--warn), var(--surface) 92%);
+      color: var(--warn);
+    }
+
+    .badge--danger {
+      border-color: color-mix(in oklab, var(--danger), var(--surface) 68%);
+      background: color-mix(in oklab, var(--danger), var(--surface) 92%);
+      color: var(--danger);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .metric-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      min-width: 0;
+      padding: var(--space-5);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      color: var(--fg);
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .metric-card:hover {
+      border-color: var(--accent);
+      background: color-mix(in oklab, var(--accent), var(--surface) 97%);
+    }
+
+    .metric-card:active {
+      border-color: var(--accent-active);
+      background: color-mix(in oklab, var(--accent), var(--surface) 93%);
+    }
+
+    .metric-value {
+      margin-top: var(--space-1);
+      color: var(--fg);
+      font: 650 var(--text-3xl) / var(--leading-tight) var(--font-display);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-hint {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .metric-icon {
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      color: var(--accent);
+      font-size: var(--text-2xl);
+    }
+
+    .metric-icon--danger {
+      background: color-mix(in oklab, var(--danger), var(--surface) 94%);
+      color: var(--danger);
+    }
+
+    .metric-icon--warn {
+      background: color-mix(in oklab, var(--warn), var(--surface) 94%);
+      color: var(--warn);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(300px, 0.78fr);
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .panel-title {
+      color: var(--fg);
+      font-size: var(--text-lg);
+      font-weight: 650;
+    }
+
+    .panel-subtitle {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .text-link,
+    .table-link,
+    .activity-link {
+      color: var(--accent);
+      font-size: var(--text-sm);
+      font-weight: 650;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+    }
+
+    .text-link:hover,
+    .table-link:hover,
+    .activity-link:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .text-link:active,
+    .table-link:active,
+    .activity-link:active {
+      color: var(--accent-active);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th {
+      height: 40px;
+      padding: 0 var(--space-3);
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 650;
+      text-align: left;
+    }
+
+    td {
+      min-height: 56px;
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-soft);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background-color var(--motion-fast) var(--ease-standard);
+    }
+
+    tbody tr:hover {
+      background: color-mix(in oklab, var(--accent), var(--surface) 97%);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .spu-cell {
+      position: relative;
+      padding-left: var(--space-5);
+    }
+
+    .spu-cell::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--space-1);
+      background: var(--danger);
+    }
+
+    .spu-cell--warn::before {
+      background: var(--warn);
+    }
+
+    .spu-cell--accent::before {
+      background: var(--accent);
+    }
+
+    .spu-name {
+      overflow: hidden;
+      color: var(--fg);
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spu-meta {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .action-name {
+      font-weight: 700;
+    }
+
+    .action-name--danger { color: var(--danger); }
+    .action-name--warn { color: var(--warn); }
+    .action-name--accent { color: var(--accent); }
+
+    .evidence {
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+
+    .track-stack {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .track-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .track-line strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .activity-list {
+      margin: 0;
+      padding: var(--space-2) var(--space-5) var(--space-4);
+      list-style: none;
+    }
+
+    .activity-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+    }
+
+    .activity-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 40px;
+      bottom: -4px;
+      left: 13px;
+      width: 1px;
+      background: var(--border-soft);
+    }
+
+    .activity-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--accent);
+      font-size: var(--text-sm);
+    }
+
+    .activity-title {
+      color: var(--fg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      line-height: var(--leading-body);
+    }
+
+    .activity-meta {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-5) var(--space-5);
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 42px;
+      padding: var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+
+    .quick-link i {
+      color: var(--accent);
+      font-size: var(--text-lg);
+    }
+
+    .quick-link:hover {
+      border-color: var(--accent);
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    .quick-link:active {
+      border-color: var(--accent-active);
+      color: var(--accent-active);
+    }
+
+    .quick-link:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .footer-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .toast {
+      position: fixed;
+      right: var(--space-6);
+      bottom: var(--space-6);
+      z-index: 60;
+      min-width: 280px;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      border: 1px solid color-mix(in oklab, var(--success), var(--surface) 68%);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--fg);
+      box-shadow: var(--elev-float);
+      opacity: 0;
+      visibility: hidden;
+      filter: blur(2px);
+      transition: opacity var(--motion-base) var(--ease-standard), visibility var(--motion-base) var(--ease-standard), filter var(--motion-base) var(--ease-standard);
+    }
+
+    .toast[data-open="true"] {
+      opacity: 1;
+      visibility: visible;
+      filter: blur(0);
+    }
+
+    .toast i {
+      color: var(--success);
+      font-size: var(--text-xl);
+    }
+
+    .toast-title {
+      font-size: var(--text-sm);
+      font-weight: 650;
+    }
+
+    .toast-copy {
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid color-mix(in oklab, currentColor, transparent 72%);
+      border-top-color: currentColor;
+      border-radius: var(--radius-pill);
+      animation: spin 800ms linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes content-enter {
+      from { opacity: 0; filter: blur(2px); }
+      to { opacity: 1; filter: blur(0); }
+    }
+
+    .page-enter {
+      animation: content-enter var(--motion-base) var(--ease-standard) both;
+    }
+
+    .page-enter--summary { animation-delay: var(--motion-fast); }
+    .page-enter--content { animation-delay: var(--motion-base); }
+
+    .mobile-bar {
+      display: none;
+    }
+
+    @media (max-width: 1279px) {
+      .topbar,
+      .content {
+        padding-left: var(--container-gutter-tablet);
+        padding-right: var(--container-gutter-tablet);
+      }
+
+      .batch-card {
+        grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(120px, 0.6fr)) auto;
+      }
+
+      .batch-card > :nth-child(4),
+      .batch-card > :nth-child(5) {
+        display: none;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .app-shell {
+        display: block;
+      }
+
+      .sidebar,
+      .topbar,
+      .desktop-content {
+        display: none;
+      }
+
+      .main-area {
+        min-height: 100vh;
+      }
+
+      .mobile-bar {
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--container-gutter-tablet);
+        border-bottom: 1px solid var(--border-soft);
+        background: var(--surface);
+      }
+
+      .device-notice {
+        min-height: calc(100vh - 56px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--container-gutter-tablet);
+      }
+
+      .device-card {
+        width: 100%;
+        max-width: 520px;
+        padding: var(--space-8);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-lg);
+        background: var(--surface);
+        text-align: center;
+      }
+
+      .device-icon {
+        width: 56px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        background: var(--bg);
+        color: var(--accent);
+        font-size: var(--text-3xl);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .device-notice {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-enter,
+      .page-enter--summary,
+      .page-enter--content {
+        animation: none;
+      }
+
+      .nav-link,
+      .button,
+      .batch-card,
+      .metric-card,
+      tbody tr,
+      .quick-link,
+      .toast {
+        transition-duration: 0ms;
+      }
+
+      .toast {
+        filter: none;
+      }
+
+      .spinner {
+        animation-duration: 1600ms;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i class="ph ph-compass-tool"></i></span>
+        <div>
+          <div class="brand-name">趣然 AI 决策</div>
+          <div class="brand-meta">经营利润工作台</div>
+        </div>
+      </div>
+
+      <div class="nav-label">Workspace</div>
+      <nav>
+        <ul class="nav-list">
+          <li><a class="nav-link" aria-current="page" href="阶段1_经营协作_角色化工作台.html"><i class="ph ph-squares-four" aria-hidden="true"></i><span>工作台</span></a></li>
+          <li><a class="nav-link" href="阶段1_行动清单_行动清单.html"><i class="ph ph-list-checks" aria-hidden="true"></i><span>行动清单</span></a></li>
+          <li><a class="nav-link" href="阶段1_数据批次_数据批次列表.html"><i class="ph ph-stack" aria-hidden="true"></i><span>数据批次</span></a></li>
+          <li><a class="nav-link" href="阶段1_规则与数据溯源_追溯记录.html"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span>追溯记录</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-note">
+        <div class="sidebar-note__title"><i class="ph ph-shield-check" aria-hidden="true"></i>同源状态</div>
+        <div class="sidebar-note__copy">本页汇总来自当前批次的唯一行动清单，审核与两条动作轨道分别计数。</div>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="context-line" aria-label="当前业务上下文">
+          <span class="context-item"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
+          <span class="separator" aria-hidden="true"></span>
+          <span class="context-item">当前批次 <strong>BAT-20260706-01</strong></span>
+          <span class="badge badge--success"><i class="ph ph-check-circle" aria-hidden="true"></i>清单可用</span>
+        </div>
+        <div class="identity-line" aria-label="当前身份">
+          <span class="role-badge"><i class="ph ph-user-focus" aria-hidden="true"></i>运营主管</span>
+          <span class="avatar" aria-hidden="true">陈</span>
+          <span class="context-item"><strong>陈思远</strong> · 钉钉身份</span>
+        </div>
+      </header>
+
+      <header class="mobile-bar">
+        <div class="flex items-center gap-3">
+          <span class="brand-mark" aria-hidden="true"><i class="ph ph-compass-tool"></i></span>
+          <strong class="text-sm">趣然 AI 决策</strong>
+        </div>
+        <span class="role-badge">运营主管</span>
+      </header>
+
+      <section class="device-notice" aria-labelledby="device-title">
+        <div class="device-card">
+          <span class="device-icon" aria-hidden="true"><i class="ph ph-desktop"></i></span>
+          <h1 id="device-title" class="mt-5 text-xl font-semibold">请使用更宽的电脑屏幕</h1>
+          <p class="mt-3 text-sm leading-6" style="color: var(--muted);">工作台包含密集指标、规则依据和跨角色动作轨道。请在宽度不低于 1280px 的办公电脑上处理业务操作。</p>
+        </div>
+      </section>
+
+      <main class="content desktop-content">
+        <div class="page-header page-enter">
+          <div>
+            <div class="page-eyebrow"><i class="ph ph-waveform" aria-hidden="true"></i>Operating overview</div>
+            <h1 class="page-title">早上好，陈思远</h1>
+            <p class="page-subtitle">你当前以运营主管身份查看本周任务。先处理高优先级待审核建议，再关注跨角色未闭环事项。</p>
+          </div>
+          <button id="refreshButton" class="button" type="button">
+            <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+            <span>刷新状态</span>
+          </button>
+        </div>
+
+        <a class="batch-card page-enter page-enter--summary" href="阶段1_数据批次_数据批次列表.html" aria-label="查看当前数据批次 BAT-20260706-01">
+          <div>
+            <div class="batch-label">当前工作台依据此批次</div>
+            <div class="batch-title"><i class="ph ph-database" aria-hidden="true"></i>BAT-20260706-01</div>
+          </div>
+          <div>
+            <div class="batch-label">数据期间</div>
+            <div class="batch-value">2026-06-01 — 06-30</div>
+          </div>
+          <div>
+            <div class="batch-label">业务截止日</div>
+            <div class="batch-value">2026-07-06</div>
+          </div>
+          <div>
+            <div class="batch-label">规则版本</div>
+            <div class="batch-value">RULE-V1.0</div>
+          </div>
+          <div>
+            <div class="batch-label">事业部</div>
+            <div class="batch-value">玩具事业部</div>
+          </div>
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </a>
+
+        <section class="metric-grid page-enter page-enter--summary" aria-label="运营主管任务总览">
+          <a class="metric-card" href="阶段1_行动清单_行动清单.html?review_state=pending">
+            <div>
+              <div class="metric-label">待审核建议</div>
+              <div class="metric-value">10</div>
+              <div class="metric-hint">进入详情核对完整依据后审核</div>
+            </div>
+            <span class="metric-icon" aria-hidden="true"><i class="ph ph-clipboard-text"></i></span>
+          </a>
+          <a class="metric-card" href="阶段1_行动清单_行动清单.html?priority=high">
+            <div>
+              <div class="metric-label">高优先级待审核</div>
+              <div class="metric-value">4</div>
+              <div class="metric-hint">清仓与止损优先处理</div>
+            </div>
+            <span class="metric-icon metric-icon--danger" aria-hidden="true"><i class="ph ph-warning-octagon"></i></span>
+          </a>
+          <a class="metric-card" href="阶段1_行动清单_行动清单.html?cross_role_blocker=true">
+            <div>
+              <div class="metric-label">跨角色阻塞</div>
+              <div class="metric-value">3</div>
+              <div class="metric-hint">两条动作轨道尚未同时闭环</div>
+            </div>
+            <span class="metric-icon metric-icon--warn" aria-hidden="true"><i class="ph ph-arrows-left-right"></i></span>
+          </a>
+        </section>
+
+        <section class="dashboard-grid page-enter page-enter--content">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">待审核与高优先级建议</div>
+                <div class="panel-subtitle">按清仓、止损、观察、加投、补货固定层级排序 · 共 10 条</div>
+              </div>
+              <a class="text-link" href="阶段1_行动清单_行动清单.html?review_state=pending">查看全部</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 24%;">SPU</th>
+                    <th style="width: 10%;">主动作</th>
+                    <th style="width: 18%;">关键依据</th>
+                    <th style="width: 12%;">补货结论</th>
+                    <th style="width: 24%;">动作轨道</th>
+                    <th style="width: 12%;">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="spu-cell"><div class="spu-name">布乐迪忙碌屋早教玩具</div><div class="spu-meta">SPU-515 · 趣然玩具旗舰店</div></td>
+                    <td><span class="action-name action-name--danger">清仓</span></td>
+                    <td><div class="evidence">经营准利润率 -6.8%，低于 0%</div></td>
+                    <td><span class="badge badge--danger">禁止补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-515">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell"><div class="spu-name">儿童仿真厨房组合套装</div><div class="spu-meta">SPU-1082 · 趣然玩具旗舰店</div></td>
+                    <td><span class="action-name action-name--danger">清仓</span></td>
+                    <td><div class="evidence">非新品，月净销售额 18,640 元</div></td>
+                    <td><span class="badge badge--danger">禁止补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-1082">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell"><div class="spu-name">磁力片积木 128 件套</div><div class="spu-meta">SPU-2047 · 趣然益智玩具店</div></td>
+                    <td><span class="action-name action-name--danger">止损</span></td>
+                    <td><div class="evidence">小爆款，经营准利润率 7.6%</div></td>
+                    <td><span class="badge badge--danger">禁止补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-2047">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell"><div class="spu-name">大颗粒动物乐园积木</div><div class="spu-meta">SPU-2391 · 趣然玩具旗舰店</div></td>
+                    <td><span class="action-name action-name--danger">止损</span></td>
+                    <td><div class="evidence">大爆款，经营准利润率 4.2%</div></td>
+                    <td><span class="badge badge--danger">禁止补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-2391">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--warn"><div class="spu-name">儿童过家家收银台</div><div class="spu-meta">SPU-3175 · 趣然角色扮演店</div></td>
+                    <td><span class="action-name action-name--warn">观察</span></td>
+                    <td><div class="evidence">大爆款，近 7 天品退率 2.1%</div></td>
+                    <td><span class="badge">不补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 无任务</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-3175">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--warn"><div class="spu-name">音乐启蒙拍拍鼓</div><div class="spu-meta">SPU-3608 · 趣然婴童玩具店</div></td>
+                    <td><span class="action-name action-name--warn">观察</span></td>
+                    <td><div class="evidence">新品亏损 1 个月，利润率 -24.3%</div></td>
+                    <td><span class="badge">不生成结论</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 无任务</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-3608">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--accent"><div class="spu-name">百变轨道赛车组合</div><div class="spu-meta">SPU-4210 · 趣然益智玩具店</div></td>
+                    <td><span class="action-name action-name--accent">加投</span></td>
+                    <td><div class="evidence">大爆款，利润率 13.8%，品退率 0.8%</div></td>
+                    <td><span class="badge badge--warn">补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-4210">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--accent"><div class="spu-name">儿童科学实验探索箱</div><div class="spu-meta">SPU-4763 · 趣然成长实验室</div></td>
+                    <td><span class="action-name action-name--accent">加投</span></td>
+                    <td><div class="evidence">小爆款，利润率 18.6%，品退率 1.1%</div></td>
+                    <td><span class="badge">不补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 无任务</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-4763">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--accent"><div class="spu-name">木制城市交通拼图</div><div class="spu-meta">SPU-5036 · 趣然木玩专营店</div></td>
+                    <td><span class="action-name action-name--accent">加投</span></td>
+                    <td><div class="evidence">新品，经营准利润率 -12.4%</div></td>
+                    <td><span class="badge">不生成结论</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 无任务</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-5036">查看建议</a></td>
+                  </tr>
+                  <tr>
+                    <td class="spu-cell spu-cell--accent"><div class="spu-name">遥控越野攀爬车</div><div class="spu-meta">SPU-5884 · 趣然遥控玩具店</div></td>
+                    <td><span class="action-name action-name--accent">加投</span></td>
+                    <td><div class="evidence">大爆款，利润率 16.2%，品退率 1.2%</div></td>
+                    <td><span class="badge badge--warn">补货</span></td>
+                    <td><div class="track-stack"><div class="track-line"><span>建议审核</span><strong>待审核</strong></div><div class="track-line"><span>经营 / 采购</span><strong>待激活 / 待激活</strong></div></div></td>
+                    <td><a class="table-link" href="阶段1_建议与执行_建议详情.html?spu=SPU-5884">查看建议</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">最近状态</div>
+                  <div class="panel-subtitle">仅展示当前角色可见记录</div>
+                </div>
+                <a class="text-link" href="阶段1_规则与数据溯源_追溯记录.html">查看追溯</a>
+              </div>
+              <ol class="activity-list">
+                <li class="activity-item">
+                  <span class="activity-icon" aria-hidden="true"><i class="ph ph-check"></i></span>
+                  <div><a class="activity-link activity-title" href="阶段1_建议与执行_建议详情.html?spu=SPU-1874">SPU-1874 建议审核已通过</a><div class="activity-meta">陈思远 · 今天 09:18</div></div>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-icon" aria-hidden="true"><i class="ph ph-arrows-left-right"></i></span>
+                  <div><a class="activity-link activity-title" href="阶段1_建议与执行_建议详情.html?spu=SPU-6290">经营已执行，采购待确认禁补</a><div class="activity-meta">周晓宁 · 今天 08:52</div></div>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-icon" aria-hidden="true"><i class="ph ph-package"></i></span>
+                  <div><a class="activity-link activity-title" href="阶段1_建议与执行_建议详情.html?spu=SPU-7351">采购已确认补货任务</a><div class="activity-meta">林嘉 · 昨天 17:36</div></div>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-icon" aria-hidden="true"><i class="ph ph-note-pencil"></i></span>
+                  <div><a class="activity-link activity-title" href="阶段1_建议与执行_建议详情.html?spu=SPU-2682">经营结果已记录</a><div class="activity-meta">周晓宁 · 昨天 16:08</div></div>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-icon" aria-hidden="true"><i class="ph ph-x"></i></span>
+                  <div><a class="activity-link activity-title" href="阶段1_建议与执行_建议详情.html?spu=SPU-6943">建议已驳回并保留原结论</a><div class="activity-meta">陈思远 · 昨天 14:21</div></div>
+                </li>
+              </ol>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">主管快捷入口</div>
+                  <div class="panel-subtitle">进入完整页面后处理</div>
+                </div>
+              </div>
+              <div class="quick-grid">
+                <a class="quick-link" href="阶段1_行动清单_行动清单.html?review_state=pending"><i class="ph ph-clipboard-text" aria-hidden="true"></i><span>全部待审核</span></a>
+                <a class="quick-link" href="阶段1_行动清单_行动清单.html?cross_role_blocker=true"><i class="ph ph-arrows-left-right" aria-hidden="true"></i><span>跨角色阻塞</span></a>
+                <a class="quick-link" href="阶段1_规则与数据溯源_追溯记录.html"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span>追溯记录</span></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer-note page-enter page-enter--content">
+          <span><i class="ph ph-info" aria-hidden="true"></i> 数量按建议与动作轨道分别统计；页面反映当前批次及周内最新状态投影。</span>
+          <span>最近同步：2026-08-04 09:26</span>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="refreshToast" class="toast" role="status" aria-live="polite" data-open="false">
+    <i class="ph ph-check-circle" aria-hidden="true"></i>
+    <div>
+      <div class="toast-title">工作台状态已刷新</div>
+      <div class="toast-copy">当前批次、待办数量和最近动态均已重新核对。</div>
+    </div>
+  </div>
+
+  <script>
+    const refreshButton = document.getElementById('refreshButton');
+    const refreshToast = document.getElementById('refreshToast');
+    const originalRefresh = refreshButton.innerHTML;
+    let toastTimer;
+
+    refreshButton.addEventListener('click', () => {
+      if (refreshButton.disabled) return;
+
+      refreshButton.disabled = true;
+      refreshButton.setAttribute('aria-busy', 'true');
+      refreshButton.innerHTML = '<span class="spinner" aria-hidden="true"></span><span>正在刷新…</span>';
+      refreshToast.dataset.open = 'false';
+
+      window.setTimeout(() => {
+        refreshButton.disabled = false;
+        refreshButton.removeAttribute('aria-busy');
+        refreshButton.innerHTML = originalRefresh;
+        refreshToast.dataset.open = 'true';
+
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          refreshToast.dataset.open = 'false';
+        }, 2800);
+      }, 900);
+    });
+  </script>
+</body>
+</html>
