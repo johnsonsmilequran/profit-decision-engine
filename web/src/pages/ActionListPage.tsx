@@ -4,6 +4,7 @@ import { useQueries, useQuery } from '@tanstack/react-query'
 import { listActions, listBatches, type ActionFilters } from '../api'
 import { AppShell } from '../components/AppShell'
 import { ActionTable } from '../components/ActionTable'
+import { latestReadyBatch } from './actionBatchOrdering'
 
 function initialFilters(): ActionFilters {
   const query = new URLSearchParams(window.location.search)
@@ -50,9 +51,10 @@ export function ActionListPage() {
   const pages = Math.max(1,Math.ceil((query.data?.total ?? 0)/filters.limit))
   const update = (part: Partial<ActionFilters>) => setFilters(value => ({ ...value, ...part, page: part.page ?? 1 }))
   const readyBatches = (batchQuery.data?.items ?? []).filter(batch => batch.status === 'ready')
-  const historical = Boolean(filters.batchId && readyBatches[0] && filters.batchId !== readyBatches[0].id)
+  const latestBatch = latestReadyBatch(readyBatches)
+  const historical = Boolean(filters.batchId && latestBatch && filters.batchId !== latestBatch.id)
   const newestBatch = batchQuery.data?.items[0]
-  const activeBatch = filters.batchId ? readyBatches.find(batch => batch.id === filters.batchId) : readyBatches[0]
+  const activeBatch = filters.batchId ? readyBatches.find(batch => batch.id === filters.batchId) : latestBatch
   const hasNarrowing = Boolean(filters.search || filters.action || filters.store || filters.operator || filters.reviewStatus || filters.businessState || filters.inventoryState || filters.clearanceStatus || filters.progress)
   const clearFilters = () => update({ search: '', action: '', store: '', operator: '', reviewStatus: '', businessState: '', inventoryState: '', clearanceStatus: '', progress: '' })
   return <AppShell active="actions"><section data-page-id="PAGE-F05-02">
