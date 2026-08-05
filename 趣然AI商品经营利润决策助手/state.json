@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-03T11:06:24Z",
+  "last_updated_at_utc": "2026-08-04T07:20:07Z",
   "work_type": "feature",
   "workflow_mode": "standard",
   "value_confirmation": {
@@ -19,15 +19,15 @@
     "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
     "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
   },
-  "contract_revision": 1,
-  "source_ids_changed": [],
-  "current_stage": "6.3",
-  "current_substep": "stage6-regenerated-from-stage5-and-verified",
+  "contract_revision": 8,
+  "source_ids_changed": ["REQ-F05-05", "AC-F05-09"],
+  "current_stage": "tdd-master",
+  "current_substep": "go-react-technical-baseline-synchronized",
   "completed_stages": ["0", "1", "5", "6"],
   "skipped_stages": ["2", "3", "4"],
   "next_action": {
-    "type": "ready_for_user_review_or_design",
-    "description": "阶段 6 已依据阶段 5 正式输出重新生成并通过 HTML 浏览器校验、PPTX 再渲染和溢出测试；可由用户审阅或进入设计阶段"
+    "type": "ready_for_coding_goal",
+    "description": "Go API + Go Worker + React/TypeScript/Vite 技术基线已同步到设计与 TDD；Coding Agent 开工前必须先按当前契约建立全量 pending 结果台账，再按最小闭环实现并在发布候选阶段提供本轮真实证据"
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -51,7 +51,7 @@
     },
     {
       "id": "D-4",
-      "decision": "运营和采购计划直接使用行动清单；运营主管审核；运营执行加投、广告止损和清仓并对经营结果负责，采购计划执行补货",
+      "decision": "产品直接业务角色仅为运营和运营主管；责任运营负责经营动作、库存/OA 协同与结果回填，运营主管负责审核、改判和清仓完成事实确认",
       "stage": "1",
       "rationale": "角色边界决定建议的可见范围、审核流程和跨部门动作闭环"
     },
@@ -63,7 +63,7 @@
     },
     {
       "id": "D-6",
-      "decision": "首轮采用人工轻闭环：生成建议、运营主管审核、运营或采购计划确认执行、记录结果；不自动操作外部系统",
+      "decision": "首轮采用人工轻闭环：生成建议、运营主管审核、责任运营执行经营与 OA 协同并记录结果；不自动操作外部系统",
       "stage": "1",
       "rationale": "既解决515案例的跨部门断点，又控制自动写入广告和采购系统的误操作风险"
     },
@@ -93,7 +93,7 @@
     },
     {
       "id": "D-11",
-      "decision": "新品首版不生成补货建议；采购计划仅查看补货或禁补结论及库存销量必要依据",
+      "decision": "新品首版不生成补货建议；采购、仓库等相关人员无产品访问权，仅通过 OA 接收责任运营发送的最小协同字段",
       "stage": "1",
       "rationale": "避免新品补货扩大亏损库存，并按岗位职责落实最小必要数据权限"
     },
@@ -129,9 +129,45 @@
     },
     {
       "id": "D-17",
-      "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；观察归运营负责并以记录观察或有证据的优化结果闭环",
+      "decision": "建议由运营主管整体审核，规则阶段原子生成经营与库存动作，审核通过仅激活；责任运营统一处理经营与库存/OA 协同并记录结果",
       "stage": "5",
       "rationale": "既避免止损/清仓与禁补被拆散，也允许运营和采购计划分别执行并保留独立状态"
+    },
+    {
+      "id": "D-18",
+      "decision": "使用钉钉统一身份认证；运营和运营主管两类业务角色变更由事业部负责人审批，运维/系统管理员按审批结果配置",
+      "stage": "5",
+      "rationale": "统一身份可追溯到个人，并将业务授权与技术配置分离，避免共享账号或技术管理员自行扩大经营数据权限"
+    },
+    {
+      "id": "D-19",
+      "decision": "同一 SPU 每周决策快照独立保留，但相同经营/库存动作续接稳定任务且不重复审核；动作变化追加待主管确认版本，通过后替换当前生效动作",
+      "stage": "design-master",
+      "rationale": "避免连续清仓等同动作周周重复建任，同时保留清仓变观察等动作变更的审核边界与完整历史"
+    },
+    {
+      "id": "D-20",
+      "decision": "经营待办以事业部与 SPU/商品链接精确锚定；新批次显示最近一条前序待办、首次产生时间、本周关联时间、当前经营状态与真实执行时间，并支持按经营状态筛选",
+      "stage": "design-master",
+      "rationale": "让周度导入后的任务续接关系、处理进度和执行事实可见，同时避免审核、采购或更新时间被误当成经营状态或执行时间"
+    },
+    {
+      "id": "D-21",
+      "decision": "清仓动作跨周不变时沿用同一稳定任务；责任运营提交实际清仓完成时间，运营主管确认或退回；最终确认前系统每天通过 OA 最多催办责任运营一次，确认、改判或终止后停止",
+      "stage": "design-master",
+      "rationale": "避免重复建任并确保清仓不是由通知送达或运营单方声明直接闭环，同时对长期未确认的完成事实形成可监控催办"
+    },
+    {
+      "id": "D-22",
+      "decision": "运营工作台和行动清单中的当前任务信息常驻；最近前序待办按 SPU 默认折叠，展开后必须以与当前待办完全相同的整行列结构显示原批次只读记录，只增加前序批次与只读标识，不得使用行内摘要卡或用当前周数据回填；建议详情继续完整展示同一前序快照",
+      "stage": "design-master",
+      "rationale": "降低主表历史信息密度，同时保留跨周关系的可发现性和完整追溯字段"
+    },
+    {
+      "id": "D-23",
+      "decision": "后端采用同一 Go Module 的 Go API 与 Go Worker，前端采用 React + TypeScript + Vite，通过同源 Nginx 和版本化 OpenAPI 契约协作",
+      "stage": "design-master",
+      "rationale": "用户明确指定 Go 后端与 React 前端；该结构保留模块化单体、异步任务和轻量单机部署，同时用契约生成与测试控制 Go/TypeScript 字段漂移"
     }
   ],
   "category": "saas",
@@ -179,6 +215,7 @@
     ],
     "final_pptx": "output/AI商品经营与利润决策助手-阶段5正式版.pptx",
     "legacy_pptx": "output/AI商品经营与利润决策助手-方案V0.pptx",
-    "stage6_report": "drafts/stage6-consistency.md"
+    "stage6_report": "drafts/stage6-consistency.md",
+    "tdd_contract": "output/tests/TDD验收契约.md"
   }
 }

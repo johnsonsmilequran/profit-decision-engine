@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F05-01">
+  <title>运营工作台｜趣然 AI 商品经营与利润决策助手</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+  --surface-hover: #edf3f9;
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #122033;
+  --fg-2: var(--fg);
+  --muted: #53657a;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #c9d5e2;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #123b66;
+  --accent-on: #ffffff;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #137a4a;
+  --warn: #9a5b00;
+  --danger: #b42318;
+  --action-clear: #b42318;
+  --action-stop: #c4510c;
+  --action-watch: #9a5b00;
+  --action-invest: #137a4a;
+  --action-replenish: #1769aa;
+  --ai: #5b5f8a;
+  --success-soft: #e8f5ee;
+  --warn-soft: #fff4d6;
+  --danger-soft: #fdecea;
+  --accent-soft: #e7eff8;
+  --ai-soft: #efeff8;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.6;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 40px;
+  --section-y-tablet: 28px;
+  --section-y-phone: 20px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1440px;
+  --container-gutter-desktop: 28px;
+  --container-gutter-tablet: 20px;
+  --container-gutter-phone: 16px;
+}
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--fg); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .numeric { font-variant-numeric: tabular-nums; }
+    .text-sm { font-size: var(--text-sm); }
+    .text-lg { font-size: var(--text-lg); }
+    .text-xl { font-size: var(--text-xl); }
+    .font-semibold { font-weight: 650; }
+    .font-bold { font-weight: 700; }
+    .leading-tight { line-height: var(--leading-tight); }
+    .text-center { text-align: center; }
+    .rounded-md { border-radius: var(--radius-md); }
+    .border-t { border-top-width: 1px; border-top-style: solid; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .desktop-app { min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: 224px;
+      background: var(--surface);
+      border-right: 1px solid var(--border-soft);
+    }
+    .brand-mark {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: var(--accent-on);
+      box-shadow: var(--elev-raised);
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-height: 42px;
+      padding: 0 var(--space-3);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+    .nav-link:hover { color: var(--accent); background: var(--surface-hover); border-color: var(--border-soft); }
+    .nav-link:active { background: var(--accent-soft); }
+    .nav-link:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .nav-link.active { color: var(--accent); background: var(--accent-soft); border-color: var(--border); }
+    .nav-badge {
+      margin-left: auto;
+      min-width: 24px;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      color: var(--accent-on);
+      text-align: center;
+      font-size: var(--text-xs);
+      line-height: 20px;
+    }
+
+    .app-main { margin-left: 224px; min-width: 0; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: 56px;
+      background: color-mix(in oklab, var(--surface), transparent 4%);
+      border-bottom: 1px solid var(--border-soft);
+      backdrop-filter: blur(12px);
+    }
+    .context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 32px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      white-space: nowrap;
+    }
+    .avatar {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .page-shell {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--container-gutter-desktop);
+    }
+    .page-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+      font-weight: 720;
+    }
+    .eyebrow {
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .muted { color: var(--muted); }
+    .meta { color: var(--meta); font-size: var(--text-xs); }
+    .section-title { margin: 0; font-size: var(--text-lg); line-height: var(--leading-tight); font-weight: 700; }
+
+    .btn-primary, .btn-secondary, .icon-button, .link-button, .filter-button {
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 40px;
+      padding: 0 var(--space-4);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--accent-on);
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn-primary:active { background: var(--accent-active); border-color: var(--accent-active); }
+    .btn-primary:focus-visible, .btn-secondary:focus-visible, .icon-button:focus-visible, .link-button:focus-visible, .filter-button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 40px;
+      padding: 0 var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .btn-secondary:hover, .icon-button:hover { background: var(--surface-hover); border-color: var(--accent); }
+    .btn-secondary:active, .icon-button:active { background: var(--accent-soft); }
+    .icon-button {
+      display: inline-grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    .surface {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      box-shadow: var(--elev-flat);
+    }
+    .surface-raised { box-shadow: var(--elev-raised); }
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--accent-soft) 100%);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+    }
+    .hero-panel::after {
+      position: absolute;
+      right: -28px;
+      bottom: -44px;
+      width: 180px;
+      height: 180px;
+      border: 28px solid color-mix(in oklab, var(--accent), transparent 92%);
+      border-radius: var(--radius-pill);
+      content: "";
+      pointer-events: none;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--success);
+      box-shadow: 0 0 0 4px var(--success-soft);
+    }
+    .progress-line { height: 2px; background: var(--border-soft); }
+    .progress-line.complete { background: var(--success); }
+    .step-icon {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border: 1px solid var(--success);
+      border-radius: var(--radius-pill);
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .metric-card {
+      min-height: 130px;
+      padding: var(--space-5);
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+    }
+    .metric-card:hover { background: var(--surface-hover); border-color: var(--accent); }
+    .metric-icon {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .metric-number { font-size: var(--text-3xl); line-height: 1; font-weight: 740; letter-spacing: var(--tracking-display); }
+
+    .search-field {
+      min-height: 38px;
+      width: 220px;
+      padding: 0 var(--space-3) 0 36px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      outline: none;
+      transition: border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard);
+    }
+    .search-field:hover, .search-field:focus { border-color: var(--accent); }
+    .search-field:focus-visible { box-shadow: var(--focus-ring); }
+    .state-filter {
+      min-height: 38px;
+      min-width: 148px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      outline: none;
+    }
+    .state-filter:focus-visible { box-shadow: var(--focus-ring); border-color: var(--accent); }
+    .filter-button {
+      min-height: 34px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: var(--text-sm);
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .filter-button:hover { color: var(--accent); border-color: var(--accent); background: var(--surface-hover); }
+    .filter-button.active { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+    .table-wrap { overflow-x: auto; }
+    .task-table { width: 100%; min-width: 920px; border-collapse: collapse; }
+    .task-table th {
+      padding: 11px var(--space-3);
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .task-table td {
+      padding: 13px var(--space-3);
+      border-bottom: 1px solid var(--border-soft);
+      vertical-align: middle;
+    }
+    .task-row, .previous-task-row { background: var(--surface); transition: background var(--motion-fast) var(--ease-standard); }
+    .task-row:hover, .previous-task-row:hover { background: var(--surface-hover); }
+    .task-row[hidden], .previous-task-row[hidden], .previous-toggle-row[hidden] { display: none; }
+    .previous-toggle-row td { padding: 0 var(--space-3) 10px; background: var(--surface); }
+    .previous-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      width: 100%;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .previous-toggle .meta { margin-left: 2px; font-weight: 500; }
+    .previous-toggle .previous-caret { margin-left: auto; transition: transform var(--motion-fast) var(--ease-standard); }
+    .previous-toggle[aria-expanded="true"] .previous-caret { transform: rotate(180deg); }
+    .previous-toggle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+    .previous-task-row td { background: var(--accent-soft); border-bottom-color: var(--accent-border); }
+    .previous-task-row td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+    .previous-readonly { margin-top: 6px; }
+    .product-name { font-weight: 680; color: var(--fg); }
+    .evidence { color: var(--muted); font-size: var(--text-xs); line-height: 1.55; }
+    .task-time { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 24px;
+      padding: 0 var(--space-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .badge-clear { color: var(--action-clear); background: var(--danger-soft); border-color: var(--action-clear); }
+    .badge-stop { color: var(--action-stop); background: var(--warn-soft); border-color: var(--action-stop); }
+    .badge-watch { color: var(--action-watch); background: var(--warn-soft); border-color: var(--action-watch); }
+    .badge-invest { color: var(--action-invest); background: var(--success-soft); border-color: var(--action-invest); }
+    .badge-neutral { color: var(--accent); background: var(--accent-soft); border-color: var(--border); }
+    .badge-ai { color: var(--ai); background: var(--ai-soft); border-color: var(--border); }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--accent);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .link-button:hover { background: var(--accent-soft); }
+    .link-button:active { background: var(--surface-hover); }
+
+    .result-item, .limit-item, .event-item {
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .result-item:last-child, .limit-item:last-child, .event-item:last-child { border-bottom: 0; }
+    .result-item { padding: var(--space-4) 0; }
+    .limit-item { padding: var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--border-soft); background: var(--bg); }
+    .limit-item + .limit-item { margin-top: var(--space-3); }
+    .limit-icon {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: var(--radius-sm);
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+    .event-item { position: relative; padding: var(--space-4) 0 var(--space-4) 28px; }
+    .event-item::before {
+      position: absolute;
+      top: 24px;
+      left: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+      content: "";
+    }
+    .event-item:not(:last-child)::after {
+      position: absolute;
+      top: 34px;
+      bottom: -12px;
+      left: 9px;
+      width: 2px;
+      background: var(--border-soft);
+      content: "";
+    }
+
+    .toast {
+      position: fixed;
+      right: var(--space-6);
+      bottom: var(--space-6);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      max-width: 380px;
+      padding: var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface-overlay);
+      color: var(--fg);
+      box-shadow: var(--elev-float);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: opacity var(--motion-base) var(--ease-standard), visibility var(--motion-base) var(--ease-standard), transform var(--motion-base) var(--ease-standard);
+    }
+    .toast.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    @keyframes enter-calm {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .page-enter { animation: enter-calm var(--motion-base) var(--ease-standard) both; }
+    .page-enter.delay-1 { animation-delay: 40ms; }
+    .page-enter.delay-2 { animation-delay: 80ms; }
+
+    @media (max-width: 1279px) {
+      .sidebar { width: 64px; }
+      .sidebar .nav-label, .sidebar .brand-copy, .sidebar .user-copy, .sidebar .nav-badge { display: none; }
+      .sidebar .nav-link { justify-content: center; padding: 0; }
+      .app-main { margin-left: 64px; }
+      .page-shell { padding: var(--container-gutter-tablet); }
+      .context-secondary { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .page-enter { animation: none; }
+      .nav-link, .btn-primary, .btn-secondary, .icon-button, .link-button, .filter-button, .metric-card, .task-row, .toast, .previous-caret { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-app">
+    <aside class="sidebar flex flex-col" aria-label="任务导航">
+      <div class="flex h-16 items-center gap-3 px-4">
+        <div class="brand-mark"><i class="ph ph-chart-line-up text-xl" aria-hidden="true"></i></div>
+        <div class="brand-copy min-w-0">
+          <div class="font-bold leading-tight">趣然经营</div>
+          <div class="meta mt-0.5">利润决策助手</div>
+        </div>
+      </div>
+
+      <nav class="flex-1 px-3 py-5">
+        <p class="nav-label eyebrow mb-3 px-3">经营任务</p>
+        <div class="space-y-1">
+          <a class="nav-link active" href="#overview" aria-current="page">
+            <i class="ph ph-squares-four text-lg" aria-hidden="true"></i>
+            <span class="nav-label">工作台</span>
+          </a>
+          <a class="nav-link prototype-link" href="阶段1_行动中心_行动清单页.html" data-message="将进入当前批次行动清单">
+            <i class="ph ph-list-checks text-lg" aria-hidden="true"></i>
+            <span class="nav-label">行动中心</span>
+            <span class="nav-badge">2</span>
+          </a>
+          <a class="nav-link prototype-link" href="阶段1_数据批次_数据批次列表页.html" data-message="将进入数据批次列表">
+            <i class="ph ph-database text-lg" aria-hidden="true"></i>
+            <span class="nav-label">数据批次</span>
+          </a>
+          <a class="nav-link prototype-link" href="阶段1_历史追溯_历史与追溯列表页.html" data-message="将进入历史与追溯列表">
+            <i class="ph ph-clock-counter-clockwise text-lg" aria-hidden="true"></i>
+            <span class="nav-label">历史与追溯</span>
+          </a>
+        </div>
+
+        <p class="nav-label eyebrow mb-3 mt-8 px-3">支持</p>
+        <div class="space-y-1">
+          <button class="nav-link w-full prototype-link" type="button" data-message="已打开口径说明">
+            <i class="ph ph-book-open-text text-lg" aria-hidden="true"></i>
+            <span class="nav-label">口径说明</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="border-t p-3" style="border-color: var(--border-soft);">
+        <div class="flex items-center gap-3 rounded-md px-2 py-2">
+          <div class="avatar">缘</div>
+          <div class="user-copy min-w-0 flex-1">
+            <div class="truncate font-semibold">缘一</div>
+            <div class="meta truncate">玩具事业部 · 运营</div>
+          </div>
+          <button class="icon-button user-copy" type="button" aria-label="账户菜单"><i class="ph ph-caret-up-down" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="topbar flex items-center justify-between px-5 xl:px-7" aria-label="业务上下文">
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="context-chip"><i class="ph ph-buildings" aria-hidden="true"></i><strong>玩具事业部</strong></span>
+          <span class="context-chip mono"><i class="ph ph-stack" aria-hidden="true"></i>BATCH-20260630-4EC92F6A</span>
+          <span class="context-chip context-secondary"><i class="ph ph-calendar-blank" aria-hidden="true"></i>业务期间 2026-06-01—2026-06-30</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="context-chip"><span class="status-dot" aria-hidden="true"></span>角色：运营</span>
+          <button class="icon-button" type="button" aria-label="通知"><i class="ph ph-bell" aria-hidden="true"></i></button>
+          <div class="avatar" aria-label="当前用户缘一">缘</div>
+        </div>
+      </header>
+
+      <main id="overview" class="page-shell">
+        <section class="page-enter flex items-end justify-between gap-6" aria-labelledby="page-heading">
+          <div>
+            <div class="eyebrow mb-2">OPERATIONS WORKBENCH</div>
+            <h1 id="page-heading" class="page-title">早上好，缘一</h1>
+            <p class="muted mt-2">今天优先处理高风险经营动作，再补录已执行任务的结果。</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="refreshButton" class="btn-secondary" type="button"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>刷新状态</button>
+            <button class="btn-primary prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将进入数据批次导入页"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入新批次</button>
+          </div>
+        </section>
+
+        <section id="batch" class="hero-panel page-enter delay-1 mt-6 p-5" aria-labelledby="batch-heading">
+          <div class="relative z-10 grid grid-cols-12 gap-6">
+            <div class="col-span-5">
+              <div class="flex items-center gap-2">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span class="badge badge-invest"><i class="ph ph-check-circle" aria-hidden="true"></i>清单已就绪</span>
+              </div>
+              <h2 id="batch-heading" class="mt-3 text-lg font-bold">当前经营批次</h2>
+              <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span class="mono text-lg font-bold">BATCH-20260630-4EC92F6A</span>
+                <span class="meta">规则版本 <span class="mono">RULE-V1.0</span></span>
+              </div>
+              <p class="muted mt-2 text-sm">数据期间 2026-06-01—2026-06-30 · 业务截止日 2026-06-30 · 工作台更新于 2026.08.05 03:47</p>
+            </div>
+            <div class="col-span-5 flex items-center">
+              <div class="grid w-full grid-cols-[auto_1fr_auto_1fr_auto_1fr_auto] items-center gap-2" aria-label="导入处理进度">
+                <div class="text-center"><div class="step-icon mx-auto"><i class="ph ph-upload-simple" aria-hidden="true"></i></div><div class="meta mt-1">已接收</div></div>
+                <div class="progress-line complete"></div>
+                <div class="text-center"><div class="step-icon mx-auto"><i class="ph ph-shield-check" aria-hidden="true"></i></div><div class="meta mt-1">校验通过</div></div>
+                <div class="progress-line complete"></div>
+                <div class="text-center"><div class="step-icon mx-auto"><i class="ph ph-function" aria-hidden="true"></i></div><div class="meta mt-1">规则完成</div></div>
+                <div class="progress-line complete"></div>
+                <div class="text-center"><div class="step-icon mx-auto"><i class="ph ph-list-checks" aria-hidden="true"></i></div><div class="meta mt-1">清单就绪</div></div>
+              </div>
+            </div>
+            <div class="col-span-2 flex items-center justify-end">
+              <button class="btn-secondary prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将打开当前批次详情">查看批次详情<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-enter delay-2 mt-5 grid grid-cols-4 gap-4" aria-label="经营任务摘要">
+          <article class="metric-card">
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-play-circle text-lg" aria-hidden="true"></i></div><span class="badge badge-neutral">需今日关注</span></div>
+            <div class="metric-number numeric mt-5">1</div>
+            <div class="mt-1 font-semibold">待执行经营动作</div>
+            <div class="meta mt-2">清仓 1 · SPU 932592549424</div>
+          </article>
+          <article class="metric-card">
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-note-pencil text-lg" aria-hidden="true"></i></div><span class="badge badge-neutral">当前已补齐</span></div>
+            <div class="metric-number numeric mt-5">0</div>
+            <div class="mt-1 font-semibold">待补录经营结果</div>
+            <div class="meta mt-2">SPU 683939339441 已明确三项结果未提供</div>
+          </article>
+          <article class="metric-card">
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-calendar-check text-lg" aria-hidden="true"></i></div><span class="badge badge-watch">每日 OA 催办</span></div>
+            <div class="metric-number numeric mt-5">0</div>
+            <div class="mt-1 font-semibold">待确认清仓完成</div>
+            <div class="meta mt-2">已提交的清仓完成时间均已主管确认</div>
+          </article>
+          <article class="metric-card">
+            <div class="flex items-start justify-between"><div class="metric-icon"><i class="ph ph-paper-plane-tilt text-lg" aria-hidden="true"></i></div><span class="badge badge-stop">OA 未配置</span></div>
+            <div class="metric-number numeric mt-5">3</div>
+            <div class="mt-1 font-semibold">协同与催办通知</div>
+            <div class="meta mt-2">发送失败 3 · 均保留受控失败记录</div>
+          </article>
+        </section>
+
+        <section id="tasks" class="mt-6 grid grid-cols-12 items-start gap-5">
+          <div class="surface col-span-8 overflow-hidden" aria-labelledby="tasks-heading">
+            <div class="flex flex-wrap items-center justify-between gap-4 p-5">
+              <div>
+                <h2 id="tasks-heading" class="section-title">优先经营待办</h2>
+                <p class="meta mt-1">沿用固定层级：清仓 → 止损 → 观察 → 加投；AI 不改变排序</p>
+              </div>
+              <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-message="将打开当前批次 2 条本人任务">查看全部行动<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 px-5 pb-4">
+              <div class="flex flex-wrap gap-2" role="group" aria-label="按经营动作筛选">
+                <button class="filter-button active" type="button" data-filter="all">全部 2</button>
+                <button class="filter-button" type="button" data-filter="clear">清仓 2</button>
+                <button class="filter-button" type="button" data-filter="stop">止损 0</button>
+                <button class="filter-button" type="button" data-filter="watch">观察 0</button>
+                <button class="filter-button" type="button" data-filter="invest">加投 0</button>
+              </div>
+              <div class="flex items-center gap-2">
+                <label>
+                  <span class="sr-only">按经营状态筛选</span>
+                  <select id="businessStateFilter" class="state-filter" aria-label="经营状态筛选">
+                    <option value="all">全部经营状态</option>
+                    <option value="待审核">待审核</option>
+                    <option value="变更待确认">变更待确认</option>
+                    <option value="待执行">待执行</option>
+                    <option value="已执行">已执行</option>
+                    <option value="待记录结果">待记录结果</option>
+                    <option value="待提交清仓完成时间">待提交清仓完成时间</option>
+                    <option value="待主管确认">待主管确认</option>
+                    <option value="完成时间待修正">完成时间待修正</option>
+                    <option value="已确认完成">已确认完成</option>
+                    <option value="已记录结果">已记录结果</option>
+                    <option value="已关闭">已关闭</option>
+                  </select>
+                </label>
+                <label class="relative block">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 muted" aria-hidden="true"></i>
+                <span class="sr-only">搜索 SPU</span>
+                <input id="taskSearch" class="search-field" type="search" placeholder="搜索 SPU 或商品名">
+                </label>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="task-table">
+                <thead>
+                  <tr>
+                    <th>经营对象</th>
+                    <th>主动作</th>
+                    <th>关键依据</th>
+                    <th>库存语境</th>
+                    <th>经营状态</th>
+                    <th>辅助解释</th>
+                    <th><span class="sr-only">操作</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="task-row" data-task-key="spu-932592549424" data-action="clear" data-business-state="待执行" data-search="932592549424 毛毡板水果切切乐 d83d0e81">
+                    <td><div class="product-name">毛毡板水果切切乐忙碌板围栏摘摘乐可切菜厨房果蔬益智过家家玩具</div><div class="meta mono">SPU 932592549424 · TASK d83d0e81</div></td>
+                    <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
+                    <td><div class="numeric font-semibold">上月净销售额 34,024.46 元</div><div class="evidence">经营准利润率 -1.45% · 小爆款利润率低于 5%</div></td>
+                    <td><div class="font-semibold muted">库存数据不足</div><div class="evidence">仓内、在途与近 14 天销量未提供 · 固定规则仍生成禁止补货</div></td>
+                    <td><span class="badge badge-neutral">待执行</span><div class="meta mt-1">主管已通过 · 经营/库存双轨待执行</div><div class="task-time mono">产生 08-04 21:13<br>本周关联 08-04 21:13<br>执行 —<br>OA 催办 08-05 03:47 · 发送失败</div></td>
+                    <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>AI 未配置</span></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="毛毡板水果切切乐忙碌板围栏摘摘乐可切菜厨房果蔬益智过家家玩具">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                  </tr>
+                  <tr class="task-row" data-task-key="spu-683939339441" data-action="clear" data-business-state="已关闭" data-search="683939339441 儿童身高墙贴 7b244b3c">
+                    <td><div class="product-name">儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙</div><div class="meta mono">SPU 683939339441 · TASK 7b244b3c</div></td>
+                    <td><span class="badge badge-clear"><i class="ph ph-trash" aria-hidden="true"></i>清仓</span></td>
+                    <td><div class="numeric font-semibold">上月净销售额 59,930.95 元</div><div class="evidence">经营准利润率 4.86% · 小爆款利润率低于 5%</div></td>
+                    <td><div class="font-semibold muted">库存数据不足</div><div class="evidence">经营轨已闭环 · 库存协同仍待执行</div></td>
+                    <td><span class="badge badge-invest">已关闭</span><div class="meta mt-1">结果已记录 · 清仓完成已确认</div><div class="task-time mono">产生 08-04 21:13<br>执行 08-04 21:38<br>结果 08-04 21:45<br>完成确认 08-04 21:47</div></td>
+                    <td><span class="badge badge-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>AI 未配置</span></td>
+                    <td><button class="link-button view-task" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙">查看建议<i class="ph ph-arrow-right" aria-hidden="true"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-between px-5 py-4">
+              <span id="taskCount" class="meta">当前显示 2 条 · 其中 1 条经营待执行</span>
+              <div class="flex items-center gap-1">
+                <button class="icon-button" type="button" aria-label="上一页" disabled><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+                <span class="context-chip mono">1 / 1</span>
+                <button class="icon-button" type="button" aria-label="下一页" disabled><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="col-span-4 space-y-5">
+            <section class="surface p-5" aria-labelledby="results-heading">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 id="results-heading" class="section-title">待补录经营结果</h2>
+                  <p class="meta mt-1">当前没有待补录经营结果</p>
+                </div>
+                <span class="badge badge-neutral numeric">0</span>
+              </div>
+              <div class="mt-3">
+                <article class="result-item">
+                  <div class="font-semibold">暂无待补录结果</div>
+                  <p class="muted mt-2 text-sm">SPU 683939339441 已记录销售、利润、库存三项结果均未提供；其他本人任务尚未执行。</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="surface p-5" aria-labelledby="limits-heading">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 id="limits-heading" class="section-title">数据限制</h2>
+                  <p class="meta mt-1">缺失不等于 0，受阻判断已明确标记</p>
+                </div>
+                <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_数据批次_导入与批次详情页.html'" data-message="将打开批次数据限制明细">查看明细<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+              </div>
+              <div class="mt-4">
+                <article class="limit-item flex gap-3">
+                  <div class="limit-icon"><i class="ph ph-warning-circle" aria-hidden="true"></i></div>
+                  <div><div class="flex items-center gap-2"><strong>品退数据未校验</strong><span class="badge badge-watch">4 个 SPU</span></div><p class="muted mt-1 text-sm">缘一本批次 4 个 SPU 均缺可信 7 天周期输入；不影响已有利润规则结论。</p></div>
+                </article>
+                <article class="limit-item flex gap-3">
+                  <div class="limit-icon"><i class="ph ph-package" aria-hidden="true"></i></div>
+                  <div><div class="flex items-center gap-2"><strong>库存数据不足</strong><span class="badge badge-watch">4 个 SPU</span></div><p class="muted mt-1 text-sm">仓内、在途与近 14 天销量未提供，不计算库存可售天数，不生成补货建议。</p></div>
+                </article>
+              </div>
+            </section>
+          </aside>
+        </section>
+
+        <section id="recent" class="surface mt-6 p-5" aria-labelledby="recent-heading">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 id="recent-heading" class="section-title">最近处理</h2>
+              <p class="meta mt-1">本人最近完成的经营动作与结果记录，可回到原建议追溯</p>
+            </div>
+            <button class="link-button prototype-link" type="button" onclick="location.href='阶段1_历史追溯_历史与追溯列表页.html'" data-message="将进入历史与追溯列表">查看历史<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="mt-3 grid grid-cols-3 gap-5">
+            <article class="event-item">
+              <div class="meta">08.04 21:46</div>
+              <div class="mt-1 font-semibold">儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙</div>
+              <div class="meta mono">SPU 683939339441</div>
+              <p class="muted mt-2 text-sm">清仓完成时间：已提交 → 待主管确认</p>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙">查看记录</button>
+            </article>
+            <article class="event-item">
+              <div class="meta">08.04 21:45</div>
+              <div class="mt-1 font-semibold">儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙</div>
+              <div class="meta mono">SPU 683939339441</div>
+              <p class="muted mt-2 text-sm">经营结果：已执行 → 已记录结果（三项未提供）</p>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙">查看记录</button>
+            </article>
+            <article class="event-item">
+              <div class="meta">08.04 21:38</div>
+              <div class="mt-1 font-semibold">儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙</div>
+              <div class="meta mono">SPU 683939339441</div>
+              <p class="muted mt-2 text-sm">清仓：待执行 → 已执行</p>
+              <button class="link-button view-task mt-1" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-name="儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙">查看记录</button>
+            </article>
+          </div>
+        </section>
+
+        <footer class="flex items-center justify-between py-6">
+          <p class="meta">固定规则决定经营动作，AI 仅提供辅助解释，不改变动作与优先级。</p>
+          <p class="meta">业务时区 Asia/Shanghai · 数据粒度 SPU</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <div class="step-icon"><i class="ph ph-arrow-square-out" aria-hidden="true"></i></div>
+    <div><div class="font-semibold">已保留当前批次上下文</div><div id="toastMessage" class="meta mt-0.5">将进入对应业务页面</div></div>
+  </div>
+
+  <script>
+    const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+    const taskRows = Array.from(document.querySelectorAll('.task-row'));
+    const previousToggles = Array.from(document.querySelectorAll('.previous-toggle'));
+    const taskSearch = document.getElementById('taskSearch');
+    const businessStateFilter = document.getElementById('businessStateFilter');
+    const taskCount = document.getElementById('taskCount');
+    let activeFilter = 'all';
+
+    function setPreviousExpanded(button, expanded) {
+      const row = document.getElementById(button.getAttribute('aria-controls'));
+      button.setAttribute('aria-expanded', String(expanded));
+      if (row) row.hidden = !expanded;
+    }
+
+    previousToggles.forEach((button) => {
+      button.addEventListener('click', () => setPreviousExpanded(button, button.getAttribute('aria-expanded') !== 'true'));
+    });
+
+    function updateTasks() {
+      previousToggles.forEach((button) => setPreviousExpanded(button, false));
+      const keyword = taskSearch.value.trim().toLowerCase();
+      const businessState = businessStateFilter.value;
+      let visibleCount = 0;
+      taskRows.forEach((row) => {
+        const matchesAction = activeFilter === 'all' || row.dataset.action === activeFilter;
+        const matchesBusinessState = businessState === 'all' || row.dataset.businessState === businessState;
+        const matchesKeyword = !keyword || row.dataset.search.toLowerCase().includes(keyword);
+        const visible = matchesAction && matchesBusinessState && matchesKeyword;
+        row.hidden = !visible;
+        const toggleRow = document.querySelector(`.previous-toggle-row[data-parent-task="${row.dataset.taskKey}"]`);
+        if (toggleRow) toggleRow.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+      taskCount.textContent = `当前显示 ${visibleCount} 条 · 经营状态：${businessState === 'all' ? '全部' : businessState}`;
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach((item) => item.classList.toggle('active', item === button));
+        updateTasks();
+      });
+    });
+    taskSearch.addEventListener('input', updateTasks);
+    businessStateFilter.addEventListener('change', updateTasks);
+
+    document.querySelectorAll('.previous-record').forEach((button) => {
+      button.addEventListener('click', () => showToast(`${button.dataset.name}将在历史只读模式打开`));
+    });
+
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    let toastTimer;
+    function showToast(message) {
+      toastMessage.textContent = message;
+      toast.classList.add('visible');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2400);
+    }
+
+    document.querySelectorAll('.prototype-link').forEach((element) => {
+      element.addEventListener('click', (event) => {
+        const href = element.getAttribute('href');
+        if ((href && href.endsWith('.html')) || element.hasAttribute('onclick')) return;
+        event.preventDefault();
+        showToast(element.dataset.message || '将进入对应业务页面');
+      });
+    });
+    document.querySelectorAll('.view-task').forEach((button) => {
+      button.addEventListener('click', () => showToast(`将打开“${button.dataset.name}”建议详情`));
+    });
+
+    document.getElementById('refreshButton').addEventListener('click', (event) => {
+      const button = event.currentTarget;
+      button.innerHTML = '<i class="ph ph-check-circle" aria-hidden="true"></i>已更新 03:47';
+      showToast('经营任务、导入状态和最近处理已更新');
+      window.setTimeout(() => {
+        button.innerHTML = '<i class="ph ph-arrows-clockwise" aria-hidden="true"></i>刷新状态';
+      }, 2200);
+    });
+  </script>
+</body>
+</html>

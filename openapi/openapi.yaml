@@ -1,0 +1,563 @@
+openapi: 3.1.0
+info: { title: 趣然 AI 商品经营与利润决策助手 API, version: 1.0.0 }
+paths:
+  /api/session:
+    get:
+      operationId: getSession
+      responses:
+        '200': { description: 当前会话, content: { application/json: { schema: { $ref: '#/components/schemas/SessionResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/batches:
+    get:
+      operationId: listBatches
+      parameters:
+        - { name: search, in: query, description: 按批次编号或源文件名检索, schema: { type: string } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 批次分页列表, content: { application/json: { schema: { $ref: '#/components/schemas/BatchListResponse' } } } }
+    post:
+      operationId: createBatch
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [business_unit, period_start, period_end, business_cutoff_date, xlsx_file]
+              properties:
+                business_unit: { type: string, const: 玩具事业部 }
+                period_start: { type: string, format: date }
+                period_end: { type: string, format: date }
+                business_cutoff_date: { type: string, format: date }
+                xlsx_file: { type: string, format: binary }
+      responses:
+        '201': { description: 新批次, content: { application/json: { schema: { $ref: '#/components/schemas/BatchSummary' } } } }
+        '200': { description: 幂等命中, content: { application/json: { schema: { $ref: '#/components/schemas/BatchSummary' } } } }
+        '422': { $ref: '#/components/responses/Error' }
+  /api/batches/{batchId}:
+    get:
+      operationId: getBatch
+      parameters:
+        - { name: batchId, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: 批次详情, content: { application/json: { schema: { $ref: '#/components/schemas/BatchDetail' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/actions:
+    get:
+      operationId: listActions
+      parameters:
+        - { name: batch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: tab, in: query, schema: { type: string, enum: [mine, all, processing, completed], default: mine } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: action, in: query, schema: { type: string } }
+        - { name: store, in: query, schema: { type: string } }
+        - { name: operator, in: query, schema: { type: string } }
+        - { name: review_status, in: query, schema: { type: string } }
+        - { name: business_state, in: query, schema: { type: string } }
+        - { name: inventory_state, in: query, schema: { type: string } }
+        - { name: clearance_status, in: query, schema: { type: string, enum: [not_submitted, pending_confirmation, returned, confirmed] } }
+        - { name: progress, in: query, schema: { type: string, enum: [pending_review, pending_execution, executing, executed, result_recorded, rejected] } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 行动清单, content: { application/json: { schema: { $ref: '#/components/schemas/ActionListResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/workbench:
+    get:
+      operationId: getWorkbench
+      responses:
+        '200': { description: 当前角色工作台, content: { application/json: { schema: { $ref: '#/components/schemas/Workbench' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/history:
+    get:
+      operationId: listHistory
+      parameters:
+        - { name: batch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: action, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: review_status, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: execution_state, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: period_start, in: query, schema: { type: string, pattern: '^\\d{4}-\\d{2}$' } }
+        - { name: period_end, in: query, schema: { type: string, pattern: '^\\d{4}-\\d{2}$' } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: limit, in: query, schema: { type: integer, enum: [20, 50, 100] } }
+      responses:
+        '200': { description: 历史建议分页列表, content: { application/json: { schema: { $ref: '#/components/schemas/HistoryResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}:
+    get:
+      operationId: getSuggestion
+      parameters:
+        - { name: linkId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: mode, in: query, schema: { type: string, enum: [history] } }
+      responses:
+        '200': { description: 建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/review:
+    post:
+      operationId: reviewSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/ReviewInput' } } }
+      responses:
+        '200': { description: 审核后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/override:
+    post:
+      operationId: overrideSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OverrideInput' } } } }
+      responses:
+        '200': { description: 改判后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/terminate:
+    post:
+      operationId: terminateSuggestion
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TerminateInput' } } } }
+      responses:
+        '200': { description: 终止后的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/suggestions/{linkId}/ai-retry:
+    post:
+      operationId: retryAIExplanation
+      parameters: [{ name: linkId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AIRetryInput' } } } }
+      responses:
+        '200': { description: 已进入异步生成的建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/execute:
+    post:
+      operationId: executeAction
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExecuteInput' } } } }
+      responses:
+        '200': { description: 执行后的建议, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/result:
+    post:
+      operationId: recordActionResult
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ResultInput' } } } }
+      responses:
+        '200': { description: 记录结果后的建议, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/clearance-completion:
+    post:
+      operationId: submitClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceSubmitInput' } } } }
+      responses:
+        '200': { description: 提交后的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/confirm:
+    post:
+      operationId: confirmClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceDecisionInput' } } } }
+      responses:
+        '200': { description: 已确认的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/return:
+    post:
+      operationId: returnClearanceCompletion
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClearanceDecisionInput' } } } }
+      responses:
+        '200': { description: 已退回的清仓完成详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/oa-notifications:
+    post:
+      operationId: sendOANotification
+      parameters: [{ name: taskId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OANotificationInput' } } } }
+      responses:
+        '200': { description: OA 发送结果及建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/actions/{taskId}/oa-notifications/{notificationId}/retry:
+    post:
+      operationId: retryOANotification
+      parameters:
+        - { name: taskId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: notificationId, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OARetryInput' } } } }
+      responses:
+        '200': { description: OA 补发结果及建议详情, content: { application/json: { schema: { $ref: '#/components/schemas/SuggestionDetail' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+components:
+  responses:
+    Error: { description: 业务错误, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
+  schemas:
+    BusinessRole: { type: string, enum: [operations, supervisor] }
+    SessionUser:
+      type: object
+      required: [name, role]
+      properties: { name: { type: string }, role: { $ref: '#/components/schemas/BusinessRole' } }
+    SessionResponse:
+      type: object
+      required: [authenticated, user]
+      properties: { authenticated: { type: boolean, const: true }, user: { $ref: '#/components/schemas/SessionUser' } }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        latest: { anyOf: [{ $ref: '#/components/schemas/ConflictLatest' }, { type: 'null' }] }
+    ConflictLatest:
+      type: object
+      required: [review_status, review_version, business_state, business_version, inventory_state, inventory_version]
+      properties:
+        review_status: { type: string }
+        review_version: { type: integer }
+        business_state: { type: string }
+        business_version: { type: integer }
+        inventory_state: { type: string }
+        inventory_version: { type: integer }
+        actor_ref: { type: string }
+        updated_at: { type: string, format: date-time }
+    BatchStatus: { type: string, enum: [received, processing, ready, failed] }
+    BatchSummary:
+      type: object
+      required: [id, code, business_unit, period_start, period_end, business_cutoff_date, source_file_name, status, valid_count, rejected_count, degraded_count, warning_count, rule_version, failure_code, created_by, created_at, completed_at]
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        business_unit: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        source_file_name: { type: string }
+        status: { $ref: '#/components/schemas/BatchStatus' }
+        valid_count: { type: [integer, 'null'] }
+        rejected_count: { type: [integer, 'null'] }
+        degraded_count: { type: [integer, 'null'] }
+        warning_count: { type: [integer, 'null'] }
+        rule_version: { type: [string, 'null'] }
+        failure_code: { type: [string, 'null'] }
+        created_by: { type: string }
+        created_at: { type: string, format: date-time }
+        completed_at: { type: [string, 'null'], format: date-time }
+        idempotent: { type: boolean }
+    ImportIssue:
+      type: object
+      required: [source_sheet, source_row, spu_id, field, raw_value, code, reason, impact, resolution, severity]
+      properties:
+        source_sheet: { type: string }
+        source_row: { type: [integer, 'null'] }
+        spu_id: { type: [string, 'null'] }
+        field: { type: string }
+        raw_value: { type: [string, 'null'] }
+        code: { type: string }
+        reason: { type: string }
+        impact: { type: string }
+        resolution: { type: string }
+        severity: { type: string, enum: [rejected, degraded, warning] }
+    Decision:
+      type: object
+      required: [id, product_type, business_action, inventory_action, trigger_rule, evidence]
+      properties:
+        id: { type: string, format: uuid }
+        product_type: { type: [string, 'null'] }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        evidence: { type: object, additionalProperties: true }
+    Snapshot:
+      type: object
+      required: [id, spu_id, name, store, platform, operator_ref, source_sheet, source_row, launch_date, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, raw_values]
+      properties:
+        id: { type: string, format: uuid }
+        spu_id: { type: string }
+        name: { type: string }
+        store: { type: string }
+        platform: { type: string }
+        operator_ref: { type: string }
+        source_sheet: { type: string }
+        source_row: { type: integer }
+        launch_date: { type: [string, 'null'], format: date }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+        quality: { type: object, additionalProperties: { type: string } }
+        raw_values: { type: object, additionalProperties: { type: string } }
+        decision: { $ref: '#/components/schemas/Decision' }
+    BatchDetail:
+      allOf:
+        - { $ref: '#/components/schemas/BatchSummary' }
+        - type: object
+          required: [issues, snapshots]
+          properties:
+            issues: { type: array, items: { $ref: '#/components/schemas/ImportIssue' } }
+            snapshots: { type: array, items: { $ref: '#/components/schemas/Snapshot' } }
+    BatchListResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/BatchSummary' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+    PreviousActionItem:
+      type: object
+      required: [link_id, batch_id, batch_code, spu_id, name, business_action, inventory_action, trigger_rule, business_state, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days]
+      properties:
+        link_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        spu_id: { type: string }
+        name: { type: string }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        business_state: { type: string }
+        task_created_at: { type: string, format: date-time }
+        linked_at: { type: string, format: date-time }
+        business_executed_at: { type: [string, 'null'], format: date-time }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+    ActionItem:
+      type: object
+      required: [link_id, task_id, decision_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, rule_version, spu_id, name, store, platform, operator_ref, suggested_business_action, suggested_inventory_action, effective_business_action, effective_inventory_action, trigger_rule, evidence, review_status, review_version, business_state, inventory_state, business_version, inventory_version, relation_type, task_created_at, linked_at, business_executed_at, net_sales_prev_month, operating_profit_rate, quality_return_rate_7d, inventory_days, quality, latest_ai_status, latest_notification_status, latest_notification_error_code, latest_clearance_status, previous]
+      properties:
+        link_id: { type: string, format: uuid }
+        task_id: { type: string, format: uuid }
+        decision_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        rule_version: { type: string }
+        spu_id: { type: string }
+        name: { type: string }
+        store: { type: string }
+        platform: { type: string }
+        operator_ref: { type: string }
+        suggested_business_action: { type: [string, 'null'] }
+        suggested_inventory_action: { type: [string, 'null'] }
+        effective_business_action: { type: [string, 'null'] }
+        effective_inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        evidence: { type: object, additionalProperties: true }
+        review_status: { type: string, enum: [pending, approved, rejected] }
+        review_version: { type: integer }
+        business_state: { type: string }
+        inventory_state: { type: string }
+        business_version: { type: integer }
+        inventory_version: { type: integer }
+        relation_type: { type: string, enum: [new_task, same_action_continuation, action_change_pending] }
+        task_created_at: { type: string, format: date-time }
+        linked_at: { type: string, format: date-time }
+        business_executed_at: { type: [string, 'null'], format: date-time }
+        net_sales_prev_month: { type: [number, 'null'] }
+        operating_profit_rate: { type: [number, 'null'] }
+        quality_return_rate_7d: { type: [number, 'null'] }
+        inventory_days: { type: [number, 'null'] }
+        quality: { type: object, additionalProperties: { type: string } }
+        latest_ai_status: { type: string, enum: [generating, generated, failed, not_adopted, not_configured] }
+        latest_notification_status: { type: [string, 'null'], enum: [pending, sent, failed, null] }
+        latest_notification_error_code: { type: [string, 'null'] }
+        latest_clearance_status: { type: [string, 'null'], enum: [pending_confirmation, returned, confirmed, null] }
+        previous: { anyOf: [{ $ref: '#/components/schemas/PreviousActionItem' }, { type: 'null' }] }
+    ActionListResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/ActionItem' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+    HistoryItem:
+      type: object
+      required: [link_id, batch_id, batch_code, period_start, period_end, business_cutoff_date, spu_id, name, operator_ref, rule_version, product_type, business_action, inventory_action, trigger_rule, review_status, business_state, inventory_state, audit_count, generated_at, latest_event_type, latest_event_actor, latest_event_at]
+      properties:
+        link_id: { type: string, format: uuid }
+        batch_id: { type: string, format: uuid }
+        batch_code: { type: string }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        business_cutoff_date: { type: string, format: date }
+        spu_id: { type: string }
+        name: { type: string }
+        operator_ref: { type: string }
+        rule_version: { type: string }
+        product_type: { type: [string, 'null'] }
+        business_action: { type: [string, 'null'] }
+        inventory_action: { type: [string, 'null'] }
+        trigger_rule: { type: string }
+        review_status: { type: string, enum: [pending, approved, rejected] }
+        business_state: { type: string }
+        inventory_state: { type: string }
+        audit_count: { type: integer, minimum: 0 }
+        generated_at: { type: string, format: date-time }
+        latest_event_type: { type: [string, 'null'] }
+        latest_event_actor: { type: [string, 'null'] }
+        latest_event_at: { type: [string, 'null'], format: date-time }
+    HistoryResponse:
+      type: object
+      required: [items, page, limit, total]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/HistoryItem' } }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+    Workbench:
+      type: object
+      required: [role, latest_batch_id, latest_batch_code, batch_completed_at, pending_review_count, pending_execution_count, pending_result_count, clearance_confirm_count, notification_failure_count, exception_count, data_limitations, items]
+      properties:
+        role: { $ref: '#/components/schemas/BusinessRole' }
+        latest_batch_id: { type: string }
+        latest_batch_code: { type: string }
+        batch_completed_at: { type: string, format: date-time }
+        pending_review_count: { type: integer }
+        pending_execution_count: { type: integer }
+        pending_result_count: { type: integer }
+        clearance_confirm_count: { type: integer }
+        notification_failure_count: { type: integer }
+        exception_count: { type: integer }
+        data_limitations:
+          type: array
+          items: { $ref: '#/components/schemas/DataLimitation' }
+        items: { type: array, items: { $ref: '#/components/schemas/ActionItem' } }
+    DataLimitation:
+      type: object
+      required: [field, status, count]
+      properties:
+        field: { type: string }
+        status: { type: string }
+        count: { type: integer, minimum: 1 }
+    BusinessEvent:
+      type: object
+      required: [id, type, actor_ref, from_state, to_state, reason, details, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: string }
+        actor_ref: { type: string }
+        from_state: { type: [string, 'null'] }
+        to_state: { type: [string, 'null'] }
+        reason: { type: [string, 'null'] }
+        details: { type: object, additionalProperties: true }
+        created_at: { type: string, format: date-time }
+    SuggestionDetail:
+      allOf:
+        - { $ref: '#/components/schemas/ActionItem' }
+        - type: object
+          required: [events, ai_status, ai_content, clearance_completion, notifications]
+          properties:
+            events: { type: array, items: { $ref: '#/components/schemas/BusinessEvent' } }
+            ai_status: { type: string }
+            ai_content: { type: object, additionalProperties: true }
+            clearance_completion: { anyOf: [{ $ref: '#/components/schemas/ClearanceCompletion' }, { type: 'null' }] }
+            notifications: { type: array, items: { $ref: '#/components/schemas/OANotification' } }
+    ClearanceCompletion:
+      type: object
+      required: [id, submission_version, actual_completed_at, note, status, submitted_by, submitted_at, reviewed_by, reviewed_at, return_reason]
+      properties:
+        id: { type: string, format: uuid }
+        submission_version: { type: integer, minimum: 1 }
+        actual_completed_at: { type: string, format: date-time }
+        note: { type: [string, 'null'] }
+        status: { type: string, enum: [pending_confirmation, confirmed, returned] }
+        submitted_by: { type: string }
+        submitted_at: { type: string, format: date-time }
+        reviewed_by: { type: [string, 'null'] }
+        reviewed_at: { type: [string, 'null'], format: date-time }
+        return_reason: { type: [string, 'null'] }
+    OANotification:
+      type: object
+      required: [id, local_date, recipient_user_id, template_code, type, status, provider_reference, error_code, requested_by, created_at, sent_at]
+      properties:
+        id: { type: string, format: uuid }
+        local_date: { type: string, format: date }
+        recipient_user_id: { type: string, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
+        template_code: { type: string }
+        type: { type: string, enum: [coordination, clearance_reminder] }
+        status: { type: string, enum: [pending, sent, failed] }
+        provider_reference: { type: [string, 'null'] }
+        error_code: { type: [string, 'null'] }
+        requested_by: { type: string }
+        created_at: { type: string, format: date-time }
+        sent_at: { type: [string, 'null'], format: date-time }
+    ReviewInput:
+      type: object
+      required: [decision, note, review_version, idempotency_key]
+      properties:
+        decision: { type: string, enum: [approved, rejected] }
+        note: { type: string }
+        review_version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ExecuteInput:
+      type: object
+      required: [track, version, note, idempotency_key]
+      properties:
+        track: { type: string, enum: [business, inventory] }
+        version: { type: integer, minimum: 1 }
+        note: { type: string }
+        idempotency_key: { type: string, minLength: 1 }
+    ResultInput:
+      type: object
+      required: [period_start, period_end, sales_value, profit_value, inventory_value, sales_unavailable, profit_unavailable, inventory_unavailable, note, version, idempotency_key]
+      properties:
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        sales_value: { type: [number, 'null'] }
+        profit_value: { type: [number, 'null'] }
+        inventory_value: { type: [number, 'null'] }
+        sales_unavailable: { type: boolean }
+        profit_unavailable: { type: boolean }
+        inventory_unavailable: { type: boolean }
+        note: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    OverrideInput:
+      type: object
+      required: [business_action, inventory_action, reason, version, idempotency_key]
+      properties:
+        business_action: { type: string, enum: [clearance, stop_loss, observe, invest, maintain] }
+        inventory_action: { type: [string, 'null'], enum: [restock, no_restock, prohibit_restock, null] }
+        reason: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    TerminateInput:
+      type: object
+      required: [reason, version, idempotency_key]
+      properties:
+        reason: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ClearanceSubmitInput:
+      type: object
+      required: [actual_completed_at, note, version, idempotency_key]
+      properties:
+        actual_completed_at: { type: string, format: date-time }
+        note: { type: string, minLength: 1 }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    ClearanceDecisionInput:
+      type: object
+      required: [reason, version, idempotency_key]
+      properties:
+        reason: { type: string }
+        version: { type: integer, minimum: 1 }
+        idempotency_key: { type: string, minLength: 1 }
+    OANotificationInput:
+      type: object
+      required: [recipient_user_id, feedback_request]
+      properties:
+        recipient_user_id: { type: string, minLength: 1, description: 公司钉钉 User ID，不是 Union ID 或手机号 }
+        feedback_request: { type: string, minLength: 1 }
+    OARetryInput:
+      type: object
+      required: [idempotency_key]
+      properties:
+        idempotency_key: { type: string, minLength: 1 }
+    AIRetryInput:
+      type: object
+      required: [idempotency_key]
+      properties:
+        idempotency_key: { type: string, minLength: 1 }

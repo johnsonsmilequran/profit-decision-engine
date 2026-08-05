@@ -1,435 +1,362 @@
 # Design System Inspired by 趣然 AI 商品经营与利润决策助手
 
-> Category: Professional & Corporate
-> 一套把周度经营风险压缩成“风险、依据、行动”清晰路径的浅色企业数据设计系统。
+> Category: E-Commerce & Retail
+> 一套让利润风险、库存责任与执行进度在同一视野中保持清醒的浅色经营工作台。
 
 ## 1. 视觉主题与氛围
 
-### 1.1 核心隐喻：晨间经营指挥室
+### 核心隐喻：清晨的经营控制室
 
-想象每周一早晨，运营、主管与采购走进同一间安静的经营指挥室。
-窗外不是科幻数据流，而是刚刚亮起的自然日光。
-桌面铺着一张经过整理的白色经营地图。
-每一个 SPU 都是地图上的坐标，每条风险都沿着一根细长色轨指向明确行动。
-人不需要在散落表格之间来回拼接事实，也不需要猜测 AI 到底改了什么。
-系统把喧闹的数据压低，把固定规则和待办动作抬到视线中央。
-这种空间感不是“豪华驾驶舱”，而是有秩序的业务作战室。
-它让数字保持锋利，让判断保持克制，让跨部门协作保持同一节拍。
-浅灰背景像吸收杂音的桌面，白色表面像一页页可核对的工作纸。
-深海军蓝文字提供确定感，铉蓝只在真正可操作的地方出现。
-风险红、观察琥珀和完成绿只为业务含义服务，不承担装饰职责。
+这套界面像一间刚刚亮起晨光的经营控制室。
 
-### 1.2 用户情绪
+窗外不是霓虹和宇宙，而是每周一准时送达的经营事实：销售、利润、品退、库存和动作责任。
 
-第一情绪是冷静掌控：运营能够迅速知道“现在最该处理什么”。
-第二情绪是可信：主管能沿指标、阈值、规则版本复核结论，而非相信黑盒。
-第三情绪是协同压力：待处理风险清楚存在，但不会用满屏红色制造恐慌。
-第四情绪是闭环感：经营动作与采购动作并排展示，任何一条断点都不会被总状态遮住。
-这些情绪对产品至关重要，因为真实损失来自发现滞后和部门动作不同步。
-设计必须让用户愿意每天停留，也必须让风险在几秒内被看见。
+云白与浅蓝灰构成稳定的工作台面，像摊开的经营底稿；深海军蓝负责给结论定锚，让每个数字都知道自己属于哪个批次、哪个期间、哪条规则。
 
-### 1.3 为什么选择浅色
+用户不需要被 AI 的光效包围。
 
-这是白天长时间使用的 PC 企业工具，不是夜间值守大屏。
-用户需要持续读取中文名称、金额、百分比、日期、阈值和长表格。
-浅色模式让细小数据拥有更稳定的边缘清晰度，也更接近原始经营表的阅读习惯。
-白色表面与浅灰背景形成温和层级，避免依赖厚重边框切割每个信息块。
-MVP 只提供浅色模式，减少一套未经业务验证的视觉维护面。
+他们需要在几十秒内判断：哪个 SPU 必须清仓，哪个推广应该止损，哪个库存需要补货，以及谁还没有完成动作。
 
-### 1.4 风格定位
+因此界面把“结论”放在前，把“解释”放在后；把固定规则放在明处，把 AI 放在可折叠的辅助层。
 
-骨架借鉴 Linear 的克制与即时反馈，但不采用面向开发者工具的暗色微光。
-信息密度借鉴成熟企业数据后台，但避免“表格即全部”的陈旧感。
-留白纪律借鉴 Dieter Rams 的少即是多，但不牺牲经营证据的完整呈现。
-最终坐标是 Professional & Corporate：稳健、精确、可追溯、适合内部长期工作。
-设计不试图把 AI 视觉化为魔法；AI 是次级解释层，固定规则始终拥有主视觉权威。
+设计的价值不是制造更多信息，而是让原本分散的信息形成可执行的秩序。
 
-### 1.5 设计签名：行动罗盘
+### 用户情绪
 
-“行动罗盘”由优先级色轨、规则依据筹码、经营动作轨和采购动作轨组成。
-色轨位于建议卡或表格首列，像地图方向标，先告诉用户风险方向。
-依据筹码紧邻动作，不允许把触发阈值藏进深层弹窗。
-双动作轨并排展示，使“运营已止损、采购仍待禁补”一眼可见。
-截图离开产品标识后，仍能通过这组结构认出它是一款经营利润决策工具。
+- 冷静：风险色明确，但不使用大面积警报红制造焦虑。
+- 掌控：当前批次、业务截止日和角色始终可见，用户知道自己正在处理哪一份事实。
+- 确信：规则证据展示实际值、周期、阈值和比较关系，不靠模糊的“AI 判断”。
+- 协作：经营动作和库存动作并排出现，让跨部门断点无法藏在页面下方。
+- 可恢复：网络失败、并发冲突和数据缺失都有明确下一步，不让用户陷入空白页。
 
-### 1.6 色彩速览
+### 为什么选择浅色
+
+这是运营和运营主管在办公时间长期使用的数据密集型工具；采购、仓库等相关人员只接收钉钉企业内部机器人单聊协同消息。
+
+浅色能够保持表格列、数字、小字号标签和输入控件的可读性，也能让动作语义色在必要时出现，而不是被深色背景迫使全屏高饱和。
+
+浅色并不等于松散。
+
+本系统用低饱和蓝灰、紧凑排版、细边界和克制阴影建立专业感，让页面更接近经营底稿与控制台的结合，而不是消费型商城。
+
+### 风格定位
+
+视觉语言借鉴 Linear 的信息纪律、Stripe Dashboard 的财务可信度和 Shopify Admin 的零售任务导向。
+
+它不复制三者的品牌外观，而是提取共同原则：上下文稳定、状态清晰、表格紧凑、详情层次明确。
+
+区别在于“双轨决策脊线”。
+
+同一 SPU 的经营动作与库存动作不是两张孤立卡片，而是从同一组规则证据出发的两条责任轨。
+
+这是本产品最重要的识别符，也直接回应“运营止损后采购仍补货”的真实损失案例。
+
+### 设计签名：双轨决策脊线
+
+详情页中，经营动作轨与库存动作轨平行展开。
+
+两轨之间由规则证据节点连接：利润率、品退率、库存可售天数和优先级裁决依次成为脊线上的节点。
+
+清仓或止损出现时，库存轨必须同步显示禁止补货；加投可以与补货并存，但责任人和状态分别呈现。
+
+这条脊线不是装饰。
+
+它是固定规则、跨部门责任和审计追溯的视觉压缩。
+
+### 色彩速览
 
 | 色彩 | Hex | 角色 |
 | :--- | :--- | :--- |
-| 雾白底 | `#F4F7FB` | 全局工作区，降低长时间阅读眩光 |
-| 纸白面 | `#FFFFFF` | 卡片、表格、弹窗与输入区域 |
-| 深海军 | `#132238` | 主标题、关键数字与固定规则结论 |
-| 铉蓝 | `#075EAD` | 主操作、焦点与当前导航 |
-| 稳定绿 | `#197343` | 成功、已完成与合法通过 |
-| 证据琥珀 | `#8A4B08` | 数据降级、观察与待确认 |
-| 风险红 | `#B42318` | 清仓、止损、错误与不可继续 |
+| 云白背景 | `#F4F7FB` | 页面底色，承接长时间阅读 |
+| 纯白表面 | `#FFFFFF` | 卡片、表格、浮层 |
+| 深海军蓝 | `#123B66` | 品牌主色、主按钮、关键链接 |
+| 墨蓝正文 | `#122033` | 主文本和关键数字 |
+| 清仓红 | `#B42318` | 最高经营风险 |
+| 止损橙 | `#C4510C` | 需要立即收缩投入 |
+| 观察琥珀 | `#9A5B00` | 需要持续验证的数据风险 |
+| 加投绿 | `#137A4A` | 已满足增长条件 |
+| 补货蓝 | `#1769AA` | 库存协同动作 |
+| AI 紫灰 | `#5B5F8A` | 辅助解释，不与规则争权 |
 
-### 1.7 参考先例
+### 参考先例
 
-- Linear：汲取低噪声导航、紧凑信息和色彩响应，不复制暗色主题。
-- IBM Carbon：汲取企业数据语义、状态一致性和可访问性纪律。
-- Ant Design：汲取中文企业表单与密集表格的成熟交互经验。
-- Stripe Dashboard：汲取指标证据、状态与操作之间的视觉层级。
+| 先例 | 汲取内容 | 明确不复制 |
+| :--- | :--- | :--- |
+| Linear | 稳定侧栏、快捷任务定位、克制状态反馈 | 暗色科技氛围与高频命令式操作 |
+| Stripe Dashboard | 财务数字层级、可信留白、审计语气 | 面向外部商户的增长营销表达 |
+| Shopify Admin | 零售任务组织、状态标签、表格与详情衔接 | 商品装修和消费者电商视觉 |
+| IBM Carbon | 数据密度、无障碍、语义反馈纪律 | 过强的企业组件库外观 |
 
 ## 2. 色彩美学
 
-### 2.1 色彩哲学
+### 色彩哲学
 
-中性色负责承载事实，铉蓝负责指向操作，语义色负责指出业务后果。
+深海军蓝不是“科技蓝”，而是经营结论的压舱石。
 
-`#075EAD` 不是装饰性科技蓝，而是指挥室中的唯一交互信号。
-它在白色上足够清晰，又不会像高饱和电光蓝那样抢走风险结论的注意力。
+它在白色表面上保持足够对比，同时比纯黑更温和，适合长时间查看数字和状态。
 
-`#132238` 带有轻微蓝相，比纯黑更适合冷静的企业数据环境。
+动作色只在动作标签、关键脊线节点和必要的风险摘要中出现。
 
-`#465870` 保持次级信息可读，避免用浅灰把口径、周期和来源降成不可见脚注。
-三种语义色均选择较深色阶，因此既可作图标和轨道，也可直接承载小号文本。
+颜色必须和文字、图标共同表达，任何人都不应仅靠色觉区分清仓与止损。
 
-### 2.2 强调色纪律
+### 强调色纪律
 
-每屏最多出现 2 处高显著度 `--accent`：通常是一处当前上下文和一处主 CTA。
-链接、悬停边框和焦点环都计入强调色使用量。
-中性色占画面 70%—90%，强调色占 5%—10%，语义色占 0%—5%。
-同一区域存在风险色时，主操作蓝必须退到按钮或焦点，不与风险轨争夺面积。
-禁止把所有可点击文字染蓝；次级操作使用主文字或描边样式。
+- 中性色占单屏面积的 70%—90%。
+- `--accent` 占 5%—10%，每屏最多两处强可见使用：一个主行动入口与一个当前上下文锚点。
+- 语义色占 0%—5%，只标记真实动作、异常或状态。
+- 链接、悬停边框和焦点环都计入强调色用量。
+- AI 紫灰不算品牌强调色，也不得作为主 CTA。
 
-### 2.3 Surface 色板
+### Surface 色板
 
-| Token | Hex/值 | 设计理由 |
-| :--- | :--- | :--- |
-| `--bg` | `#F4F7FB` | 形成低眩光工作台底面 |
-| `--surface` | `#FFFFFF` | 保持数据内容像工作纸一样清晰 |
-| `--surface-warm` | alias `--surface` | MVP 不制造无业务含义的暖色分层 |
-| `--surface-raised` | alias `--surface` | 抬升态依靠色彩响应与轻投影，不换色 |
-| `--surface-overlay` | alias `--surface` | 弹窗仍保持同一纸白语言 |
-| 交互 Surface hover | `#F1F7FD` | 仅作色彩响应的计算结果，不新增 Token |
-| `--border` | `#CBD5E1` | 提供克制的结构边界 |
-| `--border-soft` | alias `--border` | 避免相近灰色无止境扩张 |
-
-### 2.4 Data 与语义色板
-
-| Token | Hex/计算值 | 情感与使命 |
-| :--- | :--- | :--- |
-| `--accent` | `#075EAD` | 明确“可以行动” |
-| `--accent-hover` | 约 `#06569F` | 悬停时加深，保持色彩响应 |
-| `--accent-active` | 约 `#055092` | 按下时进一步收紧 |
-| `--success` | `#197343` | 表示真实完成，而非一般推荐 |
-| `--warn` | `#8A4B08` | 表示观察、降级与需核对证据 |
-| `--danger` | `#B42318` | 表示止损、清仓和阻断性错误 |
-
-### 2.5 Text 色板与对比度
-
-| 文本 | 前景 | 主要背景 | 对比度 |
+| Token | Hex/映射 | 用途 | 理由 |
 | :--- | :--- | :--- | :--- |
-| 主文字 `--fg` | `#132238` | `#FFFFFF` | `15.99:1` |
-| 主文字 `--fg` | `#132238` | `#F4F7FB` | `14.88:1` |
-| 次级 `--muted` | `#465870` | `#FFFFFF` | `7.27:1` |
-| 次级 `--muted` | `#465870` | `#F4F7FB` | `6.76:1` |
-| 按钮 `--accent-on` | `#FFFFFF` | `#075EAD` | `6.53:1` |
+| `--bg` | `#F4F7FB` | 页面底色 | 降低纯白大面积眩光 |
+| `--surface` | `#FFFFFF` | 表格和卡片 | 建立清晰工作台面 |
+| `--surface-warm` | `var(--surface)` | 无额外暖层 | 避免无业务意义的色温混用 |
+| `--surface-raised` | `var(--surface)` | 下拉和抬升态 | 依靠阴影与边界区分层级 |
+| `--surface-overlay` | `var(--surface)` | 模态最高层 | 保持文字对比一致 |
+| `--surface-hover` | `#EDF3F9` | 行和卡片悬停 | 用色彩响应表达可操作性 |
 
-`--fg-2` alias 到 `--fg`，`--meta` alias 到 `--muted`，因此对应配对同样满足 WCAG 2.2 AA。
-成功、警告、危险文本在白底上的对比度分别为 `5.87:1`、`6.79:1`、`6.57:1`。
-所有普通字号文本配对均不低于 `4.5:1`。
-状态浅底使用 `color-mix()` 生成，文字仍使用原深色语义 token。
-MVP 不提供暗色主题，因此不存在暗色 elevation 覆盖块。
+### Data 与动作色板
+
+| Token | Hex | 情感与功能 |
+| :--- | :--- | :--- |
+| `--accent` | `#123B66` | 稳定、可信、可执行 |
+| `--success` | `#137A4A` | 成功与加投 |
+| `--warn` | `#9A5B00` | 观察与待确认风险 |
+| `--danger` | `#B42318` | 清仓、错误和阻断 |
+| `--action-stop` | `#C4510C` | 止损，不与清仓同色 |
+| `--action-replenish` | `#1769AA` | 补货与库存协同轨 |
+| `--ai` | `#5B5F8A` | AI 辅助信息 |
+
+### Text 色板与对比
+
+| Token | Hex/映射 | 主要背景 | WCAG 结果 |
+| :--- | :--- | :--- | :--- |
+| `--fg` | `#122033` | `#FFFFFF` / `#F4F7FB` | 普通文本达到 AA |
+| `--fg-2` | `var(--fg)` | 同上 | 与主文本一致 |
+| `--muted` | `#53657A` | `#FFFFFF` | 普通文本达到 AA |
+| `--meta` | `var(--muted)` | `#FFFFFF` | 普通文本达到 AA |
+| `--accent-on` | `#FFFFFF` | `#123B66` | 普通按钮文字达到 AA |
+
+所有关键配对在交付前使用 WCAG 2.2 对比度公式复核。
+
+边框不是唯一分隔手段；表格同时使用行高、背景响应和分组标题维持结构。
 
 ## 3. 排版与字体
 
-### 3.1 字体哲学
+### 字体哲学
 
-字体系统完全依赖本地系统栈，确保中国大陆网络环境和企业内网稳定可达。
-中文正文优先苹方、微软雅黑和 Noto Sans CJK SC；不同系统都保持中性、清楚的无衬线气质。
-Display 与 Body 使用同一栈，层级来自字号、字重和间距，而非额外字体下载。
-数字与批次 ID 使用系统等宽栈，并启用 `font-variant-numeric: tabular-nums`。
-等宽数字让金额、利润率与库存天数纵向对齐，减少扫表误读。
+产品不依赖境外字体服务。
 
-### 3.2 字体栈
+中文正文采用系统无衬线字体，让公司电脑在不同网络环境下都保持快速、稳定和熟悉。
+
+数字、SPU ID、批次号和规则版本使用系统等宽字体，避免多位数字在表格中跳动。
+
+大标题不追求品牌海报感，而强调批次上下文和任务优先级。
+
+### 字体栈
 
 Font labels for catalog extraction:
 
-Display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif
-Body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif
-Mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace
+Display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif
+Body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif
+Mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace
 
-### 3.3 字号梯度
+### 字号梯度
 
-| Token | 大小 | 用途 |
+| Token | 尺寸 | 使用场景 |
 | :--- | :--- | :--- |
-| `--text-xs` | `12px` | 元信息、周期、表格辅助标记 |
-| `--text-sm` | `13px` | 标签、按钮、密集表格正文 |
-| `--text-base` | `14px` | 通用正文与表单输入 |
-| `--text-lg` | `16px` | 卡片标题与关键段落 |
-| `--text-xl` | `20px` | 区块标题 |
-| `--text-2xl` | `24px` | 页面标题 |
-| `--text-3xl` | `32px` | 工作台关键指标 |
-| `--text-4xl` | `40px` | 登录页品牌标题或单一主指标 |
+| `--text-xs` | 12px | 时间、周期、辅助元数据 |
+| `--text-sm` | 13px | 标签、表头、次级说明 |
+| `--text-base` | 14px | 表格、表单、正文 |
+| `--text-lg` | 16px | 卡片标题、关键字段 |
+| `--text-xl` | 18px | 区域标题 |
+| `--text-2xl` | 22px | 页面标题 |
+| `--text-3xl` | 28px | 工作台核心数字 |
+| `--text-4xl` | 36px | 登录页品牌标题、展示页 Hero |
 
-这组紧凑梯度适合 1440px 企业工作台，不通过超大标题浪费首屏信息空间。
+14px 是密集 PC 工作台的主字号，配合 1.6 行高保证中文阅读。
 
-### 3.4 Letter-spacing 硬规则
+### Letter-spacing 硬规则
 
-| 文本类型 | 精确规则 |
+| 文本类型 | 字距 |
 | :--- | :--- |
-| ALL CAPS | `letter-spacing: 0.06em`，无例外 |
-| Display 48px+ | `letter-spacing: -0.025em` |
-| 标题 32px+ | `letter-spacing: -0.015em` |
-| 小文本 11—13px | `letter-spacing: 0.015em` |
-| UI 标签/按钮 | `letter-spacing: 0.02em` |
-| 正文 | `letter-spacing: 0` |
+| ALL CAPS | `0.08em` |
+| 48px 以上 Display | `-0.025em` |
+| 32px 以上标题 | `-0.015em` |
+| 11—13px 小文本 | `0.015em` |
+| UI 标签与按钮 | `0.02em` |
+| 正文 | `0` |
 
-### 3.5 行高与数字
+### Line-height
 
-正文行高 `1.6`，保障中文解释和审核备注不拥挤。
-标题行高 `1.25`，让页面层级紧凑而不压迫。
-表格单行使用 `1.4`，多行证据单元格使用正文行高。
-金额、比率、日期和版本号必须使用等宽数字特性，负号与小数点不得视觉漂移。
+- 正文和表单说明：`var(--leading-body)`，让中文段落保持稳定呼吸。
+- 页面标题与核心数字：`var(--leading-tight)`，强化经营仪表感。
+- 表格单元格：1.45；多行依据摘要最多三行，完整内容进入详情。
+- 金额、百分比和天数启用 `font-variant-numeric: tabular-nums`。
 
 ## 4. 间距体系
 
-### 4.1 间距哲学
+### 间距哲学
 
-4px 是本系统的最小节拍，像规则引擎稳定重复的拍点。
-小间距用于标签与图标，中间距用于控件，较大间距用于认知分组。
-任何间距都必须能解释为 4px 的倍数，避免页面之间出现不受控的“差不多”。
+4px 基准让密集表格、标签、按钮和 Bento 分区共享同一节奏。
 
-### 4.2 基准间距
+它足够细，能表达 8px 的紧凑关系，也能通过 24px、32px 和 48px 建立页面级呼吸。
 
-| Token | 值 | 使用场景 |
+| Token | 值 | 典型用途 |
 | :--- | :--- | :--- |
-| `--space-1` | `4px` | 图标微距、状态点 |
-| `--space-2` | `8px` | 标签内距、紧密元素 |
-| `--space-3` | `12px` | 控件横向间距 |
-| `--space-4` | `16px` | 卡片基础内距 |
-| `--space-5` | `20px` | 表单组间距 |
-| `--space-6` | `24px` | 卡片舒展内距 |
-| `--space-8` | `32px` | 页面区块间距 |
-| `--space-12` | `48px` | 大区块分隔 |
+| `--space-1` | 4px | 图标与短标签内部 |
+| `--space-2` | 8px | 同组控件、紧凑表格 |
+| `--space-3` | 12px | 输入框内部、状态组 |
+| `--space-4` | 16px | 卡片内容间距 |
+| `--space-5` | 20px | 次级区域间距 |
+| `--space-6` | 24px | 卡片与页面分组 |
+| `--space-8` | 32px | 页面主区域 |
+| `--space-12` | 48px | 登录和展示页大段落 |
 
-### 4.3 Section rhythm
-
-Desktop 使用 `48px`，适合 1440px 主画布的工作台呼吸。
-Tablet 使用 `32px`，在受限宽度下保持任务连续。
-Phone 使用 `24px`，仅支持登录与阅读提示，不承诺业务操作布局。
+Section rhythm：桌面 40px，窄 PC 28px，低于 1024px 的设备提示页使用 20px。
 
 ## 5. 布局与空间构成
 
-### 5.1 布局哲学
+### 布局哲学
 
-Bento Grid 不是装饰性的卡片拼贴，而是经营信息的认知分仓。
-批次、风险、待办和动态各自进入独立单元，用户无需在不同页面拼接第一判断。
-每个格子只回答一个问题：发生了什么、为什么、谁要做、做到哪一步。
-复杂详情则从总览格子进入独立页面，防止工作台变成无限堆叠的信息墙。
+Bento Grid 在这里不是潮流装饰，而是认知分仓。
 
-### 5.2 全站框架
+每个格子承载一个稳定问题：当前批次是什么、风险在哪里、谁负责、下一步做什么。
 
-左侧导航固定宽度建议 `232px`，为四个一级入口保留稳定位置。
-顶部上下文栏建议高度 `56px`，持续显示角色、批次和钉钉身份。
-主内容容器最大宽度为 `1440px`，同时允许密集表格在内容区内横向滚动。
-桌面 gutter 为 `32px`，在最低 1280px 宽度下收敛为 `24px`。
-主内容不使用居中窄文章布局；经营表格必须拥有足够横向空间。
+工作台使用 12 列栅格；主任务占 7—8 列，摘要和限制占 4—5 列。
 
-### 5.3 Bento Grid
+建议详情把四要素放在第一屏，证据与双轨脊线占主列，审核/执行栏固定在右侧或底部安全区。
 
-1440px 主画布采用 12 列网格，列间距 `16px`。
-工作台 KPI 通常占 3 列，高优先级列表占 8 列，最近动态占 4 列。
-批次摘要可占 12 列，避免日期和规则版本被压缩。
-建议详情首屏采用 8+4 分栏：规则证据为主，角色操作为辅。
-每个格子圆角统一使用 `--radius-lg`，不通过不同圆角制造层级。
+### 容器与导航
 
-### 5.4 深度与层级
+- 最大内容宽度：`var(--container-max)`，覆盖 1440px 经营表格。
+- 桌面边距：28px；窄 PC：20px。
+- 左侧导航固定 224px，收起后 64px。
+- 顶部上下文栏 56px，始终显示事业部、批次和角色。
+- 表格区域允许横向滚动，但关键 SPU 和动作列固定。
 
-全局底面不加阴影，内容表面使用纸白和柔和边界区分。
-抬升卡片只使用 `--elev-raised`，弹窗使用 `--elev-float`。
-重要性主要由位置、尺寸、字重和色轨表达，不靠厚重阴影。
-悬停采用边框和背景色响应，不使用 `translateY` 制造漂浮。
+### 深度与层级
 
-### 5.5 响应式行为
+- 页面底色是最低层。
+- 普通卡片使用白色表面和软边界。
+- 下拉、悬浮审核栏使用 `--elev-raised`。
+- 模态使用 `--elev-float`，但不通过夸张位移制造层级。
+- 当前操作区由轻微 accent 边框和焦点环突出。
 
-`>=1280px`：完整左侧导航、12 列网格、密集表格与固定操作区。
+### 响应式边界
 
-`1024px—1279px`：可阅读但显示“建议使用更宽屏幕”，表格保留横向滚动。
-
-`<1024px`：登录页和无权限页正常呈现；业务页只给出设备提示，不提供状态变更操作。
-窄屏绝不通过缩小到 11px 以下来容纳金额和阈值。
-表格关键列包括色轨、SPU、主动作和状态，应固定在水平滚动起点。
-
-### 5.6 空间中的行动罗盘
-
-优先级色轨固定为 `4px`，既醒目又不吞噬数据宽度。
-依据筹码可换行，但经营动作与采购动作状态必须保持同一视觉组。
-双动作不同步时，空白不应被总览“完成”状态填平，而要明确暴露待办。
+- `≥1280px`：完整侧栏、双栏详情、12 列 Bento。
+- `1024—1279px`：侧栏默认收起，详情改为主区加底部操作区。
+- `<1024px`：显示受控电脑访问提示，不提供缩小版经营操作。
+- 高保真评审例外：运营工作台 `PAGE-F05-01` 不使用全屏设备提示遮挡内容；在内置浏览器的窄视口中沿用收起侧栏的 PC 布局，必要时允许内容区滚动，仅用于继续设计评审。
 
 ## 6. 组件设计
 
-### 6.1 组件哲学与统一交互语言
+### 组件哲学
 
-组件首先是业务语义容器，其次才是视觉对象。
-按钮表示会发生什么，卡片表示一组完整认知，输入框表示当前需要用户补足的事实。
-徽章不能只靠颜色传达状态，必须同时有文字。
-行动罗盘必须把风险、依据和两条动作轨放在一个可扫读结构里。
-全站统一采用“色彩响应型”交互。
-Hover 只改变边框、背景或文字色，不增加阴影，不发生物理位移。
-Active 通过更深颜色和更收紧的背景表达按下状态。
-Focus-visible 使用同一 `--focus-ring`，为键盘用户保留清晰导航证据。
-Disabled 保持可读，并在相邻帮助文本中解释状态或权限原因。
+组件必须先说明任务，再表达品牌。
 
-### 6.2 按钮 Button
+本系统选择“色彩响应型”交互：悬停时边框或背景轻微变化，不改变卡片位置，不制造数据表跳动。
 
-主按钮只用于每个任务区唯一的推进动作，例如“导入并处理”或“确认通过”。
+### 主按钮
 
-8px 圆角兼顾企业克制和触控可达性，按钮高度至少 36px。
+`PAGE-F07-01` 的认证卡只保留一个“使用钉钉登录”主按钮。按钮上方用本人身份说明明确点击后进入钉钉授权页；不得展示二维码、扫码文案、钉钉客户端/工作台分支或其他认证入口。处理中禁用该按钮，成功与失败状态沿同一入口反馈。
+
+用于导入、通过审核、确认执行等单一主行动。
 
 ```css
-.button {
-  min-height: 36px;
+.btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  min-height: 40px;
+  padding: 0 var(--space-4);
   border: 1px solid var(--accent);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--accent);
   color: var(--accent-on);
-  font: 600 var(--text-sm) / var(--leading-tight) var(--font-body);
+  font: 600 var(--text-base)/1 var(--font-body);
   letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
-.button:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-}
-.button:active {
-  background: var(--accent-active);
-  border-color: var(--accent-active);
-}
-.button:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-.button:disabled {
-  background: var(--surface);
-  border-color: var(--border);
-  color: var(--muted);
-  cursor: not-allowed;
-}
-.button--secondary {
-  background: var(--surface);
-  color: var(--fg);
-  border-color: var(--border);
-}
-.button--secondary:hover {
-  background: var(--bg);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.button--secondary:active {
-  background: color-mix(in oklab, var(--accent), transparent 92%);
-  border-color: var(--accent-active);
-  color: var(--accent-active);
-}
-.button--secondary:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-primary:active { background: var(--accent-active); border-color: var(--accent-active); }
+.btn-primary:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn-primary:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
 ```
 
-### 6.3 数据卡片 Data Card
+6px 圆角和 40px 高度兼顾办公密度与明确点击区域。
 
-卡片用于批次摘要、KPI 和规则证据，不作为每个小字段的外框。
-色彩响应只在可点击卡片启用；纯展示卡没有虚假的悬停暗示。
+### 次按钮
+
+用于返回、取消和非破坏性辅助动作。
+
+```css
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--fg);
+  font: 600 var(--text-base)/1 var(--font-body);
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+}
+.btn-secondary:hover { background: var(--surface-hover); border-color: var(--accent); }
+.btn-secondary:active { background: var(--accent-soft); border-color: var(--accent); }
+.btn-secondary:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn-secondary:disabled { color: var(--muted); background: var(--bg); cursor: not-allowed; }
+```
+
+### 数据卡片
 
 ```css
 .data-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-5);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
   background: var(--surface);
-  color: var(--fg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   box-shadow: var(--elev-flat);
-  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
-}
-.data-card[tabindex]:hover {
-  background: color-mix(in oklab, var(--accent), var(--surface) 97%);
-  border-color: var(--accent);
-}
-.data-card[tabindex]:active {
-  background: color-mix(in oklab, var(--accent), var(--surface) 93%);
-  border-color: var(--accent-active);
-}
-.data-card[tabindex]:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-.data-card__label {
-  color: var(--muted);
-  font-size: var(--text-sm);
-}
-.data-card__value {
+  padding: var(--space-5);
   color: var(--fg);
-  font: 650 var(--text-3xl) / var(--leading-tight) var(--font-display);
-  font-variant-numeric: tabular-nums;
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
+.data-card:hover { background: var(--surface-hover); border-color: var(--accent); }
+.data-card:active { background: var(--accent-soft); }
+.data-card:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 ```
 
-### 6.4 输入框 Field
+卡片不位移，避免工作台数据在鼠标移动时产生视觉抖动。
 
-输入框在静态态保持中性，聚焦后才使用铉蓝，避免整页蓝色边框。
-错误态使用危险色并配文字原因，不能只靠红框。
+### 输入框
 
 ```css
 .field {
   width: 100%;
   min-height: 40px;
-  padding: var(--space-2) var(--space-3);
+  padding: 0 var(--space-3);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--fg);
-  font: 400 var(--text-base) / var(--leading-body) var(--font-body);
-  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+  font: 400 var(--text-base)/1.4 var(--font-body);
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
-.field:hover {
-  border-color: var(--accent);
-}
-.field:active {
-  border-color: var(--accent-active);
-}
-.field:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: var(--focus-ring);
-}
-.field[aria-invalid="true"] {
-  border-color: var(--danger);
-}
-.field[aria-invalid="true"]:hover {
-  background: color-mix(in oklab, var(--danger), var(--surface) 97%);
-  border-color: var(--danger);
-}
-.field[aria-invalid="true"]:active {
-  background: color-mix(in oklab, var(--danger), var(--surface) 93%);
-  border-color: var(--danger);
-}
-.field[aria-invalid="true"]:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger), transparent 70%);
-}
-.field:disabled {
-  background: var(--bg);
-  color: var(--muted);
-  cursor: not-allowed;
-}
+.field:hover { border-color: var(--accent); }
+.field:active { background: var(--surface-hover); }
+.field:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+.field[aria-invalid="true"] { border-color: var(--danger); }
+.field:disabled { background: var(--bg); color: var(--muted); cursor: not-allowed; }
 ```
 
-### 6.5 状态徽章 Badge
-
-徽章由文字和浅底共同表达状态，不允许只有一个彩色圆点。
-可交互筛选徽章使用 `role="button"`，只读状态不制造点击暗示。
+### 动作徽章
 
 ```css
 .badge {
@@ -437,307 +364,204 @@ Disabled 保持可读，并在相邻帮助文本中解释状态或权限原因�
   align-items: center;
   gap: var(--space-1);
   min-height: 24px;
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--border-soft);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-pill);
-  background: var(--bg);
-  color: var(--fg);
-  font: 600 var(--text-xs) / var(--leading-tight) var(--font-body);
-  letter-spacing: 0.015em;
-  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
-}
-.badge--success {
-  background: color-mix(in oklab, var(--success), var(--surface) 92%);
-  border-color: color-mix(in oklab, var(--success), var(--surface) 68%);
-  color: var(--success);
-}
-.badge--warn {
-  background: color-mix(in oklab, var(--warn), var(--surface) 92%);
-  border-color: color-mix(in oklab, var(--warn), var(--surface) 68%);
-  color: var(--warn);
-}
-.badge--danger {
-  background: color-mix(in oklab, var(--danger), var(--surface) 92%);
-  border-color: color-mix(in oklab, var(--danger), var(--surface) 68%);
-  color: var(--danger);
-}
-.badge[role="button"]:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.badge[role="button"]:active {
-  background: color-mix(in oklab, var(--accent), var(--surface) 90%);
-  border-color: var(--accent-active);
-  color: var(--accent-active);
-}
-.badge[role="button"]:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-```
-
-### 6.6 行动罗盘 Action Compass
-
-行动罗盘是产品签名组件，也是建议列表和详情首屏的共同语法。
-色轨表达业务优先级，内容区表达证据，双轨区表达跨部门闭环。
-组件不允许 AI 文案占据第一视觉层级。
-
-```css
-.action-compass {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.42fr);
-  gap: var(--space-4);
-  padding: var(--space-5);
-  padding-inline-start: var(--space-6);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
   background: var(--surface);
   color: var(--fg);
-  overflow: hidden;
-  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+  font: 600 var(--text-xs)/1 var(--font-body);
+  letter-spacing: 0.02em;
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
-.action-compass::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: var(--space-1);
-  background: var(--danger);
-}
-.action-compass:hover {
-  background: color-mix(in oklab, var(--accent), var(--surface) 97%);
-  border-color: var(--accent);
-}
-.action-compass:active {
-  background: color-mix(in oklab, var(--accent), var(--surface) 93%);
-  border-color: var(--accent-active);
-}
-.action-compass:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-.action-compass--observe::before {
-  background: var(--warn);
-}
-.action-compass--invest::before {
-  background: var(--accent);
-}
-.action-compass--complete::before {
-  background: var(--success);
-}
-.action-compass__evidence {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-.action-compass__tracks {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
-  align-content: start;
-}
-.action-compass__track {
-  padding: var(--space-3);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  background: var(--bg);
-}
+.badge:hover { background: var(--surface-hover); border-color: var(--accent); }
+.badge:active { background: var(--accent-soft); }
+.badge:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.badge-clear { color: var(--action-clear); background: var(--danger-soft); border-color: var(--action-clear); }
+.badge-stop { color: var(--action-stop); background: var(--warn-soft); border-color: var(--action-stop); }
+.badge-watch { color: var(--action-watch); background: var(--warn-soft); border-color: var(--action-watch); }
+.badge-invest { color: var(--action-invest); background: var(--success-soft); border-color: var(--action-invest); }
+.badge-replenish { color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish); }
 ```
 
-### 6.7 表格与密集数据
+### 表格行
 
-表头固定，关键列固定，行高建议 48px；多行依据可扩展到 64px。
-数字列右对齐并启用 tabular numbers，状态列左对齐以便扫读文字。
-表格行 hover 只改变底色，不能让行抬升或改变高度。
-拒绝行、降级字段与普通警告必须分区，不只用不同颜色混在一张表。
-空状态、加载失败和筛选无结果必须使用不同标题与恢复动作。
+```css
+.table-row {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--fg);
+  transition: background var(--motion-fast) var(--ease-standard);
+}
+.table-row:hover { background: var(--surface-hover); }
+.table-row:active { background: var(--accent-soft); }
+.table-row:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+```
 
-### 6.8 弹窗与固定操作区
+### 双轨决策脊线
 
-审核弹窗必须复述 SPU、主动作和补货/禁补影响，避免用户只看按钮颜色确认。
-驳回输入为空时，提交按钮禁用并就地说明必填原因。
-固定操作区使用纸白背景和顶边轻投影，不遮挡时间线与表格最后一行。
-版本冲突使用页内强提示，不允许用短暂 Toast 替代刷新入口。
+```css
+.decision-spine {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+}
+.decision-spine:hover { border-color: var(--accent); background: var(--surface-hover); }
+.decision-spine:active { background: var(--accent-soft); }
+.decision-spine:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.spine-node { border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-on); }
+```
+
+中间 56px 脊线固定承载证据节点，左右两轨不会因文本长度失去关联。
 
 ## 7. 动效与交互物理
 
-### 7.1 动效哲学
+### 动效哲学
 
-动效是状态变化的证据，不是娱乐性的装饰。
-系统面对的是审核、执行、数据降级和并发冲突，每次变化都应短、稳、可解释。
-统一色彩响应意味着元素不跳动、不浮起，只在原位改变色与边界。
-快速反馈使用 `--motion-fast`，层级切换使用 `--motion-base`。
-所有缓动使用 `--ease-standard`，禁止页面自行发明弹簧或回弹。
+动效只负责确认状态变化，不承担品牌表演。
 
-### 7.2 微反馈
+用户在审核、执行和结果记录时需要知道系统已经收到动作，也需要在并发冲突时立即停止错误预期。
 
-```css
-.button,
-.field,
-.data-card[tabindex],
-.badge[role="button"],
-.action-compass {
-  transition-duration: var(--motion-fast);
-  transition-timing-function: var(--ease-standard);
-}
-.button:active {
-  background-color: var(--accent-active);
-}
-.field:focus-visible {
-  border-color: var(--accent);
-  box-shadow: var(--focus-ring);
-}
-.data-card[tabindex]:hover,
-.action-compass:hover {
-  border-color: var(--accent);
-}
-```
+因此大多数反馈在 150—200ms 内完成。
 
-### 7.3 页面进场
+页面进入只做一次低幅度淡入，不使用位移超过 8px 的动画。
 
-页面进场只用于建立阅读顺序：标题、摘要、主体依次显现。
-stagger 最多三层，避免长列表逐行动画拖慢信息到达。
+### 微反馈
 
 ```css
-@keyframes content-enter {
-  from {
-    opacity: 0;
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-  }
+.interactive {
+  transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
 }
-.page-enter {
-  animation: content-enter var(--motion-base) var(--ease-standard) both;
-}
-.page-enter--summary {
-  animation-delay: var(--motion-fast);
-}
-.page-enter--content {
-  animation-delay: var(--motion-base);
-}
+.interactive:hover { border-color: var(--accent); background: var(--surface-hover); }
+.interactive:active { background: var(--accent-soft); }
+.interactive:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 ```
 
-### 7.4 状态切换
-
-Tab 通过文字色、底边和内容透明度变化表达当前上下文。
-弹窗通过透明度和轻微模糊展开，不使用大幅缩放。
-下拉菜单使用透明度和可见性切换，不改变周围布局。
+### 进场编排
 
 ```css
-.tab-panel {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--motion-base) var(--ease-standard), visibility var(--motion-base) var(--ease-standard);
+@keyframes enter-calm {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.tab-panel[data-active="true"] {
-  opacity: 1;
-  visibility: visible;
-}
-.dialog-surface,
-.dropdown-menu {
-  opacity: 0;
-  visibility: hidden;
-  filter: blur(2px);
-  transition: opacity var(--motion-base) var(--ease-standard), visibility var(--motion-base) var(--ease-standard), filter var(--motion-base) var(--ease-standard);
-}
-.dialog-surface[data-open="true"],
-.dropdown-menu[data-open="true"] {
-  opacity: 1;
-  visibility: visible;
-  filter: blur(0);
-}
+.page-enter { animation: enter-calm var(--motion-base) var(--ease-standard) both; }
+.page-enter:nth-child(2) { animation-delay: 40ms; }
+.page-enter:nth-child(3) { animation-delay: 80ms; }
 ```
 
-### 7.5 Reduced motion
+### 状态切换
 
-降低动效偏好下保留颜色和焦点反馈，只移除进场与模糊过渡。
-禁止使用全局 `*` 覆盖，因为它会意外破坏组件库的必要状态反馈。
+```css
+.tab-panel { opacity: 1; transition: opacity var(--motion-fast) var(--ease-standard); }
+.tab-panel[hidden] { display: none; opacity: 0; }
+.drawer { opacity: 1; visibility: visible; transition: opacity var(--motion-base) var(--ease-standard), visibility var(--motion-base) var(--ease-standard); }
+.drawer[aria-hidden="true"] { opacity: 0; visibility: hidden; }
+.menu { opacity: 1; transition: opacity var(--motion-fast) var(--ease-standard); }
+.menu[hidden] { display: none; opacity: 0; }
+```
+
+### 高保真跨页导航
+
+- 已在《页面清单》和页面文档中定义目标的入口，必须使用同目录真实 `.html` 地址完成跳转；不得被通用原型提示脚本 `preventDefault()` 阻断。
+- 仅尚无目标页面的演示控件可以停留当前页并显示反馈提示；带显式 `location.href` 的按钮同样不得被通用提示脚本覆盖。
+- 联调以用户真实点击后的 URL、页面标题和目标页关键内容为准，不能只用静态链接存在性代替。
+
+### 跨周待办关系与时间表达
+
+- 行动清单和运营工作台使用“当前稳定任务 + 最近前序建议快照”两层表达：当前任务标识长期经营责任，前序快照解释上一次批次基于当时状态给出了什么建议以及为什么。
+- 当前稳定任务 ID、当前动作、当前状态和当前生命周期时间常驻展示；最近前序待办使用每条 SPU 独立的行级披露控件，默认折叠。展开后新增一整行历史待办，复用当前待办完全相同的列结构、列宽、字段顺序和视觉语义；差异仅是前序行使用原批次冻结值、明确标识来源批次并保持只读。
+- 折叠态在当前行下方显示横跨整表的“最近前序待办 · 展开上次完整记录”控制行，不透出历史字段；展开后按当前表头逐列呈现经营对象、主动作、关键依据、库存语境、经营状态、辅助解释和详情入口，不再使用当前对象单元格内的摘要卡或另一套四区结构。披露控件支持鼠标点击与键盘 Enter/Space，展开动作不得触发当前行跳转。
+- 披露状态不跨刷新、筛选、分页或详情返回持久化；重新生成列表后恢复折叠。首次建任没有前序时显示“无前序待办”，不提供空折叠控件。
+- 产生时间、本周关联时间、执行时间必须使用固定标签并并列或纵向对齐；未执行显示“—”，不使用更新时间占位。
+- 经营状态筛选使用独立字段标签“经营状态”，不得复用“审核状态”“任务总进度”或库存协同状态的文案。
+- 清仓任务增加“完成时间确认”状态组：待运营提交、待主管确认、完成时间待修正、已确认完成。运营填报实际时间，主管确认后闭环。
+- 最终清仓完成时间未获主管确认时显示每日 OA 催办摘要；同一任务/自然日/接收人只显示一条，OA 失败显示人工补发入口。
+- 关系标识同时使用链路图标、文字“延续/首次/变更”和任务 ID，不能只靠颜色表达。
+
+### 减少动态效果
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  .page-enter,
-  .page-enter--summary,
-  .page-enter--content {
-    animation: none;
-  }
-  .dialog-surface,
-  .dropdown-menu,
-  .tab-panel {
-    transition-duration: 0ms;
-    filter: none;
-  }
-  .button,
-  .field,
-  .data-card[tabindex],
-  .badge[role="button"],
-  .action-compass {
-    transition-duration: 0ms;
-  }
+  .page-enter { animation: none; }
+  .interactive, .tab-panel, .drawer, .menu, .previous-caret { transition: none; }
 }
 ```
 
+不使用全局 `*` 关闭动画，避免误伤浏览器和辅助技术的必要行为。
+
 ## 8. 品牌情感与声音
 
-### 8.1 品牌灵魂
+### 品牌人格
 
-**冷静**：先给事实和规则，不用夸张语言放大风险。
-**可信**：每个结论都能回到批次、周期、阈值和版本。
-**果断**：动作标签用动词，明确谁做、何时做、做到哪一步。
-**协同**：经营与采购动作并列，不把任一角色藏在总览之后。
-**克制**：AI 解释只增强理解，不冒充规则裁判。
+- 冷静：先给事实，再给建议。
+- 负责：任何动作都说清对象、依据、责任人和状态。
+- 克制：AI 不使用夸张语气，不暗示它替代主管拍板。
+- 直接：错误说明原因和恢复动作，不写“发生未知错误”。
+- 可追溯：重要文案带批次、期间或规则版本上下文。
 
-### 8.2 文案声音
+### 文案声音
 
-使用“发现—依据—行动”句式，例如“利润率低于 0%，建议清仓并禁止补货”。
-错误说明必须告诉用户影响范围，例如“品退周期未校验，本次不用于观察或加投判断”。
-避免“智能赋能”“一键洞察”等无法验证的空洞表达。
-成功反馈说明真实结果，例如“审核已通过，两条动作已分别进入待执行”。
-人工确认不能写成外部系统回执，例如必须写“已确认禁补”而非“采购系统已停单”。
+推荐使用“已识别”“待审核”“数据不足”“状态已变化”等可验证表达。
 
-### 8.3 边缘时刻
+禁止使用“AI 认为这是最佳方案”“绝对应该”“智能预测”等超出固定规则的权威语气。
 
-空状态：用简洁线性经营坐标图形，说明当前没有批次、没有待办或筛选无结果。
-Loading：使用灰阶骨架和明确处理阶段，不显示无意义旋转超过必要时间。
-失败：说明是文件、批次、AI 还是网络失败，并给出唯一可恢复动作。
+按钮使用动词加对象，例如“查看建议”“确认禁补”“记录经营结果”。
 
-404/无权限：使用中性门禁图形，不展示受限对象名称、数量或摘要。
-AI 失败：结构化四要素保持完整，仅用次级警告说明增强解释不可用。
+### 情感化边缘时刻
 
-### 8.4 插画与装饰
+- 空状态：说明当前批次确无待办，给出返回工作台或切换批次的动作，不使用庆祝插画掩盖事实。
+- Loading：优先显示批次和页面骨架，让用户确认加载对象。
+- 404/无权限：不泄露目标对象，仅提供返回本人工作台。
+- AI 失败：显示固定规则四要素仍可用，不把页面染成错误红色。
+- 并发冲突：展示最新操作者、时间和状态，保留用户未提交文字。
 
-只使用扁平、线性、低饱和的坐标、轨道、表格纸张和方向标元素。
-禁止人物 3D 卡通、机器人头像和漂浮币图，因为它们削弱内部决策工具的可信度。
-装饰图形不得占据经营数据首屏的主要面积。
+### 插画与图形
 
-### 8.5 Agent 设计指令
+首版不使用写实 3D 或商品营销插画。
 
-1. 先呈现固定规则结论，再呈现 AI 增强解释。
-2. 每个建议必须保留行动罗盘：优先级色轨、依据筹码和双动作轨。
-3. 只使用 `tokens.css` 中的变量，不在组件内硬编码颜色、阴影、动效或字体。
-4. 所有可交互元素实现 hover、active、focus-visible 和明确 disabled 原因。
-5. 为数据空、筛选空、加载、失败、无权限和 version 冲突分别设计状态。
+可使用抽象的双轨线、批次节点和轻量数据网格作为背景纹理。
+
+所有功能图标使用统一矢量线性图标，禁止 emoji 充当图标。
+
+### Agent 设计指令
+
+1. 第一屏优先呈现当前批次、待办和固定规则结论。
+2. 所有颜色引用 token，并同时用文字或图标表达动作语义。
+3. 表格保持紧凑，详情使用 Bento 分区与双轨脊线。
+4. AI 区视觉弱于规则区；外部相关人员没有产品视图，OA 消息不出现敏感经营字段。
+5. 正式产品低于 1024px 显示电脑访问提示，不压缩成可操作手机页面；`PAGE-F05-01` 高保真评审 HTML 例外，须在内置浏览器直接显示缩窄 PC 布局，不得用全屏提示遮挡页面。
 
 ## 9. 设计禁忌
 
-- 禁止使用暗色、霓虹、HUD 网格或粒子背景，因为本产品是白天长时间使用的企业工作台。
-- 禁止把 AI 文案放在固定规则结论之前，因为 AI 不拥有动作裁决权。
-- 禁止用红色装饰导航、品牌或普通按钮，因为风险红只服务于清仓、止损和错误。
-- 禁止在同一交互中混用阴影提升和物理位移，因为全站已选择色彩响应语言。
-- 禁止使用超过 `12px` 的普通卡片圆角，因为过度柔软会削弱密集经营数据的精确感。
-- 禁止仅用颜色表达审核或动作状态，因为色觉差异用户仍需读取文字标签。
-- 禁止把次级文字降到低于 WCAG 2.2 AA 的对比度，因为口径、周期和来源都是决策证据。
-- 禁止从境外 CDN 加载字体、图标或运行依赖，因为企业内网和中国大陆可达性必须稳定。
-- 禁止用无限滚动承载行动清单和追溯记录，因为用户需要稳定页码和可恢复上下文。
-- 禁止让表格横向压缩字号到 `11px` 以下，因为金额、阈值与状态语义不能被牺牲。
-- 禁止把驳回、执行或结果提交只反馈为 Toast，因为这些状态变化需要持久、可追溯的页面证据。
-- 禁止在采购视图中用模糊或遮挡代替字段移除，因为受限数据应由服务端完全不返回。
+### 高保真统一真实候选快照
 
-## 10. 生产实现同步（2026-08-04）
+跨页面原型引用同一个“当前批次”或同一个 SPU 时，必须复用以下由用户真实 `商品链接.xlsx` 经生产 API→Worker→PostgreSQL 形成的候选快照，不得为单页另造数值、前序批次或完整字段状态：
 
-- 全站采用 `border-box` 盒模型；固定 232px 侧栏后，主布局宽度严格使用 `calc(100% - 232px)` 并允许收缩，确保 1280px 最低支持宽度与 1440px 主画布下，内容区内边距、四列指标卡和页头操作不会造成横向溢出或右侧裁切。
-- 生产壳层同步为 MVP 浅色模式：白色固定侧栏、浅灰内容背景、56px 身份上下文顶栏、底部“同源状态”说明；顶栏从真实工作台读模型显示当前批次编号与清单可用状态，保留服务端角色裁剪后的菜单与真实退出流程。
-- 登录与无权限页同步高保真双栏信息架构，统一使用浅蓝安全视觉、白色操作卡与克制阴影；认证和权限接口、路由及数据最小化边界不变。
+| 对象 | 统一示例值 |
+| :--- | :--- |
+| 当前批次 | `BATCH-20260630-4EC92F6A`；玩具事业部；数据期间 `2026-06-01—2026-06-30`；业务截止日 `2026-06-30`；有效 SPU `10`、决策 `7`、清仓 `6` |
+| 主展示 SPU 身份 | `932592549424`；毛毡板水果切切乐忙碌板围栏摘摘乐可切菜厨房果蔬益智过家家玩具；趣然母婴玩具旗舰店（拼多多）/ 拼多多；责任运营缘一 |
+| 主展示 SPU 冻结指标 | 上月净销售额 `34,024.46 元`；经营准利润率 `-1.45%`；近 7 天品退率未校验；仓内、在途、近 14 天销量与库存可售天数均为数据不足，不显示为 `0` |
+| 主展示 SPU 规则结论 | 小爆款；经营动作清仓；库存动作禁止补货；触发“小爆款经营准利润率 < 5%”；固定规则依据先于 AI 解释 |
+| 主展示 SPU 闭环状态 | 主管已通过；责任运营缘一的经营轨与库存轨均待执行；清仓完成时间待提交；该视觉候选不混入提醒专用候选的钉钉回执，通知状态按独立真实调用链验收 |
+| 跨周与最近前序 | 当前真实 XLSX 只形成一个期间，该 SPU 无最近前序待办；HTML 不呈现折叠控件或伪造前序数值。跨周续接、动作变化及前序同构行仍按 MD/TDD 行为契约以真实 PostgreSQL 持久化集成测试验收，不生成视觉基线 |
+
+主管工作台的“待审核”列表不得把已通过的 SPU `932592549424` 继续显示为待审核；可以在最近审核或待执行摘要中显示。待审核区应使用同一真实批次内尚为 pending 的 SPU，不变造主展示对象状态。历史追溯页在只有当前单期数据时必须如实呈现单期记录，不增造旧批次。
+
+- 禁止把 AI 解释做成页面主视觉；固定规则才是决策权威。
+- 禁止用单一颜色表达清仓、止损、观察、加投和补货；必须同时有文字与图标。
+- 禁止卡片悬停位移；数据密集页面的物理跳动会破坏扫描效率。
+- 禁止使用境外字体服务；内网和国内云环境必须保持可用。
+- 禁止把缺失指标显示为 0；这会让数据不足看起来像真实经营结果。
+- 禁止隐藏批次、业务期间和截止日；旧数据被误当成当前任务会直接导致错误动作。
+- 禁止向采购、仓库等外部相关人员开放产品视图；OA 消息不得包含利润、推广、品退、售后、规则阈值或完整 AI 文本。
+- 禁止把审核、经营执行、库存协同和清仓完成确认压成一个状态；各层进度必须分别可见。
+- 禁止大面积使用动作色；语义色只服务真实状态，不制造营销氛围。
+- 禁止使用超过 14px 的常规卡片圆角；过度圆润会削弱经营工具的精密感。
+- 禁止使用未经需求确认的趋势图、SKU 视图、广告明细或自动执行入口。
+- 禁止用通用“操作失败”替代可恢复反馈；必须说明错误来源和下一步。

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-id" content="PAGE-F08-01">
+  <title>历史与追溯列表页｜趣然经营决策</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+:root {
+  /* ─── Surface (3 levels) ─── */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-warm: var(--surface);
+  --surface-raised: var(--surface);
+  --surface-overlay: var(--surface);
+  --surface-hover: #edf3f9;
+
+  /* ─── Foreground (4 levels) ─── */
+  --fg: #122033;
+  --fg-2: var(--fg);
+  --muted: #53657a;
+  --meta: var(--muted);
+
+  /* ─── Border (2 levels) ─── */
+  --border: #c9d5e2;
+  --border-soft: var(--border);
+
+  /* ─── Accent ─── */
+  --accent: #123b66;
+  --accent-on: #ffffff;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  /* ─── Semantic ─── */
+  --success: #137a4a;
+  --warn: #9a5b00;
+  --danger: #b42318;
+  --action-clear: #b42318;
+  --action-stop: #c4510c;
+  --action-watch: #9a5b00;
+  --action-invest: #137a4a;
+  --action-replenish: #1769aa;
+  --ai: #5b5f8a;
+  --success-soft: #e8f5ee;
+  --warn-soft: #fff4d6;
+  --danger-soft: #fdecea;
+  --accent-soft: #e7eff8;
+  --ai-soft: #efeff8;
+
+  /* ─── Typography — fonts ─── */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* ─── Type scale ─── */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+
+  /* ─── Leading & Tracking ─── */
+  --leading-body: 1.6;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* ─── Spacing (4px base) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ─── */
+  --section-y-desktop: 40px;
+  --section-y-tablet: 28px;
+  --section-y-phone: 20px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* ─── Surface elevation ─── */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 2px 8px color-mix(in oklab, var(--fg), transparent 92%);
+  --elev-float: 0 8px 32px color-mix(in oklab, var(--fg), transparent 88%);
+
+  /* ─── Focus ─── */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+
+  /* ─── Motion ─── */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ─── Layout ─── */
+  --container-max: 1440px;
+  --container-gutter-desktop: 28px;
+  --container-gutter-tablet: 20px;
+  --container-gutter-phone: 16px;
+}
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--fg); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button, select { -webkit-tap-highlight-color: transparent; }
+    [hidden] { display: none !important; }
+    .desktop-app { min-height: 100vh; }
+    .device-notice { display: none; min-height: 100vh; padding: var(--space-5); }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .numeric { font-variant-numeric: tabular-nums; }
+    .muted { color: var(--muted); }
+    .meta { color: var(--meta); font-size: var(--text-xs); }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: 224px;
+      background: var(--surface);
+      border-right: 1px solid var(--border-soft);
+    }
+    .brand-mark {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: var(--accent-on);
+      box-shadow: var(--elev-raised);
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 720;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+    }
+    .brand-subtitle { margin-top: 2px; color: var(--muted); font-size: var(--text-xs); }
+    .nav-label {
+      padding: 0 var(--space-3);
+      color: var(--meta);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      width: 100%;
+      min-height: 42px;
+      padding: 0 var(--space-3);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+      font-weight: 600;
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+    }
+    .nav-button:hover { color: var(--accent); background: var(--surface-hover); border-color: var(--border-soft); }
+    .nav-button:active { background: var(--accent-soft); }
+    .nav-button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .nav-button.active { color: var(--accent); background: var(--accent-soft); border-color: var(--border); }
+    .sidebar-context {
+      margin: auto var(--space-4) var(--space-4);
+      padding: var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+    }
+    .sidebar-context-title { font-size: var(--text-xs); font-weight: 700; }
+    .sidebar-context-copy { margin-top: var(--space-1); color: var(--muted); font-size: var(--text-xs); }
+
+    .app-main { min-width: 0; margin-left: 224px; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: 56px;
+      background: color-mix(in oklab, var(--surface), transparent 4%);
+      border-bottom: 1px solid var(--border-soft);
+      backdrop-filter: blur(12px);
+    }
+    .context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 32px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      white-space: nowrap;
+    }
+    .context-chip i { color: var(--muted); }
+    .readonly-chip { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); font-weight: 700; }
+    .readonly-chip i { color: var(--accent); }
+    .avatar {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .user-name { font-size: var(--text-sm); font-weight: 650; }
+    .page-shell {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--container-gutter-desktop);
+    }
+    .eyebrow {
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .page-title {
+      margin: var(--space-1) 0 0;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 720;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+    }
+    .page-description { max-width: 800px; margin: var(--space-2) 0 0; color: var(--muted); }
+    .section-title { margin: 0; font-size: var(--text-lg); font-weight: 700; line-height: var(--leading-tight); }
+    .section-description { margin: var(--space-1) 0 0; color: var(--muted); font-size: var(--text-sm); }
+
+    .button-primary, .button-secondary, .link-button, .field {
+      transition: background var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard);
+    }
+    .button-primary, .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 40px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .button-primary { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-on); }
+    .button-primary:hover { border-color: var(--accent-hover); background: var(--accent-hover); }
+    .button-primary:active { border-color: var(--accent-active); background: var(--accent-active); }
+    .button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--fg); }
+    .button-secondary:hover { border-color: var(--accent); background: var(--surface-hover); }
+    .button-secondary:active { background: var(--accent-soft); }
+    .button-primary:focus-visible, .button-secondary:focus-visible, .link-button:focus-visible, .field:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .field {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+    }
+    .field:hover { border-color: var(--accent); }
+    .field:focus-visible { border-color: var(--accent); }
+    select.field { cursor: pointer; }
+    .field-label { display: block; margin-bottom: var(--space-1); color: var(--muted); font-size: var(--text-xs); font-weight: 650; }
+
+    .readonly-banner {
+      margin-top: var(--space-6);
+      padding: var(--space-4) var(--space-5);
+      border: 1px solid var(--border-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+    }
+    .readonly-banner i { color: var(--accent); font-size: var(--text-xl); }
+    .readonly-title { font-weight: 700; }
+    .readonly-copy { margin-top: 2px; color: var(--muted); font-size: var(--text-sm); }
+
+    .filter-panel {
+      margin-top: var(--space-5);
+      padding: var(--space-5);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--elev-raised);
+    }
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1.35fr 1fr 1fr 1fr 1.45fr;
+      gap: var(--space-3);
+      align-items: end;
+    }
+    .period-fields { display: grid; grid-template-columns: 1fr 18px 1fr; align-items: center; gap: var(--space-1); }
+    .period-separator { color: var(--muted); font-size: var(--text-xs); text-align: center; }
+    .filter-actions { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-soft); }
+    .filter-help { color: var(--muted); font-size: var(--text-xs); }
+
+    .result-panel {
+      margin-top: var(--space-5);
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--elev-raised);
+    }
+    .result-header { padding: var(--space-5); border-bottom: 1px solid var(--border-soft); }
+    .result-count { color: var(--muted); font-size: var(--text-sm); }
+    .result-count strong { color: var(--fg); font-size: var(--text-lg); }
+    .condition-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 28px;
+      padding: 0 var(--space-2);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+    .result-note { color: var(--muted); font-size: var(--text-xs); }
+
+    .table-wrap { overflow: auto; }
+    table { width: 100%; min-width: 1450px; border-collapse: separate; border-spacing: 0; }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-align: left;
+      white-space: nowrap;
+    }
+    td {
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-sm);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: var(--surface-hover); }
+    .sticky-column { position: sticky; left: 0; z-index: 2; }
+    th.sticky-column { z-index: 5; }
+    .identity-cell { width: 300px; min-width: 300px; }
+    .batch-id { color: var(--accent); font-size: var(--text-xs); font-weight: 700; }
+    .spu-name { margin-top: var(--space-2); font-weight: 700; line-height: 1.4; }
+    .record-meta { margin-top: var(--space-1); color: var(--muted); font-size: var(--text-xs); }
+    .record-rule { margin-top: var(--space-2); color: var(--meta); font-size: var(--text-xs); }
+    .action-cell { width: 220px; min-width: 220px; }
+    .action-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .action-caption { margin-top: var(--space-2); color: var(--muted); font-size: var(--text-xs); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 24px;
+      padding: 0 var(--space-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-clear { color: var(--action-clear); background: var(--danger-soft); border-color: var(--action-clear); }
+    .badge-stop { color: var(--action-stop); background: var(--warn-soft); border-color: var(--action-stop); }
+    .badge-watch { color: var(--action-watch); background: var(--warn-soft); border-color: var(--action-watch); }
+    .badge-invest { color: var(--action-invest); background: var(--success-soft); border-color: var(--action-invest); }
+    .badge-replenish { color: var(--action-replenish); background: var(--accent-soft); border-color: var(--action-replenish); }
+    .badge-neutral { color: var(--muted); background: var(--bg); border-color: var(--border); }
+    .badge-success { color: var(--success); background: var(--success-soft); border-color: var(--success); }
+    .badge-warn { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+    .badge-ai { color: var(--ai); background: var(--ai-soft); border-color: var(--ai); }
+    .status-cell { width: 260px; min-width: 260px; }
+    .status-row { display: grid; grid-template-columns: 66px minmax(0, 1fr); align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
+    .status-row:last-child { margin-bottom: 0; }
+    .status-label { color: var(--meta); font-size: var(--text-xs); }
+    .status-value { font-size: var(--text-xs); font-weight: 650; }
+    .milestone-cell { width: 380px; min-width: 380px; }
+    .milestone-line { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-1); padding-top: 22px; }
+    .milestone-line::before { position: absolute; top: 7px; right: 8%; left: 8%; height: 1px; background: var(--border); content: ""; }
+    .milestone-step { position: relative; color: var(--muted); font-size: var(--text-xs); text-align: center; line-height: 1.35; }
+    .milestone-step::before {
+      position: absolute;
+      top: -19px;
+      left: 50%;
+      width: 9px;
+      height: 9px;
+      border: 2px solid var(--surface);
+      border-radius: var(--radius-pill);
+      background: var(--border);
+      box-shadow: 0 0 0 1px var(--border);
+      content: "";
+      transform: translateX(-50%);
+    }
+    .milestone-step.done { color: var(--fg); font-weight: 650; }
+    .milestone-step.done::before { background: var(--success); box-shadow: 0 0 0 1px var(--success); }
+    .milestone-step.closed::before { background: var(--muted); box-shadow: 0 0 0 1px var(--muted); }
+    .milestone-time { margin-top: var(--space-2); color: var(--meta); font-size: var(--text-xs); }
+    .audit-cell { width: 178px; min-width: 178px; }
+    .audit-copy { margin-top: var(--space-2); color: var(--muted); font-size: var(--text-xs); line-height: 1.45; }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 34px;
+      padding: 0 var(--space-2);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 680;
+      white-space: nowrap;
+    }
+    .link-button:hover { border-color: var(--border); background: var(--accent-soft); }
+    .link-button:active { background: var(--surface-hover); }
+    .table-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border-soft); background: var(--surface); }
+    .page-button {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--fg);
+      cursor: pointer;
+    }
+    .page-button:hover:not(:disabled) { border-color: var(--accent); background: var(--surface-hover); }
+    .page-button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .page-button:disabled { color: var(--muted); background: var(--bg); cursor: not-allowed; }
+    .page-current { display: grid; min-width: 34px; height: 34px; place-items: center; border-radius: var(--radius-sm); background: var(--accent); color: var(--accent-on); font-size: var(--text-sm); font-weight: 700; }
+    .per-page { width: 90px; min-height: 34px; }
+    .footer-note { padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border-soft); background: var(--bg); color: var(--muted); font-size: var(--text-xs); }
+
+    .toast {
+      position: fixed;
+      right: var(--space-6);
+      bottom: var(--space-6);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      max-width: 440px;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface-overlay);
+      color: var(--fg);
+      box-shadow: var(--elev-float);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(var(--space-2));
+      transition: opacity var(--motion-base) var(--ease-standard), transform var(--motion-base) var(--ease-standard);
+    }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .toast i { color: var(--success); }
+    .device-content { text-align: center; }
+    .device-content .brand-mark { margin: 0 auto; }
+    .device-content .page-title { margin-top: var(--space-4); }
+    .device-content .page-description { margin-left: auto; margin-right: auto; }
+
+    @media (max-width: 1279px) and (min-width: 1024px) {
+      .sidebar { width: 72px; }
+      .sidebar-brand { justify-content: center; padding-left: 0; padding-right: 0; }
+      .brand-copy, .nav-label, .nav-text, .sidebar-context { display: none; }
+      .nav-button { justify-content: center; padding: 0; }
+      .app-main { margin-left: 72px; }
+      .page-shell { padding: var(--container-gutter-tablet); }
+      .context-chip.optional { display: none; }
+      .filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1023px) {
+      .desktop-app { display: none; }
+      .device-notice { display: grid; place-items: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nav-button, .button-primary, .button-secondary, .link-button, .field, .toast { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-app">
+    <aside class="sidebar flex flex-col" aria-label="运营主管任务导航">
+      <div class="sidebar-brand flex items-center gap-3 px-4 h-16">
+        <span class="brand-mark" aria-hidden="true"><i class="ph-bold ph-chart-line-up"></i></span>
+        <div class="brand-copy min-w-0">
+          <div class="brand-name">趣然经营决策</div>
+          <div class="brand-subtitle">玩具事业部</div>
+        </div>
+      </div>
+
+      <nav class="flex flex-col gap-2 px-3 mt-5" aria-label="主要导航">
+        <div class="nav-label">经营任务</div>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_角色工作台_运营工作台.html'" data-nav="工作台"><i class="ph-bold ph-squares-four" aria-hidden="true"></i><span class="nav-text">工作台</span></button>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_行动中心_行动清单页.html'" data-nav="行动中心"><i class="ph-bold ph-list-checks" aria-hidden="true"></i><span class="nav-text">行动中心</span></button>
+        <button class="nav-button" type="button" onclick="location.href='阶段1_数据批次_数据批次列表页.html'" data-nav="数据批次"><i class="ph-bold ph-stack" aria-hidden="true"></i><span class="nav-text">数据批次</span></button>
+        <button class="nav-button active" type="button" aria-current="page" data-nav="历史与追溯"><i class="ph-bold ph-clock-counter-clockwise" aria-hidden="true"></i><span class="nav-text">历史与追溯</span></button>
+      </nav>
+
+      <div class="sidebar-context">
+        <div class="flex items-center gap-2"><i class="ph-bold ph-lock-key" aria-hidden="true"></i><span class="sidebar-context-title">不可变历史</span></div>
+        <div class="sidebar-context-copy">这里检索生成时快照，不提供审核、执行、结果修改或删除入口。</div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="topbar">
+        <div class="h-full px-7 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="context-chip"><i class="ph-bold ph-buildings" aria-hidden="true"></i>玩具事业部</span>
+            <span class="context-chip readonly-chip"><i class="ph-bold ph-lock-simple" aria-hidden="true"></i>历史只读</span>
+            <span class="context-chip optional"><i class="ph-bold ph-database" aria-hidden="true"></i>共 1 个成功批次</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="context-chip"><i class="ph-bold ph-identification-card" aria-hidden="true"></i>运营主管</span>
+            <span class="avatar" aria-hidden="true">验</span>
+            <div class="hidden xl:block"><div class="user-name">验收主管</div><div class="meta">玩具事业部负责人</div></div>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-shell">
+        <section aria-labelledby="page-title">
+          <div class="eyebrow">不可变快照 · 业务事件追溯</div>
+          <h1 class="page-title" id="page-title">历史与追溯</h1>
+          <p class="page-description">按批次与 SPU 找回当时的固定规则建议、审核结果和双动作进度，再进入只读详情核查冻结证据与完整事件。</p>
+        </section>
+
+        <section class="readonly-banner" aria-label="历史只读说明">
+          <div class="flex items-start gap-3">
+            <i class="ph-bold ph-lock-key-open" aria-hidden="true"></i>
+            <div>
+              <div class="readonly-title">历史记录为生成时快照，仅供追溯</div>
+              <div class="readonly-copy">不可在此修改审核、执行或结果；同一 SPU 的不同批次保持独立记录，当前规则不会替换当时结论。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="filter-panel" aria-labelledby="filter-title">
+          <div class="flex items-start justify-between gap-5">
+            <div><h2 class="section-title" id="filter-title">检索历史建议</h2><p class="section-description">条件仅收窄授权范围内的历史记录，不改变原建议与稳定顺序。</p></div>
+            <span class="condition-chip"><i class="ph-bold ph-shield-check" aria-hidden="true"></i>已按玩具事业部权限裁剪</span>
+          </div>
+
+          <div class="filter-grid mt-5">
+            <label><span class="field-label">业务批次</span><select class="field" id="batch-filter"><option value="">全部批次</option><option value="BATCH-20260630-4EC92F6A">BATCH-20260630-4EC92F6A</option></select></label>
+            <label><span class="field-label">SPU ID 或名称</span><input class="field" id="spu-filter" type="search" placeholder="例如：932592549424 或 毛毡板" autocomplete="off"></label>
+            <label><span class="field-label">建议动作</span><select class="field" id="action-filter"><option value="">全部动作</option><option value="加投">加投</option><option value="观察">观察</option><option value="止损">推广止损</option><option value="清仓">清仓</option><option value="补货">补货</option><option value="禁止补货">禁止补货</option></select></label>
+            <label><span class="field-label">审核状态</span><select class="field" id="review-filter"><option value="">全部状态</option><option value="待审核">待审核</option><option value="已通过">已通过</option><option value="已驳回">已驳回</option></select></label>
+            <label><span class="field-label">执行状态</span><select class="field" id="execution-filter"><option value="">全部进度</option><option value="待审核">待审核</option><option value="待执行">待执行</option><option value="执行中">执行中</option><option value="已执行">已执行</option><option value="已记录结果">已记录结果</option><option value="已关闭">已关闭</option></select></label>
+            <label><span class="field-label">业务期间</span><span class="period-fields"><input class="field" id="period-start" type="month" value="2026-06" aria-label="起始业务期间"><span class="period-separator">至</span><input class="field" id="period-end" type="month" value="2026-06" aria-label="结束业务期间"></span></label>
+          </div>
+
+          <div class="filter-actions flex items-center justify-between gap-4">
+            <div class="filter-help flex items-center gap-2"><i class="ph-bold ph-info" aria-hidden="true"></i><span>刷新或从只读详情返回时，系统恢复当前条件、页码与列表位置。</span></div>
+            <div class="flex items-center gap-2"><button class="button-secondary" id="reset-filter" type="button"><i class="ph-bold ph-arrow-counter-clockwise" aria-hidden="true"></i>重置筛选</button><button class="button-primary" id="query-button" type="button"><i class="ph-bold ph-magnifying-glass" aria-hidden="true"></i>查询历史</button></div>
+          </div>
+        </section>
+
+        <section class="result-panel" aria-labelledby="result-title">
+          <div class="result-header flex items-center justify-between gap-5">
+            <div><h2 class="section-title" id="result-title">历史建议记录</h2><div class="result-count">匹配 <strong id="visible-count">7</strong> 条历史建议</div></div>
+            <div class="flex items-center gap-2"><span class="condition-chip"><i class="ph-bold ph-calendar-blank" aria-hidden="true"></i><span id="period-summary">2026-06 至 2026-06</span></span><span class="result-note">每行对应一个业务批次中的一条 SPU 建议</span></div>
+          </div>
+
+          <div class="table-wrap">
+            <table aria-describedby="history-note">
+              <thead><tr><th class="sticky-column" scope="col">批次与 SPU</th><th scope="col">冻结建议动作</th><th scope="col">审核与双动作状态</th><th scope="col">业务里程碑摘要</th><th scope="col">审计异常</th><th scope="col">追溯</th></tr></thead>
+              <tbody id="history-list">
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="待执行" data-search="3777853568762118406 磁力积木轨道车火车玩具磁吸拼装创意拼搭益智玩具男孩生日礼物">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">磁力积木轨道车火车玩具磁吸拼装创意拼搭益智玩具男孩生日礼物</div><div class="record-meta"><span class="mono">SPU 3777853568762118406</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">大爆款 · 经营准利润率低于 0%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待执行</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待执行</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：验收主管于 08-04 22:51 人工改判动作</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">API 当前异常计数为 0</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 3777853568762118406"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="待执行" data-search="3798495589524701423 安静手撕布书婴儿玩具启蒙撕撕书早教魔术贴可啃咬宝宝0-12个月3">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">安静手撕布书婴儿玩具启蒙撕撕书早教魔术贴可啃咬宝宝0-12个月3</div><div class="record-meta"><span class="mono">SPU 3798495589524701423</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率低于 5%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待执行</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待执行</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：验收主管于 08-04 23:01 整体通过建议</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">API 当前异常计数为 0</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 3798495589524701423"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="执行中" data-search="683939339441 儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">儿童身高墙贴磁吸精准测量仪尺神器可移除宝宝身高贴纸家用不伤墙</div><div class="record-meta"><span class="mono">SPU 683939339441</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率低于 5%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">已关闭 · 已记录结果</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待执行</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step done">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step done">业务结果</span></div><div class="milestone-time">最近事件：system:oa 于 08-04 21:48 记录钉钉发送失败</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">钉钉未配置事件不计入本列契约</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 683939339441"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="推广止损 禁止补货" data-review="待审核" data-execution="待审核" data-search="745838943806 移车出库汽车华容道滑动拼图数字儿童益智3到6岁思维训练智力玩具">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">移车出库汽车华容道滑动拼图数字儿童益智3到6岁思维训练智力玩具</div><div class="record-meta"><span class="mono">SPU 745838943806</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-stop"><i class="ph-bold ph-pause-circle" aria-hidden="true"></i>推广止损</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率位于 5% 至 10% 之间</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-neutral">待审核</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待审核</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待审核</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：system:worker 于 08-04 21:13 记录 AI 未配置</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">AI 未配置不计入失败异常口径</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 745838943806"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="待审核" data-execution="待审核" data-search="855091964728 拧螺丝玩具儿童修理工具箱男孩益智动手可拆卸组装电钻螺丝刀宝宝">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">拧螺丝玩具儿童修理工具箱男孩益智动手可拆卸组装电钻螺丝刀宝宝</div><div class="record-meta"><span class="mono">SPU 855091964728</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率低于 5%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-neutral">待审核</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待审核</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待审核</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：system:worker 于 08-04 21:13 记录 AI 未配置</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">AI 未配置不计入失败异常口径</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 855091964728"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="待审核" data-execution="待审核" data-search="921300798647 儿童益智多功能棋盘多合一小学生飞行棋五子围棋游戏跳棋套装玩具">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">儿童益智多功能棋盘多合一小学生飞行棋五子围棋游戏跳棋套装玩具</div><div class="record-meta"><span class="mono">SPU 921300798647</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">大爆款 · 经营准利润率低于 0%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-neutral">待审核</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待审核</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待审核</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：system:worker 于 08-04 21:13 记录 AI 未配置</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">AI 未配置不计入失败异常口径</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 921300798647"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+
+                <tr data-batch="BATCH-20260630-4EC92F6A" data-period="2026-06" data-action="清仓 禁止补货" data-review="已通过" data-execution="待执行" data-search="932592549424 毛毡板水果切切乐忙碌板围栏摘摘乐可切菜厨房果蔬益智过家家玩具">
+                  <td class="identity-cell sticky-column"><div class="batch-id mono">BATCH-20260630-4EC92F6A</div><div class="spu-name">毛毡板水果切切乐忙碌板围栏摘摘乐可切菜厨房果蔬益智过家家玩具</div><div class="record-meta"><span class="mono">SPU 932592549424</span> · 业务期间 2026-06 · 截止 06-30</div><div class="record-rule mono">RULE-V1.0 · 生成于 08-04 21:13</div></td>
+                  <td class="action-cell"><div class="action-stack"><span class="badge badge-clear"><i class="ph-bold ph-trash" aria-hidden="true"></i>清仓</span><span class="badge badge-clear"><i class="ph-bold ph-prohibit" aria-hidden="true"></i>禁止补货</span></div><div class="action-caption">小爆款 · 经营准利润率低于 5%</div></td>
+                  <td class="status-cell"><div class="status-row"><span class="status-label">主管审核</span><span class="badge badge-success">已通过</span></div><div class="status-row"><span class="status-label">运营动作</span><span class="status-value">待执行</span></div><div class="status-row"><span class="status-label">库存协同</span><span class="status-value">待执行</span></div></td>
+                  <td class="milestone-cell"><div class="milestone-line"><span class="milestone-step done">建议生成</span><span class="milestone-step done">主管审核</span><span class="milestone-step">运营动作</span><span class="milestone-step">库存协同</span><span class="milestone-step">业务结果</span></div><div class="milestone-time">最近事件：system:oa 于 08-05 03:47 记录钉钉发送失败</div></td>
+                  <td class="audit-cell"><span class="badge badge-neutral"><i class="ph-bold ph-check-circle" aria-hidden="true"></i>无可见异常</span><div class="audit-copy">钉钉未配置事件不计入本列契约</div></td>
+                  <td><button class="link-button" type="button" onclick="location.href='阶段1_行动中心_建议详情页.html'" data-record="BATCH-20260630-4EC92F6A / SPU 932592549424"><span>查看追溯</span><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-footer flex items-center justify-between gap-5">
+            <div class="result-note">按业务截止日倒序，同批次内使用稳定建议顺序</div>
+            <div class="flex items-center gap-2" aria-label="分页"><span class="meta">每页</span><select class="field per-page" id="per-page" aria-label="每页数量"><option>20</option><option selected>50</option><option>100</option></select><button class="page-button" type="button" disabled aria-label="上一页"><i class="ph-bold ph-caret-left" aria-hidden="true"></i></button><span class="page-current" aria-current="page">1</span><button class="page-button" type="button" disabled aria-label="下一页"><i class="ph-bold ph-caret-right" aria-hidden="true"></i></button><span class="meta">共 1 页</span></div>
+          </div>
+          <div class="footer-note" id="history-note">列表仅概括业务里程碑；进入只读追溯详情后，查看冻结规则、原始关键值、成功事件和按权限开放的审计异常。</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <section class="device-notice" aria-labelledby="device-title">
+    <div class="device-content"><span class="brand-mark" aria-hidden="true"><i class="ph-bold ph-desktop"></i></span><h1 class="page-title" id="device-title">请使用电脑访问</h1><p class="page-description">历史列表包含完整批次、动作状态和业务里程碑，请在宽度不小于 1024px 的电脑浏览器中查看。</p></div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><i class="ph-bold ph-check-circle" aria-hidden="true"></i><span id="toast-copy">已更新历史检索结果</span></div>
+
+  <script>
+    const rows = Array.from(document.querySelectorAll('#history-list tr'));
+    const batchFilter = document.getElementById('batch-filter');
+    const spuFilter = document.getElementById('spu-filter');
+    const actionFilter = document.getElementById('action-filter');
+    const reviewFilter = document.getElementById('review-filter');
+    const executionFilter = document.getElementById('execution-filter');
+    const periodStart = document.getElementById('period-start');
+    const periodEnd = document.getElementById('period-end');
+    const visibleCount = document.getElementById('visible-count');
+    const periodSummary = document.getElementById('period-summary');
+    const toast = document.getElementById('toast');
+    const toastCopy = document.getElementById('toast-copy');
+    let toastTimer;
+
+    function showToast(message) {
+      toastCopy.textContent = message;
+      toast.classList.add('visible');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2200);
+    }
+
+    function applyFilters() {
+      const query = spuFilter.value.trim().toLowerCase();
+      let count = 0;
+      rows.forEach((row) => {
+        const period = row.dataset.period;
+        const matches = (!batchFilter.value || row.dataset.batch === batchFilter.value)
+          && (!query || row.dataset.search.toLowerCase().includes(query))
+          && (!actionFilter.value || row.dataset.action.includes(actionFilter.value))
+          && (!reviewFilter.value || row.dataset.review === reviewFilter.value)
+          && (!executionFilter.value || row.dataset.execution === executionFilter.value)
+          && (!periodStart.value || period >= periodStart.value)
+          && (!periodEnd.value || period <= periodEnd.value);
+        row.hidden = !matches;
+        if (matches) count += 1;
+      });
+      visibleCount.textContent = String(count);
+      periodSummary.textContent = `${periodStart.value || '最早'} 至 ${periodEnd.value || '最新'}`;
+      showToast(`已找到 ${count} 条授权范围内的历史建议`);
+    }
+
+    document.getElementById('query-button').addEventListener('click', applyFilters);
+    spuFilter.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') applyFilters();
+    });
+
+    document.getElementById('reset-filter').addEventListener('click', () => {
+      batchFilter.value = '';
+      spuFilter.value = '';
+      actionFilter.value = '';
+      reviewFilter.value = '';
+      executionFilter.value = '';
+      periodStart.value = '2026-06';
+      periodEnd.value = '2026-06';
+      applyFilters();
+    });
+
+    document.getElementById('per-page').addEventListener('change', (event) => showToast(`每页数量已切换为 ${event.target.value} 条`));
+
+    document.querySelectorAll('[data-record]').forEach((control) => {
+      control.addEventListener('click', () => showToast(`正在打开 ${control.dataset.record} 的只读追溯详情`));
+    });
+
+    document.querySelectorAll('[data-nav]').forEach((control) => {
+      control.addEventListener('click', () => {
+        if (!control.classList.contains('active')) showToast(`正在前往${control.dataset.nav}`);
+      });
+    });
+  </script>
+</body>
+</html>
