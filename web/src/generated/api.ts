@@ -335,6 +335,7 @@ export interface components {
         SessionUser: {
             name: string;
             role: components["schemas"]["BusinessRole"];
+            union_id: string;
         };
         SessionResponse: {
             /** @constant */

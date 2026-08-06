@@ -232,8 +232,8 @@ components:
         dingtalk_user_id: { type: [string, 'null'] }
     SessionUser:
       type: object
-      required: [name, role]
-      properties: { name: { type: string }, role: { $ref: '#/components/schemas/BusinessRole' } }
+      required: [name, role, union_id]
+      properties: { name: { type: string }, role: { $ref: '#/components/schemas/BusinessRole' }, union_id: { type: string } }
     SessionResponse:
       type: object
       required: [authenticated, user]

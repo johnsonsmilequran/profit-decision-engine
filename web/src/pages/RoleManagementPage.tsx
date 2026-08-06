@@ -30,8 +30,8 @@ export function RoleManagementPage() {
 }
 
 function RoleTable({ rows, onEdit }: { rows: RoleMapping[]; onEdit: (row: RoleMapping) => void }) {
-  return <div className="table-scroll"><table><thead><tr><th>用户</th><th>身份标识</th><th>角色</th><th>状态</th><th>批准 / 配置</th><th>操作</th></tr></thead><tbody>{rows.map(row => <tr key={row.actor_ref}><td><strong>{row.display_name}</strong></td><td>{mask(row.actor_ref)}</td><td>{row.role === 'supervisor' ? '运营主管' : '运营'}</td><td>{row.active ? '已启用' : '已停用'}</td><td>{row.approved_by} / {row.configured_by}</td><td><button className="button" onClick={() => onEdit(row)}>编辑</button></td></tr>)}</tbody></table></div>
+  const copy = (unionID: string) => navigator.clipboard.writeText(unionID)
+  return <div className="table-scroll"><table className="role-table"><thead><tr><th>用户</th><th>unionId</th><th>角色</th><th>状态</th><th>批准 / 配置</th><th>操作</th></tr></thead><tbody>{rows.map(row => <tr key={row.actor_ref}><td><strong>{row.display_name}</strong></td><td><code className="union-id">{row.actor_ref}</code><button className="copy-link" type="button" aria-label={`复制 ${row.actor_ref}`} onClick={() => copy(row.actor_ref)}>复制</button></td><td>{row.role === 'supervisor' ? '运营主管' : '运营'}</td><td>{row.active ? '已启用' : '已停用'}</td><td>{row.approved_by} / {row.configured_by}</td><td><button className="button" onClick={() => onEdit(row)}>编辑</button></td></tr>)}</tbody></table></div>
 }
 
 function State({ text }: { text: string }) { return <div className="empty-state"><strong>{text}</strong></div> }
-function mask(value: string) { return value.length <= 10 ? value : `${value.slice(0, 5)}••••${value.slice(-5)}` }

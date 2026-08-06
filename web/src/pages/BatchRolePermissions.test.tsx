@@ -17,12 +17,12 @@ vi.mock('../api', async importOriginal => {
 
 const supervisorSession = {
   authenticated: true as const,
-  user: { name: '验收主管', role: 'supervisor' as const },
+  user: { name: '验收主管', role: 'supervisor' as const, union_id: 'union-supervisor-001' },
 }
 
 const operationsSession = {
   authenticated: true as const,
-  user: { name: '缘一', role: 'operations' as const },
+  user: { name: '缘一', role: 'operations' as const, union_id: 'union-operations-001' },
 }
 
 function renderPage(page: ReactNode) {

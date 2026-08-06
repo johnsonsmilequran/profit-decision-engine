@@ -864,6 +864,28 @@ WHEN 主管尝试停用自己、把自己降为运营，或停用/降级最后�
 THE SYSTEM SHALL 原子拒绝整个变更并保留原映射和现有会话，不产生部分写入。
 ```
 
+### AC-F07-10 · 已认证用户识别并退出当前账号
+
+- Parent: REQ-F07-03
+- Priority: P0
+- EARS:
+
+```text
+WHEN 已认证运营或主管打开全局账户菜单
+THE SYSTEM SHALL 显示当前业务显示名、角色和本人的完整钉钉 unionId，并提供复制身份标识和退出登录操作；退出须撤销服务端会话、清除 HttpOnly Cookie 并返回登录页，不在 URL、日志或未认证页面暴露 unionId。
+```
+
+### AC-F07-11 · 主管核对被管理用户身份
+
+- Parent: REQ-F07-04
+- Priority: P0
+- EARS:
+
+```text
+WHEN 运营主管查看用户角色管理列表
+THE SYSTEM SHALL 显示并允许复制每条权限内角色映射的完整 unionId，以便与钉钉账号准确核对；运营和未认证用户不得读取该列表或身份标识。
+```
+
 ## Feature F08 · 规则与数据溯源
 
 ### US-F08-01 · 追溯结论来源

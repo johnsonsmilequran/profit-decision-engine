@@ -682,7 +682,7 @@ func (s *Server) session(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnauthorized, "authentication_required")
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]interface{}{"authenticated": true, "user": principal})
+	writeJSON(w, http.StatusOK, map[string]interface{}{"authenticated": true, "user": map[string]string{"name": principal.Name, "role": principal.Role, "union_id": principal.ActorRef}})
 }
 
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) {

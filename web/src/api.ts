@@ -33,6 +33,12 @@ export async function getSession(signal?: AbortSignal): Promise<SessionResponse>
   return response.json() as Promise<SessionResponse>
 }
 
+export async function logout(): Promise<void> {
+  const response = await fetch('/auth/logout', { method: 'POST', credentials: 'include' })
+  if (!response.ok) throw new Error('logout_failed')
+  window.location.replace('/login')
+}
+
 export async function listRoleMappings(signal?: AbortSignal): Promise<RoleMapping[]> {
   const response = await fetch('/api/role-mappings', { credentials: 'include', signal })
   return businessResponse<RoleMapping[]>(response)
