@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { listBatches, type BatchSummary } from '../api'
+import { getSession, listBatches, type BatchSummary } from '../api'
 import { AppShell } from '../components/AppShell'
 
 const statusText = { received: '已接收', processing: '处理中', ready: '已完成', failed: '失败' }
@@ -17,13 +17,15 @@ export function BatchListPage() {
     queryFn: ({ signal }) => listBatches(page, limit, search, signal),
     refetchInterval: ({ state }) => state.data?.items.some(item => item.status === 'received' || item.status === 'processing') ? 3000 : false,
   })
+  const session = useQuery({ queryKey: ['session'], queryFn: ({ signal }) => getSession(signal) })
+  const canImport = session.data?.user.role === 'operations'
   const pages = Math.max(1, Math.ceil((query.data?.total ?? 0) / limit))
   const current = query.data?.items.find(item => item.status === 'ready')
   const history = query.data?.items.filter(item => item.id !== current?.id) ?? []
 
   return <AppShell><section data-page-id="PAGE-F01-01">
-    <div className="page-heading"><div><p className="overline">Batch Management</p><h1>数据批次</h1><p className="muted">查看每周经营数据的处理状态、校验摘要与冻结版本。</p></div><div className="heading-actions"><button className="button" onClick={() => query.refetch()} disabled={query.isFetching}>{query.isFetching ? '刷新中…' : '刷新列表'}</button><a className="button primary-button" href="/batches/new">导入新批次</a></div></div>
-    {query.isPending ? <div className="panel"><State title="正在加载批次" body="正在读取真实批次记录。" /></div> : query.isError ? <div className="panel"><State title="批次加载失败" body="服务暂时不可用，请重试。" action={<button className="button" onClick={() => query.refetch()}>重新加载</button>} /></div> : query.data.items.length === 0 ? <div className="panel"><State title="还没有数据批次" body="导入首个完整自然月的 XLSX 文件后，批次会显示在这里。" action={<a className="button" href="/batches/new">开始导入</a>} /></div> : <>
+    <div className="page-heading"><div><p className="overline">Batch Management</p><h1>数据批次</h1><p className="muted">查看每周经营数据的处理状态、校验摘要与冻结版本。</p></div><div className="heading-actions"><button className="button" onClick={() => query.refetch()} disabled={query.isFetching}>{query.isFetching ? '刷新中…' : '刷新列表'}</button>{canImport ? <a className="button primary-button" href="/batches/new">导入新批次</a> : null}</div></div>
+    {query.isPending ? <div className="panel"><State title="正在加载批次" body="正在读取真实批次记录。" /></div> : query.isError ? <div className="panel"><State title="批次加载失败" body="服务暂时不可用，请重试。" action={<button className="button" onClick={() => query.refetch()}>重新加载</button>} /></div> : query.data.items.length === 0 ? <div className="panel"><State title="还没有数据批次" body={canImport ? '导入首个完整自然月的 XLSX 文件后，批次会显示在这里。' : '当前还没有可供审核与追溯的数据批次。'} action={canImport ? <a className="button" href="/batches/new">开始导入</a> : undefined} /></div> : <>
       {current ? <CurrentBatch batch={current} /> : <div className="notice warning">最新批次尚未形成可用清单，因此不会替换当前成功批次。</div>}
       <div className="batch-guidance" aria-label="批次规则说明"><article><strong>每周一导入</strong><span>数据支持部门提供经营表格，运营创建新批次。</span></article><article><strong>相同输入不重复</strong><span>相同文件与批次声明只返回首次创建记录。</span></article><article><strong>历史不可覆盖</strong><span>期间、校验结果与规则版本按创建时冻结保留。</span></article></div>
       <div className="panel table-panel batch-history">

@@ -1,13 +1,24 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { createBatch, getBatch, type ImportIssue, type Snapshot } from '../api'
+import { createBatch, getBatch, getSession, type ImportIssue, type Snapshot } from '../api'
 import { AppShell } from '../components/AppShell'
 
 const actionText: Record<string, string> = { clearance: '清仓', stop_loss: '止损', maintain: '维持', invest: '加大投入' }
 
 export function BatchDetailPage({ batchId }: { batchId?: string }) {
-  return <AppShell>{batchId ? <ExistingBatch batchId={batchId} /> : <NewBatch />}</AppShell>
+  const session = useQuery({ queryKey: ['session'], queryFn: ({ signal }) => getSession(signal) })
+  const canImport = session.data?.user.role === 'operations'
+  if (batchId) return <AppShell><ExistingBatch batchId={batchId} canImport={canImport} /></AppShell>
+  return <AppShell>{session.isPending ? <RoleCheckState title="正在确认角色权限" body="确认当前身份是否具有数据导入权限。" /> : session.isError ? <RoleCheckState title="无法确认角色权限" body="身份状态不可用，当前不会展示上传表单。" /> : canImport ? <NewBatch /> : <ImportForbidden />}</AppShell>
+}
+
+function RoleCheckState({ title, body }: { title: string; body: string }) {
+  return <section data-page-id="PAGE-F01-02"><div className="panel empty-state"><strong>{title}</strong><p>{body}</p></div></section>
+}
+
+function ImportForbidden() {
+  return <section data-page-id="PAGE-F01-02"><div className="panel empty-state"><strong>当前角色无导入权限</strong><p>运营主管可以查看批次与冻结依据，但只有运营可以创建数据批次。</p><a className="button" href="/workbench/supervisor">返回主管工作台</a></div></section>
 }
 
 function NewBatch() {
@@ -33,7 +44,7 @@ function NewBatch() {
   </section>
 }
 
-function ExistingBatch({ batchId }: { batchId: string }) {
+function ExistingBatch({ batchId, canImport }: { batchId: string; canImport: boolean }) {
   const [severity, setSeverity] = useState('all')
   const [selected, setSelected] = useState<Snapshot | null>(null)
   const query = useQuery({ queryKey: ['batch', batchId], queryFn: ({ signal }) => getBatch(batchId, signal), refetchInterval: ({ state }) => state.data?.status === 'received' || state.data?.status === 'processing' ? 2000 : false })
@@ -42,7 +53,7 @@ function ExistingBatch({ batchId }: { batchId: string }) {
   if (query.isError || !query.data) return <section data-page-id="PAGE-F01-02"><div className="empty-state"><strong>批次无法打开</strong><p>记录不存在或服务暂时不可用。</p><a className="button" href="/batches">返回列表</a></div></section>
   const batch = query.data
   return <section data-page-id="PAGE-F01-02">
-    <div className="page-heading"><div><p className="overline">Batch Detail</p><h1>导入与批次详情</h1><p className="muted">核对导入声明、校验结果与冻结指标，并进入该批次唯一行动清单。</p></div><div className="heading-actions"><a className="button" href="/batches">返回批次列表</a><a className="button" href="/batches/new">新建导入</a></div></div>
+    <div className="page-heading"><div><p className="overline">Batch Detail</p><h1>导入与批次详情</h1><p className="muted">核对导入声明、校验结果与冻结指标，并进入该批次唯一行动清单。</p></div><div className="heading-actions"><a className="button" href="/batches">返回批次列表</a>{canImport ? <a className="button" href="/batches/new">新建导入</a> : null}</div></div>
     <section className="batch-detail-hero">
       <div><div className="immutable-title"><span aria-hidden="true">✓</span><div><small>不可变批次</small><h2>{batch.code}</h2></div></div><span className={`status status-${batch.status}`}>{batchStatus(batch.status)}</span><p>该批次的导入声明、校验结果、冻结快照与固定规则结论不会被后续文件覆盖。</p><div className="batch-detail-meta"><div><span>事业部</span><strong>{batch.business_unit}</strong></div><div><span>数据期间</span><strong>{batch.period_start} 至 {batch.period_end}</strong></div><div><span>业务截止日</span><strong>{batch.business_cutoff_date}</strong></div><div><span>源文件</span><strong>{batch.source_file_name}</strong></div><div><span>提交人 / 时间</span><strong>{batch.created_by} · {formatDate(batch.created_at)}</strong></div><div><span>规则版本</span><strong>{batch.rule_version ?? '待生成'}</strong></div></div></div>
       <aside><p className="overline">Next Step</p><h2>{batch.status === 'ready' ? '行动清单已生成' : '等待规则处理完成'}</h2><p>{batch.status === 'ready' ? '后续审核与执行会引用这里冻结的事实，原批次保持只读。' : '页面会自动刷新当前处理阶段。'}</p>{batch.status === 'ready' ? <a className="button primary-button full-button" href={`/actions?batch_id=${batch.id}`}>进入行动清单</a> : <button className="button full-button" disabled>清单尚未就绪</button>}</aside>
