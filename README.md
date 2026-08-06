@@ -18,7 +18,7 @@
 - 备份：`BACKUP_DESTINATION=/受控异机目录 COMPOSE_PROJECT_NAME=profit-decision make backup`，生成数据库、XLSX、manifest 与 SHA256 校验和快照
 - 隔离恢复：先以相同代码和迁移建立空 Compose 项目，再执行 `RESTORE_SNAPSHOT=/绝对路径/快照 COMPOSE_PROJECT_NAME=目标项目 make restore`；目标数据库或文件卷非空时命令拒绝执行
 
-认证只接受钉钉 OAuth。角色映射由运维依据事业部负责人审批写入 PostgreSQL `role_mapping`；应用没有默认账号、密码登录、共享账号或角色选择入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
+认证只接受钉钉 OAuth。首个主管映射由运维安全引导写入 PostgreSQL `role_mapping`；此后仅运营主管通过产品“用户角色”页面维护运营/主管映射，系统禁止停用或降级自己及最后一个有效主管。应用没有默认账号、密码登录、共享账号或用户自选角色入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
 
 ### 配置钉钉测试身份
 
@@ -34,7 +34,7 @@
 
 企业 `User ID` 可由管理员在钉钉管理后台的通讯录成员详情中查看。如果只知道 `User ID` 而不知道 `unionId`，应为当前应用开通 `qyapi_get_member`，再通过钉钉“查询用户详情”接口只查询该名已审批员工并取得 `unionId`；本产品不需要、也不应为此同步全公司部门和人员。也可以由管理员直接提供已核验的 `unionId`，此时无需该单用户查询权限。
 
-取得上述信息后，在数据库中执行以下授权。一个 `unionId` 只能对应一个当前角色：
+首次部署尚无主管时，由运维执行以下引导授权且角色必须为 `supervisor`；首个主管登录后，其余授权均在 `/admin/roles` 完成。一个 `unionId` 只能对应一个当前角色：
 
 ```sql
 BEGIN;
@@ -49,7 +49,7 @@ INSERT INTO role_mapping (
 ) VALUES (
   '<UNION_ID>',
   '<运营账号填商品数据中的责任运营名称；主管填真实姓名>',
-  '<operations 或 supervisor>',
+  'supervisor',
   true,
   '<角色审批人>',
   'lingfeng',

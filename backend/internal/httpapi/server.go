@@ -43,6 +43,8 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Get("/auth/dingtalk/callback", s.finishDingTalk)
 	r.Post("/auth/logout", s.logout)
 	r.Get("/api/session", s.session)
+	r.Get("/api/role-mappings", s.listRoleMappings)
+	r.Put("/api/role-mappings", s.upsertRoleMapping)
 	r.Get("/api/batches", s.listBatches)
 	r.Post("/api/batches", s.createBatch)
 	r.Get("/api/batches/{batchID}", s.getBatch)
@@ -62,6 +64,52 @@ func New(db *pgxpool.Pool, identities *identity.Service, dingTalk *identity.Ding
 	r.Post("/api/actions/{taskID}/oa-notifications", s.sendOANotification)
 	r.Post("/api/actions/{taskID}/oa-notifications/{notificationID}/retry", s.retryOANotification)
 	return r
+}
+
+func (s *Server) listRoleMappings(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	result, err := s.identity.ListRoles(r.Context(), principal)
+	if errors.Is(err, identity.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "forbidden")
+		return
+	}
+	if err != nil {
+		s.logger.Error("list role mappings", "error", err)
+		writeError(w, http.StatusInternalServerError, "role_mapping_query_failed")
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) upsertRoleMapping(w http.ResponseWriter, r *http.Request) {
+	principal, err := s.authenticate(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication_required")
+		return
+	}
+	var input identity.RoleMappingInput
+	if err := decodeJSON(r, &input); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_json")
+		return
+	}
+	result, err := s.identity.UpsertRole(r.Context(), principal, input)
+	switch {
+	case errors.Is(err, identity.ErrForbidden):
+		writeError(w, http.StatusForbidden, "forbidden")
+	case errors.Is(err, identity.ErrInvalidRoleMapping):
+		writeError(w, http.StatusUnprocessableEntity, "invalid_role_mapping")
+	case errors.Is(err, identity.ErrRoleLockout):
+		writeError(w, http.StatusConflict, "role_lockout")
+	case err != nil:
+		s.logger.Error("upsert role mapping", "error", err)
+		writeError(w, http.StatusInternalServerError, "role_mapping_update_failed")
+	default:
+		writeJSON(w, http.StatusOK, result)
+	}
 }
 
 func (s *Server) history(w http.ResponseWriter, r *http.Request) {

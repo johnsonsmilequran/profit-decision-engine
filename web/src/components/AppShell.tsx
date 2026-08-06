@@ -13,6 +13,7 @@ export function AppShell({ children, active = 'batches' }: { children: ReactNode
         <a className={active === 'batches' ? 'active' : ''} href="/batches">数据批次</a>
         <a className={active === 'actions' ? 'active' : ''} href="/actions">行动中心</a>
         <a className={active === 'history' ? 'active' : ''} href="/history">历史追溯</a>
+        {session.data?.user.role === 'supervisor' ? <a className={active === 'roles' ? 'active' : ''} href="/admin/roles">用户角色</a> : null}
       </nav>
       <p className="sidebar-note">固定规则形成结论<br />AI 仅辅助解释</p>
     </aside>

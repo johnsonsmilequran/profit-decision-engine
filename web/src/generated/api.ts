@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/role-mappings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listRoleMappings"];
+        put: operations["upsertRoleMapping"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/batches": {
         parameters: {
             query?: never;
@@ -298,6 +314,24 @@ export interface components {
     schemas: {
         /** @enum {string} */
         BusinessRole: "operations" | "supervisor";
+        RoleMapping: {
+            actor_ref: string;
+            display_name: string;
+            role: components["schemas"]["BusinessRole"];
+            active: boolean;
+            approved_by: string;
+            configured_by: string;
+            /** Format: date-time */
+            configured_at: string;
+            dingtalk_user_id?: string | null;
+        };
+        RoleMappingInput: {
+            actor_ref: string;
+            display_name: string;
+            role: components["schemas"]["BusinessRole"];
+            active: boolean;
+            dingtalk_user_id?: string | null;
+        };
         SessionUser: {
             name: string;
             role: components["schemas"]["BusinessRole"];
@@ -720,6 +754,56 @@ export interface operations {
                 };
             };
             401: components["responses"]["Error"];
+        };
+    };
+    listRoleMappings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 主管可见的真实角色映射 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleMapping"][];
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+        };
+    };
+    upsertRoleMapping: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleMappingInput"];
+            };
+        };
+        responses: {
+            /** @description 已持久化角色映射 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleMapping"];
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
         };
     };
     listBatches: {

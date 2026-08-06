@@ -7,6 +7,24 @@ paths:
       responses:
         '200': { description: 当前会话, content: { application/json: { schema: { $ref: '#/components/schemas/SessionResponse' } } } }
         '401': { $ref: '#/components/responses/Error' }
+  /api/role-mappings:
+    get:
+      operationId: listRoleMappings
+      responses:
+        '200': { description: 主管可见的真实角色映射, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/RoleMapping' } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+    put:
+      operationId: upsertRoleMapping
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/RoleMappingInput' } } }
+      responses:
+        '200': { description: 已持久化角色映射, content: { application/json: { schema: { $ref: '#/components/schemas/RoleMapping' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
   /api/batches:
     get:
       operationId: listBatches
@@ -191,6 +209,27 @@ components:
     Error: { description: 业务错误, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
   schemas:
     BusinessRole: { type: string, enum: [operations, supervisor] }
+    RoleMapping:
+      type: object
+      required: [actor_ref, display_name, role, active, approved_by, configured_by, configured_at]
+      properties:
+        actor_ref: { type: string }
+        display_name: { type: string }
+        role: { $ref: '#/components/schemas/BusinessRole' }
+        active: { type: boolean }
+        approved_by: { type: string }
+        configured_by: { type: string }
+        configured_at: { type: string, format: date-time }
+        dingtalk_user_id: { type: [string, 'null'] }
+    RoleMappingInput:
+      type: object
+      required: [actor_ref, display_name, role, active]
+      properties:
+        actor_ref: { type: string, minLength: 1 }
+        display_name: { type: string, minLength: 1 }
+        role: { $ref: '#/components/schemas/BusinessRole' }
+        active: { type: boolean }
+        dingtalk_user_id: { type: [string, 'null'] }
     SessionUser:
       type: object
       required: [name, role]

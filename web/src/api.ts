@@ -17,6 +17,8 @@ export type SuggestionDetail = components['schemas']['SuggestionDetail']
 export type HistoryItem = components['schemas']['HistoryItem']
 export type HistoryResponse = components['schemas']['HistoryResponse']
 export type ConflictLatest = components['schemas']['ConflictLatest']
+export type RoleMapping = components['schemas']['RoleMapping']
+export type RoleMappingInput = components['schemas']['RoleMappingInput']
 
 export class BusinessError extends Error {
   constructor(code: string, readonly latest?: ConflictLatest | null) {
@@ -29,6 +31,16 @@ export async function getSession(signal?: AbortSignal): Promise<SessionResponse>
   const response = await fetch('/api/session', { credentials: 'include', signal })
   if (!response.ok) throw new Error(response.status === 401 ? 'unauthenticated' : 'service_unavailable')
   return response.json() as Promise<SessionResponse>
+}
+
+export async function listRoleMappings(signal?: AbortSignal): Promise<RoleMapping[]> {
+  const response = await fetch('/api/role-mappings', { credentials: 'include', signal })
+  return businessResponse<RoleMapping[]>(response)
+}
+
+export async function upsertRoleMapping(input: RoleMappingInput): Promise<RoleMapping> {
+  const response = await fetch('/api/role-mappings', { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) })
+  return businessResponse<RoleMapping>(response)
 }
 
 async function businessResponse<T>(response: Response): Promise<T> {
