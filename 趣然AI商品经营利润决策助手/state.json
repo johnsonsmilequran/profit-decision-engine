@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:48:52Z",
+  "last_updated_at_utc": "2026-08-07T07:50:42Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -24,7 +24,7 @@
     "beneficiary": "事业部/公司：F09 解锁整套经营决策助手的经营价值",
     "current_cost": "每个类似延误问题约6万元直接利润损失；约10万元库存占用仅作风险佐证，不重复相加",
     "affected_scale": "用户确认的待验证假设值：12次/年；依据为暂无完整历史记录，需上线后按真实事件台账验证",
-    "estimated_value": "按当前假设计算为72万元/年的受影响利润；价值表达周期待用户确认"
+    "estimated_value": "按当前待验证假设计算为72万元/年的受影响利润，三年可支撑价值约216万元；不得表述为已实际节省"
   },
   "stage_confirmations": {
     "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T07:30:44Z"},
@@ -37,13 +37,13 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "2",
-  "current_substep": "admin-value-horizon-confirmation",
+  "current_substep": "admin-value-final-confirmation",
   "completed_stages": ["0", "1", "1.9"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认 F09 可支撑价值采用一年还是三年口径；12次/年是假设值，不能表述为已实测节省",
-    "askuserquestion_options": ["按三年可支撑约216万元表达（推荐，逐年验证12次假设）", "只按一年约72万元表达，不主张达到约200万元", "先验证年度真实数量，再判断价值周期"]
+    "description": "基于事业部/公司受益、6万元/次、12次/年待验证假设和三年约216万元可支撑价值，完成阶段2最终价值拍板",
+    "askuserquestion_options": ["认可", "不认可", "需要先验证"]
   },
   "open_questions": [],
   "key_decisions_made": [
