@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:19:30Z",
+  "last_updated_at_utc": "2026-08-07T07:22:36Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "value_confirmation": {
@@ -22,21 +22,19 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "1",
-  "current_substep": "admin-default-proposal-frontier-3",
+  "current_substep": "admin-default-proposal-frontier-4",
   "completed_stages": ["0"],
   "skipped_stages": [],
   "next_action": {
     "type": "stage1_frontier",
-    "description": "等待用户拍板管理员委派与业务角色授权审批责任",
-    "question_ids": ["OQ-F09-05", "OQ-F09-11"],
+    "description": "等待用户拍板单管理员账号恢复、不可停用保护和成功标准",
+    "question_ids": ["OQ-F09-07", "OQ-F09-08", "OQ-F09-10"],
     "research_ids": []
   },
   "open_questions": [
-    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-07", "title": "最后一名有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-10", "title": "本地 Admin 忘记密码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-11", "title": "Admin 是业务角色授权审批人还是仅执行已审批配置", "kind": "decision", "category": "workflow", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"}
+    {"id": "OQ-F09-07", "title": "唯一有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-10", "title": "唯一 Admin 忘记密码或丢失动态码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"}
   ],
   "key_decisions_made": [
     {
@@ -212,6 +210,18 @@
       "decision": "本地 Admin 登录强制使用身份验证器动态码并生成恢复码",
       "stage": "1",
       "rationale": "用户接受本地高权限账号必须具备密码之外的第二道验证，降低密码泄露后的接管风险"
+    },
+    {
+      "id": "D-30",
+      "decision": "系统只保留首位 Admin，不允许该 Admin 在后台创建或委派其他 Admin",
+      "stage": "1",
+      "rationale": "用户选择单管理员模型，以减少高权限账号数量和委派攻击面；对应的单点失效由独立恢复机制处理"
+    },
+    {
+      "id": "D-31",
+      "decision": "事业部负责人审批运营和运营主管业务角色，Admin 仅执行已审批配置并记录审批人和审批依据",
+      "stage": "1",
+      "rationale": "用户确认延续业务审批与技术配置职责分离，避免 Admin 自行扩大业务访问权限"
     }
   ],
   "category": "saas",
