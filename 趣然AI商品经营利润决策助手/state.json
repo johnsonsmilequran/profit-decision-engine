@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:58:53Z",
+  "last_updated_at_utc": "2026-08-07T09:00:21Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -44,13 +44,13 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "4.6",
-  "current_substep": "mvp-observability-confirmation",
+  "current_substep": "mvp-completion-definition-confirmation",
   "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认授权关键时间点、10分钟首用指标、日常授权周期和30天价值复盘所需最小数据是否进入第一版；不建设分析大屏",
-    "askuserquestion_options": ["进入第一版（推荐）：用最小埋点验证系统是否真的更快可用", "后置：先完成授权能力，首版不验证10分钟目标或价值假设"]
+    "description": "确认第一版完成定义是否同时要求六项产品能力通过真实闭环验收，并满足身份属性、环境隔离、岗位联系、恢复通知与演练等生产上线门禁",
+    "askuserquestion_options": ["功能与上线门禁全部满足才算完成（推荐）：交付后可以真实使用", "功能代码完成即算完成：生产配置和演练另行处理"]
   },
   "mvp_boundary": {
     "status": "in_confirmation",
@@ -60,7 +60,7 @@
       {"id": "F09-SCOPE-03", "name": "身份/审批核验与唯一角色生命周期", "decision": "mvp"},
       {"id": "F09-SCOPE-04", "name": "两级恢复与非静默安全通知", "decision": "mvp"},
       {"id": "F09-SCOPE-05", "name": "不可变管理审计", "decision": "mvp"},
-      {"id": "F09-SCOPE-06", "name": "授权时效与价值观察", "decision": "pending"}
+      {"id": "F09-SCOPE-06", "name": "授权时效与价值观察", "decision": "mvp"}
     ],
     "completion_definition": null,
     "supplement_confirmation": "pending"
