@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:13:33Z",
+  "last_updated_at_utc": "2026-08-07T07:19:30Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "value_confirmation": {
@@ -22,23 +22,21 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "1",
-  "current_substep": "admin-default-proposal-frontier-2",
+  "current_substep": "admin-default-proposal-frontier-3",
   "completed_stages": ["0"],
   "skipped_stages": [],
   "next_action": {
     "type": "stage1_frontier",
-    "description": "等待用户拍板首位管理员初始化、Admin 业务数据可见范围、本地 Admin 二次验证要求",
-    "question_ids": ["OQ-F09-04", "OQ-F09-06", "OQ-F09-09"],
+    "description": "等待用户拍板管理员委派与业务角色授权审批责任",
+    "question_ids": ["OQ-F09-05", "OQ-F09-11"],
     "research_ids": []
   },
   "open_questions": [
-    {"id": "OQ-F09-04", "title": "首位管理员采用哪种安全初始化机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": ["OQ-F09-04"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-06", "title": "Admin 默认是否允许读取经营业务数据", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-07", "title": "最后一名有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": ["OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-09", "title": "本地 Admin 登录是否强制二次验证", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-10", "title": "本地 Admin 忘记密码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-04", "OQ-F09-09"], "owner": "user", "status": "pending_user"}
+    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-07", "title": "最后一名有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-10", "title": "本地 Admin 忘记密码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-05"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-11", "title": "Admin 是业务角色授权审批人还是仅执行已审批配置", "kind": "decision", "category": "workflow", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"}
   ],
   "key_decisions_made": [
     {
@@ -196,6 +194,24 @@
       "decision": "钉钉认证成功但没有有效业务角色的身份自动生成待审批申请",
       "stage": "1",
       "rationale": "用户明确选择先认证后申请，使空角色环境可由 Admin 在产品内完成授权闭环，同时不自动授予业务角色"
+    },
+    {
+      "id": "D-27",
+      "decision": "系统没有管理员时，通过部署配置的一次性初始化口令进入设置页创建首位管理员，成功后关闭初始化入口",
+      "stage": "1",
+      "rationale": "用户选择一次性初始化页面，在避免预置通用默认密码的同时提供无需直接操作数据库的首次可用路径"
+    },
+    {
+      "id": "D-28",
+      "decision": "Admin 默认不能读取经营业务数据，只有另行获得运营或运营主管角色后才能进入对应业务页面",
+      "stage": "1",
+      "rationale": "用户确认管理权限与业务数据权限最小化分离，避免高权限账号天然扩大经营数据可见范围"
+    },
+    {
+      "id": "D-29",
+      "decision": "本地 Admin 登录强制使用身份验证器动态码并生成恢复码",
+      "stage": "1",
+      "rationale": "用户接受本地高权限账号必须具备密码之外的第二道验证，降低密码泄露后的接管风险"
     }
   ],
   "category": "saas",
