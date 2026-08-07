@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T06:51:31Z",
+  "last_updated_at_utc": "2026-08-07T06:59:50Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "value_confirmation": {
@@ -21,16 +21,26 @@
   },
   "contract_revision": 10,
   "source_ids_changed": [],
-  "current_stage": "0",
-  "current_substep": "admin-feature-replay-confirmation",
-  "completed_stages": [],
+  "current_stage": "1",
+  "current_substep": "admin-default-proposal-frontier-1",
+  "completed_stages": ["0"],
   "skipped_stages": [],
   "next_action": {
-    "type": "user_decision",
-    "description": "等待用户确认 admin 管理后台增量 Feature 的阶段 0 需求回放是否准确",
-    "askuserquestion_options": ["理解准确，进入阶段 1", "需要修正或补充"]
+    "type": "stage1_frontier",
+    "description": "等待用户拍板 admin 认证方式、管理权限与业务角色关系、未授权身份进入待审批列表的方式",
+    "question_ids": ["OQ-F09-01", "OQ-F09-02", "OQ-F09-03"],
+    "research_ids": []
   },
-  "open_questions": [],
+  "open_questions": [
+    {"id": "OQ-F09-01", "title": "Admin 使用钉钉认证还是独立本地账号", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-02", "title": "Admin 管理权限是否与运营/主管业务角色正交", "kind": "decision", "category": "role", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-03", "title": "钉钉认证成功但无角色的身份如何进入待审批流程", "kind": "decision", "category": "workflow", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-04", "title": "首位管理员采用哪种安全初始化机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-01", "OQ-F09-02"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": ["OQ-F09-02", "OQ-F09-04"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-06", "title": "Admin 默认是否允许读取经营业务数据", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-02"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-07", "title": "最后一名有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": ["OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-03", "OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"}
+  ],
   "key_decisions_made": [
     {
       "id": "D-1",
