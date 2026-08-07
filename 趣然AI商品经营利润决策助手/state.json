@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:30:39Z",
+  "last_updated_at_utc": "2026-08-07T08:42:03Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -43,13 +43,14 @@
   },
   "contract_revision": 10,
   "source_ids_changed": [],
-  "current_stage": "4",
-  "current_substep": "admin-review-round3-challenge",
-  "completed_stages": ["0", "1", "1.9", "2", "3"],
+  "current_stage": "4.5",
+  "current_substep": "admin-v1-confirmation",
+  "completed_stages": ["0", "1", "1.9", "2", "3", "4"],
   "skipped_stages": [],
   "next_action": {
-    "type": "automatic_task",
-    "description": "工程、设计、商业、战略阅读 V0.5 与全部首轮意见，进行跨角色相互 challenge"
+    "type": "user_decision",
+    "description": "确认 proposal-v1.md 的方向，或要求四方再争论/调整大方向",
+    "askuserquestion_options": ["V1方向确认，进入MVP逐项划分（推荐）", "四方再争论一轮", "调整大方向"]
   },
   "open_questions": [],
   "key_decisions_made": [
