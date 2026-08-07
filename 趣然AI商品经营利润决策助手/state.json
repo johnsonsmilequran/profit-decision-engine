@@ -2,9 +2,16 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:30:44Z",
+  "last_updated_at_utc": "2026-08-07T07:33:27Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
+  "technical_feasibility": {
+    "status": "awaiting_confirmation",
+    "decision": null,
+    "completed_at_utc": "2026-08-07T07:33:27Z",
+    "evidence": "evidence/technical-feasibility.md",
+    "summary": "现有架构内可实现且无需收缩范围；Admin 必须与业务身份、业务会话和业务审计物理分离"
+  },
   "value_confirmation": {
     "status": "pending",
     "decision": null,
@@ -22,12 +29,13 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "1.9",
-  "current_substep": "admin-technical-feasibility-precheck",
+  "current_substep": "admin-technical-feasibility-confirmation",
   "completed_stages": ["0", "1"],
   "skipped_stages": [],
   "next_action": {
-    "type": "technical_feasibility_precheck",
-    "description": "核对现有 Go/React/PostgreSQL 认证、会话、角色与部署配置，输出 F09 技术可行性证据"
+    "type": "user_decision",
+    "description": "等待用户确认 F09 技术可行性约束与无范围收缩结论",
+    "askuserquestion_options": ["确认可行性结论，进入阶段 2 价值确认", "需要调整技术约束或产品范围"]
   },
   "open_questions": [],
   "key_decisions_made": [
@@ -244,7 +252,7 @@
     "debate_log": "debate-log.md",
     "assumptions": "assumptions.md",
     "conversation": "conversation.md",
-    "evidence": ["evidence/商品链接字段核验.md"],
+    "evidence": ["evidence/商品链接字段核验.md", "evidence/technical-feasibility.md"],
     "drafts": [
       "output/PRD-V0.md",
       "drafts/r0-chapter-negotiation.md",

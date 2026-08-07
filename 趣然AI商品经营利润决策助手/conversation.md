@@ -216,3 +216,13 @@
 - 已生成 `scene-anchor.md`，汇总目标用户、真实场景、角色边界、首版范围、系统依赖、安全约束、成功标准和稳定 ID 注册表。
 - 用户确认共同理解无遗漏，阶段 1 人工门禁已通过。
 - 项目使用 `tech-constrained` 模式，现进入阶段 1 后的技术可行性预检；完成并确认冲突结论后才能进入阶段 2 价值论证。
+
+## Admin 管理后台增量 Feature · 技术可行性预检
+
+- 现有 `business_role` 仅允许 `operations/supervisor`，且 `user_session` 必须引用有效 `role_mapping`；因此 Admin 不能作为第三种业务角色，也不能复用业务会话。
+- 可行方案是在同一 Go API 与 PostgreSQL 内增加独立 Admin 账号、会话、待审批身份和不可变管理审计模型；业务 API 继续只接受钉钉业务会话，Admin API 只接受独立 Admin 会话。
+- 钉钉回调已在创建业务会话前取得稳定 `actor_ref`，可在无有效角色时按该键幂等写入待审批身份，再保持拒绝业务访问。
+- 初始化、恢复和 TOTP 需要新增部署秘密、哈希/加密存储、一次性消费记录、并发单例约束、CSRF 防护与会话全量撤销；现有 Go/PostgreSQL/React 技术栈均可支撑。
+- 现有 `business_event` 绑定经营任务，不适合管理审计；需新增独立、禁止更新删除的 `admin_audit_event`。
+- 当前钉钉客户端只保留 `unionId`，待审批列表若要显示姓名，需扩展当前用户响应字段或提供安全降级显示；该点不阻塞核心授权闭环。
+- 结论：F09 可在现有架构内实现，无需收缩已确认产品范围；详细证据见 `evidence/technical-feasibility.md`，当前等待用户确认该约束结论。
