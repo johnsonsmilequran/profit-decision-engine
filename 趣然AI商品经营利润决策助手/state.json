@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:42:03Z",
+  "last_updated_at_utc": "2026-08-07T08:46:45Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -36,21 +36,34 @@
   "stage_confirmations": {
     "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T07:30:44Z"},
     "stage3_research_sufficiency": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:02:34Z"},
-    "stage4_5_v1": {"status": "pending", "confirmed_at_utc": null},
+    "stage4_5_v1": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:46:45Z"},
     "stage4_6_mvp": {"status": "pending", "confirmed_at_utc": null},
     "stage5_formal_prd": {"status": "pending", "confirmed_at_utc": null},
     "stage6_ppt": {"status": "pending", "confirmed_at_utc": null}
   },
   "contract_revision": 10,
   "source_ids_changed": [],
-  "current_stage": "4.5",
-  "current_substep": "admin-v1-confirmation",
-  "completed_stages": ["0", "1", "1.9", "2", "3", "4"],
+  "current_stage": "4.6",
+  "current_substep": "mvp-admin-bootstrap-auth-confirmation",
+  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认 proposal-v1.md 的方向，或要求四方再争论/调整大方向",
-    "askuserquestion_options": ["V1方向确认，进入MVP逐项划分（推荐）", "四方再争论一轮", "调整大方向"]
+    "description": "确认唯一 Admin 初始化与独立密码加 TOTP 登录是否进入第一版最小可用范围",
+    "askuserquestion_options": ["进入第一版（推荐）：没有它就没有可用的管理入口", "后置：第一版将无法通过产品内 Admin 完成授权"]
+  },
+  "mvp_boundary": {
+    "status": "in_confirmation",
+    "scope_items": [
+      {"id": "F09-SCOPE-01", "name": "唯一 Admin 初始化与独立登录", "decision": "pending"},
+      {"id": "F09-SCOPE-02", "name": "待处理用户状态与责任承接", "decision": "pending"},
+      {"id": "F09-SCOPE-03", "name": "身份/审批核验与唯一角色生命周期", "decision": "pending"},
+      {"id": "F09-SCOPE-04", "name": "两级恢复与非静默安全通知", "decision": "pending"},
+      {"id": "F09-SCOPE-05", "name": "不可变管理审计", "decision": "pending"},
+      {"id": "F09-SCOPE-06", "name": "授权时效与价值观察", "decision": "pending"}
+    ],
+    "completion_definition": null,
+    "supplement_confirmation": "pending"
   },
   "open_questions": [],
   "key_decisions_made": [
