@@ -7,16 +7,28 @@
 ## 工程命令
 
 - 安装：`make install`
-- 前端开发：`cd web && npm run dev`
-- 数据迁移：`make migrate`（需要 `DATABASE_URL`）
-- API / Worker：`make dev-api` / `make dev-worker`（Compose 数据库默认在本机 `55432` 端口可达）
+- 开发基础设施：复制 `infra/.env.example` 为 `infra/.env`，执行 `make infra-up`；该入口只启动 PostgreSQL，不构建或启动应用服务
+- 开发应用配置：复制 `.env.development.example` 为 `.env.development`
+- 数据迁移：`make migrate`（固定读取 `.env.development`）
+- API / Worker：`make dev-api` / `make dev-worker`（本机 Go 进程，连接独立开发 PostgreSQL）
+- 前端开发：`make dev-web`（本机 Vite 开发服务）
 - 校验：`make lint typecheck test build`
 - 真实数据库集成测试：先迁移 PostgreSQL，再执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" go test -race ./...`
 - 真实 XLSX 批次集成测试：额外设置 `TEST_XLSX_PATH`，执行 `cd backend && TEST_DATABASE_URL="$DATABASE_URL" TEST_XLSX_PATH="/绝对路径/商品链接.xlsx" go test -v ./internal/batch`
 - OpenAPI 类型同步：`cd web && npm run generate:api`（契约源为 `openapi/openapi.yaml`）
-- Compose：复制 `.env.example` 为 `.env`，填入真实环境值后执行 `make compose-up`
+- 线上部署：复制根 `.env.example` 为 `.env`，由运维填入真实部署值后执行 `make prod-up`
 - 备份：`BACKUP_DESTINATION=/受控异机目录 COMPOSE_PROJECT_NAME=profit-decision make backup`，生成数据库、XLSX、manifest 与 SHA256 校验和快照
 - 隔离恢复：先以相同代码和迁移建立空 Compose 项目，再执行 `RESTORE_SNAPSHOT=/绝对路径/快照 COMPOSE_PROJECT_NAME=目标项目 make restore`；目标数据库或文件卷非空时命令拒绝执行
+
+### 环境边界
+
+| 环境 | 配置入口 | 运行内容 | 数据边界 |
+| --- | --- | --- | --- |
+| 开发基础设施 | `infra/compose.yaml` + `infra/.env` | 仅 PostgreSQL | Compose 项目 `profit-decision-dev-infra`，独立开发卷 |
+| 开发应用 | `.env.development` + `make dev-*` | 本机 Vite、Go API、Go Worker | 连接开发基础设施，不读取线上 `.env` |
+| 线上部署 | 根 `compose.yaml` + 根 `.env` | PostgreSQL、迁移、API、Worker、Web | Compose 项目 `profit-decision`，线上持久卷与部署密钥 |
+
+`make compose-up` 已禁用，因为该名称无法表达环境；必须明确使用 `make infra-up` 或 `make prod-up`。开发 infra 与线上部署不共享 Compose 项目名、数据卷或环境文件。
 
 认证只接受钉钉 OAuth。角色映射由运维依据事业部负责人审批写入 PostgreSQL `role_mapping`；应用没有默认账号、密码登录、共享账号或角色选择入口。缺少钉钉配置时认证入口保持不可用并进入受控恢复页，不会降级放行。
 
@@ -99,9 +111,10 @@ AI 解读由 Worker 通过 `LITELLM_BASE_URL`、`LITELLM_API_KEY` 和 `LITELLM_M
 ├── backend/                         # Go API、Worker、迁移与领域模块
 ├── deploy/                          # Nginx 生产同源入口
 ├── doc/                             # 跨会话项目纪要
+├── infra/                           # 独立开发基础设施 Compose 与配置模板
 ├── openapi/                         # 版本化 API 契约
 ├── web/                             # React/TypeScript/Vite PC Web
-├── compose.yaml                     # PostgreSQL、迁移、API、Worker、Web
+├── compose.yaml                     # 线上 PostgreSQL、迁移、API、Worker、Web 部署栈
 ├── 趣然AI商品经营利润决策助手/       # 产品契约、设计、测试、证据与补充应用产物
 ├── CONTRIBUTING.md                  # 贡献流程
 └── 仓库协作设置指引.md               # GitHub 分支保护与 CI 启用指引

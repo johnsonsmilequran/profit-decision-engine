@@ -29,7 +29,6 @@ jobs:
       TEST_DATABASE_URL: postgres://profit_decision:ci-database-password@127.0.0.1:5432/profit_decision_test?sslmode=disable
       DATABASE_URL: postgres://profit_decision:ci-database-password@127.0.0.1:5432/profit_decision_test?sslmode=disable
       POSTGRES_PASSWORD: ci-compose-password
-      POSTGRES_PORT: "55439"
       PUBLIC_BASE_URL: http://127.0.0.1:18093
       WEB_PORT: "18093"
       COOKIE_SECURE: "false"
