@@ -2,12 +2,13 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:36:44Z",
+  "last_updated_at_utc": "2026-08-07T07:42:38Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
-    "status": "adjustment_requested",
-    "decision": "需要调整",
+    "status": "confirmed",
+    "decision": "确认可行且无需调整",
+    "confirmed_at_utc": "2026-08-07T07:42:38Z",
     "completed_at_utc": "2026-08-07T07:33:27Z",
     "evidence": "evidence/technical-feasibility.md",
     "summary": "现有架构内可实现且无需收缩范围；Admin 必须与业务身份、业务会话和业务审计物理分离"
@@ -17,6 +18,13 @@
     "decision": null,
     "confirmed_at_utc": null,
     "basis": null
+  },
+  "value_hypothesis": {
+    "status": "in_progress",
+    "beneficiary": null,
+    "current_cost": null,
+    "affected_scale": null,
+    "estimated_value": null
   },
   "stage_confirmations": {
     "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T07:30:44Z"},
@@ -28,19 +36,16 @@
   },
   "contract_revision": 10,
   "source_ids_changed": [],
-  "current_stage": "1.9",
-  "current_substep": "admin-technical-feasibility-adjustment-intake",
-  "completed_stages": ["0", "1"],
+  "current_stage": "2",
+  "current_substep": "admin-value-beneficiary-confirmation",
+  "completed_stages": ["0", "1", "1.9"],
   "skipped_stages": [],
   "next_action": {
-    "type": "stage1_frontier",
-    "description": "等待用户说明希望调整的具体技术约束或产品范围",
-    "question_ids": ["OQ-F09-12"],
-    "research_ids": []
+    "type": "user_decision",
+    "description": "确认 F09 价值主要归因于解锁事业部使用整套经营决策助手，还是仅节省运维配置时间",
+    "askuserquestion_options": ["事业部/公司经营价值（推荐）", "运维配置效率", "其他口径"]
   },
-  "open_questions": [
-    {"id": "OQ-F09-12", "title": "用户希望调整技术可行性方案中的哪项约束或产品范围", "kind": "fact", "category": "technical_feasibility", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user", "evidence_needed": "指出需要修改的具体结论、约束或范围及期望结果", "acceptance_threshold": "能够唯一识别受影响的技术或产品分支", "due_by": "用户下一次回复"}
-  ],
+  "open_questions": [],
   "key_decisions_made": [
     {
       "id": "D-1",
