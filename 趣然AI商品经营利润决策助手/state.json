@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:22:36Z",
+  "last_updated_at_utc": "2026-08-07T07:25:27Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "value_confirmation": {
@@ -22,20 +22,15 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "1",
-  "current_substep": "admin-default-proposal-frontier-4",
+  "current_substep": "admin-shared-understanding-confirmation",
   "completed_stages": ["0"],
   "skipped_stages": [],
   "next_action": {
-    "type": "stage1_frontier",
-    "description": "等待用户拍板单管理员账号恢复、不可停用保护和成功标准",
-    "question_ids": ["OQ-F09-07", "OQ-F09-08", "OQ-F09-10"],
-    "research_ids": []
+    "type": "user_decision",
+    "description": "等待用户确认 Admin 增量 Feature 的阶段 1 共同理解",
+    "askuserquestion_options": ["确认无遗漏，进入技术可行性预检", "需要调整"]
   },
-  "open_questions": [
-    {"id": "OQ-F09-07", "title": "唯一有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-10", "title": "唯一 Admin 忘记密码或丢失动态码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"}
-  ],
+  "open_questions": [],
   "key_decisions_made": [
     {
       "id": "D-1",
@@ -222,11 +217,29 @@
       "decision": "事业部负责人审批运营和运营主管业务角色，Admin 仅执行已审批配置并记录审批人和审批依据",
       "stage": "1",
       "rationale": "用户确认延续业务审批与技术配置职责分离，避免 Admin 自行扩大业务访问权限"
+    },
+    {
+      "id": "D-32",
+      "decision": "唯一 Admin 无法登录时，由运维配置一次性恢复口令，通过恢复页面重设密码和动态码，撤销旧会话并销毁口令",
+      "stage": "1",
+      "rationale": "用户选择可审计的一次性恢复入口，解决单管理员模型的凭据丢失风险，同时避免常驻后门"
+    },
+    {
+      "id": "D-33",
+      "decision": "唯一 Admin 不允许在管理后台停用或删除自己",
+      "stage": "1",
+      "rationale": "用户选择阻止产品内自锁死，管理员凭据变更统一走受控恢复流程"
+    },
+    {
+      "id": "D-34",
+      "decision": "首次初始化至已审批钉钉用户获得正确业务角色并进入工作台不超过 10 分钟，所有高权限操作可审计且错误业务授权为 0",
+      "stage": "1",
+      "rationale": "用户确认可观察的首用闭环时间目标与授权安全护栏，用于判断 F09 是否解决空角色环境不可用问题"
     }
   ],
   "category": "saas",
   "deliverables": {
-    "scene_anchor": null,
+    "scene_anchor": "scene-anchor.md",
     "proposal_v0": null,
     "proposal_v1": null,
     "debate_log": "debate-log.md",
