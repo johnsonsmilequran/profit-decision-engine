@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T06:59:50Z",
+  "last_updated_at_utc": "2026-08-07T07:13:33Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "value_confirmation": {
@@ -22,24 +22,23 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "1",
-  "current_substep": "admin-default-proposal-frontier-1",
+  "current_substep": "admin-default-proposal-frontier-2",
   "completed_stages": ["0"],
   "skipped_stages": [],
   "next_action": {
     "type": "stage1_frontier",
-    "description": "等待用户拍板 admin 认证方式、管理权限与业务角色关系、未授权身份进入待审批列表的方式",
-    "question_ids": ["OQ-F09-01", "OQ-F09-02", "OQ-F09-03"],
+    "description": "等待用户拍板首位管理员初始化、Admin 业务数据可见范围、本地 Admin 二次验证要求",
+    "question_ids": ["OQ-F09-04", "OQ-F09-06", "OQ-F09-09"],
     "research_ids": []
   },
   "open_questions": [
-    {"id": "OQ-F09-01", "title": "Admin 使用钉钉认证还是独立本地账号", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-02", "title": "Admin 管理权限是否与运营/主管业务角色正交", "kind": "decision", "category": "role", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-03", "title": "钉钉认证成功但无角色的身份如何进入待审批流程", "kind": "decision", "category": "workflow", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-04", "title": "首位管理员采用哪种安全初始化机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-01", "OQ-F09-02"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": ["OQ-F09-02", "OQ-F09-04"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-06", "title": "Admin 默认是否允许读取经营业务数据", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-02"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-04", "title": "首位管理员采用哪种安全初始化机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-05", "title": "管理员能否授予和撤销其他管理员", "kind": "decision", "category": "scope", "priority": "P1", "depends_on": ["OQ-F09-04"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-06", "title": "Admin 默认是否允许读取经营业务数据", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
     {"id": "OQ-F09-07", "title": "最后一名有效管理员的停用保护规则", "kind": "decision", "category": "security", "priority": "P1", "depends_on": ["OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"},
-    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-03", "OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"}
+    {"id": "OQ-F09-08", "title": "Admin 管理后台成功标准与验证时间窗", "kind": "decision", "category": "success_metric", "priority": "P1", "depends_on": ["OQ-F09-04", "OQ-F09-05"], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-09", "title": "本地 Admin 登录是否强制二次验证", "kind": "decision", "category": "security", "priority": "P0", "depends_on": [], "owner": "user", "status": "pending_user"},
+    {"id": "OQ-F09-10", "title": "本地 Admin 忘记密码时采用哪种恢复机制", "kind": "decision", "category": "security", "priority": "P0", "depends_on": ["OQ-F09-04", "OQ-F09-09"], "owner": "user", "status": "pending_user"}
   ],
   "key_decisions_made": [
     {
@@ -179,6 +178,24 @@
       "decision": "后端采用同一 Go Module 的 Go API 与 Go Worker，前端采用 React + TypeScript + Vite，通过同源 Nginx 和版本化 OpenAPI 契约协作",
       "stage": "design-master",
       "rationale": "用户明确指定 Go 后端与 React 前端；该结构保留模块化单体、异步任务和轻量单机部署，同时用契约生成与测试控制 Go/TypeScript 字段漂移"
+    },
+    {
+      "id": "D-24",
+      "decision": "Admin 使用独立本地用户名密码登录，不依赖钉钉认证",
+      "stage": "1",
+      "rationale": "用户明确选择本地 Admin 认证入口；该决定新增独立认证与凭据安全边界"
+    },
+    {
+      "id": "D-25",
+      "decision": "Admin 管理权限与运营、运营主管业务角色正交",
+      "stage": "1",
+      "rationale": "用户明确选择管理能力与业务数据权限分离，管理员是否能处理经营业务由业务角色另行决定"
+    },
+    {
+      "id": "D-26",
+      "decision": "钉钉认证成功但没有有效业务角色的身份自动生成待审批申请",
+      "stage": "1",
+      "rationale": "用户明确选择先认证后申请，使空角色环境可由 Admin 在产品内完成授权闭环，同时不自动授予业务角色"
     }
   ],
   "category": "saas",
