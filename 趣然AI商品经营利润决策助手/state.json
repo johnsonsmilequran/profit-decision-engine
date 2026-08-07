@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:49:57Z",
+  "last_updated_at_utc": "2026-08-07T08:52:58Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -44,19 +44,19 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "4.6",
-  "current_substep": "mvp-pending-identity-confirmation",
+  "current_substep": "mvp-role-governance-confirmation",
   "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认无角色用户的待处理状态、具体责任岗位与联系指引、Admin 首页新申请和积压可见性是否进入第一版",
-    "askuserquestion_options": ["进入第一版（推荐）：避免把登录报错改成无人处理的新死路", "后置：第一版只提供管理入口，待授权用户仍需线下排查"]
+    "description": "确认可靠身份核验、结构化审批依据和唯一业务角色新增/变更/停用/恢复是否进入第一版",
+    "askuserquestion_options": ["进入第一版（推荐）：这是 Admin 真正解决无角色登录阻塞的核心能力", "后置：第一版只能看申请，不能安全配置业务角色"]
   },
   "mvp_boundary": {
     "status": "in_confirmation",
     "scope_items": [
       {"id": "F09-SCOPE-01", "name": "唯一 Admin 初始化与独立登录", "decision": "mvp"},
-      {"id": "F09-SCOPE-02", "name": "待处理用户状态与责任承接", "decision": "pending"},
+      {"id": "F09-SCOPE-02", "name": "待处理用户状态与责任承接", "decision": "mvp"},
       {"id": "F09-SCOPE-03", "name": "身份/审批核验与唯一角色生命周期", "decision": "pending"},
       {"id": "F09-SCOPE-04", "name": "两级恢复与非静默安全通知", "decision": "pending"},
       {"id": "F09-SCOPE-05", "name": "不可变管理审计", "decision": "pending"},
