@@ -2,9 +2,9 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-04T07:20:07Z",
+  "last_updated_at_utc": "2026-08-07T06:51:31Z",
   "work_type": "feature",
-  "workflow_mode": "standard",
+  "workflow_mode": "tech-constrained",
   "value_confirmation": {
     "status": "pending",
     "decision": null,
@@ -12,22 +12,23 @@
     "basis": null
   },
   "stage_confirmations": {
-    "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-03T08:59:04Z"},
+    "stage1_shared_understanding": {"status": "pending", "confirmed_at_utc": null},
     "stage3_research_sufficiency": {"status": "pending", "confirmed_at_utc": null},
     "stage4_5_v1": {"status": "pending", "confirmed_at_utc": null},
     "stage4_6_mvp": {"status": "pending", "confirmed_at_utc": null},
-    "stage5_formal_prd": {"status": "completed", "confirmed_at_utc": "2026-08-03T10:35:43Z"},
-    "stage6_ppt": {"status": "completed", "confirmed_at_utc": "2026-08-03T11:06:24Z"}
+    "stage5_formal_prd": {"status": "pending", "confirmed_at_utc": null},
+    "stage6_ppt": {"status": "pending", "confirmed_at_utc": null}
   },
-  "contract_revision": 8,
-  "source_ids_changed": ["REQ-F05-05", "AC-F05-09"],
-  "current_stage": "tdd-master",
-  "current_substep": "go-react-technical-baseline-synchronized",
-  "completed_stages": ["0", "1", "5", "6"],
-  "skipped_stages": ["2", "3", "4"],
+  "contract_revision": 10,
+  "source_ids_changed": [],
+  "current_stage": "0",
+  "current_substep": "admin-feature-replay-confirmation",
+  "completed_stages": [],
+  "skipped_stages": [],
   "next_action": {
-    "type": "ready_for_coding_goal",
-    "description": "Go API + Go Worker + React/TypeScript/Vite 技术基线已同步到设计与 TDD；Coding Agent 开工前必须先按当前契约建立全量 pending 结果台账，再按最小闭环实现并在发布候选阶段提供本轮真实证据"
+    "type": "user_decision",
+    "description": "等待用户确认 admin 管理后台增量 Feature 的阶段 0 需求回放是否准确",
+    "askuserquestion_options": ["理解准确，进入阶段 1", "需要修正或补充"]
   },
   "open_questions": [],
   "key_decisions_made": [
