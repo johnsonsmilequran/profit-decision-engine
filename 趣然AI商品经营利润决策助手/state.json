@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:46:45Z",
+  "last_updated_at_utc": "2026-08-07T08:49:57Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -44,18 +44,18 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "4.6",
-  "current_substep": "mvp-admin-bootstrap-auth-confirmation",
+  "current_substep": "mvp-pending-identity-confirmation",
   "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认唯一 Admin 初始化与独立密码加 TOTP 登录是否进入第一版最小可用范围",
-    "askuserquestion_options": ["进入第一版（推荐）：没有它就没有可用的管理入口", "后置：第一版将无法通过产品内 Admin 完成授权"]
+    "description": "确认无角色用户的待处理状态、具体责任岗位与联系指引、Admin 首页新申请和积压可见性是否进入第一版",
+    "askuserquestion_options": ["进入第一版（推荐）：避免把登录报错改成无人处理的新死路", "后置：第一版只提供管理入口，待授权用户仍需线下排查"]
   },
   "mvp_boundary": {
     "status": "in_confirmation",
     "scope_items": [
-      {"id": "F09-SCOPE-01", "name": "唯一 Admin 初始化与独立登录", "decision": "pending"},
+      {"id": "F09-SCOPE-01", "name": "唯一 Admin 初始化与独立登录", "decision": "mvp"},
       {"id": "F09-SCOPE-02", "name": "待处理用户状态与责任承接", "decision": "pending"},
       {"id": "F09-SCOPE-03", "name": "身份/审批核验与唯一角色生命周期", "decision": "pending"},
       {"id": "F09-SCOPE-04", "name": "两级恢复与非静默安全通知", "decision": "pending"},
