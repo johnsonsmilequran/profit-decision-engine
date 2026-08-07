@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T07:45:22Z",
+  "last_updated_at_utc": "2026-08-07T07:47:24Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -22,7 +22,7 @@
   "value_hypothesis": {
     "status": "in_progress",
     "beneficiary": "事业部/公司：F09 解锁整套经营决策助手的经营价值",
-    "current_cost": null,
+    "current_cost": "每个类似延误问题约6万元直接利润损失；约10万元库存占用仅作风险佐证，不重复相加",
     "affected_scale": null,
     "estimated_value": null
   },
@@ -37,13 +37,13 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "2",
-  "current_substep": "admin-value-current-cost-confirmation",
+  "current_substep": "admin-value-affected-scale-confirmation",
   "completed_stages": ["0", "1", "1.9"],
   "skipped_stages": [],
   "next_action": {
     "type": "user_decision",
-    "description": "确认每个类似经营问题被延误时的当前代价基线；避免把直接利润损失与库存资金占用重复相加",
-    "askuserquestion_options": ["6万元/次直接利润损失，10万元库存占用仅作风险佐证（推荐）", "10万元/次库存占用作为主要代价", "其他金额与口径"]
+    "description": "确认过去12个月发生或险些发生的类似经营问题延误数量，以核算年度影响规模",
+    "askuserquestion_options": ["按过去12个月实际数量核算（推荐，需提供数量）", "暂无记录，先按12次/年的假设值验证", "只计算达到约200万元价值所需的数量门槛"]
   },
   "open_questions": [],
   "key_decisions_made": [
