@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T08:02:34Z",
+  "last_updated_at_utc": "2026-08-07T08:13:17Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -44,12 +44,12 @@
   "contract_revision": 10,
   "source_ids_changed": [],
   "current_stage": "4",
-  "current_substep": "admin-v0-drafting",
+  "current_substep": "admin-review-round1",
   "completed_stages": ["0", "1", "1.9", "2", "3"],
   "skipped_stages": [],
   "next_action": {
     "type": "automatic_task",
-    "description": "Lead PM 基于场景锚点、技术证据、竞品调研和价值假设形成管理员方案 V0，并进入四方独立评审"
+    "description": "工程、设计、商业、战略四方基于 proposal-v0.md 独立评审，不互看首轮意见"
   },
   "open_questions": [],
   "key_decisions_made": [
