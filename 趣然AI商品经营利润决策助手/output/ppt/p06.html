@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>整条建议审核，分动作执行</title>
+  <title>无角色用户授权路径</title>
   <style>
-    :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 6px;
-      --radius-md: 12px;
-    }
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --surface-2: #eef1ec;
+  --ink: #101713;
+  --muted: #657069;
+  --line: #d8ded9;
+  --accent: #126b4d;
+  --accent-2: #dceee6;
+  --success: #23845d;
+  --warning: #b56a19;
+  --danger: #b23a3a;
+  --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+  --radius-sm: 14px;
+  --radius-md: 24px;
+  --radius-lg: 38px;
+}
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
-      background: var(--panel);
-      color: var(--ink);
-      font-family: var(--font);
       overflow-x: hidden;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
     }
     .stage {
       position: relative;
@@ -35,186 +40,190 @@
       transform-origin: top left;
       background: var(--bg);
     }
+    .stage::after {
+      content: "";
+      position: absolute;
+      width: 620px;
+      height: 620px;
+      left: -390px;
+      bottom: -390px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+    }
     .slide {
+      position: relative;
+      z-index: 1;
       height: 100%;
-      padding: 72px 96px 42px;
+      padding: 68px 96px 38px;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 34px;
+      gap: 30px;
     }
-    .chapter {
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 70px;
+    }
+    .eyebrow {
       margin: 0 0 14px;
-      color: var(--accent-strong);
+      color: var(--accent);
       font-size: 18px;
       line-height: 1;
-      font-weight: 750;
-      letter-spacing: .18em;
+      font-weight: 700;
+      letter-spacing: .16em;
     }
     h1 {
-      max-width: 1540px;
       margin: 0;
-      font-size: 68px;
+      max-width: 1420px;
+      font-size: 66px;
       line-height: 1.08;
       letter-spacing: -.035em;
       font-weight: 760;
     }
+    .identity-equation {
+      padding: 18px 0 8px 28px;
+      border-left: 2px solid var(--accent);
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1.45;
+      white-space: nowrap;
+    }
+    .identity-equation strong {
+      color: var(--accent);
+      font-size: 32px;
+    }
     .content {
       min-height: 0;
       display: grid;
-      grid-template-rows: 1fr 186px;
+      grid-template-rows: 492px 170px;
       gap: 26px;
     }
-    .process {
-      min-height: 0;
+    .journey {
+      position: relative;
       display: grid;
-      grid-template-columns: 220px 42px 286px 42px 304px 42px 438px 42px 220px;
-      align-items: center;
-      justify-content: space-between;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 54px 32px 30px;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
-    .arrow {
+    .rail {
+      position: absolute;
+      left: 98px;
+      right: 98px;
+      top: 103px;
+      height: 4px;
+      background: var(--line);
+    }
+    .step {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      padding: 0 18px 22px;
+      border-bottom: 5px solid var(--line);
+    }
+    .step.external { border-bottom-color: var(--warning); }
+    .step.admin { border-bottom-color: var(--accent); }
+    .step.done { border-bottom-color: var(--success); }
+    .step-no {
+      width: 56px;
+      height: 56px;
       display: grid;
       place-items: center;
-      color: var(--accent-strong);
-      font-size: 34px;
-      font-weight: 700;
-    }
-    .node {
-      min-height: 300px;
-      padding: 26px;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-    }
-    .node.approval {
-      border: 3px solid var(--accent-strong);
-      background: var(--accent);
-    }
-    .step-no {
-      color: var(--accent-strong);
-      font-size: 18px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--accent);
+      font-size: 20px;
       line-height: 1;
       font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .external .step-no {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+    .done .step-no {
+      border-color: var(--success);
+      background: var(--accent-2);
+      color: var(--success);
+    }
+    .owner {
+      margin: 34px 0 11px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 700;
       letter-spacing: .12em;
     }
-    .approval .step-no { color: var(--ink); }
-    .node h2 {
-      margin: 44px 0 12px;
-      font-size: 31px;
+    .external .owner { color: var(--warning); }
+    .admin .owner { color: var(--accent); }
+    .done .owner { color: var(--success); }
+    .step h2 {
+      margin: 0 0 12px;
+      font-size: 30px;
       line-height: 1.18;
       font-weight: 740;
     }
-    .node p {
+    .step p {
       margin: 0;
       color: var(--muted);
-      font-size: 23px;
-      line-height: 1.42;
+      font-size: 22px;
+      line-height: 1.48;
     }
-    .approval p { color: var(--ink); }
-    .approval-mark {
-      margin-top: auto;
-      padding-top: 17px;
-      border-top: 1px solid var(--accent-strong);
+    .state-band {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      align-items: center;
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+    .state-title {
+      padding-right: 34px;
+    }
+    .state-title strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+    .state-title span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
       font-size: 21px;
       line-height: 1.3;
-      font-weight: 760;
-    }
-    .node.lanes {
-      padding: 22px;
-    }
-    .lanes h2 {
-      margin: 18px 0 16px;
-    }
-    .lane-grid {
-      margin-top: auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .lane {
-      min-height: 138px;
-      padding: 17px;
-      border-top: 6px solid var(--accent-strong);
-      background: var(--panel);
-    }
-    .lane b {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 23px;
-      line-height: 1.1;
-    }
-    .lane span {
-      color: var(--muted);
-      font-size: 19px;
-      line-height: 1.35;
-    }
-    .controls {
-      display: grid;
-      grid-template-columns: 1.25fr 1fr;
-      gap: 24px;
-    }
-    .atomic,
-    .states {
-      min-width: 0;
-      padding: 26px 30px;
-      border-radius: var(--radius-md);
-    }
-    .atomic {
-      display: grid;
-      grid-template-columns: 170px 1fr;
-      align-items: center;
-      background: var(--accent);
-    }
-    .control-label {
-      font-size: 19px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: .12em;
-    }
-    .atomic-rule {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 20px;
-    }
-    .atomic-rule strong {
-      font-size: 31px;
-      line-height: 1.18;
-    }
-    .atomic-rule i {
-      font-style: normal;
-      color: var(--accent-strong);
-      font-size: 32px;
-      font-weight: 800;
-    }
-    .atomic-rule span {
-      grid-column: 1 / -1;
-      color: var(--muted);
-      font-size: 20px;
-      line-height: 1.25;
     }
     .states {
-      border: 1px solid var(--rule);
-      background: var(--bg);
-    }
-    .state-grid {
-      margin-top: 22px;
+      height: 100%;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
     .state {
-      padding: 0 18px;
-      border-left: 1px solid var(--rule);
+      position: relative;
+      padding: 31px 24px 22px;
+      border-left: 1px solid var(--line);
     }
-    .state:first-child {
-      padding-left: 0;
-      border-left: 0;
+    .state::before {
+      content: "";
+      display: block;
+      width: 12px;
+      height: 12px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      background: var(--line);
     }
+    .state.current::before { background: var(--accent); }
+    .state.success::before { background: var(--success); }
+    .state.stop::before { background: var(--danger); }
+    .state.conflict::before { background: var(--warning); }
     .state b {
       display: block;
       font-size: 23px;
-      line-height: 1.15;
+      line-height: 1.25;
+      font-weight: 720;
     }
     .state span {
       display: block;
@@ -224,118 +233,119 @@
       line-height: 1.2;
     }
     .footer {
-      height: 44px;
+      min-height: 46px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
       display: grid;
       grid-template-columns: 1fr auto auto;
-      align-items: end;
-      gap: 26px;
-      border-top: 1px solid var(--rule);
+      align-items: center;
+      gap: 28px;
       color: var(--muted);
       font-size: 18px;
+      line-height: 1;
     }
-    .footer-brand { padding-top: 14px; }
     .page-no {
-      padding-top: 14px;
       color: var(--ink);
+      font-size: 22px;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
     .nav {
       display: flex;
-      gap: 8px;
-      padding-top: 8px;
+      align-items: center;
+      gap: 18px;
     }
     .nav a {
-      width: 46px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      color: var(--ink);
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 700;
       text-decoration: none;
-      font-size: 20px;
-      line-height: 1;
     }
+    .nav-separator { color: var(--line); }
   </style>
 </head>
 <body>
   <div class="stage">
     <main class="slide">
-      <header>
-        <p class="chapter">PRODUCT DESIGN / 02</p>
-        <h1>整条建议只审核一次，动作按角色分开执行</h1>
+      <header class="header">
+        <div>
+          <p class="eyebrow">PRODUCT DESIGN · AUTHORIZATION</p>
+          <h1>钉钉确认“你是谁”，产品决定“你能做什么”</h1>
+        </div>
+        <div class="identity-equation" aria-label="身份与权限的关系">
+          身份认证 <strong>≠</strong> 业务授权
+        </div>
       </header>
 
-      <section class="content" aria-label="整体审核与分动作执行流程">
-        <div class="process">
-          <article class="node">
-            <span class="step-no">01</span>
-            <h2>导入校验</h2>
-            <p>读取 SPU 经营表</p>
-          </article>
-          <div class="arrow" aria-hidden="true">→</div>
+      <section class="content" aria-label="从钉钉认证到正确工作台的六段授权流程">
+        <div class="journey">
+          <div class="rail" aria-hidden="true"></div>
 
-          <article class="node">
-            <span class="step-no">02</span>
-            <h2>规则判定与解释</h2>
-            <p>同时生成经营动作与库存动作</p>
+          <article class="step">
+            <div class="step-no">01</div>
+            <p class="owner">钉钉</p>
+            <h2>确认身份</h2>
+            <p>只证明当前用户是谁</p>
           </article>
-          <div class="arrow" aria-hidden="true">→</div>
 
-          <article class="node approval">
-            <span class="step-no">03 / 唯一审核点</span>
-            <h2>主管整体审核</h2>
-            <p>整条建议一次通过或驳回</p>
-            <div class="approval-mark">通过后才激活执行任务</div>
+          <article class="step">
+            <div class="step-no">02</div>
+            <p class="owner">系统</p>
+            <h2>进入待处理</h2>
+            <p>无角色幂等登记，不建业务会话</p>
           </article>
-          <div class="arrow" aria-hidden="true">→</div>
 
-          <article class="node lanes">
-            <span class="step-no">04 / 双泳道</span>
-            <h2>分角色执行</h2>
-            <div class="lane-grid">
-              <div class="lane"><b>运营</b><span>经营动作</span></div>
-              <div class="lane"><b>采购计划</b><span>补货 / 禁止补货</span></div>
-            </div>
+          <article class="step external">
+            <div class="step-no">03</div>
+            <p class="owner">产品外</p>
+            <h2>负责人审批</h2>
+            <p>审批运营或运营主管角色</p>
           </article>
-          <div class="arrow" aria-hidden="true">→</div>
 
-          <article class="node">
-            <span class="step-no">05</span>
-            <h2>结果回填</h2>
-            <p>分别记录，统一追溯</p>
+          <article class="step admin">
+            <div class="step-no">04</div>
+            <p class="owner">ADMIN</p>
+            <h2>核验材料</h2>
+            <p>核对双属性与审批证据</p>
+          </article>
+
+          <article class="step admin">
+            <div class="step-no">05</div>
+            <p class="owner">ADMIN</p>
+            <h2>配置唯一角色</h2>
+            <p>原子写入角色，并立即撤销旧会话</p>
+          </article>
+
+          <article class="step done">
+            <div class="step-no">06</div>
+            <p class="owner">用户</p>
+            <h2>重新登录</h2>
+            <p>以新业务会话进入目标工作台</p>
           </article>
         </div>
 
-        <div class="controls">
-          <div class="atomic">
-            <div class="control-label">原子冲突保护</div>
-            <div class="atomic-rule">
-              <strong>止损 / 清仓</strong>
-              <i>+</i>
-              <strong>禁止补货</strong>
-              <span>规则阶段同时生成，不能拆开通过</span>
-            </div>
+        <div class="state-band" aria-label="无角色用户的五个持久状态">
+          <div class="state-title">
+            <strong>五个状态</strong>
+            <span>只描述权限事实</span>
           </div>
-
           <div class="states">
-            <div class="control-label">三层状态</div>
-            <div class="state-grid">
-              <div class="state"><b>建议级</b><span>审核状态</span></div>
-              <div class="state"><b>动作级</b><span>执行状态</span></div>
-              <div class="state"><b>总览</b><span>只读汇总</span></div>
-            </div>
+            <div class="state current"><b>待处理</b><span>尚无唯一角色</span></div>
+            <div class="state"><b>已配置待重新登录</b><span>旧会话已失效</span></div>
+            <div class="state success"><b>已授权</b><span>进入正确工作台</span></div>
+            <div class="state stop"><b>已停用</b><span>拒绝业务访问</span></div>
+            <div class="state conflict"><b>配置冲突</b><span>不猜测、不提权</span></div>
           </div>
         </div>
       </section>
 
       <footer class="footer">
-        <span class="footer-brand">AI 商品经营与利润决策助手</span>
+        <span>AI 商品经营与利润决策助手</span>
         <span class="page-no">06 / 11</span>
         <nav class="nav" aria-label="幻灯片导航">
-          <a href="p05.html" aria-label="上一页">←</a>
-          <a href="p07.html" aria-label="下一页">→</a>
+          <a href="p05.html" aria-label="上一页">上一页</a>
+          <span class="nav-separator">/</span>
+          <a href="p07.html" aria-label="下一页">下一页</a>
         </nav>
       </footer>
     </main>

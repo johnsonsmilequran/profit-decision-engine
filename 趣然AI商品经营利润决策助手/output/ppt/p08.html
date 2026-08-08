@@ -6,19 +6,35 @@
   <title>技术方案｜缺什么就降级什么</title>
   <style>
     :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 12px;
+      --bg: #f7f8f6;
+      --surface: #ffffff;
+      --surface-2: #eef1ec;
+      --ink: #101713;
+      --muted: #657069;
+      --line: #d8ded9;
+      --accent: #126b4d;
+      --accent-2: #dceee6;
+      --success: #23845d;
+      --warning: #b56a19;
+      --danger: #b23a3a;
+      --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 38px;
     }
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
+    html, body {
+      --panel: var(--surface-2);
+      --rule: var(--line);
+      --accent-strong: var(--accent);
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
     .stage {
       position: relative;
       width: 1920px;

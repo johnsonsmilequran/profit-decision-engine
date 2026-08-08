@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-08T03:55:17Z",
+  "last_updated_at_utc": "2026-08-08T04:37:36Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -39,17 +39,17 @@
     "stage4_5_v1": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:46:45Z"},
     "stage4_6_mvp": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T02:38:43Z"},
     "stage5_formal_prd": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T03:55:17Z"},
-    "stage6_ppt": {"status": "pending", "confirmed_at_utc": null}
+    "stage6_ppt": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T04:37:36Z"}
   },
   "contract_revision": 11,
   "source_ids_changed": ["F09", "US-F09-01", "US-F09-02", "US-F09-03", "REQ-F09-01", "REQ-F09-02", "REQ-F09-03", "REQ-F09-04", "REQ-F09-05", "REQ-F09-06", "REQ-F09-07", "AC-F09-01", "AC-F09-02", "AC-F09-03", "AC-F09-04", "AC-F09-05", "AC-F09-06", "AC-F09-07", "AC-F09-08", "AC-F09-09", "AC-F09-10", "AC-F09-11", "AC-F09-12", "AC-F09-13", "AC-F09-14", "AC-F09-15", "NFR-006", "NFR-007", "NFR-008", "NFR-009", "NFR-010"],
-  "current_stage": "6",
-  "current_substep": "ppt-html-generation",
-  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5", "4.6", "5"],
+  "current_stage": "complete",
+  "current_substep": "handoff",
+  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5", "4.6", "5", "6"],
   "skipped_stages": [],
   "next_action": {
     "type": "automatic_task",
-    "description": "按阶段 6 共享视觉契约生成并逐页校验 11 页方案 PPT HTML"
+    "description": "将已定版 F09 契约交给 Design Master 做增量设计，再用 TDD Master 更新验收契约后进入实现"
   },
   "mvp_boundary": {
     "status": "confirmed",
@@ -274,8 +274,8 @@
   "category": "saas",
   "deliverables": {
     "scene_anchor": "scene-anchor.md",
-    "proposal_v0": null,
-    "proposal_v1": null,
+    "proposal_v0": "proposal-v0.md",
+    "proposal_v1": "proposal-v1.md",
     "debate_log": "debate-log.md",
     "assumptions": "assumptions.md",
     "conversation": "conversation.md",
@@ -314,7 +314,7 @@
       "output/ppt/p10.html",
       "output/ppt/p11.html"
     ],
-    "final_pptx": "output/AI商品经营与利润决策助手-阶段5正式版.pptx",
+    "final_pptx": null,
     "legacy_pptx": "output/AI商品经营与利润决策助手-方案V0.pptx",
     "stage6_report": "drafts/stage6-consistency.md",
     "tdd_contract": "output/tests/TDD验收契约.md"

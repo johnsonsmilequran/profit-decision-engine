@@ -6,21 +6,30 @@
   <title>P10｜完整路线图</title>
   <style>
     :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 8px;
-      --radius-md: 12px;
+      --bg: #f7f8f6;
+      --surface: #ffffff;
+      --surface-2: #eef1ec;
+      --ink: #101713;
+      --muted: #657069;
+      --line: #d8ded9;
+      --accent: #126b4d;
+      --accent-2: #dceee6;
+      --success: #23845d;
+      --warning: #b56a19;
+      --danger: #b23a3a;
+      --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 38px;
     }
 
     * { box-sizing: border-box; }
 
     html, body {
+      --panel: var(--surface-2);
+      --rule: var(--line);
+      --accent-strong: var(--accent);
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       margin: 0;
       padding: 0;
       width: 100%;
@@ -34,6 +43,7 @@
     .stage {
       position: relative;
       width: 1920px;
+      min-height: 1080px;
       height: 1080px;
       padding: 68px 96px 42px;
       background: var(--bg);
@@ -254,42 +264,42 @@
     <header class="header">
       <div>
         <p class="eyebrow">P10 · ROADMAP</p>
-        <h1>先跑通轻闭环，<br>再按数据成熟度扩展</h1>
+        <h1>先跑通授权与经营任务，<br>再按证据扩展</h1>
       </div>
-      <div class="promise">当前承诺仅限 V0</div>
+      <div class="promise">不预埋通用 IAM</div>
     </header>
 
     <main>
       <section class="timeline" aria-label="三阶段路线图">
         <article class="phase active">
           <div class="phase-index">01 · 已承诺</div>
-          <h2>V0 MVP</h2>
+          <h2>F01—F09 MVP</h2>
           <ul>
-            <li>周度导入 · 固定规则 · AI 解释</li>
-            <li>整体审核 · 分动作执行</li>
-            <li>结果记录与审计</li>
+            <li>唯一 Admin · 待处理 · 角色生命周期</li>
+            <li>周度规则 · 审核 · 责任运营执行</li>
+            <li>两级恢复 · 结果 · 不可变审计</li>
           </ul>
           <div class="status">当前范围</div>
         </article>
 
         <article class="phase">
-          <div class="phase-index">02 · 数据前置补齐</div>
-          <h2>能力解锁条件</h2>
+          <div class="phase-index">02 · 上线门禁</div>
+          <h2>生产可用</h2>
           <ul>
-            <li>库存／在途</li>
-            <li>最近 14 天销量</li>
-            <li>可信最近 7 天品退</li>
+            <li>钉钉稳定身份 · 企业作用域 · 双属性</li>
+            <li>岗位联系人 · 审批证据目录</li>
+            <li>环境隔离 · 恢复/通知演练</li>
           </ul>
-          <div class="status">先补事实源</div>
+          <div class="status">未齐全不启用</div>
         </article>
 
         <article class="phase">
           <div class="phase-index">03 · 后续候选</div>
           <h2>另行立项确认</h2>
           <ul>
-            <li>评价与退款原因 · 广告明细</li>
-            <li>外部系统写回</li>
-            <li>SKU 级能力</li>
+            <li>评价/退款原因 · 广告明细 · SKU</li>
+            <li>外部自动写回</li>
+            <li>触发条件成立时重评高级治理</li>
           </ul>
           <div class="status">非当前承诺</div>
         </article>
@@ -297,12 +307,12 @@
 
       <div class="boundary">
         <strong>范围边界</strong>
-        <span>数据前置未满足，不启动候选扩展；候选能力不等于已排期。</span>
+        <span>当前 MVP、上线门禁与后续候选三层分开；代码完成不等于生产可启用。</span>
       </div>
     </main>
 
     <footer class="footer">
-      <span class="trace">趣然 AI 经营助手｜PRD §0.1–0.2 · §8.1</span>
+      <span class="trace">趣然 AI 经营助手｜PRD §0.2–0.5 · §9.6–9.7</span>
       <nav class="nav" aria-label="幻灯片导航">
         <a href="p09.html" aria-label="上一页">← 上一页</a>
         <a href="p11.html" aria-label="下一页">下一页 →</a>
@@ -319,12 +329,11 @@
       document.body.style.height = (stage.offsetHeight * s) + 'px';
     }
 
-    addEventListener('resize', fit);
+    addEventListener('resize', fit); fit();
     addEventListener('keydown', function (event) {
       if (event.key === 'ArrowLeft') location.href = 'p09.html';
       if (event.key === 'ArrowRight') location.href = 'p11.html';
     });
-    fit();
   </script>
 </body>
 </html>

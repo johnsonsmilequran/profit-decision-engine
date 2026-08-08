@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>515 案例：两次断点叠加成真实损失</title>
+  <title>核心痛点｜515 案例中的两次断点</title>
   <style>
-    :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 6px;
-      --radius-md: 12px;
-    }
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --surface-2: #eef1ec;
+  --ink: #101713;
+  --muted: #657069;
+  --line: #d8ded9;
+  --accent: #126b4d;
+  --accent-2: #dceee6;
+  --success: #23845d;
+  --warning: #b56a19;
+  --danger: #b23a3a;
+  --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+  --radius-sm: 14px;
+  --radius-md: 24px;
+  --radius-lg: 38px;
+}
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
-      background: var(--panel);
-      color: var(--ink);
-      font-family: var(--font);
       overflow-x: hidden;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
     }
     .stage {
       position: relative;
@@ -35,219 +40,226 @@
       transform-origin: top left;
       background: var(--bg);
     }
+    .stage::before {
+      content: "";
+      position: absolute;
+      width: 560px;
+      height: 560px;
+      top: -330px;
+      right: -180px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+    }
     .slide {
+      position: relative;
+      z-index: 1;
       height: 100%;
-      padding: 72px 96px 42px;
+      padding: 72px 96px 40px;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 38px;
+      gap: 34px;
     }
     .header {
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: start;
-      gap: 48px;
+      gap: 80px;
     }
-    .chapter {
-      margin: 0 0 15px;
-      color: var(--accent-strong);
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--accent);
       font-size: 18px;
       line-height: 1;
       font-weight: 700;
-      letter-spacing: .18em;
+      letter-spacing: .16em;
     }
     h1 {
-      max-width: 1430px;
       margin: 0;
+      max-width: 1450px;
       font-size: 68px;
-      line-height: 1.08;
+      line-height: 1.1;
       letter-spacing: -.035em;
       font-weight: 760;
     }
-    .case-tag {
-      width: 176px;
-      padding-top: 8px;
-      border-top: 8px solid var(--accent-strong);
-      text-align: right;
+    .case-mark {
+      min-width: 210px;
+      padding: 8px 0 0 28px;
+      border-left: 2px solid var(--accent);
     }
-    .case-tag b {
+    .case-mark strong {
       display: block;
-      font-size: 48px;
-      line-height: 1;
-      letter-spacing: -.04em;
+      color: var(--accent);
+      font-size: 72px;
+      line-height: .9;
+      letter-spacing: -.05em;
+      font-variant-numeric: tabular-nums;
     }
-    .case-tag span {
+    .case-mark span {
       display: block;
-      margin-top: 8px;
+      margin-top: 14px;
       color: var(--muted);
-      font-size: 20px;
+      font-size: 22px;
+      line-height: 1.2;
     }
-    .story {
+    .content {
       min-height: 0;
       display: grid;
-      grid-template-rows: 1fr 194px;
-      gap: 28px;
+      grid-template-rows: 430px 1fr;
+      gap: 30px;
     }
     .flow {
       position: relative;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 30px;
-      align-items: stretch;
-      padding-top: 32px;
+      align-items: center;
+      gap: 34px;
+      padding: 34px 26px 18px;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
-    .flow::before {
-      content: "";
+    .track {
       position: absolute;
-      top: 74px;
-      left: 92px;
-      right: 92px;
-      height: 2px;
-      background: var(--rule);
+      left: 120px;
+      right: 120px;
+      top: 126px;
+      height: 4px;
+      background: var(--line);
     }
+    .break-mark {
+      position: absolute;
+      top: 104px;
+      width: 42px;
+      height: 46px;
+      border-left: 8px solid var(--danger);
+      border-right: 8px solid var(--danger);
+      background: var(--surface);
+      transform: skewX(-18deg);
+    }
+    .break-mark.one { left: 27.4%; }
+    .break-mark.two { left: 76.2%; }
     .step {
       position: relative;
-      z-index: 1;
-      min-height: 314px;
-      padding: 0 28px 28px;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-md);
-      background: var(--bg);
+      z-index: 2;
+      align-self: stretch;
+      padding: 34px 28px 28px;
     }
-    .step-index {
-      width: 82px;
-      height: 82px;
-      margin-top: 0;
+    .step-no {
+      width: 64px;
+      height: 64px;
       display: grid;
       place-items: center;
-      border: 2px solid var(--rule);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      color: var(--accent-strong);
-      font-size: 24px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--accent);
+      font-size: 22px;
+      line-height: 1;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
-    .step.break .step-index {
-      border-color: var(--accent-strong);
-      background: var(--accent);
-      color: var(--ink);
+    .step.is-break .step-no {
+      border-color: var(--danger);
+      color: var(--danger);
     }
     .step-label {
-      margin: 30px 0 10px;
-      color: var(--accent-strong);
-      font-size: 18px;
+      margin: 34px 0 12px;
+      color: var(--muted);
+      font-size: 17px;
       line-height: 1;
-      font-weight: 750;
-      letter-spacing: .12em;
+      font-weight: 700;
+      letter-spacing: .14em;
     }
+    .step.is-break .step-label { color: var(--danger); }
     .step h2 {
       margin: 0 0 14px;
-      font-size: 34px;
-      line-height: 1.2;
-      font-weight: 730;
+      font-size: 36px;
+      line-height: 1.15;
+      font-weight: 740;
     }
     .step p {
       margin: 0;
+      max-width: 330px;
       color: var(--muted);
-      font-size: 24px;
-      line-height: 1.45;
+      font-size: 23px;
+      line-height: 1.5;
     }
-    .connector-note {
-      position: absolute;
-      z-index: 3;
-      top: 59px;
-      transform: translateX(-50%);
-      padding: 8px 13px;
-      border: 1px solid var(--accent-strong);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      color: var(--accent-strong);
-      font-size: 18px;
-      line-height: 1;
-      font-weight: 750;
-    }
-    .connector-note.first { left: 25%; }
-    .connector-note.second { left: 75%; }
-    .loss-band {
+    .impact {
       display: grid;
-      grid-template-columns: 1.45fr repeat(4, 1fr);
-      border-top: 8px solid var(--accent-strong);
-      background: var(--panel);
+      grid-template-columns: 1.55fr repeat(4, 1fr);
+      align-items: stretch;
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
     }
-    .loss-title,
-    .loss-item {
-      min-width: 0;
-      padding: 28px 30px;
-    }
-    .loss-title {
+    .impact-lead {
+      padding: 30px 38px 26px 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    .loss-title strong {
-      font-size: 31px;
-      line-height: 1.2;
+    .impact-lead strong {
+      max-width: 490px;
+      font-size: 32px;
+      line-height: 1.25;
+      font-weight: 740;
     }
-    .loss-title span {
+    .impact-lead span {
       margin-top: 10px;
       color: var(--muted);
       font-size: 22px;
-      line-height: 1.35;
+      line-height: 1.4;
     }
-    .loss-item {
-      border-left: 1px solid var(--rule);
+    .metric {
+      padding: 32px 28px 26px;
+      border-left: 1px solid var(--line);
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    .loss-item b {
-      color: var(--accent-strong);
-      font-size: 48px;
+    .metric strong {
+      color: var(--accent);
+      font-size: 50px;
       line-height: 1;
       letter-spacing: -.04em;
       font-variant-numeric: tabular-nums;
     }
-    .loss-item span {
-      margin-top: 12px;
+    .metric.loss strong { color: var(--danger); }
+    .metric span {
+      margin-top: 14px;
       color: var(--muted);
-      font-size: 21px;
-      line-height: 1.2;
+      font-size: 22px;
+      line-height: 1.25;
     }
     .footer {
-      height: 44px;
+      min-height: 46px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
       display: grid;
       grid-template-columns: 1fr auto auto;
-      align-items: end;
-      gap: 26px;
-      border-top: 1px solid var(--rule);
+      align-items: center;
+      gap: 28px;
       color: var(--muted);
       font-size: 18px;
+      line-height: 1;
     }
-    .footer-brand { padding-top: 14px; }
     .page-no {
-      padding-top: 14px;
       color: var(--ink);
+      font-size: 22px;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
     .nav {
       display: flex;
-      gap: 8px;
-      padding-top: 8px;
+      align-items: center;
+      gap: 18px;
     }
     .nav a {
-      width: 46px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      color: var(--ink);
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 700;
       text-decoration: none;
-      font-size: 20px;
-      line-height: 1;
     }
+    .nav-separator { color: var(--line); }
   </style>
 </head>
 <body>
@@ -255,63 +267,69 @@
     <main class="slide">
       <header class="header">
         <div>
-          <p class="chapter">CORE PAIN / REAL CASE</p>
-          <h1>利润晚看到，止损也没传到采购</h1>
+          <p class="eyebrow">CORE PAIN · REAL CASE</p>
+          <h1>真正的问题，是止损没有传到采购</h1>
         </div>
-        <div class="case-tag" aria-label="布乐迪忙碌屋案例">
-          <b>515</b>
-          <span>布乐迪·忙碌屋</span>
+        <div class="case-mark" aria-label="515 案例">
+          <strong>515</strong>
+          <span>一次真实损失链</span>
         </div>
       </header>
 
-      <section class="story" aria-label="515 案例事实链与损失">
+      <section class="content" aria-label="515 案例事实链与结果">
         <div class="flow">
+          <div class="track" aria-hidden="true"></div>
+          <div class="break-mark one" aria-hidden="true"></div>
+          <div class="break-mark two" aria-hidden="true"></div>
+
           <article class="step">
-            <div class="step-index">01</div>
-            <div class="step-label">起点</div>
+            <div class="step-no">01</div>
+            <p class="step-label">起点</p>
             <h2>亏损推广</h2>
             <p>前期以亏损方式推广</p>
           </article>
-          <article class="step break">
-            <div class="step-index">02</div>
-            <div class="step-label">断点一</div>
+
+          <article class="step is-break">
+            <div class="step-no">02</div>
+            <p class="step-label">断点一 · 发现滞后</p>
             <h2>月报后才发现</h2>
-            <p>财务给出月度利润报表后，才看到亏损较大</p>
+            <p>月度利润报表出来后，才看到亏损较大</p>
           </article>
+
           <article class="step">
-            <div class="step-index">03</div>
-            <div class="step-label">运营动作</div>
+            <div class="step-no">03</div>
+            <p class="step-label">运营止损</p>
             <h2>减少推广</h2>
-            <p>运营开始止损，但未同步采购计划</p>
+            <p>运营采取动作，但信息没有同步给采购</p>
           </article>
-          <article class="step break">
-            <div class="step-index">04</div>
-            <div class="step-label">断点二</div>
+
+          <article class="step is-break">
+            <div class="step-no">04</div>
+            <p class="step-label">断点二 · 协同失效</p>
             <h2>采购继续补货</h2>
             <p>仍按原销量补货，最终形成大量滞销</p>
           </article>
-          <span class="connector-note first">发现滞后</span>
-          <span class="connector-note second">信息未同步</span>
         </div>
 
-        <div class="loss-band" aria-label="515 案例结果">
-          <div class="loss-title">
-            <strong>两次断点，叠加成真实损失</strong>
-            <span>问题不只是一个利润指标没被看到</span>
+        <div class="impact" aria-label="515 案例损失结果">
+          <div class="impact-lead">
+            <strong>利润发现晚 + 补货未停止</strong>
+            <span>两次断点叠加，才是损失真正放大的原因</span>
           </div>
-          <div class="loss-item"><b>≈ 2</b><span>个月发现延迟</span></div>
-          <div class="loss-item"><b>≈ 3,000</b><span>件滞销</span></div>
-          <div class="loss-item"><b>≈ 10 万</b><span>元库存占用</span></div>
-          <div class="loss-item"><b>≈ 6 万</b><span>元利润损失</span></div>
+          <div class="metric"><strong>约 2</strong><span>个月发现延迟</span></div>
+          <div class="metric"><strong>约 3,000</strong><span>件滞销</span></div>
+          <div class="metric"><strong>约 10 万</strong><span>元库存占用</span></div>
+          <div class="metric loss"><strong>约 6 万</strong><span>元利润损失</span></div>
         </div>
       </section>
 
       <footer class="footer">
-        <span class="footer-brand">AI 商品经营与利润决策助手</span>
+        <span>AI 商品经营与利润决策助手</span>
         <span class="page-no">03 / 11</span>
         <nav class="nav" aria-label="幻灯片导航">
-          <a href="p02.html" aria-label="上一页">←</a>
-          <a href="p04.html" aria-label="下一页">→</a>
+          <a href="p02.html" aria-label="上一页">上一页</a>
+          <span class="nav-separator">/</span>
+          <a href="p04.html" aria-label="下一页">下一页</a>
         </nav>
       </footer>
     </main>

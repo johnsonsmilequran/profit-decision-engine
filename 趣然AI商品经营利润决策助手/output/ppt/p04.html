@@ -3,25 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>价值证据｜先验证真实问题</title>
+  <title>价值证据｜授权入口解锁产品价值</title>
   <style>
     :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 8px;
-      --radius-md: 12px;
+      --bg: #f7f8f6;
+      --surface: #ffffff;
+      --surface-2: #eef1ec;
+      --ink: #101713;
+      --muted: #657069;
+      --line: #d8ded9;
+      --accent: #126b4d;
+      --accent-2: #dceee6;
+      --success: #23845d;
+      --warning: #b56a19;
+      --danger: #b23a3a;
+      --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 38px;
     }
 
     * { box-sizing: border-box; }
 
     html,
     body {
+      --panel: var(--surface-2);
+      --rule: var(--line);
+      --accent-strong: var(--accent);
+      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       width: 100%;
       margin: 0;
       padding: 0;
@@ -38,7 +47,7 @@
       height: 1080px;
       overflow: hidden;
       transform-origin: top left;
-      background: var(--bg);
+      background: var(--surface);
     }
 
     .slide {
@@ -119,7 +128,7 @@
       border: 1px solid var(--rule);
       border-top: 10px solid var(--accent);
       border-radius: 0 0 var(--radius-md) var(--radius-md);
-      background: var(--bg);
+      background: var(--surface);
     }
 
     .metric::after {
@@ -237,50 +246,50 @@
     <div class="slide">
       <header class="header">
         <div>
-          <p class="eyebrow">P04 · VALUE EVIDENCE</p>
-          <h1>先验证真实问题，不外推未经确认的年度收益</h1>
+          <p class="eyebrow">P04 · VALUE HYPOTHESIS</p>
+          <h1>安全授权入口，决定整套产品能否创造价值</h1>
         </div>
         <aside class="evidence-source" aria-label="价值证据来源">
-          <span>证据口径</span>
-          <strong>515 真实案例<br>＋ 首轮业务验收</strong>
+          <span>归因边界</span>
+          <strong>F09 解锁 F01—F08<br>不单独认领收益</strong>
         </aside>
       </header>
 
       <main class="content">
-        <section class="metrics" aria-label="515 案例量化证据">
+        <section class="metrics" aria-label="F09 价值假设">
           <article class="metric">
-            <span class="metric-index">01 · STAGNANT STOCK</span>
-            <div>
-              <div class="metric-value">≈3,000</div>
-              <p class="metric-unit">件滞销</p>
-            </div>
-          </article>
-          <article class="metric">
-            <span class="metric-index">02 · CAPITAL OCCUPIED</span>
-            <div>
-              <div class="metric-value">≈10万</div>
-              <p class="metric-unit">元库存占用</p>
-            </div>
-          </article>
-          <article class="metric">
-            <span class="metric-index">03 · PROFIT LOSS</span>
+            <span class="metric-index">01 · SINGLE IMPACT</span>
             <div>
               <div class="metric-value">≈6万</div>
-              <p class="metric-unit">元利润损失</p>
+              <p class="metric-unit">元 / 次直接利润影响</p>
+            </div>
+          </article>
+          <article class="metric">
+            <span class="metric-index">02 · YEARLY HYPOTHESIS</span>
+            <div>
+              <div class="metric-value">≈72万</div>
+              <p class="metric-unit">元 / 年 · 12 次假设</p>
+            </div>
+          </article>
+          <article class="metric">
+            <span class="metric-index">03 · THREE YEARS</span>
+            <div>
+              <div class="metric-value">≈216万</div>
+              <p class="metric-unit">元 · 三年可支撑价值</p>
             </div>
           </article>
         </section>
 
         <section class="boundary" aria-label="价值边界">
           <span class="boundary-label">价值边界</span>
-          <p>这些数字证明跨部门决策断点会造成损失，但不能直接外推为全公司收益。</p>
-          <span class="roi-tag">不推算公司级 ROI</span>
+          <p>约 10 万元库存占用只作风险佐证；12 次/年与三年持续性必须由真实事件台账验证。</p>
+          <span class="roi-tag">不表述为已节省</span>
         </section>
       </main>
 
       <footer class="footer">
         <strong>AI 商品经营与利润决策助手</strong>
-        <span>追溯：PRD §1.4</span>
+        <span>追溯：PRD §1.9—1.13</span>
         <span class="page-no">04 / 11</span>
         <nav class="nav" aria-label="幻灯片导航">
           <a href="p03.html" aria-label="上一页">← 上一页</a>

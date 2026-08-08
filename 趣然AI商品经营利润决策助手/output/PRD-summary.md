@@ -1,6 +1,6 @@
 # 趣然 AI 商品经营与利润决策助手 · 摘要版
 
-**版本**：revision 11 / 阶段 5 正式版  
+**版本**：revision 11 / 阶段 5 正式版
 **完整 PRD**：`output/PRD详细版.md`  
 **开发版**：`output/PRD-dev.md`  
 **机器需求契约**：`output/requirements.md`

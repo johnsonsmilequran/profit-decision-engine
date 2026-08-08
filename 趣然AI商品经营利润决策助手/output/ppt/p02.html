@@ -3,22 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>执行摘要｜每周形成一次新判断</title>
+  <title>执行摘要｜从能进入，到持续推进</title>
   <style>
-    :root {
-      --bg: #FFFFFF;
-      --ink: #101214;
-      --muted: #5C6470;
-      --panel: #EDEDED;
-      --rule: #B8BCC4;
-      --accent: #6DCBF4;
-      --accent-strong: #3D8DFF;
-      --font: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      --radius-sm: 12px;
-    }
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --surface-2: #eef1ec;
+  --ink: #101713;
+  --muted: #657069;
+  --line: #d8ded9;
+  --accent: #126b4d;
+  --accent-2: #dceee6;
+  --success: #23845d;
+  --warning: #b56a19;
+  --danger: #b23a3a;
+  --shadow: 0 22px 70px rgba(16, 23, 19, 0.10);
+  --radius-sm: 14px;
+  --radius-md: 24px;
+  --radius-lg: 38px;
+}
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
     .stage {
       position: relative;
       width: 1920px;
@@ -27,230 +38,264 @@
       transform-origin: top left;
       background: var(--bg);
     }
-    .grid {
+    .stage::before {
+      content: "";
       position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, var(--panel) 1px, var(--bg) 1px),
-        linear-gradient(to bottom, var(--panel) 1px, var(--bg) 1px);
-      background-size: 96px 96px;
-      opacity: .38;
-      pointer-events: none;
+      width: 560px;
+      height: 560px;
+      right: -220px;
+      top: -260px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
     }
     .page {
       position: relative;
       z-index: 1;
-      height: 1080px;
-      padding: 76px 96px 48px;
+      min-height: 1080px;
+      padding: 66px 86px 52px;
       display: grid;
-      grid-template-rows: auto 1fr auto auto;
-      gap: 30px;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: 28px;
     }
     .topline {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--rule);
-      padding-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      font-size: 22px;
     }
     .eyebrow {
       margin: 0;
-      color: var(--accent-strong);
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: .16em;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: .14em;
     }
-    .section {
+    .section-label {
       margin: 0;
       color: var(--muted);
-      font-size: 20px;
-      letter-spacing: .08em;
+      font-weight: 650;
     }
-    .hero {
+    .headline {
       display: grid;
-      grid-template-columns: 1.04fr .96fr;
-      gap: 62px;
-      align-items: center;
-      min-height: 0;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 72px;
+      align-items: end;
     }
-    .statement h1 {
+    h1 {
       margin: 0;
-      max-width: 920px;
-      font-size: 76px;
+      max-width: 1120px;
+      font-size: 72px;
       line-height: 1.08;
-      letter-spacing: -.04em;
+      letter-spacing: -.045em;
     }
-    .statement .lead {
-      margin: 30px 0 0;
-      max-width: 850px;
-      color: var(--muted);
-      font-size: 28px;
+    .thesis {
+      margin: 0 0 4px;
+      padding: 22px 24px;
+      border-left: 7px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: var(--accent-2);
+      color: var(--ink);
+      font-size: 24px;
       line-height: 1.55;
+      font-weight: 650;
     }
     .results {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      align-self: stretch;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
+      grid-template-columns: 1.08fr .96fr .96fr;
+      gap: 24px;
+      align-items: stretch;
+      min-height: 0;
     }
     .result {
-      min-width: 0;
-      padding: 38px 30px 32px;
+      position: relative;
+      min-height: 346px;
+      padding: 34px 34px 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .result + .result { border-left: 1px solid var(--rule); }
-    .result .index {
-      color: var(--accent-strong);
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: .12em;
+    .result:first-child {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--surface);
+      box-shadow: var(--shadow);
     }
+    .result-no {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      color: var(--accent);
+    }
+    .result:first-child .result-no { color: var(--accent-2); }
     .result h2 {
-      margin: 0 0 20px;
-      font-size: 34px;
-      line-height: 1.18;
+      margin: 52px 0 16px;
+      font-size: 40px;
+      line-height: 1.16;
+      letter-spacing: -.02em;
     }
     .result p {
       margin: 0;
       color: var(--muted);
+      font-size: 24px;
+      line-height: 1.5;
+    }
+    .result:first-child p { color: var(--accent-2); }
+    .gate {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      width: max-content;
+      margin-top: 24px;
+      padding: 11px 15px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-2);
+      color: var(--accent);
       font-size: 22px;
-      line-height: 1.45;
+      font-weight: 800;
+    }
+    .gate-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--success);
     }
     .rhythm {
       display: grid;
-      grid-template-columns: 270px 1fr;
-      align-items: stretch;
-      min-height: 154px;
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
-      background: var(--bg);
-    }
-    .rhythm-label {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-right: 34px;
-      border-right: 1px solid var(--rule);
-    }
-    .rhythm-label strong { font-size: 30px; }
-    .rhythm-label span { margin-top: 8px; color: var(--muted); font-size: 20px; }
-    .week {
-      display: grid;
-      grid-template-columns: 1fr 2.45fr;
+      grid-template-columns: 230px 1fr 70px 1.8fr;
       align-items: center;
-      gap: 16px;
-      padding-left: 34px;
+      gap: 20px;
+      padding: 24px 28px;
+      border-radius: var(--radius-md);
+      background: var(--surface-2);
     }
-    .week-block {
+    .rhythm-title {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .rhythm-block {
       min-height: 94px;
-      padding: 20px 24px;
+      padding: 18px 22px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      border-radius: var(--radius-sm);
-      background: var(--accent);
     }
-    .week-block.secondary { background: var(--panel); }
-    .week-block strong { font-size: 27px; }
-    .week-block span { margin-top: 6px; color: var(--muted); font-size: 20px; }
-    .footer {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      align-items: center;
-      gap: 28px;
-      min-height: 42px;
+    .rhythm-block.primary {
+      background: var(--accent-2);
+      border: 1px solid var(--accent);
+    }
+    .rhythm-block strong {
+      font-size: 27px;
+      line-height: 1.2;
+    }
+    .rhythm-block span {
+      margin-top: 7px;
       color: var(--muted);
-      font-size: 18px;
+      font-size: 22px;
+      line-height: 1.35;
     }
-    .brand { color: var(--ink); font-weight: 700; }
-    .page-no { font-variant-numeric: tabular-nums; }
+    .arrow {
+      color: var(--accent);
+      font-size: 40px;
+      text-align: center;
+      font-weight: 800;
+    }
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 22px;
+    }
+    .brand { color: var(--ink); font-weight: 750; }
+    .footer-right { display: flex; align-items: center; gap: 22px; }
+    .page-no { font-variant-numeric: tabular-nums; font-weight: 700; }
     .nav { display: flex; gap: 8px; }
     .nav a {
-      width: 48px;
+      width: 46px;
       height: 38px;
       display: grid;
       place-items: center;
-      border: 1px solid var(--rule);
+      border: 1px solid var(--line);
       border-radius: var(--radius-sm);
+      background: var(--surface);
       color: var(--ink);
-      background: var(--bg);
       text-decoration: none;
       font-size: 22px;
+      line-height: 1;
     }
   </style>
 </head>
 <body>
   <div class="stage">
-    <div class="grid" aria-hidden="true"></div>
     <main class="page">
       <header class="topline">
         <p class="eyebrow">EXECUTIVE SUMMARY</p>
-        <p class="section">02 · 执行摘要</p>
+        <p class="section-label">02 · 执行摘要</p>
       </header>
 
-      <section class="hero">
-        <div class="statement">
-          <h1>每周形成一次新判断<br>一周内持续推进动作</h1>
-          <p class="lead">周一导入经营表，固定规则生成唯一主动作，AI 负责解释和排序；主管审核后，运营与采购分别执行并回填结果。</p>
-        </div>
+      <section class="headline">
+        <h1>先打开正确的门，<br>再持续推进正确的动作</h1>
+        <p class="thesis">无角色用户先被发现、审批并配置；进入正确工作台后，周度固定规则才开始驱动经营。</p>
+      </section>
 
-        <div class="results" aria-label="三个业务结果">
-          <article class="result">
-            <span class="index">01</span>
-            <div>
-              <h2>统一利润标准</h2>
-              <p>同一批数据只走一套固定规则。</p>
-            </div>
-          </article>
-          <article class="result">
-            <span class="index">02</span>
-            <div>
-              <h2>阻断继续补货</h2>
-              <p>止损或清仓同步禁止补货。</p>
-            </div>
-          </article>
-          <article class="result">
-            <span class="index">03</span>
-            <div>
-              <h2>保留全程追溯</h2>
-              <p>批次、规则、依据和状态历史均留存。</p>
-            </div>
-          </article>
-        </div>
+      <section class="results" aria-label="三个业务结果">
+        <article class="result">
+          <span class="result-no">01 · ACCESS</span>
+          <div>
+            <h2>系统真正可进入</h2>
+            <p>身份确认、角色配置与正确工作台连成一条可完成路径。</p>
+            <span class="gate"><span class="gate-dot" aria-hidden="true"></span>先授权，再经营</span>
+          </div>
+        </article>
+        <article class="result">
+          <span class="result-no">02 · DECISION</span>
+          <div>
+            <h2>阻断错误补货</h2>
+            <p>止损或清仓一旦成立，同步禁止继续补货。</p>
+          </div>
+        </article>
+        <article class="result">
+          <span class="result-no">03 · TRACE</span>
+          <div>
+            <h2>全过程可追溯</h2>
+            <p>身份、审批、批次、规则与状态历史完整保留。</p>
+          </div>
+        </article>
       </section>
 
       <section class="rhythm" aria-label="周度运行节奏">
-        <div class="rhythm-label">
-          <strong>周度节奏</strong>
-          <span>新数据驱动新清单</span>
+        <div class="rhythm-title">周度运行节奏</div>
+        <div class="rhythm-block primary">
+          <strong>新数据到达</strong>
+          <span>生成一份新清单</span>
         </div>
-        <div class="week">
-          <div class="week-block">
-            <strong>周一</strong>
-            <span>导入新数据 · 生成新清单</span>
-          </div>
-          <div class="week-block secondary">
-            <strong>周内</strong>
-            <span>只更新审核、执行与结果状态，不重复生成判断</span>
-          </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="rhythm-block">
+          <strong>同一周持续推进</strong>
+          <span>主管审核 · 责任运营执行与协同 · 只更新结果状态</span>
         </div>
       </section>
 
       <footer class="footer">
         <span class="brand">AI 商品经营与利润决策助手</span>
-        <span class="page-no">02 / 11</span>
-        <nav class="nav" aria-label="幻灯片导航">
-          <a href="p01.html" aria-label="上一页">←</a>
-          <a href="p03.html" aria-label="下一页">→</a>
-        </nav>
+        <div class="footer-right">
+          <span class="page-no">02 / 11</span>
+          <nav class="nav" aria-label="幻灯片导航">
+            <a href="p01.html" aria-label="上一页">←</a>
+            <a href="p03.html" aria-label="下一页">→</a>
+          </nav>
+        </div>
       </footer>
     </main>
   </div>
-
   <script>
     function fit() {
       var s = innerWidth / 1920;
