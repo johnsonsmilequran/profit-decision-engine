@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-08T02:38:43Z",
+  "last_updated_at_utc": "2026-08-08T03:55:17Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -38,18 +38,18 @@
     "stage3_research_sufficiency": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:02:34Z"},
     "stage4_5_v1": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:46:45Z"},
     "stage4_6_mvp": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T02:38:43Z"},
-    "stage5_formal_prd": {"status": "pending", "confirmed_at_utc": null},
+    "stage5_formal_prd": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T03:55:17Z"},
     "stage6_ppt": {"status": "pending", "confirmed_at_utc": null}
   },
-  "contract_revision": 10,
-  "source_ids_changed": [],
-  "current_stage": "5",
-  "current_substep": "r0-chapter-negotiation",
-  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5", "4.6"],
+  "contract_revision": 11,
+  "source_ids_changed": ["F09", "US-F09-01", "US-F09-02", "US-F09-03", "REQ-F09-01", "REQ-F09-02", "REQ-F09-03", "REQ-F09-04", "REQ-F09-05", "REQ-F09-06", "REQ-F09-07", "AC-F09-01", "AC-F09-02", "AC-F09-03", "AC-F09-04", "AC-F09-05", "AC-F09-06", "AC-F09-07", "AC-F09-08", "AC-F09-09", "AC-F09-10", "AC-F09-11", "AC-F09-12", "AC-F09-13", "AC-F09-14", "AC-F09-15", "NFR-006", "NFR-007", "NFR-008", "NFR-009", "NFR-010"],
+  "current_stage": "6",
+  "current_substep": "ppt-html-generation",
+  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5", "4.6", "5"],
   "skipped_stages": [],
   "next_action": {
     "type": "automatic_task",
-    "description": "按阶段 5 协同协议完成 R0 章节预协商，再启动三位主笔并行写作"
+    "description": "按阶段 6 共享视觉契约生成并逐页校验 11 页方案 PPT HTML"
   },
   "mvp_boundary": {
     "status": "confirmed",

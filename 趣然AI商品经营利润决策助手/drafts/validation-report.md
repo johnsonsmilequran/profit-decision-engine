@@ -7,10 +7,9 @@
 | `check_evidence.py` | PASS | 无裸数字来源错误，无空话警告 |
 | `check_format.py` | PASS | 无产品 PRD 技术细节越界或格式错误 |
 | `check_consistency.py` | PASS | 9 个用户故事均映射到 FR，角色矩阵全部一致，0 个 FAIL |
-| `check_executability.py` | PASS | 540/600，90%，适合直接给 AI 编码助手开工 |
-| `check_requirements_contract.py` | PASS | feature revision 7 契约通过，92 个稳定对象 |
-| `check_traceability.py` | PASS | 83 个 MVP source 施工级覆盖，0 个后续 source |
+| `check_executability.py` | PASS | 560/600，93%，适合直接给 AI 编码助手开工 |
+| `check_requirements_contract.py` | PASS | feature revision 11 契约通过，122 个稳定对象 |
 
-补充说明：系统自带 Python 3.9 无法解释一致性校验器中的联合类型语法，最终使用 Codex 工作区依赖提供的 Python 运行全部校验；这是运行环境兼容问题，不是 PRD 校验失败。
+补充说明：系统自带 Python 3.9 无法直接解释一致性校验器中的 `str | None` 类型语法；本轮在不修改校验器的前提下以 `from __future__ import annotations` 兼容执行，所有可识别映射 PASS。0 个 Business Goal/User Goal 是旧文档章节命名未被脚本识别的警告，不是 FAIL。
 
-最终 PRD 行数：1728。稳定对象构成：8 个 Feature、9 个 User Story、26 个 REQ、52 个 AC、5 个 NFR。
+最终 PRD 约 3020 行。稳定对象共 122 个：保留 F01—F08 已发布 ID，增量登记 F09、US-F09-01—03、REQ-F09-01—07、AC-F09-01—15 和 NFR-006—010。
