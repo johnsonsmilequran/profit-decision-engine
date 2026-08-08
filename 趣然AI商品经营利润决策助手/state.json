@@ -2,7 +2,7 @@
   "state_schema_version": 1,
   "project_name": "趣然AI商品经营利润决策助手",
   "project_started_at_utc": "2026-08-03T04:12:29Z",
-  "last_updated_at_utc": "2026-08-07T09:01:43Z",
+  "last_updated_at_utc": "2026-08-08T02:38:43Z",
   "work_type": "feature",
   "workflow_mode": "tech-constrained",
   "technical_feasibility": {
@@ -37,23 +37,22 @@
     "stage1_shared_understanding": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T07:30:44Z"},
     "stage3_research_sufficiency": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:02:34Z"},
     "stage4_5_v1": {"status": "confirmed", "confirmed_at_utc": "2026-08-07T08:46:45Z"},
-    "stage4_6_mvp": {"status": "pending", "confirmed_at_utc": null},
+    "stage4_6_mvp": {"status": "confirmed", "confirmed_at_utc": "2026-08-08T02:38:43Z"},
     "stage5_formal_prd": {"status": "pending", "confirmed_at_utc": null},
     "stage6_ppt": {"status": "pending", "confirmed_at_utc": null}
   },
   "contract_revision": 10,
   "source_ids_changed": [],
-  "current_stage": "4.6",
-  "current_substep": "mvp-supplement-confirmation",
-  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5"],
+  "current_stage": "5",
+  "current_substep": "r0-chapter-negotiation",
+  "completed_stages": ["0", "1", "1.9", "2", "3", "4", "4.5", "4.6"],
   "skipped_stages": [],
   "next_action": {
-    "type": "user_decision",
-    "description": "确认第一版范围是否还要补充或删减",
-    "askuserquestion_options": ["没有补充或删减，按当前范围定版（推荐）", "需要调整第一版范围"]
+    "type": "automatic_task",
+    "description": "按阶段 5 协同协议完成 R0 章节预协商，再启动三位主笔并行写作"
   },
   "mvp_boundary": {
-    "status": "in_confirmation",
+    "status": "confirmed",
     "scope_items": [
       {"id": "F09-SCOPE-01", "name": "唯一 Admin 初始化与独立登录", "decision": "mvp"},
       {"id": "F09-SCOPE-02", "name": "待处理用户状态与责任承接", "decision": "mvp"},
@@ -63,7 +62,7 @@
       {"id": "F09-SCOPE-06", "name": "授权时效与价值观察", "decision": "mvp"}
     ],
     "completion_definition": "六项产品能力通过真实浏览器、PostgreSQL、钉钉身份闭环验收，且身份双属性、开发/线上隔离、岗位联系人、审批证据、两级恢复、通知与演练等生产上线门禁全部满足后，才算第一版完成",
-    "supplement_confirmation": "pending"
+    "supplement_confirmation": "confirmed_no_changes"
   },
   "open_questions": [],
   "key_decisions_made": [
